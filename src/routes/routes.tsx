@@ -14,6 +14,7 @@ import CompanyPosition from '../pages/Company/position';
  * ?Import icons
  */
 import { RiHotelLine , RiFolder2Line , RiChatHistoryLine , RiHome2Line } from "react-icons/ri";
+import LoadingSpinner from '../components/loading-spinner';
 
 
 export type RoutingType = {

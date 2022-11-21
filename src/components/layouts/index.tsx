@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Outlet } from "react-router-dom";
 import Siderbar from "./Siderbar";
 import { MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/icons";
-import '../../styles/components/layouts.css';
+import "../../styles/components/layouts.css";
 import layoutConfig from "../../config/layoutConfig";
 
 const Layouts: React.FC = () => {
@@ -15,11 +15,24 @@ const Layouts: React.FC = () => {
       <Layout className="site-layout">
         <Layout.Header
           className="site-layout-background header"
-          style={{ padding: 0 , height : layoutConfig.headerHeight }}
+          style={{
+            padding: 0,
+            height: layoutConfig.headerHeight,
+            position: "fixed",
+            width: "100%",
+            zIndex: 2,
+          }}
         >
           {React.createElement(
             collapsed ? MenuUnfoldOutlined : MenuFoldOutlined,
             {
+              style: {
+                marginLeft: `${
+                  collapsed
+                    ? layoutConfig.siderbarCollpasedWidth
+                    : layoutConfig.siderbarWidth
+                }px`,
+              },
               className: "trigger",
               onClick: () => setCollapsed(!collapsed),
             }
@@ -28,7 +41,12 @@ const Layouts: React.FC = () => {
         <Layout.Content
           className="site-layout-background"
           style={{
-            // margin: "10px 10px",
+            marginTop: `${layoutConfig.headerHeight}px`,
+            marginLeft: `${
+              collapsed
+                ? layoutConfig.siderbarCollpasedWidth
+                : layoutConfig.siderbarWidth
+            }px`,
             padding: 10,
             minHeight: 280,
           }}

@@ -1,6 +1,7 @@
-import { Tabs, Typography } from "antd";
+import { Button, Card, Tabs, Tooltip, Typography } from "antd";
 import { Outlet } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import { InfoCircleOutlined } from "@ant-design/icons";
 
 const Companyroot: React.FC = () => {
   const navigate = useNavigate();
@@ -11,7 +12,18 @@ const Companyroot: React.FC = () => {
 
   return (
     <>
-      <Typography.Title level={3}>ข้อมูลบริษัท</Typography.Title>
+      <div
+        style={{
+          width: "100%",
+          display: "flex",
+          justifyContent: "space-between",
+        }}
+      >
+        <Typography.Title level={3}>ข้อมูลบริษัท</Typography.Title>
+        <Tooltip placement="leftTop" title={"Tour"}>
+          <Button icon={<InfoCircleOutlined />} />
+        </Tooltip>
+      </div>
       <Tabs
         defaultActiveKey="/company/location"
         onChange={onChange}
@@ -28,7 +40,7 @@ const Companyroot: React.FC = () => {
           },
           {
             label: `ตำแหน่งบริษัท`,
-            key: "/company/holiday",
+            key: "/company/position",
             children: <Outlet />,
           },
         ]}

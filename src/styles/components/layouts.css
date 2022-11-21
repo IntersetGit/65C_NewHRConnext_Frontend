@@ -7,7 +7,7 @@
   }
   
   #components-layout-demo-custom-trigger .trigger:hover {
-    color: #1890ff;
+    color: #FC6634;
   }
   
   #components-layout-demo-custom-trigger .logo {
@@ -22,8 +22,8 @@
   }
 
   .header{
-    border-bottom : 1px solid rgba(0,0,0,0.1);
-    box-shadow: 5px 10px #888888;
+    /* border-bottom : 1px solid rgba(0,0,0,0.1); */
+    box-shadow: 0.4px 0.5px #888888;
     display : flex;
     justify-items : center;
     align-items : center;
@@ -35,7 +35,7 @@
 
   .siderbar-custom {
     height : 100vh;
-    border-right : 1px solid rgba(0,0,0,0.1);
+    border-right : 1px solid rgba(0,0,0,0.2);
     padding : 0;
     margin : 0;
   }
