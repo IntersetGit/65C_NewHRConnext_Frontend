@@ -9,13 +9,15 @@ import Home from '../pages/Home';
 import Companyroot from '../pages/Company';
 import CompanyStructure from '../pages/Company/structure';
 import CompanyPosition from '../pages/Company/position';
+import Login from '../pages/Login';
+import Register from '../pages/Register';
+import LoadingSpinner from '../components/loading-spinner';
 
 /**
  * ?Import icons
  */
 import { RiHotelLine , RiFolder2Line , RiChatHistoryLine , RiHome2Line } from "react-icons/ri";
-import LoadingSpinner from '../components/loading-spinner';
-import Login from '../pages/Login';
+
 
 
 export type RoutingType = {
@@ -76,6 +78,10 @@ export const routing : RoutingType[] = [
     {
         path : '/auth',
         element : <Login/>
+    },
+    {
+        path : '/register',
+        element : <Register/>
     }
 ]
 
