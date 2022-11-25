@@ -1,4 +1,4 @@
-import { UserOutlined } from "@ant-design/icons";
+import { UserOutlined } from '@ant-design/icons';
 import {
   Button,
   Card,
@@ -8,19 +8,46 @@ import {
   Input,
   message,
   Row,
+  Select,
   Steps,
   theme,
-} from "antd";
-import { useState } from "react";
-import { RiHotelLine } from "react-icons/ri";
-import marklight from "../assets/auth-v2-login-mask-light.png";
-import human from "../assets/500.png";
-import logo from "../assets/icon.png";
+} from 'antd';
+import { useState } from 'react';
+import { RiHotelLine } from 'react-icons/ri';
+import marklight from '../assets/auth-v2-login-mask-light.png';
+import { useQuery } from '@apollo/client';
+import human from '../assets/500.png';
+import logo from '../assets/icon.png';
+import { gql } from '../__generated__/gql';
 
 const { useToken } = theme;
 
+const GET_PROVINCE = gql(/* GraphQL */ `
+  query GetProvince {
+    getProvince {
+      name
+      district {
+        name
+        amphoe {
+          name
+          zipcode
+        }
+      }
+    }
+  }
+`);
+
 const Register: React.FC = () => {
   const [current, setCurrent] = useState(0);
+  const [form] = Form.useForm();
+  const [district, setDistrict] = useState<
+    { value?: string | null; label?: string | null }[] | undefined
+  >(undefined);
+  const [amphoe, setAmphoe] = useState<
+    { value?: string | null; label?: string | null }[] | undefined
+  >(undefined);
+  const { data: province_data } = useQuery(GET_PROVINCE);
+
   const token = useToken();
   const next = () => {
     setCurrent(current + 1);
@@ -30,22 +57,75 @@ const Register: React.FC = () => {
     setCurrent(current - 1);
   };
 
+  /**
+   * ? Comapny register
+   */
+  const province = province_data?.getProvince?.map((e) => {
+    return {
+      label: e?.name,
+      value: e?.name,
+    };
+  });
+
+  const onProvinceChange = (value: string) => {
+    form.setFieldValue('company_state', null);
+    form.setFieldValue('company_city', null);
+    form.setFieldValue('company_zip', null);
+    const district = province_data?.getProvince
+      ?.find((e) => e?.name === value)
+      ?.district?.map((e) => {
+        return {
+          label: e?.name,
+          value: e?.name,
+        };
+      });
+    setDistrict(district ? district : []);
+  };
+
+  const onDistrictChange = (value: string) => {
+    form.setFieldValue('company_city', null);
+    form.setFieldValue('company_zip', null);
+    const amphoe = province_data?.getProvince
+      ?.find((e) => e?.district?.find((_e) => _e?.name === value))
+      ?.district?.find((e) => e?.name === value)
+      ?.amphoe?.map((e) => {
+        return {
+          label: e?.name,
+          value: e?.name,
+        };
+      });
+    setAmphoe(amphoe ? amphoe : []);
+  };
+
+  const onAmphoeChange = (value: string) => {
+    const zipCode = province_data?.getProvince
+      ?.find((e) =>
+        e?.district?.find((_e) =>
+          _e?.amphoe?.find((__e) => __e?.name === value),
+        ),
+      )
+      ?.district?.find((e) => e?.amphoe?.find((_e) => _e?.name === value))
+      ?.amphoe?.find((e) => e?.name === value)?.zipcode;
+
+    form.setFieldValue('company_zip', zipCode);
+  };
+
   const Stepone = (
     <>
       <Row>
         <Col span={12}>
           <Form.Item
-            label={"อีเมล"}
-            name={"email"}
+            label={'อีเมล'}
+            name={'email'}
             rules={[
               {
                 required: true,
-                message: "กรุณากรอกอีเมล",
+                message: 'กรุณากรอกอีเมล',
               },
               {
                 required: true,
                 pattern: new RegExp(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/),
-                message: "คุณกรอก อีเมล ไม่ตรงตามรูปแบบ",
+                message: 'คุณกรอก อีเมล ไม่ตรงตามรูปแบบ',
               },
             ]}
           >
@@ -56,7 +136,7 @@ const Register: React.FC = () => {
           <Form.Item
             tooltip={
               <>
-                {" "}
+                {' '}
                 <p>1. รหัสผ่านต้องมี A-Z อย่างน้อย 1 ตัว</p>
                 <p>2. รหัสผ่านต้องมี a-z อย่างน้อย 1 ตัว</p>
                 <p>3. รหัสผ่านต้องมี 0-9 อย่างน้อย 1 ตัว</p>
@@ -66,19 +146,19 @@ const Register: React.FC = () => {
                 <p>5. รหัสผ่านต้องมีความยาวอย่างน้อย 6 ตัวอักษรขึ้นไป</p>
               </>
             }
-            label={"รหัสผ่าน"}
-            name={"password"}
+            label={'รหัสผ่าน'}
+            name={'password'}
             rules={[
               {
                 required: true,
-                message: "กรุณากรอกรหัสผ่าน",
+                message: 'กรุณากรอกรหัสผ่าน',
               },
               {
                 required: true,
                 pattern: new RegExp(
-                  /^(?=.*[A-Z])(?=.*[!~@#$&*+-._%])(?=.*[0-9])(?=.*[a-z]).{6,}$/
+                  /^(?=.*[A-Z])(?=.*[!~@#$&*+-._%])(?=.*[0-9])(?=.*[a-z]).{6,}$/,
                 ),
-                message: "คุณกรอก รหัสผ่าน ไม่ตรงตามรูปแบบ",
+                message: 'คุณกรอก รหัสผ่าน ไม่ตรงตามรูปแบบ',
               },
             ]}
           >
@@ -89,18 +169,18 @@ const Register: React.FC = () => {
       <Row>
         <Col span={12}>
           <Form.Item
-            label={"ชื่อจริง"}
-            name={"firstname"}
-            tooltip={"ต้องเป็นตัวอักษรเท่านั้น"}
+            label={'ชื่อจริง'}
+            name={'firstname'}
+            tooltip={'ต้องเป็นตัวอักษรเท่านั้น'}
             rules={[
               {
                 required: true,
-                message: "กรุณากรอกชื่อจริง",
+                message: 'กรุณากรอกชื่อจริง',
               },
               {
                 required: true,
                 pattern: new RegExp(/^[a-zA-Zก-์ ]*$/),
-                message: "คุณกรอก ชื่อจริง ไม่ตรงตามรูปแบบ",
+                message: 'คุณกรอก ชื่อจริง ไม่ตรงตามรูปแบบ',
               },
             ]}
           >
@@ -109,18 +189,18 @@ const Register: React.FC = () => {
         </Col>
         <Col span={12}>
           <Form.Item
-            label={"นามสกุล"}
-            name={"lastname"}
-            tooltip={"ต้องเป็นตัวอักษรเท่านั้น"}
+            label={'นามสกุล'}
+            name={'lastname'}
+            tooltip={'ต้องเป็นตัวอักษรเท่านั้น'}
             rules={[
               {
                 required: true,
-                message: "กรุณากรอกนามสกุล",
+                message: 'กรุณากรอกนามสกุล',
               },
               {
                 required: true,
                 pattern: new RegExp(/^[a-zA-Zก-์ ]*$/),
-                message: "คุณกรอก นามสกุล ไม่ตรงตามรูปแบบ",
+                message: 'คุณกรอก นามสกุล ไม่ตรงตามรูปแบบ',
               },
             ]}
           >
@@ -131,36 +211,116 @@ const Register: React.FC = () => {
       <Row>
         <Col span={12}>
           <Form.Item
-            label={"วันเกิด"}
-            name={"dob"}
+            label={'วันเกิด'}
+            name={'dob'}
             rules={[
               {
                 required: true,
-                message: "กรุณากรอกวันเกิด",
+                message: 'กรุณากรอกวันเกิด',
               },
             ]}
           >
-            <DatePicker style={{ width: "100%" }} />
+            <DatePicker style={{ width: '100%' }} />
           </Form.Item>
         </Col>
         <Col span={12}>
           <Form.Item
-            label={"เบอร์โทรศัพท์"}
-            tooltip={"ต้องเป็นตัวเลข 10 หลักเท่านั้น"}
-            name={"tel"}
+            label={'เบอร์โทรศัพท์'}
+            tooltip={'ต้องเป็นตัวเลข 10 หลักเท่านั้น'}
+            name={'tel'}
             rules={[
               {
                 required: true,
-                message: "กรุณากรอกเบอร์โทรศัพท์",
+                message: 'กรุณากรอกเบอร์โทรศัพท์',
               },
               {
                 required: true,
                 pattern: new RegExp(/^[0-9]{10}$/),
-                message: "คุณกรอก เบอร์โทรศัพท์ ไม่ตรงตามรูปแบบ",
+                message: 'คุณกรอก เบอร์โทรศัพท์ ไม่ตรงตามรูปแบบ',
               },
             ]}
           >
             <Input />
+          </Form.Item>
+        </Col>
+      </Row>
+    </>
+  );
+
+  const Steptwo = (
+    <>
+      <Row>
+        <Col span={12}>
+          <Form.Item label={'ชื่อบริษัท'} name={'company_name'}>
+            <Input />
+          </Form.Item>
+        </Col>
+        <Col span={12}>
+          <Form.Item label={'เบอร์โทรติดต่อของบริษัท'} name={'company_phone'}>
+            <Input />
+          </Form.Item>
+        </Col>
+      </Row>
+      <Row>
+        <Col span={12}>
+          <Form.Item label={'จังหวัด/ตำบล/อำเภอ/รหัสไปรษณีย์'}>
+            <Input.Group compact>
+              <Form.Item
+                noStyle
+                name={'company_country'}
+                rules={[{ required: true, message: 'กรุถณาเลือกจังหวัด' }]}
+              >
+                <Select
+                  placeholder="เลือกจังหวัด"
+                  style={{ width: '25%' }}
+                  showSearch
+                  options={province ? province : []}
+                  onChange={onProvinceChange}
+                />
+              </Form.Item>
+              <Form.Item
+                name={'company_state'}
+                noStyle
+                rules={[{ required: true, message: 'กรุถณาเลือกตำบล' }]}
+              >
+                <Select
+                  style={{ width: '25%' }}
+                  placeholder="เลือกตำบล"
+                  onChange={onDistrictChange}
+                  showSearch
+                  options={district ? district : []}
+                />
+              </Form.Item>
+              <Form.Item
+                name={'company_city'}
+                noStyle
+                rules={[{ required: true, message: 'กรุถณาเลือกอำเภอ' }]}
+              >
+                <Select
+                  style={{ width: '25%' }}
+                  placeholder="เลือกอำเภอ"
+                  showSearch
+                  onChange={onAmphoeChange}
+                  options={amphoe ? amphoe : []}
+                />
+              </Form.Item>
+              <Form.Item
+                name={'company_zip'}
+                noStyle
+                rules={[{ required: true, message: 'กรุถณาเลือกรหัสไปรษณีย์' }]}
+              >
+                <Input
+                  style={{ width: '25%' }}
+                  disabled
+                  placeholder={'รหัสไปรษณีย์'}
+                />
+              </Form.Item>
+            </Input.Group>
+          </Form.Item>
+        </Col>
+        <Col span={12}>
+          <Form.Item label={'ที่อยู่บริษัท'} name={'company_address'}>
+            <Input.TextArea style={{ width: '100%' }} />
           </Form.Item>
         </Col>
       </Row>
@@ -174,7 +334,7 @@ const Register: React.FC = () => {
     },
     wrapperCol: {
       xs: { span: 24 },
-      sm: { span: 18 },
+      sm: { span: 22 },
     },
   };
 
@@ -193,19 +353,15 @@ const Register: React.FC = () => {
 
   const steps = [
     {
-      title: "กรอกข้อมูลของผู้สร้าง",
+      title: 'กรอกข้อมูลของผู้สร้าง',
       icon: <UserOutlined />,
       content: Stepone,
     },
     {
-      title: "กรอกข้อมูลบริษัท",
+      title: 'กรอกข้อมูลบริษัท',
       icon: <RiHotelLine />,
-      content: "Second-content",
+      content: Steptwo,
     },
-    //   {
-    //     title: "Last",
-    //     content: "Last-content",
-    //   },
   ];
 
   const items = steps.map((item) => ({
@@ -217,35 +373,40 @@ const Register: React.FC = () => {
   return (
     <div
       style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        height: "100vh",
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100vh',
       }}
     >
       <img
         src={logo}
-        style={{ position: "absolute", left: 10, width: 50, top: 10 }}
+        style={{ position: 'absolute', left: 10, width: 50, top: 10 }}
       />
       <img
         src={marklight}
-        style={{ position: "absolute", bottom: 40, width: 1200, right: 0 }}
+        style={{ position: 'absolute', bottom: 40, width: 1200, right: 0 }}
       />
       <img
         src={human}
-        style={{ position: "absolute", bottom: 40, width: 250, right: 10 }}
+        style={{ position: 'absolute', bottom: 40, width: 250, right: 10 }}
       />
       <Col xs={22} sm={22} md={22} lg={15} xl={14}>
         <Card
           bordered
           style={{
             borderColor: token.token.colorPrimary,
-            borderWidth: "0.5px",
+            borderWidth: '0.5px',
           }}
         >
           <Steps current={current} items={items} />
           <div className="steps-content">
-            <Form layout="vertical" {...formItemLayout} size="large">
+            <Form
+              layout="vertical"
+              form={form}
+              {...formItemLayout}
+              size="large"
+            >
               {steps[current].content}
             </Form>
           </div>
@@ -259,7 +420,7 @@ const Register: React.FC = () => {
               <Button
                 size="large"
                 type="primary"
-                onClick={() => message.success("Processing complete!")}
+                onClick={() => message.success('Processing complete!')}
               >
                 สร้างบัญชีผู้ใช้
               </Button>
@@ -267,7 +428,7 @@ const Register: React.FC = () => {
             {current > 0 && (
               <Button
                 size="large"
-                style={{ margin: "0 8px" }}
+                style={{ margin: '0 8px' }}
                 onClick={() => prev()}
               >
                 ย่อนกลับ
