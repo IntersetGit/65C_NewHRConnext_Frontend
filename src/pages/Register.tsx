@@ -6,7 +6,6 @@ import {
   DatePicker,
   Form,
   Input,
-  message,
   Row,
   Select,
   Steps,
@@ -14,8 +13,10 @@ import {
 } from 'antd';
 import { useState } from 'react';
 import { RiHotelLine } from 'react-icons/ri';
+import { useNavigate } from 'react-router-dom';
+import { useMutation, useQuery } from '@apollo/client';
 import marklight from '../assets/auth-v2-login-mask-light.png';
-import { useQuery } from '@apollo/client';
+import Swal from 'sweetalert2';
 import human from '../assets/500.png';
 import logo from '../assets/icon.png';
 import { gql } from '../__generated__/gql';
@@ -37,7 +38,35 @@ const GET_PROVINCE = gql(/* GraphQL */ `
   }
 `);
 
+const CREATE_ACCOUNT = gql(`
+  mutation CreateAccount($data: CreateAccountInput!) {
+    createAccount(data: $data) {
+      status
+      message
+  }
+}`);
+
+type RegisterFormType = {
+  email: string;
+  password: string;
+  firstname: string;
+  lastname: string;
+  tel: string;
+  dob: string;
+  company_name: string;
+  company_address: string;
+  company_city: string;
+  company_state: string;
+  company_zip: string;
+  company_country: string;
+  company_phone: string;
+  company_icon: string;
+};
+
 const Register: React.FC = () => {
+  /**
+   * ? React state and hook
+   */
   const [current, setCurrent] = useState(0);
   const [form] = Form.useForm();
   const [district, setDistrict] = useState<
@@ -46,11 +75,26 @@ const Register: React.FC = () => {
   const [amphoe, setAmphoe] = useState<
     { value?: string | null; label?: string | null }[] | undefined
   >(undefined);
+  const [registerdata, setRegisterdata] = useState<RegisterFormType>();
+  const navigate = useNavigate();
+
+  /**
+   * ? Graphql
+   */
   const { data: province_data } = useQuery(GET_PROVINCE);
+  const [createAccount] = useMutation(CREATE_ACCOUNT);
 
   const token = useToken();
   const next = () => {
-    setCurrent(current + 1);
+    form.validateFields().then((value) => {
+      setRegisterdata((e) => {
+        return {
+          ...e,
+          ...value,
+        };
+      });
+      setCurrent(current + 1);
+    });
   };
 
   const prev = () => {
@@ -110,11 +154,46 @@ const Register: React.FC = () => {
     form.setFieldValue('company_zip', zipCode);
   };
 
+  const onFinish = () => {
+    form.validateFields().then((value) => {
+      Swal.fire({
+        title: 'ยืนยันการสร้างบัญชีผู้ใช้',
+        // text: 'ยืนยันการลบรูป',
+        icon: 'warning',
+        showDenyButton: true,
+        showCancelButton: false,
+        confirmButtonColor: token.token.colorPrimary,
+        denyButtonColor: '#efefef',
+        confirmButtonText: 'ตกลง',
+        denyButtonText: `ยกเลิก`,
+      }).then(async (result) => {
+        /* Read more about isConfirmed, isDenied below */
+        if (result.isConfirmed) {
+          if (!registerdata) return;
+          createAccount({ variables: { data: { ...registerdata, ...value } } })
+            .then((val) => {
+              console.log(val);
+              if (val.data?.createAccount?.status) {
+                Swal.fire('สร้างบัญชีผู้ใช้สำเร็จ!', '', 'success');
+                navigate('/auth');
+              }
+            })
+            .catch((err) => {
+              Swal.fire('สร้างบัญชีผู้ใช้ไม่สำเร็จ!', '', 'error');
+              console.error(err);
+            });
+        }
+      });
+      console.log(registerdata);
+    });
+  };
+
   const Stepone = (
     <>
       <Row>
         <Col span={12}>
           <Form.Item
+            preserve
             label={'อีเมล'}
             name={'email'}
             rules={[
@@ -146,6 +225,7 @@ const Register: React.FC = () => {
                 <p>5. รหัสผ่านต้องมีความยาวอย่างน้อย 6 ตัวอักษรขึ้นไป</p>
               </>
             }
+            preserve
             label={'รหัสผ่าน'}
             name={'password'}
             rules={[
@@ -171,6 +251,7 @@ const Register: React.FC = () => {
           <Form.Item
             label={'ชื่อจริง'}
             name={'firstname'}
+            preserve
             tooltip={'ต้องเป็นตัวอักษรเท่านั้น'}
             rules={[
               {
@@ -190,6 +271,7 @@ const Register: React.FC = () => {
         <Col span={12}>
           <Form.Item
             label={'นามสกุล'}
+            preserve
             name={'lastname'}
             tooltip={'ต้องเป็นตัวอักษรเท่านั้น'}
             rules={[
@@ -212,6 +294,7 @@ const Register: React.FC = () => {
         <Col span={12}>
           <Form.Item
             label={'วันเกิด'}
+            preserve
             name={'dob'}
             rules={[
               {
@@ -226,6 +309,7 @@ const Register: React.FC = () => {
         <Col span={12}>
           <Form.Item
             label={'เบอร์โทรศัพท์'}
+            preserve
             tooltip={'ต้องเป็นตัวเลข 10 หลักเท่านั้น'}
             name={'tel'}
             rules={[
@@ -251,12 +335,27 @@ const Register: React.FC = () => {
     <>
       <Row>
         <Col span={12}>
-          <Form.Item label={'ชื่อบริษัท'} name={'company_name'}>
+          <Form.Item
+            label={'ชื่อบริษัท'}
+            name={'company_name'}
+            rules={[{ required: true, message: 'กรุณากรอกชื่อบริษัท' }]}
+          >
             <Input />
           </Form.Item>
         </Col>
         <Col span={12}>
-          <Form.Item label={'เบอร์โทรติดต่อของบริษัท'} name={'company_phone'}>
+          <Form.Item
+            label={'เบอร์โทรติดต่อของบริษัท'}
+            name={'company_phone'}
+            rules={[
+              { required: true, message: 'กรุณากรอกเบอร์โทรติดต่อของบริษัท' },
+              {
+                required: true,
+                pattern: new RegExp(/^[0-9]{9,10}$/),
+                message: 'คุณกรอก เบอร์โทรติดต่อของบริษัท ไม่ตรงตามรูปแบบ',
+              },
+            ]}
+          >
             <Input />
           </Form.Item>
         </Col>
@@ -319,7 +418,11 @@ const Register: React.FC = () => {
           </Form.Item>
         </Col>
         <Col span={12}>
-          <Form.Item label={'ที่อยู่บริษัท'} name={'company_address'}>
+          <Form.Item
+            label={'ที่อยู่บริษัท'}
+            name={'company_address'}
+            rules={[{ required: true, message: 'กรุณากรอกที่อยู่บริษัท' }]}
+          >
             <Input.TextArea style={{ width: '100%' }} />
           </Form.Item>
         </Col>
@@ -417,11 +520,7 @@ const Register: React.FC = () => {
               </Button>
             )}
             {current === steps.length - 1 && (
-              <Button
-                size="large"
-                type="primary"
-                onClick={() => message.success('Processing complete!')}
-              >
+              <Button size="large" type="primary" onClick={onFinish}>
                 สร้างบัญชีผู้ใช้
               </Button>
             )}

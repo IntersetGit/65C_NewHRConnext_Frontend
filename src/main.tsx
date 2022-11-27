@@ -1,18 +1,28 @@
-import ReactDOM from "react-dom/client";
-import { RouterProvider } from "react-router-dom";
-import router from "./routes/routes";
-import "antd/dist/reset.css";
-import "./index.css";
-import { ConfigProvider } from "antd";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { Suspense } from "react";
-import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
-import LoadingSpinner from "./components/loading-spinner";
+import ReactDOM from 'react-dom/client';
+import 'antd/dist/reset.css';
+import './index.css';
+import 'nprogress/nprogress.css';
+import './styles/components/fancyroute.css';
+import { ConfigProvider } from 'antd';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import React, { Suspense } from 'react';
+import {
+  ApolloClient,
+  InMemoryCache,
+  ApolloProvider,
+  createHttpLink,
+} from '@apollo/client';
+import LoadingSpinner from './components/loading-spinner';
 
 /**
  * ?Create gql client
  */
+
+// const link = createHttpLink({
+//   uri: import.meta.env.VITE_GQL_URL_PATH,
+//   credentials: 'same-origin',
+// });
 
 const gqlClient = new ApolloClient({
   uri: import.meta.env.VITE_GQL_URL_PATH,
@@ -24,27 +34,28 @@ const gqlClient = new ApolloClient({
  */
 
 const queryClient = new QueryClient();
+const Lazyapp = React.lazy(() => import('./App'));
 
-ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
+ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <>
     <ApolloProvider client={gqlClient}>
       <QueryClientProvider client={queryClient}>
         <ConfigProvider
           theme={{
             token: {
-              colorPrimary: "#FC6634",
+              colorPrimary: '#FC6634',
               borderRadius: 10,
-              colorBgBase: "#fff",
+              colorBgBase: '#fff',
               fontFamily: `'Prompt' ,-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji'`,
             },
           }}
         >
           <Suspense fallback={<LoadingSpinner />}>
-            <RouterProvider router={router} />
+            <Lazyapp />
           </Suspense>
         </ConfigProvider>
         <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
     </ApolloProvider>
-  </>
+  </>,
 );

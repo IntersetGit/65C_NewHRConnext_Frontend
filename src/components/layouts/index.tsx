@@ -1,14 +1,21 @@
-import { Layout } from "antd";
-import React from "react";
-import { useState } from "react";
-import { Outlet } from "react-router-dom";
-import Siderbar from "./Siderbar";
-import { MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/icons";
-import "../../styles/components/layouts.css";
-import layoutConfig from "../../config/layoutConfig";
+import { Layout } from 'antd';
+import React, { useEffect } from 'react';
+import { useState } from 'react';
+import { Outlet } from 'react-router-dom';
+import Siderbar from './Siderbar';
+import { MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons';
+import '../../styles/components/layouts.css';
+import nprogress from 'nprogress';
+import { useLocation } from 'react-router-dom';
+import layoutConfig from '../../config/layoutConfig';
 
 const Layouts: React.FC = () => {
   const [collapsed, setCollapsed] = useState(false);
+  const location = useLocation();
+  useEffect(() => {
+    nprogress.start();
+    nprogress.done();
+  }, [location.pathname]);
   return (
     <Layout id="components-layout-demo-custom-trigger">
       <Siderbar collapsed={collapsed} />
@@ -18,8 +25,8 @@ const Layouts: React.FC = () => {
           style={{
             padding: 0,
             height: layoutConfig.headerHeight,
-            position: "fixed",
-            width: "100%",
+            position: 'fixed',
+            width: '100%',
             zIndex: 2,
           }}
         >
@@ -33,9 +40,9 @@ const Layouts: React.FC = () => {
                     : layoutConfig.siderbarWidth
                 }px`,
               },
-              className: "trigger",
+              className: 'trigger',
               onClick: () => setCollapsed(!collapsed),
-            }
+            },
           )}
         </Layout.Header>
         <Layout.Content
