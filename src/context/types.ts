@@ -1,3 +1,5 @@
+import { MeQuery } from '../__generated__/graphql';
+
 export type ErrCallbackType = (err: { [key: string]: string }) => void;
 
 export type LoginParams = {
@@ -17,11 +19,5 @@ export type UserDataType = {
 
 export type AuthValuesType = {
   loading: boolean;
-  setLoading: (value: boolean) => void;
-  logout: () => void;
-  isInitialized: boolean;
-  user: UserDataType | null;
-  setUser: (value: UserDataType | null) => void;
-  setIsInitialized: (value: boolean) => void;
-  login: (params: LoginParams, errorCallback?: ErrCallbackType) => void;
+  user: MeQuery | undefined;
 };

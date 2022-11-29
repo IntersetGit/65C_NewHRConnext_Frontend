@@ -1,18 +1,37 @@
 import { createContext, ReactNode, useEffect, useState } from 'react';
 import type { AuthValuesType, UserDataType } from './types';
 import { Cookies } from 'react-cookie';
+import { gql } from '../__generated__';
+import { useQuery } from '@apollo/client';
+import { MeQuery } from '../__generated__/graphql';
 
 const cookie = new Cookies();
 
+const GET_ME = gql(`
+query Me {
+  me {
+    id
+    email
+    profile {
+      firstname
+      lastname
+      id
+      avatar
+    }
+    role {
+      id
+      name
+    }
+    company {
+      id
+      name
+    }
+  }
+}`);
+
 const defaultProvider: AuthValuesType = {
-  user: null,
+  user: undefined,
   loading: true,
-  setUser: () => null,
-  setLoading: () => Boolean,
-  isInitialized: false,
-  login: () => Promise.resolve(),
-  logout: () => Promise.resolve(),
-  setIsInitialized: () => Boolean,
 };
 
 const AuthContext = createContext(defaultProvider);
@@ -22,30 +41,14 @@ type Props = {
 };
 
 const AuthProvider = ({ children }: Props) => {
-  const [user, setUser] = useState<UserDataType | null>(defaultProvider.user);
-  const [loading, setLoading] = useState<boolean>(defaultProvider.loading);
-  const [isInitialized, setIsInitialized] = useState<boolean>(
-    defaultProvider.isInitialized,
-  );
-
-  useEffect(() => {
-    const initAuth = async (): Promise<void> => {
-      setIsInitialized(true);
-      const access = cookie.get('access');
-      if (access) {
-        setLoading(true);
-      }
-    };
-  }, []);
+  const { data: user, loading, error, refetch } = useQuery(GET_ME);
 
   const value = {
     user,
     loading,
-    setUser,
-    setLoading,
-    isInitialized,
-    setIsInitialized,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
+
+export { AuthContext, AuthProvider };

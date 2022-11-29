@@ -1,5 +1,4 @@
 import { createBrowserRouter } from 'react-router-dom';
-import Layouts from '../components/layouts';
 
 /**
  * ? Components
@@ -11,6 +10,7 @@ import CompanyStructure from '../pages/Company/structure';
 import CompanyPosition from '../pages/Company/position';
 import Login from '../pages/Login';
 import Register from '../pages/Register';
+import BaseLayout from '../components/layouts';
 
 /**
  * ?Import icons
@@ -21,6 +21,7 @@ import {
   RiChatHistoryLine,
   RiHome2Line,
 } from 'react-icons/ri';
+import React from 'react';
 
 export type RoutingType = {
   path: string;
@@ -32,10 +33,12 @@ export type RoutingType = {
   children?: RoutingType[];
 };
 
+// const Layouts = React.lazy(() => import('../components/layouts/Layout'));
+
 export const routing: RoutingType[] = [
   {
     path: '/',
-    element: <Layouts />,
+    element: <BaseLayout />,
     children: [
       {
         path: '/',

@@ -1,9 +1,9 @@
-import { Layout, Menu } from "antd";
-import layoutConfig from "../../config/layoutConfig";
-import logo from "../../assets/logo.png";
-import icon from "../../assets/icon.png";
-import { useNavigate, useLocation } from "react-router-dom";
-import { routing, RoutingType } from "../../routes/routes";
+import { Layout, Menu } from 'antd';
+import layoutConfig from '../../config/layoutConfig';
+import logo from '../../assets/logo.png';
+import icon from '../../assets/icon.png';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { routing, RoutingType } from '../../routes/routes';
 
 export type SiderbarType = {
   collapsed: boolean;
@@ -34,7 +34,7 @@ const Siderbar: React.FC<SiderbarType> = (props) => {
   const navigate = useNavigate();
   const location = useLocation();
   const baseRoute = routing.find(
-    (e) => e.path === layoutConfig.dashboardRoute
+    (e) => e.path === layoutConfig.dashboardRoute,
   )?.children;
 
   const onMenuclick = (e: { key: string }) => {
@@ -44,7 +44,7 @@ const Siderbar: React.FC<SiderbarType> = (props) => {
   return (
     <Layout.Sider
       style={{
-        position: "fixed",
+        position: 'fixed',
         zIndex: 3,
       }}
       className="siderbar-custom"
@@ -57,7 +57,7 @@ const Siderbar: React.FC<SiderbarType> = (props) => {
     >
       <img src={collapsed ? icon : logo} className="logo" alt="logo" />
       <Menu
-        style={{ width: "100%", position: "relative" }}
+        style={{ width: '100%', position: 'relative' }}
         className="menu-custom"
         mode="inline"
         onClick={onMenuclick}
