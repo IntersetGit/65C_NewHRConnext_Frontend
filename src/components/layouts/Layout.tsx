@@ -53,7 +53,7 @@ const Layouts: React.FC = () => {
             <Typography.Text>{user?.me?.company?.name}</Typography.Text>
           </div>
 
-          <RightNavbarContent />
+          <RightNavbarContent user={user} />
         </Layout.Header>
         <Layout.Content
           className="site-layout-background"
