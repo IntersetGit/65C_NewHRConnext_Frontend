@@ -1,16 +1,19 @@
 import { UserOutlined } from '@ant-design/icons';
-import { Avatar, Typography } from 'antd';
+import { Avatar, theme, Typography } from 'antd';
 import { MeQuery } from '../../__generated__/graphql';
+
+const { useToken } = theme;
 
 type RightNavContentType = {
   user: MeQuery | undefined;
 };
 
 const RightNavbarContent: React.FC<RightNavContentType> = ({ user }) => {
+  const token = useToken();
   return (
     <div style={{ paddingRight: 10 }}>
       <Avatar
-        style={{ marginRight: 2 }}
+        style={{ marginRight: 2, backgroundColor: token.token.colorPrimary }}
         shape="square"
         icon={<UserOutlined />}
       />

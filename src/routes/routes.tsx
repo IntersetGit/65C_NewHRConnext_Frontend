@@ -10,7 +10,7 @@ import CompanyStructure from '../pages/Company/structure';
 import CompanyPosition from '../pages/Company/position';
 import Login from '../pages/Login';
 import Register from '../pages/Register';
-import BaseLayout from '../components/layouts';
+// import BaseLayout from '../components/layouts';
 
 /**
  * ?Import icons
@@ -22,6 +22,7 @@ import {
   RiHome2Line,
 } from 'react-icons/ri';
 import React from 'react';
+import Overview from '../pages/Overview';
 
 export type RoutingType = {
   path: string;
@@ -30,10 +31,11 @@ export type RoutingType = {
   label?: string;
   key?: string | number;
   hideInmenu?: boolean;
+  shouldrevalidate?: any;
   children?: RoutingType[];
 };
 
-// const Layouts = React.lazy(() => import('../components/layouts/Layout'));
+const BaseLayout = React.lazy(() => import('../components/layouts'));
 
 export const routing: RoutingType[] = [
   {
@@ -41,42 +43,52 @@ export const routing: RoutingType[] = [
     element: <BaseLayout />,
     children: [
       {
-        path: '/',
+        path: ':companycode/',
         label: 'หน้าแรก',
         icon: <RiHome2Line />,
         element: <Home />,
       },
       {
-        path: '/company',
+        path: '/:companycode/company',
         label: 'บริษัท',
         icon: <RiHotelLine />,
         element: <Companyroot />,
         children: [
           {
-            path: '/company/location',
+            path: '/:companycode/company/location',
             label: 'ข้อมูลบริษัท',
             icon: <RiFolder2Line />,
             element: <CompanyLocation />,
           },
           {
-            path: '/company/structure',
+            path: '/:companycode/company/structure',
             label: 'ที่ตั้งบริษัท',
             hideInmenu: true,
             element: <CompanyStructure />,
           },
           {
-            path: '/company/position',
+            path: '/:companycode/company/position',
             label: 'ที่ตั้งบริษัท',
             hideInmenu: true,
             element: <CompanyPosition />,
           },
           {
-            path: '/company/holiday',
+            path: '/:companycode/company/holiday',
             label: 'วันหยุด',
             icon: <RiChatHistoryLine />,
             element: <CompanyLocation />,
           },
         ],
+      },
+    ],
+  },
+  {
+    path: '/overview',
+    element: <BaseLayout noSidebar={true} noCollapse />,
+    children: [
+      {
+        path: '/overview',
+        element: <Overview />,
       },
     ],
   },

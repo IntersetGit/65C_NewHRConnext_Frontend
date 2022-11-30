@@ -2,7 +2,12 @@ import { Layout, Menu } from 'antd';
 import layoutConfig from '../../config/layoutConfig';
 import logo from '../../assets/logo.png';
 import icon from '../../assets/icon.png';
-import { useNavigate, useLocation } from 'react-router-dom';
+import {
+  useNavigate,
+  useLocation,
+  useParams,
+  generatePath,
+} from 'react-router-dom';
 import { routing, RoutingType } from '../../routes/routes';
 
 export type SiderbarType = {
@@ -33,12 +38,13 @@ const Siderbar: React.FC<SiderbarType> = (props) => {
   const { collapsed } = props;
   const navigate = useNavigate();
   const location = useLocation();
+  const { companycode } = useParams();
   const baseRoute = routing.find(
     (e) => e.path === layoutConfig.dashboardRoute,
   )?.children;
 
   const onMenuclick = (e: { key: string }) => {
-    navigate(e.key);
+    navigate(generatePath(e.key, { companycode }));
   };
 
   return (

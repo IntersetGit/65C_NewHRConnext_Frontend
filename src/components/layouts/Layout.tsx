@@ -10,8 +10,11 @@ import { useLocation } from 'react-router-dom';
 import layoutConfig from '../../config/layoutConfig';
 import RightNavbarContent from './RightNavberContent';
 import { useAuth } from '../../hooks/useAuth';
+import { BaseLayoutProps } from '.';
 
-const Layouts: React.FC = () => {
+import icon from '../../assets/icon.png';
+
+const Layouts: React.FC<BaseLayoutProps> = (props) => {
   const [collapsed, setCollapsed] = useState(false);
   const { loading, user } = useAuth();
   const location = useLocation();
@@ -21,7 +24,7 @@ const Layouts: React.FC = () => {
   }, [location.pathname]);
   return (
     <Layout id="components-layout-demo-custom-trigger">
-      <Siderbar collapsed={collapsed} />
+      {!props.noSidebar && <Siderbar collapsed={collapsed} />}
       <Layout className="site-layout">
         <Layout.Header
           className="site-layout-background header"
@@ -36,21 +39,28 @@ const Layouts: React.FC = () => {
           }}
         >
           <div>
-            {React.createElement(
-              collapsed ? MenuUnfoldOutlined : MenuFoldOutlined,
-              {
-                style: {
-                  marginLeft: `${
-                    collapsed
-                      ? layoutConfig.siderbarCollpasedWidth
-                      : layoutConfig.siderbarWidth
-                  }px`,
+            {!props.noCollapse &&
+              React.createElement(
+                collapsed ? MenuUnfoldOutlined : MenuFoldOutlined,
+                {
+                  style: {
+                    marginLeft: `${
+                      collapsed
+                        ? layoutConfig.siderbarCollpasedWidth
+                        : layoutConfig.siderbarWidth
+                    }px`,
+                  },
+                  className: 'trigger',
+                  onClick: () => setCollapsed(!collapsed),
                 },
-                className: 'trigger',
-                onClick: () => setCollapsed(!collapsed),
-              },
-            )}
-            <Typography.Text>{user?.me?.company?.name}</Typography.Text>
+              )}
+            <div style={{ paddingLeft: 10 }}>
+              {!props.noSidebar ? (
+                <Typography.Text>{user?.me?.company?.name}</Typography.Text>
+              ) : (
+                <img src={icon} width={50} />
+              )}
+            </div>
           </div>
 
           <RightNavbarContent user={user} />
@@ -60,11 +70,15 @@ const Layouts: React.FC = () => {
           style={{
             marginTop: `${layoutConfig.headerHeight}px`,
             marginLeft: `${
-              collapsed
-                ? layoutConfig.siderbarCollpasedWidth
-                : layoutConfig.siderbarWidth
+              !props.noSidebar
+                ? collapsed
+                  ? layoutConfig.siderbarCollpasedWidth
+                  : layoutConfig.siderbarWidth
+                : 0
             }px`,
-            padding: 10,
+            padding: `${props.py || 10}px ${props.px || 10}px ${
+              props.py || 10
+            }px ${props.px || 10}px`,
             minHeight: 280,
           }}
         >

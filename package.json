@@ -23,6 +23,7 @@
     "localforage": "^1.10.0",
     "match-sorter": "^6.3.1",
     "nprogress": "^0.2.0",
+    "rc-virtual-list": "^3.4.11",
     "react": "^18.2.0",
     "react-cookie": "^4.1.1",
     "react-dom": "^18.2.0",
