@@ -17,7 +17,7 @@
 
 module.exports = {
   schema: "http://localhost:4000/gql",
-  documents: ["src/**/*.tsx"],
+  documents: ["src/**/*.tsx","src/**/*.ts"],
   generates: {
     "./src/__generated__/": {
       preset: "client",

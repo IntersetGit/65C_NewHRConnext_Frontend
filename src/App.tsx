@@ -153,7 +153,7 @@ function App() {
             theme={{
               token: {
                 colorPrimary: '#FC6634',
-                borderRadius: 10,
+                borderRadius: 6,
                 colorBgBase: '#fff',
                 fontFamily: `'Prompt' ,-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji'`,
               },

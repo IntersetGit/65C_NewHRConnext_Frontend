@@ -11,7 +11,7 @@ import {
   Steps,
   theme,
 } from 'antd';
-import { useState } from 'react';
+import { ChangeEvent, useRef, useState } from 'react';
 import { RiHotelLine } from 'react-icons/ri';
 import { useNavigate } from 'react-router-dom';
 import { useMutation, useQuery } from '@apollo/client';
@@ -46,6 +46,12 @@ const CREATE_ACCOUNT = gql(`
   }
 }`);
 
+const VALIDATE_COMPANYCODE = gql(`
+  query Query($companyname: String!) {
+  verifyCompanycode(companyname: $companyname)
+}
+`);
+
 type RegisterFormType = {
   email: string;
   password: string;
@@ -78,10 +84,29 @@ const Register: React.FC = () => {
   const [registerdata, setRegisterdata] = useState<RegisterFormType>();
   const navigate = useNavigate();
 
+  /**\
+   * ? Ref
+   */
+  const abortRef = useRef(new AbortController());
+
   /**
    * ? Graphql
    */
-  const { data: province_data } = useQuery(GET_PROVINCE);
+  const { loading: isValidateloading, data: province_data } =
+    useQuery(GET_PROVINCE);
+  /**
+   * ?Example of request aborter
+   */
+  const { refetch: validateCompanycode } = useQuery(VALIDATE_COMPANYCODE, {
+    fetchPolicy: 'network-only',
+    context: {
+      fetchOptions: {
+        signal: abortRef.current.signal,
+        queryDeduplication: false,
+      },
+    },
+    notifyOnNetworkStatusChange: true,
+  });
   const [createAccount] = useMutation(CREATE_ACCOUNT);
 
   const token = useToken();
@@ -152,6 +177,47 @@ const Register: React.FC = () => {
       ?.amphoe?.find((e) => e?.name === value)?.zipcode;
 
     form.setFieldValue('company_zip', zipCode);
+  };
+
+  /**
+   * ?Companycode Validate
+   * ?THis action perform aborter
+   */
+
+  const validateCompanyCode = async (
+    event: ChangeEvent<HTMLInputElement> | undefined,
+  ) => {
+    if (!event) return;
+    console.log(event.target.value);
+    /**
+     * ?Here
+     */
+    if (isValidateloading) {
+      console.log(isValidateloading);
+      abortRef.current.abort();
+    }
+
+    /**
+     * ?Validate
+     */
+    validateCompanycode({ companyname: event.target.value }).then(
+      async (res) => {
+        const validate = await form.validateFields(['companyCode']);
+        const form_error = validate.errorFields?.errors
+          ? [...validate.errorFields?.errors]
+          : [];
+        form.setFields([
+          {
+            name: 'companyCode',
+            validating: res.loading,
+            errors: res.data.verifyCompanycode
+              ? form_error
+              : [...form_error, 'มีผู้ใช้รหัสบริษัทนี้ในระบบแล้ว'],
+          },
+        ]);
+      },
+    );
+    abortRef.current = new AbortController();
   };
 
   const onFinish = () => {
@@ -424,6 +490,30 @@ const Register: React.FC = () => {
             rules={[{ required: true, message: 'กรุณากรอกที่อยู่บริษัท' }]}
           >
             <Input.TextArea style={{ width: '100%' }} />
+          </Form.Item>
+        </Col>
+      </Row>
+      <Row>
+        <Col span={12}>
+          <Form.Item
+            label={'รหัสบริษัท หรือ ชื่อย่อของบริษัท'}
+            name={'companyCode'}
+            tooltip={
+              'กรุณากรอกรหัสบริษัท หรือ ชื่อย่อของบริษัท อย่างน้อย 2 ตัว และไม่เกิน 10 ตัว และต้องเป็น ภาษาอังกฤษและตัวเลขเท่านั้น'
+            }
+            rules={[
+              {
+                required: true,
+                message: 'กรุณากรอก รหัสบริษัท ไม่ตรงตามรูปแบบ',
+              },
+              {
+                required: true,
+                pattern: new RegExp(/^[a-zA-Z0-9]{2,10}$/),
+                message: 'คุณกรอก รหัสบริษัท ไม่ตรงตามรูปแบบ',
+              },
+            ]}
+          >
+            <Input onChange={validateCompanyCode} />
           </Form.Item>
         </Col>
       </Row>

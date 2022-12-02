@@ -1,45 +1,17 @@
+import { useQuery } from '@apollo/client';
 import { Avatar, Col, Divider, List, message, theme, Typography } from 'antd';
 import VirtualList from 'rc-virtual-list';
 import { useEffect, useState } from 'react';
 import { RiHotelLine } from 'react-icons/ri';
+import { FETCH_OWNCOMAPNY } from '../service/graphql/Company';
 
 const { useToken } = theme;
 const ContainerHeight = 560;
 
-interface UserItem {
-  email: string;
-  gender: string;
-  name: {
-    first: string;
-    last: string;
-    title: string;
-  };
-  nat: string;
-  picture: {
-    large: string;
-    medium: string;
-    thumbnail: string;
-  };
-}
-const fakeDataUrl =
-  'https://randomuser.me/api/?results=5&inc=name,gender,email,nat,picture&noinfo';
-
 const Overview: React.FC = () => {
   const token = useToken();
-  const [data, setData] = useState<UserItem[]>([]);
-
-  const appendData = () => {
-    fetch(fakeDataUrl)
-      .then((res) => res.json())
-      .then((body) => {
-        setData(data.concat(body.results));
-      });
-  };
-
-  useEffect(() => {
-    appendData();
-  }, []);
-
+  const { data: companyData, loading: companyLoading } =
+    useQuery(FETCH_OWNCOMAPNY);
   return (
     <div
       style={{
@@ -80,19 +52,35 @@ const Overview: React.FC = () => {
           </Typography.Title>
         </div>
         <Divider style={{ backgroundColor: token.token.colorPrimary }} />
-        <List>
+        <List loading={companyLoading}>
           <VirtualList
-            data={data}
+            data={companyData?.getownCompany ? companyData?.getownCompany : []}
             height={ContainerHeight}
             itemHeight={47}
             itemKey="id"
           >
-            {(item: UserItem) => (
-              <List.Item key={item.email}>
+            {(item, k) => (
+              <List.Item key={k}>
                 <List.Item.Meta
-                  avatar={<Avatar shape="square" src={item.picture.large} />}
-                  title={<a href="https://ant.design">{item.name.last}</a>}
-                  description={item.email}
+                  avatar={
+                    <Avatar
+                      shape="square"
+                      src={item?.icon?.length && item?.icon}
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        justifyItems: 'center',
+                        alignItems: 'center',
+                      }}
+                      icon={<RiHotelLine />}
+                    />
+                  }
+                  title={
+                    <>
+                      {item?.name} ({item?.codeCompany})
+                    </>
+                  }
+                  description={item?.companyType}
                 />
                 <div>Content</div>
               </List.Item>
