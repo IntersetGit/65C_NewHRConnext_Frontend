@@ -1,5 +1,6 @@
+import { PlusOutlined } from '@ant-design/icons';
 import { useQuery } from '@apollo/client';
-import { Avatar, Col, Divider, List, message, theme, Typography } from 'antd';
+import { Avatar, Button, Col, Divider, List, theme, Typography } from 'antd';
 import VirtualList from 'rc-virtual-list';
 import { useEffect, useState } from 'react';
 import { RiHotelLine } from 'react-icons/ri';
@@ -22,34 +23,45 @@ const Overview: React.FC = () => {
         marginTop: 30,
       }}
     >
-      <Col xs={24} sm={18} md={16} lg={12} xl={10}>
+      <Col xs={24} sm={24} md={17} lg={12} xl={10}>
         <div
           style={{
             display: 'flex',
-            justifyContent: 'flex-start',
+            justifyContent: 'space-between',
             placeItems: 'center',
           }}
         >
-          <Avatar
-            size={'large'}
+          <div
             style={{
               display: 'flex',
-              justifyContent: 'center',
-              justifyItems: 'center',
-              alignItems: 'center',
-              marginRight: 5,
-              backgroundColor: token.token.colorPrimary,
+              justifyContent: 'space-between',
+              placeItems: 'center',
             }}
-            shape="square"
-            icon={<RiHotelLine />}
-          />
-          <Typography.Title
-            style={{ marginBottom: 0 }}
-            copyable={false}
-            level={3}
           >
-            เลือกบริษัทที่ต้องการใช้งาน
-          </Typography.Title>
+            <Avatar
+              size={'large'}
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                justifyItems: 'center',
+                alignItems: 'center',
+                marginRight: 5,
+                backgroundColor: token.token.colorPrimary,
+              }}
+              shape="square"
+              icon={<RiHotelLine />}
+            />
+            <Typography.Title
+              style={{ marginBottom: 0 }}
+              copyable={false}
+              level={4}
+            >
+              เลือกบริษัทที่ต้องการใช้งาน
+            </Typography.Title>
+          </div>
+          <Button size="large" type="primary" icon={<PlusOutlined />}>
+            เพิ่มบริษัทของคุณ
+          </Button>
         </div>
         <Divider style={{ backgroundColor: token.token.colorPrimary }} />
         <List loading={companyLoading}>

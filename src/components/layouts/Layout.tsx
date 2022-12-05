@@ -63,7 +63,7 @@ const Layouts: React.FC<BaseLayoutProps> = (props) => {
             </div>
           </div>
 
-          <RightNavbarContent user={user} />
+          <RightNavbarContent isUserloading={loading} user={user} />
         </Layout.Header>
         <Layout.Content
           className="site-layout-background"
