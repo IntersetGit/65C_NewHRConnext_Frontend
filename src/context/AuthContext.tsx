@@ -4,6 +4,8 @@ import { Cookies } from 'react-cookie';
 import { gql } from '../__generated__';
 import { useQuery } from '@apollo/client';
 import { MeQuery } from '../__generated__/graphql';
+import { AbilityContext } from './AbilityContext';
+import { createMongoAbility } from '@casl/ability';
 
 const cookie = new Cookies();
 
@@ -42,6 +44,10 @@ type Props = {
 
 const AuthProvider = ({ children }: Props) => {
   const { data: user, loading, error, refetch } = useQuery(GET_ME);
+  const defaultAbility: any[] = [];
+  const ability = createMongoAbility(
+    [{ action: 'manage', subject: 'all' }] || defaultAbility,
+  );
 
   const value = {
     user,
