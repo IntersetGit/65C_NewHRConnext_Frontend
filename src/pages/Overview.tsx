@@ -4,6 +4,7 @@ import { Avatar, Button, Col, Divider, List, theme, Typography } from 'antd';
 import VirtualList from 'rc-virtual-list';
 import { useEffect, useState } from 'react';
 import { RiHotelLine } from 'react-icons/ri';
+import { useAuth } from '../hooks/useAuth';
 import { FETCH_OWNCOMAPNY } from '../service/graphql/Company';
 
 const { useToken } = theme;
@@ -11,6 +12,7 @@ const ContainerHeight = 560;
 
 const Overview: React.FC = () => {
   const token = useToken();
+  const { ability } = useAuth();
   const { data: companyData, loading: companyLoading } =
     useQuery(FETCH_OWNCOMAPNY);
   return (
@@ -59,9 +61,11 @@ const Overview: React.FC = () => {
               เลือกบริษัทที่ต้องการใช้งาน
             </Typography.Title>
           </div>
-          <Button size="large" type="primary" icon={<PlusOutlined />}>
-            เพิ่มบริษัทของคุณ
-          </Button>
+          {ability.can('create', 'Company') && (
+            <Button size="large" type="primary" icon={<PlusOutlined />}>
+              เพิ่มบริษัทของคุณ
+            </Button>
+          )}
         </div>
         <Divider style={{ backgroundColor: token.token.colorPrimary }} />
         <List loading={companyLoading}>

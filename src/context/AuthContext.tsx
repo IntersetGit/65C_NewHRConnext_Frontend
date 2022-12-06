@@ -34,6 +34,7 @@ query Me {
 const defaultProvider: AuthValuesType = {
   user: undefined,
   loading: true,
+  ability: createMongoAbility([]),
 };
 
 const AuthContext = createContext(defaultProvider);
@@ -43,15 +44,16 @@ type Props = {
 };
 
 const AuthProvider = ({ children }: Props) => {
-  const { data: user, loading, error, refetch } = useQuery(GET_ME);
+  const { data: user, loading } = useQuery(GET_ME);
   const defaultAbility: any[] = [];
   const ability = createMongoAbility(
-    [{ action: 'manage', subject: 'all' }] || defaultAbility,
+    [{ action: 'create', subject: 'Company' }] || defaultAbility,
   );
 
   const value = {
     user,
     loading,
+    ability,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
