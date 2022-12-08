@@ -17,7 +17,6 @@ query Me {
     profile {
       firstname
       lastname
-      id
       avatar
     }
     role {

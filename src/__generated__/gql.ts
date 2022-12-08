@@ -14,7 +14,7 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  */
 const documents = {
     "\n  mutation refreshToken {\n    refreshToken {\n      access_token\n    }\n  }\n": types.RefreshTokenDocument,
-    "\nquery Me {\n  me {\n    id\n    email\n    profile {\n      firstname\n      lastname\n      id\n      avatar\n    }\n    role {\n      id\n      name\n    }\n    company {\n      id\n      name\n    }\n  }\n}": types.MeDocument,
+    "\nquery Me {\n  me {\n    id\n    email\n    profile {\n      firstname\n      lastname\n      avatar\n    }\n    role {\n      id\n      name\n    }\n    company {\n      id\n      name\n    }\n  }\n}": types.MeDocument,
     "\n  mutation Login($data: LoginaInput!) {\n    login(data: $data) {\n      access_token\n      refresh_token\n      status\n    }\n  }\n": types.LoginDocument,
     "\n  query GetProvince {\n    getProvince {\n      name\n      district {\n        name\n        amphoe {\n          name\n          zipcode\n        }\n      }\n    }\n  }\n": types.GetProvinceDocument,
     "\n  mutation CreateAccount($data: CreateAccountInput!) {\n    createAccount(data: $data) {\n      status\n      message\n  }\n}": types.CreateAccountDocument,
@@ -29,7 +29,7 @@ export function gql(source: "\n  mutation refreshToken {\n    refreshToken {\n  
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "\nquery Me {\n  me {\n    id\n    email\n    profile {\n      firstname\n      lastname\n      id\n      avatar\n    }\n    role {\n      id\n      name\n    }\n    company {\n      id\n      name\n    }\n  }\n}"): (typeof documents)["\nquery Me {\n  me {\n    id\n    email\n    profile {\n      firstname\n      lastname\n      id\n      avatar\n    }\n    role {\n      id\n      name\n    }\n    company {\n      id\n      name\n    }\n  }\n}"];
+export function gql(source: "\nquery Me {\n  me {\n    id\n    email\n    profile {\n      firstname\n      lastname\n      avatar\n    }\n    role {\n      id\n      name\n    }\n    company {\n      id\n      name\n    }\n  }\n}"): (typeof documents)["\nquery Me {\n  me {\n    id\n    email\n    profile {\n      firstname\n      lastname\n      avatar\n    }\n    role {\n      id\n      name\n    }\n    company {\n      id\n      name\n    }\n  }\n}"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

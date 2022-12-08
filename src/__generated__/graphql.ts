@@ -23,27 +23,6 @@ export type Amphoe = {
   zipcode?: Maybe<Scalars['String']>;
 };
 
-export type Company = {
-  __typename?: 'Company';
-  address?: Maybe<Scalars['String']>;
-  children?: Maybe<Array<Maybe<Company>>>;
-  city?: Maybe<Scalars['String']>;
-  country?: Maybe<Scalars['String']>;
-  createdAt?: Maybe<Scalars['Date']>;
-  icon?: Maybe<Scalars['String']>;
-  id: Scalars['ID'];
-  name?: Maybe<Scalars['String']>;
-  parent?: Maybe<Company>;
-  parentId?: Maybe<Scalars['String']>;
-  phone?: Maybe<Scalars['String']>;
-  positions?: Maybe<Array<Maybe<Position>>>;
-  state?: Maybe<Scalars['String']>;
-  updatedAt?: Maybe<Scalars['Date']>;
-  users?: Maybe<Array<Maybe<User>>>;
-  website?: Maybe<Scalars['String']>;
-  zip?: Maybe<Scalars['String']>;
-};
-
 export type CreateAccountInput = {
   avatar?: InputMaybe<Scalars['String']>;
   companyCode: Scalars['String'];
@@ -76,6 +55,46 @@ export type District = {
   name?: Maybe<Scalars['String']>;
 };
 
+export type FullCompanyQuery = SimpleCompanyQuery & {
+  __typename?: 'FullCompanyQuery';
+  address?: Maybe<Scalars['String']>;
+  children?: Maybe<Array<Maybe<FullCompanyQuery>>>;
+  city?: Maybe<Scalars['String']>;
+  companyCode?: Maybe<Scalars['String']>;
+  country?: Maybe<Scalars['String']>;
+  createdAt?: Maybe<Scalars['Date']>;
+  icon?: Maybe<Scalars['String']>;
+  id: Scalars['ID'];
+  name?: Maybe<Scalars['String']>;
+  parent?: Maybe<FullCompanyQuery>;
+  parentId?: Maybe<Scalars['String']>;
+  phone?: Maybe<Scalars['String']>;
+  positions?: Maybe<Array<Maybe<FullprofileQuery>>>;
+  state?: Maybe<Scalars['String']>;
+  updatedAt?: Maybe<Scalars['Date']>;
+  users?: Maybe<Array<Maybe<User>>>;
+  website?: Maybe<Scalars['String']>;
+  zip?: Maybe<Scalars['String']>;
+};
+
+export type FullprofileQuery = SimpleProfileQuery & {
+  __typename?: 'FullprofileQuery';
+  address?: Maybe<Scalars['String']>;
+  avatar?: Maybe<Scalars['String']>;
+  bio?: Maybe<Scalars['String']>;
+  dob?: Maybe<Scalars['Date']>;
+  firstname?: Maybe<Scalars['String']>;
+  gender?: Maybe<Scalars['String']>;
+  id: Scalars['ID'];
+  lastname?: Maybe<Scalars['String']>;
+  prefix?: Maybe<Scalars['String']>;
+  religion?: Maybe<Scalars['String']>;
+  staff_code?: Maybe<Scalars['String']>;
+  tel?: Maybe<Scalars['String']>;
+  user?: Maybe<User>;
+  userId?: Maybe<Scalars['String']>;
+};
+
 export type GetCompanyAccessType = {
   __typename?: 'GetCompanyAccessType';
   name?: Maybe<Scalars['String']>;
@@ -102,6 +121,16 @@ export type LoginaInput = {
   password: Scalars['String'];
 };
 
+export type Me = {
+  __typename?: 'Me';
+  company?: Maybe<SimpleCompanyQuery>;
+  email?: Maybe<Scalars['String']>;
+  id: Scalars['ID'];
+  position?: Maybe<PositionInterface>;
+  profile?: Maybe<SimpleProfileQuery>;
+  role?: Maybe<Role>;
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   createAccount?: Maybe<CreateCompanyResponseType>;
@@ -119,32 +148,25 @@ export type MutationLoginArgs = {
   data: LoginaInput;
 };
 
-export type Position = {
-  __typename?: 'Position';
+export type PositionInterface = {
+  id: Scalars['ID'];
+};
+
+export type PositionWithNameandAccess = PositionInterface & {
+  __typename?: 'PositionWithNameandAccess';
   access?: Maybe<Scalars['String']>;
-  company?: Maybe<Company>;
+  id: Scalars['ID'];
+  name?: Maybe<Scalars['String']>;
+};
+
+export type PositionfullQuery = PositionInterface & {
+  __typename?: 'PositionfullQuery';
+  access?: Maybe<Scalars['String']>;
+  company?: Maybe<SimpleCompanyQuery>;
   companyId?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
   name?: Maybe<Scalars['String']>;
   users?: Maybe<Array<Maybe<User>>>;
-};
-
-export type Profile = {
-  __typename?: 'Profile';
-  address?: Maybe<Scalars['String']>;
-  avatar?: Maybe<Scalars['String']>;
-  bio?: Maybe<Scalars['String']>;
-  dob?: Maybe<Scalars['Date']>;
-  firstname?: Maybe<Scalars['String']>;
-  gender?: Maybe<Scalars['String']>;
-  id: Scalars['ID'];
-  lastname?: Maybe<Scalars['String']>;
-  prefix?: Maybe<Scalars['String']>;
-  religion?: Maybe<Scalars['String']>;
-  staff_code?: Maybe<Scalars['String']>;
-  tel?: Maybe<Scalars['String']>;
-  user?: Maybe<User>;
-  userId?: Maybe<Scalars['String']>;
 };
 
 export type Province = {
@@ -158,7 +180,7 @@ export type Query = {
   __typename?: 'Query';
   getProvince?: Maybe<Array<Maybe<Province>>>;
   getownCompany?: Maybe<Array<Maybe<GetowmComoanyType>>>;
-  me?: Maybe<User>;
+  me?: Maybe<Me>;
   users?: Maybe<Array<Maybe<User>>>;
   verifyCompanycode?: Maybe<Scalars['Boolean']>;
 };
@@ -191,18 +213,37 @@ export type Role = {
   users?: Maybe<Array<Maybe<User>>>;
 };
 
+export type SimpleCompanyQuery = {
+  companyCode?: Maybe<Scalars['String']>;
+  icon?: Maybe<Scalars['String']>;
+  id: Scalars['ID'];
+  name?: Maybe<Scalars['String']>;
+};
+
+export type SimpleProfileQuery = {
+  avatar?: Maybe<Scalars['String']>;
+  bio?: Maybe<Scalars['String']>;
+  dob?: Maybe<Scalars['Date']>;
+  firstname?: Maybe<Scalars['String']>;
+  gender?: Maybe<Scalars['String']>;
+  lastname?: Maybe<Scalars['String']>;
+  prefix?: Maybe<Scalars['String']>;
+  staff_code?: Maybe<Scalars['String']>;
+  tel?: Maybe<Scalars['String']>;
+};
+
 export type User = {
   __typename?: 'User';
-  company?: Maybe<Company>;
+  company?: Maybe<SimpleCompanyQuery>;
   companyId?: Maybe<Scalars['String']>;
   createdAt?: Maybe<Scalars['Date']>;
   email?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
   islogin: Scalars['Boolean'];
   lastlogin?: Maybe<Scalars['Date']>;
-  position?: Maybe<Position>;
+  position?: Maybe<PositionInterface>;
   positionId?: Maybe<Scalars['String']>;
-  profile?: Maybe<Profile>;
+  profile?: Maybe<SimpleProfileQuery>;
   role?: Maybe<Role>;
   roleId?: Maybe<Scalars['String']>;
 };
@@ -215,7 +256,7 @@ export type RefreshTokenMutation = { __typename?: 'Mutation', refreshToken?: { _
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string, email?: string | null, profile?: { __typename?: 'Profile', firstname?: string | null, lastname?: string | null, id: string, avatar?: string | null } | null, role?: { __typename?: 'Role', id: string, name?: string | null } | null, company?: { __typename?: 'Company', id: string, name?: string | null } | null } | null };
+export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'Me', id: string, email?: string | null, profile?: { __typename?: 'FullprofileQuery', firstname?: string | null, lastname?: string | null, avatar?: string | null } | null, role?: { __typename?: 'Role', id: string, name?: string | null } | null, company?: { __typename?: 'FullCompanyQuery', id: string, name?: string | null } | null } | null };
 
 export type LoginMutationVariables = Exact<{
   data: LoginaInput;
@@ -250,7 +291,7 @@ export type GetownCompanyQuery = { __typename?: 'Query', getownCompany?: Array<{
 
 
 export const RefreshTokenDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"refreshToken"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"refreshToken"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"access_token"}}]}}]}}]} as unknown as DocumentNode<RefreshTokenMutation, RefreshTokenMutationVariables>;
-export const MeDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Me"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"me"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"profile"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"firstname"}},{"kind":"Field","name":{"kind":"Name","value":"lastname"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"avatar"}}]}},{"kind":"Field","name":{"kind":"Name","value":"role"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"company"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]}}]} as unknown as DocumentNode<MeQuery, MeQueryVariables>;
+export const MeDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Me"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"me"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"profile"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"firstname"}},{"kind":"Field","name":{"kind":"Name","value":"lastname"}},{"kind":"Field","name":{"kind":"Name","value":"avatar"}}]}},{"kind":"Field","name":{"kind":"Name","value":"role"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"company"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]}}]} as unknown as DocumentNode<MeQuery, MeQueryVariables>;
 export const LoginDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"Login"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"data"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"LoginaInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"login"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"data"},"value":{"kind":"Variable","name":{"kind":"Name","value":"data"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"access_token"}},{"kind":"Field","name":{"kind":"Name","value":"refresh_token"}},{"kind":"Field","name":{"kind":"Name","value":"status"}}]}}]}}]} as unknown as DocumentNode<LoginMutation, LoginMutationVariables>;
 export const GetProvinceDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetProvince"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getProvince"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"district"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"amphoe"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"zipcode"}}]}}]}}]}}]}}]} as unknown as DocumentNode<GetProvinceQuery, GetProvinceQueryVariables>;
 export const CreateAccountDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateAccount"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"data"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CreateAccountInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createAccount"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"data"},"value":{"kind":"Variable","name":{"kind":"Name","value":"data"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"message"}}]}}]}}]} as unknown as DocumentNode<CreateAccountMutation, CreateAccountMutationVariables>;

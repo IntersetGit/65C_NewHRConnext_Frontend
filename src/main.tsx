@@ -5,7 +5,6 @@ import 'nprogress/nprogress.css';
 import './styles/components/fancyroute.css';
 import React, { Suspense } from 'react';
 import LoadingSpinner from './components/loading-spinner';
-import { BrowserRouter as Router } from 'react-router-dom';
 
 const Lazyapp = React.lazy(() => import('./App'));
 
