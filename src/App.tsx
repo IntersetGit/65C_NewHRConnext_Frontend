@@ -97,7 +97,12 @@ const errorLink = onError(
       }
     }
 
-    if (networkError) console.log(`[Network error]: ${networkError}`);
+    if (networkError) {
+      console.log(`[Network error]: ${networkError.message}`);
+      if (networkError.message === 'Failed to fetch') {
+        router.navigate('/500');
+      }
+    }
   },
 );
 

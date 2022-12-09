@@ -1,9 +1,9 @@
-import { PlusOutlined } from '@ant-design/icons';
+import { ArrowRightOutlined, PlusOutlined } from '@ant-design/icons';
 import { useQuery } from '@apollo/client';
 import { Avatar, Button, Col, Divider, List, theme, Typography } from 'antd';
 import VirtualList from 'rc-virtual-list';
-import { useEffect, useState } from 'react';
 import { RiHotelLine } from 'react-icons/ri';
+import { Link } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { FETCH_OWNCOMAPNY } from '../service/graphql/Company';
 
@@ -98,7 +98,23 @@ const Overview: React.FC = () => {
                   }
                   description={item?.companyType}
                 />
-                <div>Content</div>
+                <div>
+                  <Link
+                    to={`/${item?.codeCompany}`}
+                    relative="path"
+                    reloadDocument
+                  >
+                    <Button
+                      icon={
+                        <ArrowRightOutlined
+                          style={{
+                            color: token.token.colorPrimary,
+                          }}
+                        />
+                      }
+                    ></Button>
+                  </Link>
+                </div>
               </List.Item>
             )}
           </VirtualList>
