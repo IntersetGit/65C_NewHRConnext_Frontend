@@ -15,21 +15,44 @@ const RightNavbarContent: React.FC<RightNavContentType> = ({
 }) => {
   const token = useToken();
   return (
-    <div style={{ paddingRight: 10 }}>
+    <div
+      style={{
+        paddingRight: 10,
+        userSelect: 'none',
+        display: 'flex',
+        justifyContent: 'center',
+        justifyItems: 'center',
+        alignItems: 'center',
+      }}
+    >
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+        }}
+      >
+        <Typography.Text>
+          {isUserloading ? (
+            <Skeleton.Input active={true} size={'small'} />
+          ) : (
+            <>{user?.me?.profile?.firstname}</>
+          )}
+        </Typography.Text>
+        <Typography.Text
+          style={{ fontSize: '0.8rem', textAlign: 'end', color: '#6A6A6A' }}
+        >
+          {isUserloading ? (
+            <Skeleton.Input active={true} size={'small'} />
+          ) : (
+            <>{user?.me?.role?.name}</>
+          )}
+        </Typography.Text>
+      </div>
       <Avatar
-        style={{ marginRight: 2, backgroundColor: token.token.colorPrimary }}
+        style={{ marginLeft: 10, backgroundColor: token.token.colorPrimary }}
         shape="square"
         icon={<UserOutlined />}
       />
-      <Typography.Text>
-        {isUserloading ? (
-          <Skeleton.Input active={true} size={'small'} />
-        ) : (
-          <>
-            {user?.me?.profile?.firstname} {user?.me?.profile?.lastname}
-          </>
-        )}
-      </Typography.Text>
     </div>
   );
 };

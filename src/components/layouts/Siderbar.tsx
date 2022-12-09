@@ -52,6 +52,7 @@ const Siderbar: React.FC<SiderbarType> = (props) => {
       style={{
         position: 'fixed',
         zIndex: 3,
+        userSelect: 'none',
       }}
       className="siderbar-custom"
       width={layoutConfig.siderbarWidth}

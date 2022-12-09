@@ -39,23 +39,30 @@ const Layouts: React.FC<BaseLayoutProps> = (props) => {
           }}
         >
           <div style={{ display: 'flex' }}>
-            {React.createElement(
-              collapsed ? MenuUnfoldOutlined : MenuFoldOutlined,
-              {
-                style: {
-                  marginLeft: `${
-                    collapsed
-                      ? layoutConfig.siderbarCollpasedWidth
-                      : layoutConfig.siderbarWidth
-                  }px`,
+            {!props.noCollapse &&
+              React.createElement(
+                collapsed ? MenuUnfoldOutlined : MenuFoldOutlined,
+                {
+                  style: {
+                    marginLeft: `${
+                      collapsed
+                        ? layoutConfig.siderbarCollpasedWidth
+                        : layoutConfig.siderbarWidth
+                    }px`,
+                  },
+                  className: 'trigger',
+                  onClick: () => setCollapsed(!collapsed),
                 },
-                className: 'trigger',
-                onClick: () => setCollapsed(!collapsed),
-              },
-            )}
+              )}
             <div style={{ paddingLeft: 10 }}>
               {!props.noSidebar ? (
-                <Typography.Text>{user?.me?.company?.name}</Typography.Text>
+                <Typography.Text
+                  style={{
+                    userSelect: 'none',
+                  }}
+                >
+                  {user?.me?.company?.name}
+                </Typography.Text>
               ) : (
                 <img src={icon} width={50} />
               )}
