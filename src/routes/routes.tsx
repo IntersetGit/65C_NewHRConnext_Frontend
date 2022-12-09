@@ -10,6 +10,8 @@ import CompanyStructure from '../pages/Company/structure';
 import CompanyPosition from '../pages/Company/position';
 import Login from '../pages/Login';
 import Register from '../pages/Register';
+import Overview from '../pages/Overview';
+import Error500 from '../pages/500';
 // import BaseLayout from '../components/layouts';
 
 /**
@@ -22,7 +24,6 @@ import {
   RiHome2Line,
 } from 'react-icons/ri';
 import React from 'react';
-import Overview from '../pages/Overview';
 
 export type RoutingType = {
   path: string;
@@ -44,7 +45,7 @@ export const routing: RoutingType[] = [
     children: [
       {
         path: ':companycode/',
-        label: 'หน้าแรก',
+        label: 'ภาพรวม',
         icon: <RiHome2Line />,
         element: <Home />,
       },
@@ -99,6 +100,10 @@ export const routing: RoutingType[] = [
   {
     path: '/register',
     element: <Register />,
+  },
+  {
+    path: '/500',
+    element: <Error500 />,
   },
 ];
 

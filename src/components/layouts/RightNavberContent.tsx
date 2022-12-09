@@ -1,14 +1,18 @@
 import { UserOutlined } from '@ant-design/icons';
-import { Avatar, theme, Typography } from 'antd';
+import { Avatar, Skeleton, theme, Typography } from 'antd';
 import { MeQuery } from '../../__generated__/graphql';
 
 const { useToken } = theme;
 
 type RightNavContentType = {
   user: MeQuery | undefined;
+  isUserloading: boolean;
 };
 
-const RightNavbarContent: React.FC<RightNavContentType> = ({ user }) => {
+const RightNavbarContent: React.FC<RightNavContentType> = ({
+  user,
+  isUserloading,
+}) => {
   const token = useToken();
   return (
     <div style={{ paddingRight: 10 }}>
@@ -18,7 +22,13 @@ const RightNavbarContent: React.FC<RightNavContentType> = ({ user }) => {
         icon={<UserOutlined />}
       />
       <Typography.Text>
-        {user?.me?.profile?.firstname} {user?.me?.profile?.lastname}
+        {isUserloading ? (
+          <Skeleton.Input active={true} size={'small'} />
+        ) : (
+          <>
+            {user?.me?.profile?.firstname} {user?.me?.profile?.lastname}
+          </>
+        )}
       </Typography.Text>
     </div>
   );

@@ -38,22 +38,21 @@ const Layouts: React.FC<BaseLayoutProps> = (props) => {
             zIndex: 2,
           }}
         >
-          <div>
-            {!props.noCollapse &&
-              React.createElement(
-                collapsed ? MenuUnfoldOutlined : MenuFoldOutlined,
-                {
-                  style: {
-                    marginLeft: `${
-                      collapsed
-                        ? layoutConfig.siderbarCollpasedWidth
-                        : layoutConfig.siderbarWidth
-                    }px`,
-                  },
-                  className: 'trigger',
-                  onClick: () => setCollapsed(!collapsed),
+          <div style={{ display: 'flex' }}>
+            {React.createElement(
+              collapsed ? MenuUnfoldOutlined : MenuFoldOutlined,
+              {
+                style: {
+                  marginLeft: `${
+                    collapsed
+                      ? layoutConfig.siderbarCollpasedWidth
+                      : layoutConfig.siderbarWidth
+                  }px`,
                 },
-              )}
+                className: 'trigger',
+                onClick: () => setCollapsed(!collapsed),
+              },
+            )}
             <div style={{ paddingLeft: 10 }}>
               {!props.noSidebar ? (
                 <Typography.Text>{user?.me?.company?.name}</Typography.Text>
@@ -63,7 +62,7 @@ const Layouts: React.FC<BaseLayoutProps> = (props) => {
             </div>
           </div>
 
-          <RightNavbarContent user={user} />
+          <RightNavbarContent isUserloading={loading} user={user} />
         </Layout.Header>
         <Layout.Content
           className="site-layout-background"
