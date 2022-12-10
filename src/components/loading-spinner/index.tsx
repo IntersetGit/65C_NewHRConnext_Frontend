@@ -22,6 +22,7 @@ const LoadingSpinner: React.FC<LoadingSpinnerType> = ({ loadingtext }) => {
         justifyItems: 'center',
         alignItems: 'center',
         flexDirection: 'column',
+        fontFamily: `'Roboto','Prompt' ,-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji'`,
       }}
     >
       <img src={icon} width={100} />

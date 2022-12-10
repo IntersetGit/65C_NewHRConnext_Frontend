@@ -61,7 +61,7 @@ const Layouts: React.FC<BaseLayoutProps> = (props) => {
                     userSelect: 'none',
                   }}
                 >
-                  {user?.me?.company?.name}
+                  {/* {user?.me?.company?.name} */}
                 </Typography.Text>
               ) : (
                 <img src={icon} width={50} />
