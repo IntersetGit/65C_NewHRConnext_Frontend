@@ -1,17 +1,12 @@
 import { UserOutlined } from '@ant-design/icons';
-import {
-  Avatar,
-  Button,
-  Divider,
-  Dropdown,
-  MenuProps,
-  Skeleton,
-  Space,
-  theme,
-  Typography,
-} from 'antd';
+import { Avatar, Divider, Dropdown, MenuProps, theme, Typography } from 'antd';
 import { MeQuery } from '../../__generated__/graphql';
-import { HiOutlineArrowRightOnRectangle } from 'react-icons/hi2';
+import {
+  HiOutlineArrowRightOnRectangle,
+  HiOutlineIdentification,
+  HiOutlineCog6Tooth,
+  HiOutlineClipboard,
+} from 'react-icons/hi2';
 
 const { useToken } = theme;
 
@@ -26,12 +21,19 @@ const profileDetailstyle: React.CSSProperties = {
 
 const items: MenuProps['items'] = [
   {
-    label: <a href="https://www.antgroup.com">1st menu item</a>,
+    label: 'โปรไฟล์',
     key: '0',
+    icon: <HiOutlineIdentification size={'18'} />,
   },
   {
-    label: <a href="https://www.aliyun.com">2nd menu item</a>,
+    label: 'กิจกรรม',
     key: '1',
+    icon: <HiOutlineClipboard size={'18'} />,
+  },
+  {
+    label: 'ตั้งค่าผู้ใช้',
+    key: '2',
+    icon: <HiOutlineCog6Tooth size={'18'} />,
   },
   {
     type: 'divider',
@@ -39,7 +41,7 @@ const items: MenuProps['items'] = [
   {
     label: 'ออกจากระบบ',
     key: '3',
-    icon: <HiOutlineArrowRightOnRectangle />,
+    icon: <HiOutlineArrowRightOnRectangle size={'18'} />,
   },
 ];
 
@@ -89,7 +91,6 @@ const RightNavbarContent: React.FC<RightNavContentType> = ({
             className="dropdown-content"
             style={{
               borderRadius: token.token.borderRadius,
-              paddingLeft: '5px',
             }}
           >
             <div

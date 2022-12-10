@@ -1,18 +1,24 @@
 import { createBrowserRouter } from 'react-router-dom';
+import React from 'react';
+/**
+ * ?Layout
+ *
+ */
+
+const BaseLayout = React.lazy(() => import('../components/layouts'));
 
 /**
  * ? Components
  */
-import CompanyLocation from '../pages/Company/location';
-import Home from '../pages/Home';
-import Companyroot from '../pages/Company';
-import CompanyStructure from '../pages/Company/structure';
-import CompanyPosition from '../pages/Company/position';
-import Login from '../pages/Login';
-import Register from '../pages/Register';
-import Overview from '../pages/Overview';
-import Error500 from '../pages/500';
-// import BaseLayout from '../components/layouts';
+const CompanyLocation = React.lazy(() => import('../pages/Company/location'));
+const Home = React.lazy(() => import('../pages/Home'));
+const Companyroot = React.lazy(() => import('../pages/Company'));
+const CompanyStructure = React.lazy(() => import('../pages/Company/structure'));
+const CompanyPosition = React.lazy(() => import('../pages/Company/position'));
+const Login = React.lazy(() => import('../pages/Login'));
+const Register = React.lazy(() => import('../pages/Register'));
+const Overview = React.lazy(() => import('../pages/Overview'));
+const Error500 = React.lazy(() => import('../pages/500'));
 
 /**
  * ?Import icons
@@ -23,7 +29,6 @@ import {
   RiChatHistoryLine,
   RiHome2Line,
 } from 'react-icons/ri';
-import React from 'react';
 
 export type RoutingType = {
   path: string;
@@ -36,8 +41,6 @@ export type RoutingType = {
   children?: RoutingType[];
 };
 
-const BaseLayout = React.lazy(() => import('../components/layouts'));
-
 export const routing: RoutingType[] = [
   {
     path: '/',
@@ -46,19 +49,19 @@ export const routing: RoutingType[] = [
       {
         path: ':companycode/',
         label: 'ภาพรวม',
-        icon: <RiHome2Line />,
+        icon: <RiHome2Line size={'18'} />,
         element: <Home />,
       },
       {
         path: '/:companycode/company',
         label: 'บริษัท',
-        icon: <RiHotelLine />,
+        icon: <RiHotelLine size={'18'} />,
         element: <Companyroot />,
         children: [
           {
             path: '/:companycode/company/location',
             label: 'ข้อมูลบริษัท',
-            icon: <RiFolder2Line />,
+            icon: <RiFolder2Line size={'18'} />,
             element: <CompanyLocation />,
           },
           {
@@ -76,7 +79,7 @@ export const routing: RoutingType[] = [
           {
             path: '/:companycode/company/holiday',
             label: 'วันหยุด',
-            icon: <RiChatHistoryLine />,
+            icon: <RiChatHistoryLine size={'18'} />,
             element: <CompanyLocation />,
           },
         ],
