@@ -105,6 +105,7 @@ const Overview: React.FC = () => {
                     reloadDocument
                   >
                     <Button
+                      className="flex content-center justify-center items-center"
                       icon={
                         <ArrowRightOutlined
                           style={{

@@ -1,6 +1,6 @@
 import ReactDOM from 'react-dom/client';
-import 'antd/dist/reset.css';
 import './index.css';
+import 'antd/dist/reset.css';
 import 'nprogress/nprogress.css';
 import './styles/components/fancyroute.css';
 import React, { Suspense } from 'react';
