@@ -52,6 +52,12 @@ const httpLink = createHttpLink({
   uri: import.meta.env.VITE_GQL_URL_PATH,
 });
 
+const clearCookieandcache = () => {
+  router.navigate('/auth');
+  gqlClient.clearStore();
+  gqlClient.cache.reset();
+};
+
 const errorLink = onError(
   ({ graphQLErrors, networkError, operation, forward }) => {
     if (graphQLErrors) {
@@ -89,9 +95,10 @@ const errorLink = onError(
 
             return observable;
           case 'USER_NOT_AUTHENTICATED':
-            router.navigate('/auth');
-            gqlClient.clearStore();
-            gqlClient.cache.reset();
+            clearCookieandcache();
+
+          case 'SESSION_EXPIRED':
+            clearCookieandcache();
         }
       }
     }
@@ -130,7 +137,7 @@ const refreshToken = async () => {
     });
 
     const access = refreshResolverResponse.data?.refreshToken.access_token;
-    cookie.set('access', access || '');
+    cookie.set('access', access || '', { path: '/', sameSite: 'lax' });
     return access;
   } catch (err) {
     cookie.remove('access');

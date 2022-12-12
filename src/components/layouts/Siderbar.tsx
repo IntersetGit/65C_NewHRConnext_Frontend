@@ -9,6 +9,7 @@ import {
   generatePath,
 } from 'react-router-dom';
 import { routing, RoutingType } from '../../routes/routes';
+import { useState } from 'react';
 
 export type SiderbarType = {
   collapsed: boolean;
@@ -34,16 +35,20 @@ export const Menurender = (el?: RoutingType[]): RoutingType[] => {
   return menu;
 };
 
+console.log(location);
+
 const Siderbar: React.FC<SiderbarType> = (props) => {
   const { collapsed } = props;
   const navigate = useNavigate();
   const location = useLocation();
   const { companycode } = useParams();
+  const [activekey, setActivekey] = useState<string>('');
   const baseRoute = routing.find(
     (e) => e.path === layoutConfig.dashboardRoute,
   )?.children;
 
   const onMenuclick = (e: { key: string }) => {
+    setActivekey(e.key);
     navigate(generatePath(e.key, { companycode }));
   };
 
@@ -64,11 +69,13 @@ const Siderbar: React.FC<SiderbarType> = (props) => {
     >
       <img src={collapsed ? icon : logo} className="logo" alt="logo" />
       <Menu
+        //aria-current="page"
+        aria
         style={{ width: '100%', position: 'relative' }}
         className="menu-custom"
         mode="inline"
         onClick={onMenuclick}
-        selectedKeys={[location.pathname]}
+        selectedKeys={[activekey]}
         // @ts-ignore
         items={Menurender(baseRoute)}
       />

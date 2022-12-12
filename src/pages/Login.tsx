@@ -31,8 +31,14 @@ const Login: React.FC = () => {
   const onFinish = (value: any) => {
     login({ variables: { data: value } })
       .then((v) => {
-        cookie.set('access', v.data.login.access_token);
-        cookie.set('refresh_token', v.data.login.refresh_token);
+        cookie.set('access', v.data.login.access_token, {
+          path: '/',
+          sameSite: 'lax',
+        });
+        cookie.set('refresh_token', v.data.login.refresh_token, {
+          path: '/',
+          sameSite: 'lax',
+        });
         navigate('/');
       })
       .catch((error) =>
@@ -119,11 +125,11 @@ const Login: React.FC = () => {
               <Button
                 style={{
                   marginRight: '3px',
+                  backgroundColor: token.token.colorPrimary,
                 }}
                 size="large"
                 type="primary"
                 htmlType="submit"
-                className="login-form-button"
               >
                 เข้าสู่ระบบ
               </Button>
