@@ -1,4 +1,8 @@
-import { createBrowserRouter } from 'react-router-dom';
+import {
+  createBrowserRouter,
+  LoaderFunctionArgs,
+  redirect,
+} from 'react-router-dom';
 import React from 'react';
 /**
  * ?Layout
@@ -21,6 +25,14 @@ const Overview = React.lazy(() => import('../pages/Overview'));
 const Error500 = React.lazy(() => import('../pages/500'));
 
 /**
+ * ?Profile setting
+ */
+const Mewrapper = React.lazy(() => import('../pages/Me'));
+const Profile = React.lazy(() => import('../pages/Me/profile'));
+const Activity = React.lazy(() => import('../pages/Me/activity'));
+const Usersetting = React.lazy(() => import('../pages/Me/setting'));
+
+/**
  * ?Import icons
  */
 import {
@@ -39,6 +51,7 @@ export type RoutingType = {
   hideInmenu?: boolean;
   shouldrevalidate?: any;
   children?: RoutingType[];
+  loader?: (v: LoaderFunctionArgs) => any;
 };
 
 export const routing: RoutingType[] = [
@@ -87,6 +100,24 @@ export const routing: RoutingType[] = [
     ],
   },
   {
+    path: '/me',
+    element: <Mewrapper noSidebar={true} noCollapse />,
+    children: [
+      {
+        path: '/me/profile',
+        element: <Profile />,
+      },
+      {
+        path: '/me/activity',
+        element: <Activity />,
+      },
+      {
+        path: '/me/setting',
+        element: <Usersetting />,
+      },
+    ],
+  },
+  {
     path: '/overview',
     element: <BaseLayout noSidebar={true} noCollapse />,
     children: [
@@ -112,3 +143,5 @@ export const routing: RoutingType[] = [
 
 const router = createBrowserRouter(routing);
 export default router;
+
+createBrowserRouter([{ loader: ({}) => {} }]);

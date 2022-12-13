@@ -1,5 +1,5 @@
 import { useMutation } from '@apollo/client';
-import { useEffect } from 'react';
+import { ReactNode, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { AuthProvider } from '../../context/AuthContext';
 import { gql } from '../../__generated__';
@@ -11,6 +11,7 @@ export type BaseLayoutProps = {
   noCollapse?: boolean;
   py?: number;
   px?: number;
+  children?: ReactNode;
 };
 
 const GQL_QUERY = gql(

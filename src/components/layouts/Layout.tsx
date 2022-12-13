@@ -88,7 +88,7 @@ const Layouts: React.FC<BaseLayoutProps> = (props) => {
             minHeight: 280,
           }}
         >
-          <Outlet />
+          {props.children ? props.children : <Outlet />}
         </Layout.Content>
       </Layout>
     </Layout>

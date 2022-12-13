@@ -35,8 +35,6 @@ export const Menurender = (el?: RoutingType[]): RoutingType[] => {
   return menu;
 };
 
-console.log(location);
-
 const Siderbar: React.FC<SiderbarType> = (props) => {
   const { collapsed } = props;
   const navigate = useNavigate();
