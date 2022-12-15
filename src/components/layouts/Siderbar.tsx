@@ -1,46 +1,62 @@
-import { Layout, Menu } from "antd";
-import layoutConfig from "../../config/layoutConfig";
-import logo from "../../assets/logo.png";
-import icon from "../../assets/icon.png";
-import { useNavigate , useLocation  } from "react-router-dom";
-import { routing, RoutingType } from "../../routes/routes";
+import { Layout, Menu } from 'antd';
+import layoutConfig from '../../config/layoutConfig';
+import logo from '../../assets/logo.png';
+import icon from '../../assets/icon.png';
+import {
+  useNavigate,
+  useLocation,
+  useParams,
+  generatePath,
+} from 'react-router-dom';
+import { routing, RoutingType } from '../../routes/routes';
+import { useState } from 'react';
 
 export type SiderbarType = {
   collapsed: boolean;
 };
 
 export type Menurendertype = {
-  path : string,
-  id : string,
-  children : Menurendertype[]
-}
+  path: string;
+  id: string;
+  children: Menurendertype[];
+};
 
-export const Menurender = (el? : RoutingType[]) : RoutingType[]  => {
-  let menu : RoutingType[] = []
+export const Menurender = (el?: RoutingType[]): RoutingType[] => {
+  let menu: RoutingType[] = [];
   el?.forEach((e) => {
-      if (!e.hideInmenu){
-          menu.push({
-            ...e,
-            key : e.path,
-            children : e.children ? Menurender(e.children) : undefined
-          })
-      }
-  })
-  return menu
-}
+    if (!e.hideInmenu) {
+      menu.push({
+        ...e,
+        key: e.path,
+        children: e.children ? Menurender(e.children) : undefined,
+      });
+    }
+  });
+  return menu;
+};
 
 const Siderbar: React.FC<SiderbarType> = (props) => {
   const { collapsed } = props;
   const navigate = useNavigate();
   const location = useLocation();
-  const baseRoute = routing.find((e) => e.path === layoutConfig.dashboardRoute)?.children
+  const { companycode } = useParams();
+  const [activekey, setActivekey] = useState<string>('');
+  const baseRoute = routing.find(
+    (e) => e.path === layoutConfig.dashboardRoute,
+  )?.children;
 
-  const onMenuclick = (e : { key : string }) => {
-    navigate(e.key);
-  }
+  const onMenuclick = (e: { key: string }) => {
+    setActivekey(e.key);
+    navigate(generatePath(e.key, { companycode }));
+  };
 
   return (
     <Layout.Sider
+      style={{
+        position: 'fixed',
+        zIndex: 3,
+        userSelect: 'none',
+      }}
       className="siderbar-custom"
       width={layoutConfig.siderbarWidth}
       collapsedWidth={layoutConfig.siderbarCollpasedWidth}
@@ -51,11 +67,13 @@ const Siderbar: React.FC<SiderbarType> = (props) => {
     >
       <img src={collapsed ? icon : logo} className="logo" alt="logo" />
       <Menu
-        style={{width : '100%' }}
+        //aria-current="page"
+        aria
+        style={{ width: '100%', position: 'relative' }}
         className="menu-custom"
         mode="inline"
         onClick={onMenuclick}
-        selectedKeys={[location.pathname]}
+        selectedKeys={[activekey]}
         // @ts-ignore
         items={Menurender(baseRoute)}
       />

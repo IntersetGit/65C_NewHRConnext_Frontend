@@ -1,43 +1,60 @@
-import { Layout } from "antd";
-import React from "react";
-import { useState } from "react";
-import { Outlet } from "react-router-dom";
-import Siderbar from "./Siderbar";
-import { MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/icons";
-import '../../styles/components/layouts.css';
-import layoutConfig from "../../config/layoutConfig";
+import { useMutation } from '@apollo/client';
+import { ReactNode, useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { AuthProvider } from '../../context/AuthContext';
+import { gql } from '../../__generated__';
+import LoadingSpinner from '../loading-spinner';
+import Layouts from './Layout';
 
-const Layouts: React.FC = () => {
-  const [collapsed, setCollapsed] = useState(false);
+export type BaseLayoutProps = {
+  noSidebar?: boolean;
+  noCollapse?: boolean;
+  py?: number;
+  px?: number;
+  children?: ReactNode;
+};
+
+const GQL_QUERY = gql(
+  `
+  mutation ValidateRoute($args: String!) {
+    validateRoute(args: $args) {
+      acess
+      path
+    }
+  }
+  `,
+);
+
+const BaseLayout: React.FC<BaseLayoutProps> = (props) => {
+  const { companycode } = useParams();
+  const navaigate = useNavigate();
+  const [validateRoute, { loading: validating, error: validaterror }] =
+    useMutation(GQL_QUERY);
+
+  useEffect(() => {
+    console.log(companycode);
+    if (!companycode) {
+      navaigate('/overview');
+    } else {
+      validateRoute({ variables: { args: companycode } })
+        .then((res) => {
+          if (!res.data?.validateRoute?.acess) {
+            navaigate('/overview');
+          }
+        })
+        .catch(() => {
+          navaigate('/overview');
+        });
+    }
+  }, []);
+
+  if (validating) return <LoadingSpinner loadingtext="Validating route..." />;
+
   return (
-    <Layout id="components-layout-demo-custom-trigger">
-      <Siderbar collapsed={collapsed} />
-      <Layout className="site-layout">
-        <Layout.Header
-          className="site-layout-background header"
-          style={{ padding: 0 , height : layoutConfig.headerHeight }}
-        >
-          {React.createElement(
-            collapsed ? MenuUnfoldOutlined : MenuFoldOutlined,
-            {
-              className: "trigger",
-              onClick: () => setCollapsed(!collapsed),
-            }
-          )}
-        </Layout.Header>
-        <Layout.Content
-          className="site-layout-background"
-          style={{
-            // margin: "10px 10px",
-            padding: 10,
-            minHeight: 280,
-          }}
-        >
-          <Outlet />
-        </Layout.Content>
-      </Layout>
-    </Layout>
+    <AuthProvider>
+      <Layouts {...props} />
+    </AuthProvider>
   );
 };
 
-export default Layouts;
+export default BaseLayout;

@@ -1,17 +1,17 @@
-import ReactDOM from "react-dom/client";
-import { RouterProvider } from "react-router-dom";
-import router from "./routes/routes";
-import "antd/dist/reset.css";
-import { ConfigProvider } from "antd";
+import ReactDOM from 'react-dom/client';
+import './index.css';
+import 'antd/dist/reset.css';
+import 'nprogress/nprogress.css';
+import './styles/components/fancyroute.css';
+import React, { Suspense } from 'react';
+import LoadingSpinner from './components/loading-spinner';
 
-ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
+const Lazyapp = React.lazy(() => import('./App'));
+
+ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <>
-    <ConfigProvider theme={{
-      token : {
-        colorPrimary : '#FC6634'
-      }
-    }}>
-      <RouterProvider router={router} />
-    </ConfigProvider>
-  </>
+    <Suspense fallback={<LoadingSpinner />}>
+      <Lazyapp />
+    </Suspense>
+  </>,
 );
