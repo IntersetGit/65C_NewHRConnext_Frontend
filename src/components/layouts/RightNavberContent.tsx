@@ -6,6 +6,8 @@ import {
   HiOutlineIdentification,
   HiOutlineCog6Tooth,
   HiOutlineClipboard,
+  HiOutlineComputerDesktop,
+  HiOutlineClipboardDocumentCheck,
 } from 'react-icons/hi2';
 
 const { useToken } = theme;
@@ -31,8 +33,13 @@ const items: MenuProps['items'] = [
     icon: <HiOutlineClipboard size={'18'} />,
   },
   {
-    label: 'ตั้งค่าผู้ใช้',
+    label: 'เลือกบริษัท',
     key: '2',
+    icon: <HiOutlineComputerDesktop size={'18'} />,
+  },
+  {
+    label: 'ตั้งค่าผู้ใช้',
+    key: '3',
     icon: <HiOutlineCog6Tooth size={'18'} />,
   },
   {
@@ -40,7 +47,7 @@ const items: MenuProps['items'] = [
   },
   {
     label: 'ออกจากระบบ',
-    key: '3',
+    key: '4',
     icon: <HiOutlineArrowRightOnRectangle size={'18'} />,
   },
 ];
