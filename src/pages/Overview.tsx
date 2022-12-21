@@ -62,7 +62,14 @@ const Overview: React.FC = () => {
             </Typography.Title>
           </div>
           {ability.can('create', 'Company') && (
-            <Button size="large" type="primary" icon={<PlusOutlined />}>
+            <Button
+              size="large"
+              type="primary"
+              style={{
+                backgroundColor: token.token.colorPrimary,
+              }}
+              icon={<PlusOutlined />}
+            >
               เพิ่มบริษัทของคุณ
             </Button>
           )}

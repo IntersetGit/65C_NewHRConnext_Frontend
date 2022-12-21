@@ -610,7 +610,14 @@ const Register: React.FC = () => {
               </Button>
             )}
             {current === steps.length - 1 && (
-              <Button size="large" type="primary" onClick={onFinish}>
+              <Button
+                size="large"
+                style={{
+                  backgroundColor: token.token.colorPrimary,
+                }}
+                type="primary"
+                onClick={onFinish}
+              >
                 สร้างบัญชีผู้ใช้
               </Button>
             )}
