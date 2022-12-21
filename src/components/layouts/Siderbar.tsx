@@ -28,7 +28,7 @@ export const Menurender = (el?: RoutingType[]): RoutingType[] => {
       menu.push({
         ...e,
         key: e.path,
-        children: e.children ? Menurender(e.children) : undefined,
+        children: e.children && !e.forcerenderMenu ? Menurender(e.children) : undefined,
       });
     }
   });

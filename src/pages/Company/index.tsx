@@ -13,7 +13,7 @@ const Companyroot: React.FC = () => {
 
   return (
     <>
-      <div
+      {/* <div
         style={{
           width: '100%',
           display: 'flex',
@@ -24,28 +24,48 @@ const Companyroot: React.FC = () => {
         <Tooltip placement="leftTop" title={'Tour'}>
           <Button icon={<InfoCircleOutlined />} />
         </Tooltip>
-      </div>
+      </div> */}
       <Tabs
         defaultActiveKey="/:companycode/company/location"
+        className='right-tab'
         onChange={onChange}
         items={[
           {
-            label: `ที่ตัังบริษัท`,
-            key: '/:companycode/company/location',
-            children: <Outlet />,
+            label: `ข้อมูลของฉัน`,
+            key: '/:companycode/userprofile',
           },
           {
-            label: `โครงสร้างบริษัท`,
-            key: '/:companycode/company/structure',
-            children: <Outlet />,
+            label: `งาน`,
+            key: '/:companycode/userprofile/work',
           },
           {
-            label: `ตำแหน่งบริษัท`,
-            key: '/:companycode/company/position',
-            children: <Outlet />,
+            label: `เงินเดือน`,
+            key: '/:companycode/userprofile/salary',
+          },
+          {
+            label: `การลา`,
+            key: '/:companycode/userprofile/vacation',
+          },
+          {
+            label: `ฝึกอบรม`,
+            key: '/:companycode/userprofile/training',
+          },
+          {
+            label: `Asset`,
+            key: '/:companycode/userprofile/asset',
+          },
+          {
+            label: `ไฟล์`,
+            key: '/:companycode/userprofile/file',
+           
+          },
+          {
+            label: `สมัครสินเชื่อ`,
+            key: '/:companycode/userprofile/credit',       
           },
         ]}
       />
+       <Outlet />
     </>
   );
 };

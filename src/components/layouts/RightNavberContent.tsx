@@ -7,7 +7,7 @@ import {
   HiOutlineCog6Tooth,
   HiOutlineClipboard,
   HiOutlineComputerDesktop,
-  HiOutlineClipboardDocumentCheck,
+  HiOutlineQuestionMarkCircle,
 } from 'react-icons/hi2';
 
 const { useToken } = theme;
@@ -38,8 +38,13 @@ const items: MenuProps['items'] = [
     icon: <HiOutlineComputerDesktop size={'18'} />,
   },
   {
-    label: 'ตั้งค่าผู้ใช้',
+    label: 'ช่วยเหลือ',
     key: '3',
+    icon: <HiOutlineQuestionMarkCircle size={'18'} />,
+  },
+  {
+    label: 'ตั้งค่าผู้ใช้',
+    key: '4',
     icon: <HiOutlineCog6Tooth size={'18'} />,
   },
   {
@@ -47,7 +52,7 @@ const items: MenuProps['items'] = [
   },
   {
     label: 'ออกจากระบบ',
-    key: '4',
+    key: '5',
     icon: <HiOutlineArrowRightOnRectangle size={'18'} />,
   },
 ];

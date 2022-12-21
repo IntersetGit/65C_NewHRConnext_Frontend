@@ -40,7 +40,18 @@ import {
   RiFolder2Line,
   RiChatHistoryLine,
   RiHome2Line,
+  RiUserLine,
+  RiContactsLine,
+  RiMoneyDollarCircleLine,
+  RiHistoryLine,
+  RiSlideshow3Line,
+  RiBarChartBoxLine,
+  RiLineChartLine,
+  RiFile3Line,
+  RiTeamLine,
+  RiHandCoinLine,
 } from 'react-icons/ri';
+import { HiOutlineClipboardDocumentCheck } from 'react-icons/hi2';
 
 export type RoutingType = {
   path: string;
@@ -49,6 +60,7 @@ export type RoutingType = {
   label?: string;
   key?: string | number;
   hideInmenu?: boolean;
+  forcerenderMenu? : boolean
   shouldrevalidate?: any;
   children?: RoutingType[];
   loader?: (v: LoaderFunctionArgs) => any;
@@ -66,36 +78,109 @@ export const routing: RoutingType[] = [
         element: <Home />,
       },
       {
-        path: '/:companycode/company',
-        label: 'บริษัท',
-        icon: <RiHotelLine size={'18'} />,
+        path: ':companycode/userprofile',
+        label: 'ข้อมูลของฉัน',
+        icon: <RiContactsLine size={'18'} />,
+        forcerenderMenu : true,
         element: <Companyroot />,
         children: [
           {
-            path: '/:companycode/company/location',
-            label: 'ข้อมูลบริษัท',
-            icon: <RiFolder2Line size={'18'} />,
+            path: '/:companycode/userprofile/work',
             element: <CompanyLocation />,
           },
           {
-            path: '/:companycode/company/structure',
-            label: 'ที่ตั้งบริษัท',
+            path: '/:companycode/userprofile/salary',
             hideInmenu: true,
             element: <CompanyStructure />,
           },
           {
-            path: '/:companycode/company/position',
-            label: 'ที่ตั้งบริษัท',
+            path: '/:companycode/userprofile/vacation',
             hideInmenu: true,
             element: <CompanyPosition />,
           },
           {
-            path: '/:companycode/company/holiday',
-            label: 'วันหยุด',
-            icon: <RiChatHistoryLine size={'18'} />,
+            path: '/:companycode/userprofile/training',
+            element: <CompanyLocation />,
+          },
+          {
+            path: '/:companycode/userprofile/asset',
+            element: <CompanyLocation />,
+          },
+          {
+            path: '/:companycode/userprofile/file',
+            element: <CompanyLocation />,
+          },
+          {
+            path: '/:companycode/userprofile/credit',
             element: <CompanyLocation />,
           },
         ],
+      },
+      {
+        path: '/:companycode/company',
+        label: 'ข้อมูลบริษัท',
+        icon: <RiHotelLine size={'18'} />,
+        element: <Companyroot />,
+      },
+      {
+        path: '/:companycode/employee',
+        label: 'พนักงาน',
+        icon: <RiUserLine size={'18'} />,
+        element: <></>
+      },
+      {
+        path: '/:companycode/summary',
+        label: 'เงินเดือน',
+        icon: <RiMoneyDollarCircleLine size={'18'} />,
+        element: <CompanyLocation />,
+      },
+      {
+        path: '/:companycode/vacation',
+        label: 'การลา',
+        icon: <RiHistoryLine size={'18'} />,
+        element: <CompanyLocation />,
+      },
+      {
+        path: '/:companycode/training',
+        label: 'การฝึกอบรม',
+        icon: <RiSlideshow3Line size={'18'} />,
+        element: <></>,
+      },
+      {
+        path: '/:companycode/assessment',
+        label: 'การประเมิน',
+        icon: <HiOutlineClipboardDocumentCheck size={'18'} />,
+        element: <></>,
+      },
+      {
+        path: '/:companycode/project',
+        label: 'โครงการ',
+        icon: <RiLineChartLine size={'18'} />,
+        element: <></>,
+      },
+      {
+        path: '/:companycode/dashboard',
+        label: 'DASHBOARD',
+        icon: <RiBarChartBoxLine size={'18'} />,
+        element: <></>,
+      },
+      {
+        path: '/:companycode/file',
+        label: 'ไฟล์',
+        icon: <RiFile3Line size={'18'} />,
+        element: <></>,
+      },
+      {
+        path: '/:companycode/activity',
+        label: 'กิจกรรม',
+        icon: <RiTeamLine size={'18'} />,
+        element: <></>,
+      },
+      {
+        path: '/:companycode/campaign',
+        label: 'แคมเปญการเงิน',
+        icon: <RiHandCoinLine size={'18'} />,
+        element: <></>,
       },
     ],
   },
