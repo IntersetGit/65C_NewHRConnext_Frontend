@@ -19,6 +19,9 @@ const Home = React.lazy(() => import('../pages/Home'));
 const Companyroot = React.lazy(() => import('../pages/Company'));
 const CompanyStructure = React.lazy(() => import('../pages/Company/structure'));
 const CompanyPosition = React.lazy(() => import('../pages/Company/position'));
+const Userprofileroot = React.lazy(() => import('../pages/Userprofile'))
+const ProfileUser = React.lazy(() => import('../pages/Userprofile/profile'))
+const Work = React.lazy(() => import('../pages/Userprofile/work'))
 const Login = React.lazy(() => import('../pages/Login'));
 const Register = React.lazy(() => import('../pages/Register'));
 const Overview = React.lazy(() => import('../pages/Overview'));
@@ -73,7 +76,7 @@ export const routing: RoutingType[] = [
     children: [
       {
         path: ':companycode/',
-        label: 'ภาพรวม',
+        label: 'Home',
         icon: <RiHome2Line size={'18'} />,
         element: <Home />,
       },
@@ -82,11 +85,15 @@ export const routing: RoutingType[] = [
         label: 'ข้อมูลของฉัน',
         icon: <RiContactsLine size={'18'} />,
         forcerenderMenu : true,
-        element: <Companyroot />,
+        element: <Userprofileroot />,
         children: [
           {
+            path: '/:companycode/userprofile',
+            element: <ProfileUser />,
+          },
+          {
             path: '/:companycode/userprofile/work',
-            element: <CompanyLocation />,
+            element: <Work />,
           },
           {
             path: '/:companycode/userprofile/salary',

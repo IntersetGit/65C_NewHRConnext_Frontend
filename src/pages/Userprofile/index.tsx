@@ -3,7 +3,7 @@ import { generatePath, Outlet, useLocation, useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { InfoCircleOutlined } from '@ant-design/icons';
 
-const Companyroot: React.FC = () => {
+const Userprofileroot: React.FC = () => {
   const navigate = useNavigate();
   let { companycode } = useParams();
 
@@ -26,7 +26,7 @@ const Companyroot: React.FC = () => {
         </Tooltip>
       </div> */}
       <Tabs
-        defaultActiveKey="/:companycode/company/location"
+        defaultActiveKey="/:companycode/userprofile"
         className='right-tab'
         onChange={onChange}
         items={[
@@ -70,4 +70,4 @@ const Companyroot: React.FC = () => {
   );
 };
 
-export default Companyroot;
+export default Userprofileroot;
