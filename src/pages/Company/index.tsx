@@ -25,7 +25,7 @@ const Companyroot: React.FC = () => {
           <Button icon={<InfoCircleOutlined />} />
         </Tooltip>
       </div> */}
-      <Tabs
+      {/* <Tabs
         defaultActiveKey="/:companycode/company/location"
         className='right-tab'
         onChange={onChange}
@@ -64,7 +64,7 @@ const Companyroot: React.FC = () => {
             key: '/:companycode/userprofile/credit',       
           },
         ]}
-      />
+      /> */}
        <Outlet />
     </>
   );

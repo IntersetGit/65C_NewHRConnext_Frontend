@@ -605,7 +605,7 @@ const Register: React.FC = () => {
           </div>
           <div className="steps-action">
             {current < steps.length - 1 && (
-              <Button size="large" type="primary" onClick={() => next()}>
+              <Button size="large" onClick={() => next()}>
                 ถัดไป
               </Button>
             )}

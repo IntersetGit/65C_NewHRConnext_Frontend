@@ -25,6 +25,7 @@ const Work = React.lazy(() => import('../pages/Userprofile/work'))
 const Login = React.lazy(() => import('../pages/Login'));
 const Register = React.lazy(() => import('../pages/Register'));
 const Overview = React.lazy(() => import('../pages/Overview'));
+const DataCompany = React.lazy(() => import('../pages/Company/data_company'));
 const Error500 = React.lazy(() => import('../pages/500'));
 
 /**
@@ -127,7 +128,7 @@ export const routing: RoutingType[] = [
         path: '/:companycode/company',
         label: 'ข้อมูลบริษัท',
         icon: <RiHotelLine size={'18'} />,
-        element: <Companyroot />,
+        element: <DataCompany />,
       },
       {
         path: '/:companycode/employee',
