@@ -12,22 +12,26 @@ const cookie = new Cookies();
 const GET_ME = gql(`
 query Me {
   me {
+    id
+    email
+    isOwner
+    companyBranch {
+      name
+      company {
+        name
+        id
+        icon
+        companyCode
+      }
+    }
     role {
       id
       name
     }
-    position {
-      id
+    Position {
       access
-      name
-    }
-    id
-    email
-    company {
-      name
-      icon
-      companyCode
       id
+      name
     }
     profile {
       firstname
@@ -53,7 +57,7 @@ const AuthProvider = ({ children }: Props) => {
   const { data: user, loading } = useQuery(GET_ME);
   const defaultAbility: any[] = [];
   const ability = createMongoAbility(
-    user?.me?.position?.access || defaultAbility,
+    user?.me?.Position?.access || defaultAbility,
   );
 
   const value = {

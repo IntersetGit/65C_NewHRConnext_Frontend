@@ -3,9 +3,10 @@ import { useQuery } from '@apollo/client';
 import { Avatar, Button, Col, Divider, List, theme, Typography } from 'antd';
 import VirtualList from 'rc-virtual-list';
 import { RiHotelLine } from 'react-icons/ri';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { FETCH_OWNCOMAPNY } from '../service/graphql/Company';
+import LoadingSpinner from '../components/loading-spinner';
 
 const { useToken } = theme;
 const ContainerHeight = 560;
@@ -13,8 +14,18 @@ const ContainerHeight = 560;
 const Overview: React.FC = () => {
   const token = useToken();
   const { ability } = useAuth();
+  const navigate = useNavigate();
   const { data: companyData, loading: companyLoading } =
     useQuery(FETCH_OWNCOMAPNY);
+
+  if (companyLoading) {
+    return <LoadingSpinner loadingtext="Loading company data...." />;
+  }
+
+  if (companyData?.getownCompany?.redirect) {
+    navigate(`/${companyData.getownCompany.company?.companyCode}`);
+  }
+
   return (
     <div
       style={{
@@ -77,7 +88,11 @@ const Overview: React.FC = () => {
         <Divider style={{ backgroundColor: token.token.colorPrimary }} />
         <List loading={companyLoading}>
           <VirtualList
-            data={companyData?.getownCompany ? companyData?.getownCompany : []}
+            data={
+              companyData?.getownCompany?.companies
+                ? companyData?.getownCompany?.companies
+                : []
+            }
             height={ContainerHeight}
             itemHeight={47}
             itemKey="id"
@@ -98,16 +113,12 @@ const Overview: React.FC = () => {
                       icon={<RiHotelLine />}
                     />
                   }
-                  title={
-                    <>
-                      {item?.name} ({item?.codeCompany})
-                    </>
-                  }
-                  description={item?.companyType}
+                  title={<>{item?.name}</>}
+                  description={item?.companyCode}
                 />
                 <div>
                   <Link
-                    to={`/${item?.codeCompany}`}
+                    to={`/${item?.companyCode}`}
                     relative="path"
                     reloadDocument
                   >
