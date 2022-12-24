@@ -450,65 +450,60 @@ const Profile: React.FC = () => {
 
         <div className="text-[#FC6634] text-base">Social Link</div>
 
-        <Row>
+        <Row gutter={16}>
           <div className="relative flex flex-row items-center">
-            <div className="flex flex-row items-center h-5 w-5 text-4xl">
+            <div className="flex flex-row ml-2 tems-center text-4xl">
               <FacebookFilled />
             </div>
-            <span className="ml-8 text-lg tracking-wide truncate">
-              <Col span={12}>
+            <div className='flex items-center ml-8 mt-6'>
+              <Col span={24}>
                 <Form.Item>
                   <Input />
                 </Form.Item>
               </Col>
-            </span>
-          </div>
-
-          <div className="relative flex flex-row items-center">
-            <div className="flex flex-row items-center h-5 w-5 text-4xl">
+            </div>
+            <div className="flex flex-row items-center ml-6 text-4xl">
               <LinkedinFilled />
             </div>
-            <span className="ml-8 text-lg tracking-wide truncate">
-              <Col span={12}>
+            <div className='flex items-center ml-8 mt-6'>
+              <Col span={24}>
                 <Form.Item>
                   <Input />
                 </Form.Item>
               </Col>
-            </span>
+            </div>
           </div>
         </Row>
 
         <Row gutter={16}>
           <div className="relative flex flex-row items-center">
-            <div className="flex flex-row items-center h-5 w-5 text-4xl">
+            <div className="flex flex-row ml-2 items-center text-4xl">
               <FaLine />
             </div>
-            <span className="ml-8 text-lg tracking-wide truncate">
-              <Col span={12}>
+            <div className="flex items-center ml-8 mt-6">
+              <Col span={24}>
                 <Form.Item>
                   <Input />
                 </Form.Item>
               </Col>
-            </span>
-          </div>
+            </div>
 
-          <div className="relative flex flex-row items-center">
-            <div className="flex flex-row items-center h-5 w-5 text-4xl">
+            <div className="flex flex-row items-center ml-6 text-4xl">
               <BsTelegram />
             </div>
-            <span className="ml-8 text-lg tracking-wide truncate">
-              <Col span={12}>
+            <div className="flex items-center ml-8 mt-6">
+              <Col span={24}>
                 <Form.Item>
                   <Input />
                 </Form.Item>
               </Col>
-            </span>
+            </div>
           </div>
         </Row>
 
         <Form.Item>
-          <Space style={{ float: 'right' }}>
-            <Button type="primary" htmlType="submit">
+          <Space>
+            <Button htmlType="submit">
               บันทึก
             </Button>
             <Button>ยกเลิก</Button>
