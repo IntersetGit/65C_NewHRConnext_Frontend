@@ -178,7 +178,7 @@ function App() {
               fallbackElement={<LoadingSpinner />}
             />
           </ConfigProvider>
-          <ReactQueryDevtools initialIsOpen={false} />
+          {/* <ReactQueryDevtools  initialIsOpen={false} /> */}
         </QueryClientProvider>
       </ApolloProvider>
     </>
