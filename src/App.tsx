@@ -54,6 +54,8 @@ const httpLink = createHttpLink({
 
 const clearCookieandcache = () => {
   router.navigate('/auth');
+  cookie.remove('access', { path: '/', sameSite: 'lax' });
+  cookie.remove('refresh_token', { path: '/', sameSite: 'lax' });
   gqlClient.clearStore();
   gqlClient.cache.reset();
 };
@@ -96,8 +98,9 @@ const errorLink = onError(
             return observable;
           case 'USER_NOT_AUTHENTICATED':
             clearCookieandcache();
-
           case 'SESSION_EXPIRED':
+            clearCookieandcache();
+          case 'USER_NOT_FOUND':
             clearCookieandcache();
         }
       }

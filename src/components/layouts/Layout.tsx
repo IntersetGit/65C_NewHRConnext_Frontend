@@ -16,7 +16,7 @@ import icon from '../../assets/icon.png';
 
 const Layouts: React.FC<BaseLayoutProps> = (props) => {
   const [collapsed, setCollapsed] = useState(false);
-  const { loading, user } = useAuth();
+  const { loading, user, company } = useAuth();
   const location = useLocation();
   useEffect(() => {
     nprogress.start();
@@ -69,7 +69,11 @@ const Layouts: React.FC<BaseLayoutProps> = (props) => {
             </div>
           </div>
 
-          <RightNavbarContent isUserloading={loading} user={user} />
+          <RightNavbarContent
+            company={company}
+            isUserloading={loading}
+            user={user}
+          />
         </Layout.Header>
         <Layout.Content
           className="site-layout-background"

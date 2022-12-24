@@ -9,11 +9,13 @@ import {
   HiOutlineComputerDesktop,
   HiOutlineQuestionMarkCircle,
 } from 'react-icons/hi2';
+import { CompanyBranchType } from '../../context/types';
 
 const { useToken } = theme;
 
 type RightNavContentType = {
   user: MeQuery | undefined;
+  company: CompanyBranchType | undefined;
   isUserloading: boolean;
 };
 
@@ -59,6 +61,7 @@ const items: MenuProps['items'] = [
 
 const RightNavbarContent: React.FC<RightNavContentType> = ({
   user,
+  company,
   isUserloading,
 }) => {
   const token = useToken();
@@ -163,6 +166,13 @@ const RightNavbarContent: React.FC<RightNavContentType> = ({
                   >
                     {user?.me?.role?.name}
                   </Typography.Text>
+                  {company?.companyName && (
+                    <Typography.Text
+                      style={{ ...profileDetailstyle, fontSize: '0.85em' }}
+                    >
+                      บริษัท {company?.companyName} {company?.branchName}
+                    </Typography.Text>
+                  )}
                 </div>
               </div>
             </div>

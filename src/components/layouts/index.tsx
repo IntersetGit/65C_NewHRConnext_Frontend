@@ -5,6 +5,8 @@ import { AuthProvider } from '../../context/AuthContext';
 import { gql } from '../../__generated__';
 import LoadingSpinner from '../loading-spinner';
 import Layouts from './Layout';
+import { Cookies } from 'react-cookie';
+const cookie = new Cookies();
 
 export type BaseLayoutProps = {
   noSidebar?: boolean;
@@ -18,8 +20,15 @@ const GQL_QUERY = gql(
   `
   mutation ValidateRoute($args: String!) {
     validateRoute(args: $args) {
-      acess
       path
+      currentBranch {
+        branchId
+        branchName
+        companyId
+        companyName
+      }
+      acess
+      reAccess
     }
   }
   `,
@@ -28,7 +37,7 @@ const GQL_QUERY = gql(
 const BaseLayout: React.FC<BaseLayoutProps> = (props) => {
   const { companycode } = useParams();
   const navaigate = useNavigate();
-  const [validateRoute, { loading: validating, error: validaterror }] =
+  const [validateRoute, { loading: validating, error: validaterror, data }] =
     useMutation(GQL_QUERY);
 
   useEffect(() => {
@@ -38,8 +47,16 @@ const BaseLayout: React.FC<BaseLayoutProps> = (props) => {
     } else {
       validateRoute({ variables: { args: companycode } })
         .then((res) => {
-          if (!res.data?.validateRoute?.acess) {
+          const data = res.data?.validateRoute;
+          if (!data?.acess) {
             navaigate('/overview');
+          }
+
+          if (data?.acess && data?.reAccess) {
+            cookie.set('access', data?.reAccess, {
+              sameSite: 'lax',
+              path: '/',
+            });
           }
         })
         .catch(() => {
@@ -51,7 +68,7 @@ const BaseLayout: React.FC<BaseLayoutProps> = (props) => {
   if (validating) return <LoadingSpinner loadingtext="Validating route..." />;
 
   return (
-    <AuthProvider>
+    <AuthProvider company={data?.validateRoute?.currentBranch}>
       <Layouts {...props} />
     </AuthProvider>
   );

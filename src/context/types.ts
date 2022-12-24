@@ -19,8 +19,17 @@ export type UserDataType = {
   avatar?: string | null;
 };
 
+export type CompanyBranchType = {
+  branchId?: string | null | undefined;
+  branchName?: string | null | undefined;
+  companyId?: string | null | undefined;
+  companyName?: string | null | undefined;
+};
+
 export type AuthValuesType = {
   loading: boolean;
   user: MeQuery | undefined;
+  setCompany: (value: CompanyBranchType | undefined) => void;
+  company: CompanyBranchType | undefined;
   ability: MongoAbility<AbilityTuple<string, Subject>, MongoQuery<AnyObject>>;
 };

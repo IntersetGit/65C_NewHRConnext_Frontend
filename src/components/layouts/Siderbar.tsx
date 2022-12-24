@@ -22,13 +22,15 @@ export type Menurendertype = {
 };
 
 export const Menurender = (el?: RoutingType[]): RoutingType[] => {
-  let menu: RoutingType[] = [];
+  let menu: any[] = [];
   el?.forEach((e) => {
     if (!e.hideInmenu) {
       menu.push({
-        ...e,
+        icon: e.icon,
+        label: e.label,
         key: e.path,
-        children: e.children && !e.forcerenderMenu ? Menurender(e.children) : undefined,
+        children:
+          e.children && !e.forcerendermenu ? Menurender(e.children) : undefined,
       });
     }
   });
@@ -68,7 +70,6 @@ const Siderbar: React.FC<SiderbarType> = (props) => {
       <img src={collapsed ? icon : logo} className="logo" alt="logo" />
       <Menu
         //aria-current="page"
-        aria
         style={{ width: '100%', position: 'relative' }}
         className="menu-custom"
         mode="inline"
