@@ -59,6 +59,7 @@ type RegisterFormType = {
   lastname: string;
   tel: string;
   dob: string;
+  userlimit: string;
   company_name: string;
   company_address: string;
   company_city: string;
@@ -315,7 +316,7 @@ const Register: React.FC = () => {
       <Row>
         <Col span={12}>
           <Form.Item
-            label={'ชื่อจริง'}
+            label={'ชื่อจริง (ภาษาไทย)'}
             name={'firstname'}
             preserve
             tooltip={'ต้องเป็นตัวอักษรเท่านั้น'}
@@ -336,7 +337,7 @@ const Register: React.FC = () => {
         </Col>
         <Col span={12}>
           <Form.Item
-            label={'นามสกุล'}
+            label={'นามสกุล (ภาษาไทย)'}
             preserve
             name={'lastname'}
             tooltip={'ต้องเป็นตัวอักษรเท่านั้น'}
@@ -514,6 +515,40 @@ const Register: React.FC = () => {
             ]}
           >
             <Input onChange={validateCompanyCode} />
+          </Form.Item>
+        </Col>
+        <Col span={12}>
+          <Form.Item
+            label={'ขนาดของบริษัท'}
+            name={'userlimit'}
+            tooltip={'ขนาดของบริษัท คือ จำนวนพนักงานภายในบริษัท ทั้งหมด'}
+            rules={[
+              {
+                required: true,
+                message: 'กรุณาเลือกขนาดบริษัท',
+              },
+            ]}
+          >
+            <Select
+              options={[
+                {
+                  label: '1-10',
+                  value: 10,
+                },
+                {
+                  label: '1-50',
+                  value: 50,
+                },
+                {
+                  label: '1-100',
+                  value: 100,
+                },
+                {
+                  label: '1-1000',
+                  value: 1000,
+                },
+              ]}
+            />{' '}
           </Form.Item>
         </Col>
       </Row>
