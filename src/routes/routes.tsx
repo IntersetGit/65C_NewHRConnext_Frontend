@@ -1,8 +1,4 @@
-import {
-  createBrowserRouter,
-  LoaderFunctionArgs,
-  redirect,
-} from 'react-router-dom';
+import { createBrowserRouter, LoaderFunctionArgs } from 'react-router-dom';
 import React from 'react';
 /**
  * ?Layout
@@ -25,7 +21,10 @@ const Work = React.lazy(() => import('../pages/Userprofile/work'));
 const Login = React.lazy(() => import('../pages/Login'));
 const Register = React.lazy(() => import('../pages/Register'));
 const Overview = React.lazy(() => import('../pages/Overview'));
-const DataCompany = React.lazy(() => import('../pages/Company/data_company'));
+const MainCompany = React.lazy(() => import('../pages/Company/company'));
+const ManageCompanyData = React.lazy(
+  () => import('../pages/Company/company/newCompany'),
+);
 const Error500 = React.lazy(() => import('../pages/500'));
 
 /**
@@ -41,8 +40,6 @@ const Usersetting = React.lazy(() => import('../pages/Me/setting'));
  */
 import {
   RiHotelLine,
-  RiFolder2Line,
-  RiChatHistoryLine,
   RiHome2Line,
   RiUserLine,
   RiContactsLine,
@@ -128,7 +125,13 @@ export const routing: RoutingType[] = [
         path: '/:companycode/company',
         label: 'บริษัท',
         icon: <RiHotelLine size={'18'} />,
-        element: <DataCompany />,
+        element: <MainCompany />,
+      },
+      {
+        path: '/:companycode/company/manage/:method/:id',
+        hideInmenu: true,
+        icon: <RiHotelLine size={'18'} />,
+        element: <ManageCompanyData />,
       },
       {
         path: '/:companycode/employee',
@@ -237,4 +240,4 @@ export const routing: RoutingType[] = [
 const router = createBrowserRouter(routing);
 export default router;
 
-createBrowserRouter([{ loader: ({ }) => { } }]);
+createBrowserRouter([{ loader: ({}) => {} }]);
