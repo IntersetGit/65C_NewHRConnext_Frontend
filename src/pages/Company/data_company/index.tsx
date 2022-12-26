@@ -23,13 +23,24 @@ const Companyniti: React.FC = () => {
                 <span className="ml-4 text-lg tracking-wide truncate">
                     ข้อมูลบริษัท / นิติบุคคล
                 </span>
+                <span style={{ position: 'absolute', right: '10px', height: '10px' }}>
+                    <Button style={{ height: '35px' }}>
+                        จัดการโครงสร้างบริษัท
+                    </Button>
+                </span>
             </div>
             <Divider />
 
             <Form>
                 <Row gutter={12}>
                     <Col span={8}>
-                        <Form.Item label={'ชื่อบริษัท'}>
+                        <Form.Item label={'ชื่อบริษัท'}
+                            rules={[
+                                {
+                                    required: true,
+                                    message: 'กรุณากรอกชื่อบริษัท',
+                                },
+                            ]}>
                             <Input placeholder="กรุณากรอกชื่อบริษัท" />
                         </Form.Item>
                     </Col>
@@ -61,8 +72,8 @@ const Companyniti: React.FC = () => {
                     </Col>
                 </Row>
 
-                <Row gutter={12}>
-                    <Col span={6}>
+                <Row gutter={16}>
+                    <Col span={8}>
                         <Form.Item label={'จังหวัด'}>
                             <Select
                                 options={[
@@ -86,7 +97,7 @@ const Companyniti: React.FC = () => {
                             />
                         </Form.Item>
                     </Col>
-                    <Col span={6}>
+                    <Col span={8}>
                         <Form.Item label={'เขต/อำเภอ'}>
                             <Select
                                 options={[
@@ -102,51 +113,51 @@ const Companyniti: React.FC = () => {
                             />
                         </Form.Item>
                     </Col>
-                    <Col span={6}>
+                    <Col span={8}>
                         <Form.Item label={'รหัสไปรษรีย์'}>
                             <Input placeholder="กรุณากรอกรหัสไปรษรีย์" />
                         </Form.Item>
                     </Col>
-
-                    <Row gutter={12}>
-                        <Col span={12}>
-                            <Form.Item label={'เบอร์โทรศัพท์'}>
-                                <Input placeholder="กรุณากรอกเบอร์โทรศัพท์" />
-                            </Form.Item>
-                        </Col>
-                        <Col span={12}>
-                            <Form.Item label={'โทรสาร (Fax)'}>
-                                <Input placeholder="กรุณากรอกโทรสาร (Fax)" />
-                            </Form.Item>
-                        </Col>
-                    </Row>
                 </Row>
 
-                <Row gutter={12}>
-                    <Col span={10}>
+                <Row gutter={16}>
+                    <Col span={8}>
+                        <Form.Item label={'เบอร์โทรศัพท์'}>
+                            <Input placeholder="กรุณากรอกเบอร์โทรศัพท์" />
+                        </Form.Item>
+                    </Col>
+                    <Col span={8}>
+                        <Form.Item label={'โทรสาร (Fax)'}>
+                            <Input placeholder="กรุณากรอกโทรสาร (Fax)" />
+                        </Form.Item>
+                    </Col>
+                </Row>
+
+                <Row gutter={16}>
+                    <Col span={8}>
                         <Form.Item label={'Web Site'}>
                             <Input />
                         </Form.Item>
                     </Col>
-                    <Col span={4}>
+                    <Col span={8}>
                         <Form.Item label={'แผนที่'}>
                             <Button color='#Fc6634'>
                                 เปิดแผนที่
                             </Button>
                         </Form.Item>
                     </Col>
-                    <Col span={10}>
+                    <Col span={8}>
                         <Form.Item label={'พิกัด'}>
                             <Input />
                         </Form.Item>
                     </Col>
 
-                    <Col span={10}>
+                    <Col span={12}>
                         <Form.Item label={'อีเมล์ #1'}>
                             <Input />
                         </Form.Item>
                     </Col>
-                    <Col span={10}>
+                    <Col span={12}>
                         <Form.Item label={'อีเมล์ #2'}>
                             <Input />
                         </Form.Item>
@@ -185,28 +196,25 @@ const Companyniti: React.FC = () => {
                         </Form.Item>
                     </Col>
                     <Col span={8}>
-                        <Form.Item label={'ทุนจดทะเบียน บริษัท'}>
+                        <Form.Item label={'ทุนจดทะเบียน ( บาท )'}>
                             <Input placeholder="( บาท )" />
                         </Form.Item>
                     </Col>
                 </Row>
                 <Divider />
 
-                <Row>
+
+                <Row gutter={16} className='px-2'>
                     <div className="text-[#FC6634] text-base">โลโก้บริษัท</div>
-                    <Col span={4}>
-                        <Form.Item>
-                            <Button
-                                style={{ left: '20px', width: '20vh' }}
-                            >
-                                เลือกรูป
-                            </Button>
-                        </Form.Item>
+                    <Col>
+                        <Button>
+                            เลือกรูป
+                        </Button>
                     </Col>
-                    <Col span={8}>
+                    <Col span={12}>
                         <Input />
                     </Col>
-                    <Col style={{ left: '10px' }}>
+                    <Col>
                         <Button className='flex flex-row items-center text-2xl'>
                             <RiCloseFill />
                         </Button>
@@ -215,153 +223,115 @@ const Companyniti: React.FC = () => {
                 </Row>
 
                 <div className="text-[#FC6634] text-base">Social Link</div>
-                <Row>
 
+                <Row gutter={16}>
                     {/*---------------- Facebook ----------------*/}
-                    <Col span={2}>
-                        <Form.Item>
-                            <div className="relative flex flex-row items-center">
-                                <div className="flex flex-row items-center text-4xl py-3 px-8">
-                                    <FaFacebookSquare />
-                                </div>
-                            </div>
-                        </Form.Item>
-                    </Col>
-                    <Col
-                        className='py-3.5'
-                        span={6}
-                    >
-                        <Form.Item>
-                            <Input />
-                        </Form.Item>
-                    </Col>
-
-                    {/*---------------- in ----------------*/}
-                    <Col span={2}>
-                        <Form.Item>
-                            <div className="relative flex flex-row items-center">
-                                <div className="flex flex-row items-center text-4xl py-3 px-8">
-                                    <FaLinkedin />
-                                </div>
-                            </div>
-                        </Form.Item>
-                    </Col>
-                    <Col
-                        className='py-3.5'
-                        span={6}
-                    >
-                        <Form.Item>
-                            <Input />
-                        </Form.Item>
-                    </Col>
+                    <div className="relative flex flex-row items-center">
+                        <div className="flex flex-row ml-2 tems-center text-4xl">
+                            <FaFacebookSquare />
+                        </div>
+                        <div className='flex items-center ml-8 mt-6'>
+                            <Col span={24}>
+                                <Form.Item>
+                                    <Input />
+                                </Form.Item>
+                            </Col>
+                        </div>
+                        {/*---------------- in ----------------*/}
+                        <div className="flex flex-row items-center ml-6 text-4xl">
+                            <FaLinkedin />
+                        </div>
+                        <div className='flex items-center ml-8 mt-6'>
+                            <Col span={24}>
+                                <Form.Item>
+                                    <Input />
+                                </Form.Item>
+                            </Col>
+                        </div>
+                    </div>
                 </Row>
 
-                <Row>
-
+                <Row gutter={16}>
                     {/*---------------- instagram ----------------*/}
-                    <Col
-                        style={{ top: '-4vh' }}
-                        span={2}
-                    >
-                        <Form.Item>
-                            <div className="relative flex flex-row items-center">
-                                <div className="flex flex-row items-center text-4xl py-3 px-8">
-                                    <FaInstagramSquare />
-                                </div>
-                            </div>
-                        </Form.Item>
-                    </Col>
-                    <Col
-                        style={{ top: '-4vh' }}
-                        className='py-3.5'
-                        span={6}
-                    >
-                        <Form.Item>
-                            <Input />
-                        </Form.Item>
-                    </Col>
-
-                    {/*---------------- Line ----------------*/}
-                    <Col
-                        style={{ top: '-4vh' }}
-                        span={2}
-                    >
-                        <Form.Item>
-                            <div className="relative flex flex-row items-center">
-                                <div className="flex flex-row items-center text-4xl py-3 px-8">
-                                    <FaLine />
-                                </div>
-                            </div>
-                        </Form.Item>
-                    </Col>
-                    <Col
-                        style={{ top: '-4vh' }}
-                        className='py-3.5'
-                        span={6}
-                    >
-                        <Form.Item>
-                            <Input />
-                        </Form.Item>
-                    </Col>
+                    <div className="relative flex flex-row items-center">
+                        <div className="flex flex-row ml-2 items-center text-4xl">
+                            <FaInstagramSquare />
+                        </div>
+                        <div className="flex items-center ml-8 mt-6">
+                            <Col span={24}>
+                                <Form.Item>
+                                    <Input />
+                                </Form.Item>
+                            </Col>
+                        </div>
+                        {/*---------------- Line ----------------*/}
+                        <div className="flex flex-row items-center ml-6 text-4xl">
+                            <FaLine />
+                        </div>
+                        <div className="flex items-center ml-8 mt-6">
+                            <Col span={24}>
+                                <Form.Item>
+                                    <Input />
+                                </Form.Item>
+                            </Col>
+                        </div>
+                    </div>
                 </Row>
+
                 <Divider />
 
                 <div className="text-[#FC6634] text-base">ไฟล์เอกสารการเป็นนิติบุคคล ***</div><br />
-                <Row gutter={12}>
-                    <Col span={4}>
+
+                <Row gutter={16}>
+                    <Col>
                         <Form.Item label='หนังสือรับรอง'>
                             <Button>
                                 เลือกไฟล์เอกสาร
                             </Button>
                         </Form.Item>
                     </Col>
-                    <Col span={10} style={{ left: '4vh' }}>
+                    <Col>
                         <Form.Item>
                             <Input />
                         </Form.Item>
                     </Col>
-                    <Col style={{ left: '30px' }}>
+                    <Col>
                         <Button className='flex flex-row items-center text-2xl'>
                             <RiCloseFill />
                         </Button>
                     </Col>
-                </Row>
-
-                <Row gutter={12}>
-                    <Col span={4}>
+                    <Col>
                         <Form.Item label='ก.พ. 20'>
                             <Button>
                                 เลือกไฟล์เอกสาร
                             </Button>
                         </Form.Item>
                     </Col>
-                    <Col span={10} style={{ left: '4vh' }}>
+                    <Col>
                         <Form.Item>
                             <Input />
                         </Form.Item>
                     </Col>
-                    <Col style={{ left: '30px' }}>
+                    <Col>
                         <Button className='flex flex-row items-center text-2xl'>
                             <RiCloseFill />
                         </Button>
                     </Col>
                 </Row>
-                <Row gutter={12}>
-                    <Col>
-                        <Form.Item>
-                            <Button>
+
+                <Row gutter={16}>
+                    <Form.Item>
+                        <Space>
+                            <Button htmlType="submit">
                                 บันทึก
                             </Button>
-                        </Form.Item>
-                    </Col>
-                    <Col>
-                        <Form.Item>
                             <Button>
                                 ยกเลิก
                             </Button>
-                        </Form.Item>
-                    </Col>
+                        </Space>
+                    </Form.Item>
                 </Row>
+
                 <div className="text-[#FC6634] text-base">
                     *** กรอกข้อมูล และ Upload เอกสารที่ถูกต้อง เพื่อรับสิทธิ์ การใช้ระบบ Report/Dash Bard สำหรับผู้บริหาร/หรือฝ่ายบุคคล ของบริษัทฯ ฟรีตลอดอายุการใช้งาน
                 </div>
