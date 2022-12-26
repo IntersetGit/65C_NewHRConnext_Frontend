@@ -18,6 +18,11 @@ const CompanyPosition = React.lazy(() => import('../pages/Company/position'));
 const Userprofileroot = React.lazy(() => import('../pages/Userprofile'));
 const ProfileUser = React.lazy(() => import('../pages/Userprofile/profile'));
 const Work = React.lazy(() => import('../pages/Userprofile/work'));
+const Employeeroot = React.lazy(() => import('../pages/Employee'));
+const Employee = React.lazy(() => import('../pages/Employee/employee'));
+const UserEmployee = React.lazy(
+  () => import('../pages/Employee/employee/useremployee'),
+);
 const Login = React.lazy(() => import('../pages/Login'));
 const Register = React.lazy(() => import('../pages/Register'));
 const Overview = React.lazy(() => import('../pages/Overview'));
@@ -78,49 +83,49 @@ export const routing: RoutingType[] = [
         icon: <RiHome2Line size={'18'} />,
         element: <Home />,
       },
-      {
-        path: ':companycode/userprofile',
-        label: 'ข้อมูลของฉัน',
-        icon: <RiContactsLine size={'18'} />,
-        forcerendermenu: true,
-        element: <Userprofileroot />,
-        children: [
-          {
-            path: '/:companycode/userprofile',
-            element: <ProfileUser />,
-          },
-          {
-            path: '/:companycode/userprofile/work',
-            element: <Work />,
-          },
-          {
-            path: '/:companycode/userprofile/salary',
-            hideInmenu: true,
-            element: <CompanyStructure />,
-          },
-          {
-            path: '/:companycode/userprofile/vacation',
-            hideInmenu: true,
-            element: <CompanyPosition />,
-          },
-          {
-            path: '/:companycode/userprofile/training',
-            element: <CompanyLocation />,
-          },
-          {
-            path: '/:companycode/userprofile/asset',
-            element: <CompanyLocation />,
-          },
-          {
-            path: '/:companycode/userprofile/file',
-            element: <CompanyLocation />,
-          },
-          {
-            path: '/:companycode/userprofile/credit',
-            element: <CompanyLocation />,
-          },
-        ],
-      },
+      // {
+      //   path: ':companycode/userprofile',
+      //   label: 'ข้อมูลของฉัน',
+      //   icon: <RiContactsLine size={'18'} />,
+      //   forcerendermenu: true,
+      //   element: <Userprofileroot />,
+      //   children: [
+      //     {
+      //       path: '/:companycode/userprofile',
+      //       element: <ProfileUser />,
+      //     },
+      //     {
+      //       path: '/:companycode/userprofile/work',
+      //       element: <Work />,
+      //     },
+      //     {
+      //       path: '/:companycode/userprofile/salary',
+      //       hideInmenu: true,
+      //       element: <></>,
+      //     },
+      //     {
+      //       path: '/:companycode/userprofile/vacation',
+      //       hideInmenu: true,
+      //       element: <></>,
+      //     },
+      //     {
+      //       path: '/:companycode/userprofile/training',
+      //       element: <></>,
+      //     },
+      //     {
+      //       path: '/:companycode/userprofile/asset',
+      //       element: <></>,
+      //     },
+      //     {
+      //       path: '/:companycode/userprofile/file',
+      //       element: <></>,
+      //     },
+      //     {
+      //       path: '/:companycode/userprofile/credit',
+      //       element: <></>,
+      //     },
+      //   ],
+      // },
       {
         path: '/:companycode/company',
         label: 'บริษัท',
@@ -137,7 +142,20 @@ export const routing: RoutingType[] = [
         path: '/:companycode/employee',
         label: 'พนักงาน',
         icon: <RiUserLine size={'18'} />,
-        element: <></>,
+        forcerendermenu: true,
+        element: <Employeeroot />,
+        children: [
+          {
+            path: '/:companycode/employee',
+            element: <Employee />,
+            hideInmenu: true,
+          },
+          {
+            path: '/:companycode/employee/useremployee',
+            element: <UserEmployee />,
+            hideInmenu: true,
+          },
+        ],
       },
       {
         path: '/:companycode/summary',
