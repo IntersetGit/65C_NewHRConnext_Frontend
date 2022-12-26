@@ -131,6 +131,14 @@ const gqlClient = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
+export const logout = () => {
+  cookie.remove('access');
+  cookie.remove('refresh_token');
+  router.navigate('/auth');
+  gqlClient.clearStore();
+  gqlClient.cache.reset();
+};
+
 const refreshToken = async () => {
   try {
     const refreshResolverResponse = await gqlClient.mutate<{
@@ -143,11 +151,7 @@ const refreshToken = async () => {
     cookie.set('access', access || '', { path: '/', sameSite: 'lax' });
     return access;
   } catch (err) {
-    cookie.remove('access');
-    cookie.remove('refresh_token');
-    router.navigate('/auth');
-    gqlClient.clearStore();
-    gqlClient.cache.reset();
+    logout();
     throw err;
   }
 };
@@ -167,6 +171,8 @@ function App() {
             theme={{
               token: {
                 colorPrimary: '#FC6634',
+                colorBgLayout: '#f9fafb',
+                colorText: '#0f172a',
                 borderRadius: 6,
                 colorBgBase: '#fff',
                 fontFamily: `'Roboto','Prompt' ,-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji'`,

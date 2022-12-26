@@ -16,7 +16,7 @@ const documents = {
     "\n  mutation refreshToken {\n    refreshToken {\n      access_token\n    }\n  }\n": types.RefreshTokenDocument,
     "\n  mutation ValidateRoute($args: String!) {\n    validateRoute(args: $args) {\n      path\n      currentBranch {\n        branchId\n        branchName\n        companyId\n        companyName\n      }\n      acess\n      reAccess\n    }\n  }\n  ": types.ValidateRouteDocument,
     "\nquery Me {\n  me {\n    id\n    email\n    isOwner\n    companyBranch {\n      name\n      company {\n        name\n        id\n        icon\n        companyCode\n      }\n    }\n    role {\n      id\n      name\n    }\n    Position {\n      access\n      id\n      name\n    }\n    profile {\n      firstname_th\n      lastname_th\n      firstname_en\n      lastname_en\n      avatar\n    }\n  }\n}": types.MeDocument,
-    "\n  query Company {\n    company {\n      branch {\n        name\n        address\n        tel\n        website\n        id\n      }\n      userlimit\n      name\n    }\n  }\n": types.CompanyDocument,
+    "\n  query Company {\n    company {\n      _count {\n        branch\n      }\n      branch {\n        _count {\n          users\n          positions\n        }\n        name\n        address\n        tel\n        website\n        id\n      }\n      userlimit\n      name\n    }\n  }\n": types.CompanyDocument,
     "\n  mutation Login($data: LoginaInput!) {\n    login(data: $data) {\n      access_token\n      refresh_token\n      status\n    }\n  }\n": types.LoginDocument,
     "\n  query GetProvince {\n    getProvince {\n      name\n      district {\n        name\n        amphoe {\n          name\n          zipcode\n        }\n      }\n    }\n  }\n": types.GetProvinceDocument,
     "\n  mutation CreateAccount($data: CreateAccountInput!) {\n    createAccount(data: $data) {\n      status\n      message\n  }\n}": types.CreateAccountDocument,
@@ -39,7 +39,7 @@ export function gql(source: "\nquery Me {\n  me {\n    id\n    email\n    isOwne
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "\n  query Company {\n    company {\n      branch {\n        name\n        address\n        tel\n        website\n        id\n      }\n      userlimit\n      name\n    }\n  }\n"): (typeof documents)["\n  query Company {\n    company {\n      branch {\n        name\n        address\n        tel\n        website\n        id\n      }\n      userlimit\n      name\n    }\n  }\n"];
+export function gql(source: "\n  query Company {\n    company {\n      _count {\n        branch\n      }\n      branch {\n        _count {\n          users\n          positions\n        }\n        name\n        address\n        tel\n        website\n        id\n      }\n      userlimit\n      name\n    }\n  }\n"): (typeof documents)["\n  query Company {\n    company {\n      _count {\n        branch\n      }\n      branch {\n        _count {\n          users\n          positions\n        }\n        name\n        address\n        tel\n        website\n        id\n      }\n      userlimit\n      name\n    }\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

@@ -1,6 +1,6 @@
 import { useMutation } from '@apollo/client';
 import { ReactNode, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { AuthProvider } from '../../context/AuthContext';
 import { gql } from '../../__generated__';
 import LoadingSpinner from '../loading-spinner';
@@ -37,11 +37,11 @@ const GQL_QUERY = gql(
 const BaseLayout: React.FC<BaseLayoutProps> = (props) => {
   const { companycode } = useParams();
   const navaigate = useNavigate();
+  const location = useLocation();
   const [validateRoute, { loading: validating, error: validaterror, data }] =
     useMutation(GQL_QUERY);
 
   useEffect(() => {
-    console.log(companycode);
     if (!companycode) {
       navaigate('/overview');
     } else {

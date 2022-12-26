@@ -10,6 +10,7 @@ import {
   HiOutlineQuestionMarkCircle,
 } from 'react-icons/hi2';
 import { CompanyBranchType } from '../../context/types';
+import { logout } from '../../App';
 
 const { useToken } = theme;
 
@@ -65,6 +66,10 @@ const RightNavbarContent: React.FC<RightNavContentType> = ({
   isUserloading,
 }) => {
   const token = useToken();
+
+  const onClick: MenuProps['onClick'] = ({ key }) => {
+    if (key === '5') logout();
+  };
   return (
     <div
       style={{
@@ -77,30 +82,8 @@ const RightNavbarContent: React.FC<RightNavContentType> = ({
       }}
     >
       <Divider type="vertical" style={{ margin: 0 }} />
-      {/* <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-        }}
-      >
-        <Typography.Text>
-          {isUserloading ? (
-            <Skeleton.Input active={true} size={'small'} />
-          ) : (
-            <>{user?.me?.profile?.firstname}</>
-          )}
-        </Typography.Text>
-        <Typography.Text
-          style={{ fontSize: '0.8rem', textAlign: 'end', color: '#6A6A6A' }}
-        >
-          {isUserloading ? (
-            <Skeleton.Input active={true} size={'small'} />
-          ) : (
-            <>{user?.me?.role?.name}</>
-          )}
-        </Typography.Text>
-      </div> */}
       <Dropdown
+        destroyPopupOnHide
         dropdownRender={(menu) => (
           <div
             className="dropdown-content"
@@ -181,7 +164,7 @@ const RightNavbarContent: React.FC<RightNavContentType> = ({
             {menu}
           </div>
         )}
-        menu={{ items }}
+        menu={{ items, onClick }}
         trigger={['click']}
       >
         <Avatar

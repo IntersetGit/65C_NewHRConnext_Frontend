@@ -30,7 +30,11 @@
 }
 
 .site-layout .site-layout-background {
-  background: #fff;
+  background: #f9fafb;
+}
+
+.site-layout .header-bg {
+  background: #ffff;
 }
 
 .siderbar-custom {

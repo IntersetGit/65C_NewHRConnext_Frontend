@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   theme,
   Button,
@@ -10,11 +10,13 @@ import {
   Row,
   Table,
   Card,
+  Typography,
 } from 'antd';
-import { RiCommunityLine, RiCloseFill } from 'react-icons/ri';
-import { FaSearch } from 'react-icons/fa';
+import { RiCommunityLine } from 'react-icons/ri';
 import { gql } from '../../../__generated__/gql';
 import { useQuery } from '@apollo/client';
+import Spinner from '../../../components/Spinner';
+import type { ColumnsType } from 'antd/es/table';
 import { CompanyQuery } from '../../../__generated__/graphql';
 
 const { useToken } = theme;
@@ -22,7 +24,14 @@ const { useToken } = theme;
 const GET_COMPANY = gql(/* GraphQL */ `
   query Company {
     company {
+      _count {
+        branch
+      }
       branch {
+        _count {
+          users
+          positions
+        }
         name
         address
         tel
@@ -37,20 +46,32 @@ const GET_COMPANY = gql(/* GraphQL */ `
 
 const Companyniti: React.FC = () => {
   const token = useToken();
-  const { loading, data } = useQuery(GET_COMPANY);
+  const { loading, data, refetch } = useQuery(GET_COMPANY);
 
-  const columns = [
+  const columns: ColumnsType<CompanyQuery> = [
     {
       title: 'ลำดับ',
-      dataIndex: 'id',
+      align: 'center',
+      render: (_, record, index) => {
+        return index + 1;
+      },
     },
     {
-      title: 'ประเภท',
+      title: 'ประเภทบริษัท',
+      align: 'center',
       dataIndex: 'type',
     },
     {
       title: 'ชื่อบริษัท/สาขา',
       dataIndex: 'name',
+      align: 'center',
+    },
+    {
+      title: 'จำนวนพนักงาน',
+      align: 'center',
+      render: (_, record: any) => {
+        return record._count?.users;
+      },
     },
     {
       title: 'ที่อยู่',
@@ -58,11 +79,15 @@ const Companyniti: React.FC = () => {
     },
     {
       title: 'หมายเลขโทรศัพท์',
-      dataIndex: 'tel',
+      render: (_, record: any) => {
+        return record.tel;
+      },
     },
     {
       title: 'Web Site',
-      dataIndex: 'website',
+      render: (_, record: any) => {
+        return record.website;
+      },
     },
     {
       title: 'Actions',
@@ -78,79 +103,74 @@ const Companyniti: React.FC = () => {
 
   return (
     <div className="px-2 py-2">
-      <Form>
-        <div className="relative flex flex-row items-center">
-          <div className="flex flex-row items-center text-3xl">
+      <div className="relative flex flex-row items-center">
+        <div className="flex">
+          <RiCommunityLine style={{ color: token.token.colorText }} size={30} />
+          <Typography.Title level={3}>จัดการบริษัท</Typography.Title>
+          {/* <div className="flex flex-row items-center text-2xl">
             <RiCommunityLine />
           </div>
           <span className="ml-4 text-lg tracking-wide truncate font-bold">
             จัดการบริษัท
-          </span>
+          </span> */}
         </div>
-        <Divider />
-        <Row>
-          <Col xs={24} xl={12}>
-            <Card
-              bordered
-              className="shadow-lg mb-5"
-              size="small"
-              style={{ borderColor: token.token.colorPrimary }}
-            >
-              {' '}
-              <p className="text-lg font-bold">{data?.company?.name}</p>
-              <p>มีจำนวนสมาชิกทั้งหมด /{data?.company?.userlimit}</p>
-              <p>มีจำนวนสาขาทั้งหมด {data?.company?.branch?.length}</p>
-            </Card>
-          </Col>
-        </Row>
+      </div>
+      <Divider />
 
-        <Row gutter={16}>
-          <Col>
-            <Form.Item>
-              <span className="tracking-wide truncate">ชื่อบริษัท / สาขา</span>
-            </Form.Item>
-          </Col>
-          <Col span={12}>
-            <Input />
-          </Col>
-          <Col>
-            <Button>
-              <FaSearch />
-            </Button>
-          </Col>
-        </Row>
-
-        <Col>
-          <Form.Item>
-            <span
-              className="tracking-wide truncate]"
-              style={{
-                marginRight: '3px',
-                color: token.token.colorPrimary,
+      <Card className="shadow-md mb-3">
+        <Row gutter={5}>
+          <Col xs={24} sm={24} md={24} lg={17} xl={20}>
+            <Form
+              wrapperCol={{
+                xl: { span: 5, offset: 0 },
+                lg: { span: 12, offset: 0 },
+                md: { span: 24, offset: 0 },
+                sm: { span: 24, offset: 0 },
+                xs: { span: 24, offset: 0 },
               }}
+              layout="vertical"
             >
-              บริษัท / นิติบุคคล
-            </span>
-            <span
-              style={{ position: 'absolute', right: '10px', height: '10px' }}
-            >
+              <Form.Item label={<b>ชื่อบริษัท/สาขา</b>}>
+                <Input />
+              </Form.Item>
+            </Form>
+          </Col>
+          <Col xs={24} sm={24} md={24} lg={7} xl={4}>
+            <div className="space-x-2 flex h-full items-center justify-end justify-items-center">
               <Button
-                style={{ height: '35px' }}
-                onClick={() => {
-                  // setTablefield(false);
-                }}
+                loading={loading}
+                type="primary"
+                style={{ backgroundColor: token.token.colorPrimary }}
               >
-                + เพิ่มสาขา
+                Search
               </Button>
-            </span>
-          </Form.Item>
+              <Button>Reset</Button>
+            </div>
+          </Col>
+        </Row>
+      </Card>
+      <Card className="shadow-md">
+        <Col className="pb-4 flex justify-end">
+          <Button
+            style={{ height: '35px' }}
+            type={'dashed'}
+            onClick={() => {
+              // setTablefield(false);
+            }}
+          >
+            + เพิ่มสาขา
+          </Button>
         </Col>
         <Table
+          rowKey={'id'}
           dataSource={data?.company?.branch as any}
-          loading={loading}
+          loading={{
+            spinning: loading,
+            indicator: <Spinner />,
+          }}
           columns={columns}
         />
-      </Form>
+      </Card>
     </div>
   );
 };

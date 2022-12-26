@@ -27,7 +27,7 @@ const Layouts: React.FC<BaseLayoutProps> = (props) => {
       {!props.noSidebar && <Siderbar collapsed={collapsed} />}
       <Layout className="site-layout">
         <Layout.Header
-          className="site-layout-background header"
+          className="header header-bg"
           style={{
             padding: 0,
             height: layoutConfig.headerHeight,
@@ -76,8 +76,9 @@ const Layouts: React.FC<BaseLayoutProps> = (props) => {
           />
         </Layout.Header>
         <Layout.Content
-          className="site-layout-background"
+          className="site-layout-background bg-gray-300"
           style={{
+            height: '100vh',
             marginTop: `${layoutConfig.headerHeight}px`,
             marginLeft: `${
               !props.noSidebar
