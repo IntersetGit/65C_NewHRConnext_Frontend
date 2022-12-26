@@ -548,7 +548,7 @@ const Register: React.FC = () => {
                   value: 1000,
                 },
               ]}
-            />{' '}
+            />
           </Form.Item>
         </Col>
       </Row>

@@ -34,8 +34,10 @@ query Me {
       name
     }
     profile {
-      firstname
-      lastname
+      firstname_th
+      lastname_th
+      firstname_en
+      lastname_en
       avatar
     }
   }

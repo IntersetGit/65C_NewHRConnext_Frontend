@@ -154,7 +154,8 @@ const RightNavbarContent: React.FC<RightNavContentType> = ({
                       whiteSpace: 'nowrap',
                     }}
                   >
-                    {user?.me?.profile?.firstname} {user?.me?.profile?.lastname}
+                    {user?.me?.profile?.firstname_th}{' '}
+                    {user?.me?.profile?.lastname_th}
                   </Typography.Text>
                   <Typography.Text
                     style={{ ...profileDetailstyle, fontSize: '0.9em' }}
@@ -170,7 +171,7 @@ const RightNavbarContent: React.FC<RightNavContentType> = ({
                     <Typography.Text
                       style={{ ...profileDetailstyle, fontSize: '0.85em' }}
                     >
-                      บริษัท {company?.companyName} {company?.branchName}
+                      {company?.companyName} {company?.branchName}
                     </Typography.Text>
                   )}
                 </div>
