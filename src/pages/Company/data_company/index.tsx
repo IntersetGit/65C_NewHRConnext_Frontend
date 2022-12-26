@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import {
+    theme,
     Button,
     Col,
     Divider,
@@ -15,12 +16,15 @@ import { RiCommunityLine, RiCloseFill } from "react-icons/ri";
 import { FaFacebookSquare, FaLinkedin, FaInstagramSquare, FaLine, FaSearch } from "react-icons/fa";
 
 
+const { useToken } = theme;
+
 const Companyniti: React.FC<{ products: { name: string }[]; onDelete: (id: string) => void }> = ({
     onDelete,
     products,
 }) => {
 
     const [isTablefield, setTablefield] = useState(true);
+    const token = useToken();
 
     const columns = [
         {
@@ -124,7 +128,11 @@ const Companyniti: React.FC<{ products: { name: string }[]; onDelete: (id: strin
 
                     <Col>
                         <Form.Item>
-                            <span className="tracking-wide truncate text-[#FC6634]">
+                            <span className="tracking-wide truncate]"
+                                style={{
+                                    marginRight: '3px',
+                                    color: token.token.colorPrimary,
+                                }}>
                                 บริษัท / นิติบุคคล
                             </span>
                             <span style={{ position: 'absolute', right: '10px', height: '10px' }}>
@@ -268,7 +276,7 @@ const Companyniti: React.FC<{ products: { name: string }[]; onDelete: (id: strin
                             </Col>
                             <Col span={8}>
                                 <Form.Item label={'แผนที่'}>
-                                    <Button color='#Fc6634'>
+                                    <Button>
                                         เปิดแผนที่
                                     </Button>
                                 </Form.Item>
@@ -332,7 +340,9 @@ const Companyniti: React.FC<{ products: { name: string }[]; onDelete: (id: strin
 
 
                         <Row gutter={16} className='px-2'>
-                            <div className="text-[#FC6634] text-base">โลโก้บริษัท</div>
+                            <div
+                                className="text-base"
+                                style={{ color: token.token.colorPrimary }}>โลโก้บริษัท</div>
                             <Col>
                                 <Button>
                                     เลือกรูป
@@ -349,7 +359,7 @@ const Companyniti: React.FC<{ products: { name: string }[]; onDelete: (id: strin
                             <Divider />
                         </Row>
 
-                        <div className="text-[#FC6634] text-base">Social Link</div>
+                        <div className="text-base" style={{ color: token.token.colorPrimary }}>Social Link</div>
 
                         <Row gutter={16}>
                             {/*---------------- Facebook ----------------*/}
@@ -407,7 +417,7 @@ const Companyniti: React.FC<{ products: { name: string }[]; onDelete: (id: strin
 
                         <Divider />
 
-                        <div className="text-[#FC6634] text-base">ไฟล์เอกสารการเป็นนิติบุคคล ***</div><br />
+                        <div className="text-base" style={{ color: token.token.colorPrimary }}>ไฟล์เอกสารการเป็นนิติบุคคล ***</div><br />
 
                         <Row gutter={16}>
                             <Col>
@@ -463,7 +473,7 @@ const Companyniti: React.FC<{ products: { name: string }[]; onDelete: (id: strin
                             </Form.Item>
                         </Row>
 
-                        <div className="text-[#FC6634] text-base">
+                        <div className="text-base" style={{ color: token.token.colorPrimary }}>
                             *** กรอกข้อมูล และ Upload เอกสารที่ถูกต้อง เพื่อรับสิทธิ์ การใช้ระบบ Report/Dash Bard สำหรับผู้บริหาร/หรือฝ่ายบุคคล ของบริษัทฯ ฟรีตลอดอายุการใช้งาน
                         </div>
                     </Form>
