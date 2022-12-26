@@ -126,7 +126,7 @@ export const routing: RoutingType[] = [
       },
       {
         path: '/:companycode/company',
-        label: 'ข้อมูลบริษัท',
+        label: 'บริษัท',
         icon: <RiHotelLine size={'18'} />,
         element: <DataCompany />,
       },
@@ -237,4 +237,4 @@ export const routing: RoutingType[] = [
 const router = createBrowserRouter(routing);
 export default router;
 
-createBrowserRouter([{ loader: ({}) => {} }]);
+createBrowserRouter([{ loader: ({ }) => { } }]);
