@@ -15,11 +15,13 @@ const Home = React.lazy(() => import('../pages/Home'));
 const Companyroot = React.lazy(() => import('../pages/Company'));
 const CompanyStructure = React.lazy(() => import('../pages/Company/structure'));
 const CompanyPosition = React.lazy(() => import('../pages/Company/position'));
-const Userprofileroot = React.lazy(() => import('../pages/Userprofile'));
-const ProfileUser = React.lazy(() => import('../pages/Userprofile/profile'));
-const Work = React.lazy(() => import('../pages/Userprofile/work'));
 const Employeeroot = React.lazy(() => import('../pages/Employee'));
 const Employee = React.lazy(() => import('../pages/Employee/employee'));
+const Resumeroot = React.lazy(() => import('../pages/Resume'));
+const ProfileResume = React.lazy(() => import('../pages/Resume/profileresume'));
+const Summaryroot = React.lazy(() => import('../pages/Summary'));
+const Compensation = React.lazy(() => import('../pages/Summary/compensation'));
+const Remuneration = React.lazy(() => import('../pages/Summary/remuneration'));
 const UserEmployee = React.lazy(
   () => import('../pages/Employee/employee/useremployee'),
 );
@@ -56,6 +58,7 @@ import {
   RiFile3Line,
   RiTeamLine,
   RiHandCoinLine,
+  RiFileCopyLine,
 } from 'react-icons/ri';
 import { HiOutlineClipboardDocumentCheck } from 'react-icons/hi2';
 
@@ -83,49 +86,6 @@ export const routing: RoutingType[] = [
         icon: <RiHome2Line size={'18'} />,
         element: <Home />,
       },
-      // {
-      //   path: ':companycode/userprofile',
-      //   label: 'ข้อมูลของฉัน',
-      //   icon: <RiContactsLine size={'18'} />,
-      //   forcerendermenu: true,
-      //   element: <Userprofileroot />,
-      //   children: [
-      //     {
-      //       path: '/:companycode/userprofile',
-      //       element: <ProfileUser />,
-      //     },
-      //     {
-      //       path: '/:companycode/userprofile/work',
-      //       element: <Work />,
-      //     },
-      //     {
-      //       path: '/:companycode/userprofile/salary',
-      //       hideInmenu: true,
-      //       element: <></>,
-      //     },
-      //     {
-      //       path: '/:companycode/userprofile/vacation',
-      //       hideInmenu: true,
-      //       element: <></>,
-      //     },
-      //     {
-      //       path: '/:companycode/userprofile/training',
-      //       element: <></>,
-      //     },
-      //     {
-      //       path: '/:companycode/userprofile/asset',
-      //       element: <></>,
-      //     },
-      //     {
-      //       path: '/:companycode/userprofile/file',
-      //       element: <></>,
-      //     },
-      //     {
-      //       path: '/:companycode/userprofile/credit',
-      //       element: <></>,
-      //     },
-      //   ],
-      // },
       {
         path: '/:companycode/company',
         label: 'บริษัท',
@@ -158,10 +118,37 @@ export const routing: RoutingType[] = [
         ],
       },
       {
+        path: '/:companycode/resume',
+        label: 'ประวัติการทำงาน',
+        icon: <RiFileCopyLine />,
+        forcerendermenu: true,
+        element: <Resumeroot />,
+        children: [
+          {
+            path: '/:companycode/resume',
+            element: <ProfileResume />,
+            hideInmenu: true,
+          },
+        ],
+      },
+      {
         path: '/:companycode/summary',
         label: 'เงินเดือน',
         icon: <RiMoneyDollarCircleLine size={'18'} />,
-        element: <CompanyLocation />,
+        forcerendermenu: true,
+        element: <Summaryroot />,
+        children: [
+          {
+            path: '/:companycode/summary',
+            element: <Compensation />,
+            hideInmenu: true,
+          },
+          {
+            path: '/:companycode/summary/remuneration',
+            element: <Remuneration />,
+            hideInmenu: true,
+          },
+        ],
       },
       {
         path: '/:companycode/vacation',

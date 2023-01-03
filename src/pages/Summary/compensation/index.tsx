@@ -1,5 +1,3 @@
-import { useState } from 'react';
-import { FaUserAlt } from 'react-icons/fa';
 import {
   Button,
   Card,
@@ -15,9 +13,10 @@ import {
   Dropdown,
   Menu,
 } from 'antd';
+import { GiReceiveMoney } from 'react-icons/gi';
 import type { ColumnsType } from 'antd/es/table';
-import { useNavigate } from 'react-router-dom';
 import { MoreOutlined } from '@ant-design/icons';
+import { useNavigate } from 'react-router-dom';
 
 const { useToken } = theme;
 
@@ -31,9 +30,8 @@ interface DataType {
   email: string;
 }
 
-const Employee: React.FC = () => {
+const Compensation: React.FC = () => {
   const token = useToken();
-  const navigate = useNavigate();
 
   const menuItems = [
     {
@@ -164,9 +162,11 @@ const Employee: React.FC = () => {
 
   return (
     <>
-      <div className="flex text-2xl ml-2 pt-4">
-        <FaUserAlt />
-        <div className="ml-2 text-lg">พนักงาน</div>
+      <div className="flex text-3xl ml-2 pt-4">
+        <GiReceiveMoney />
+        <div className="ml-2 text-xl">
+          ค่าตอบแทน ( เงินเดือน ค่าล่วงเวลา ค่าบริหาร เบี้ยขยัน และ อื่น ๆ )
+        </div>
       </div>
 
       <Divider />
@@ -216,22 +216,9 @@ const Employee: React.FC = () => {
                 marginBottom: '10px',
                 backgroundColor: token.token.colorPrimary,
               }}
-              onClick={() => {
-                navigate('useremployee');
-              }}
+              onClick={() => {}}
             >
-              + เพิ่มพนักงาน
-            </Button>
-
-            <Button
-              type="primary"
-              size="middle"
-              style={{
-                marginBottom: '10px',
-                backgroundColor: token.token.colorPrimary,
-              }}
-            >
-              Upload Excel
+              + จัดการข้อมูล
             </Button>
           </Space>
         </Col>
@@ -241,4 +228,4 @@ const Employee: React.FC = () => {
   );
 };
 
-export default Employee;
+export default Compensation;

@@ -522,7 +522,7 @@ const UserEmployee: React.FC = () => {
               <Button htmlType="submit">บันทึก</Button>
               <Button
                 onClick={() => {
-                  navigate('/employee');
+                  navigate(-1);
                 }}
               >
                 ยกเลิก
