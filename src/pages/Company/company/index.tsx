@@ -18,6 +18,7 @@ import { useQuery } from '@apollo/client';
 import Spinner from '../../../components/Spinner';
 import type { ColumnsType } from 'antd/es/table';
 import { CompanyQuery } from '../../../__generated__/graphql';
+import { useNavigate } from 'react-router-dom';
 
 const { useToken } = theme;
 
@@ -47,6 +48,7 @@ const GET_COMPANY = gql(/* GraphQL */ `
 const Companyniti: React.FC = () => {
   const token = useToken();
   const { loading, data, refetch } = useQuery(GET_COMPANY);
+  const navigate = useNavigate();
 
   const columns: ColumnsType<CompanyQuery> = [
     {
@@ -107,12 +109,6 @@ const Companyniti: React.FC = () => {
         <div className="flex">
           <RiCommunityLine style={{ color: token.token.colorText }} size={30} />
           <Typography.Title level={3}>จัดการบริษัท</Typography.Title>
-          {/* <div className="flex flex-row items-center text-2xl">
-            <RiCommunityLine />
-          </div>
-          <span className="ml-4 text-lg tracking-wide truncate font-bold">
-            จัดการบริษัท
-          </span> */}
         </div>
       </div>
       <Divider />
@@ -152,10 +148,13 @@ const Companyniti: React.FC = () => {
       <Card className="shadow-md">
         <Col className="pb-4 flex justify-end">
           <Button
-            style={{ height: '35px' }}
-            type={'dashed'}
+            type="primary"
+            style={{
+              marginBottom: '10px',
+              backgroundColor: token.token.colorPrimary,
+            }}
             onClick={() => {
-              // setTablefield(false);
+              navigate('newCompany');
             }}
           >
             + เพิ่มสาขา

@@ -28,7 +28,8 @@ const UserEmployee = React.lazy(
 const Login = React.lazy(() => import('../pages/Login'));
 const Register = React.lazy(() => import('../pages/Register'));
 const Overview = React.lazy(() => import('../pages/Overview'));
-const MainCompany = React.lazy(() => import('../pages/Company/company'));
+const MainCompany = React.lazy(() => import('../pages/Company'));
+const Company = React.lazy(() => import('../pages/Company/company'))
 const ManageCompanyData = React.lazy(
   () => import('../pages/Company/company/newCompany'),
 );
@@ -61,6 +62,7 @@ import {
   RiFileCopyLine,
 } from 'react-icons/ri';
 import { HiOutlineClipboardDocumentCheck } from 'react-icons/hi2';
+import Newcompany from '../pages/Company/company/newCompany';
 
 export type RoutingType = {
   path: string;
@@ -90,14 +92,27 @@ export const routing: RoutingType[] = [
         path: '/:companycode/company',
         label: 'บริษัท',
         icon: <RiHotelLine size={'18'} />,
+        forcerendermenu: true,
         element: <MainCompany />,
+        children: [
+          {
+            path: '/:companycode/company',
+            element: <Company />,
+            hideInmenu: true,
+          },
+          {
+            path: '/:companycode/company/newCompany',
+            element: <ManageCompanyData />,
+            hideInmenu: true,
+          },
+        ],
       },
-      {
-        path: '/:companycode/company/manage/:method/:id',
-        hideInmenu: true,
-        icon: <RiHotelLine size={'18'} />,
-        element: <ManageCompanyData />,
-      },
+      // {
+      //   path: '/:companycode/company/manage/:method/:id',
+      //   hideInmenu: true,
+      //   icon: <RiHotelLine size={'18'} />,
+      //   element: <ManageCompanyData />,
+      // },
       {
         path: '/:companycode/employee',
         label: 'พนักงาน',
@@ -245,4 +260,4 @@ export const routing: RoutingType[] = [
 const router = createBrowserRouter(routing);
 export default router;
 
-createBrowserRouter([{ loader: ({}) => {} }]);
+createBrowserRouter([{ loader: ({ }) => { } }]);
