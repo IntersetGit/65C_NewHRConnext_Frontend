@@ -361,7 +361,7 @@ const Newcompany = () => {
                     marginBottom: '10px',
                   }}
                   onClick={() => {
-                    navigate('/company');
+                    navigate('/:companycode/company');
                   }}
                 >
                   ยกเลิก
