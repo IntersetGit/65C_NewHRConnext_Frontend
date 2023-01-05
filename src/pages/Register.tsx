@@ -18,7 +18,7 @@ import { useMutation, useQuery } from '@apollo/client';
 import marklight from '../assets/auth-v2-login-mask-light.png';
 import Swal from 'sweetalert2';
 import human from '../assets/500.png';
-import logo from '../assets/icon.png';
+import logo from '../assets/HR logo.png';
 import { gql } from '../__generated__/gql';
 
 const { useToken } = theme;

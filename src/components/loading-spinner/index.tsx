@@ -1,6 +1,6 @@
 import { theme } from 'antd';
 
-import icon from '../../assets/icon.png';
+import icon from '../../assets/HR logo.png';
 import spinner from '../../assets/loadspinner.svg';
 
 const { useToken } = theme;

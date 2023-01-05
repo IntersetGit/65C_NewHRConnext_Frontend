@@ -12,7 +12,7 @@ import RightNavbarContent from './RightNavberContent';
 import { useAuth } from '../../hooks/useAuth';
 import { BaseLayoutProps } from '.';
 
-import icon from '../../assets/icon.png';
+import icon from '../../assets/HR logo.png';
 
 const Layouts: React.FC<BaseLayoutProps> = (props) => {
   const [collapsed, setCollapsed] = useState(false);
@@ -44,11 +44,10 @@ const Layouts: React.FC<BaseLayoutProps> = (props) => {
                 collapsed ? MenuUnfoldOutlined : MenuFoldOutlined,
                 {
                   style: {
-                    marginLeft: `${
-                      collapsed
+                    marginLeft: `${collapsed
                         ? layoutConfig.siderbarCollpasedWidth
                         : layoutConfig.siderbarWidth
-                    }px`,
+                      }px`,
                   },
                   className: 'trigger',
                   onClick: () => setCollapsed(!collapsed),
@@ -80,16 +79,14 @@ const Layouts: React.FC<BaseLayoutProps> = (props) => {
           style={{
             height: '100vh',
             marginTop: `${layoutConfig.headerHeight}px`,
-            marginLeft: `${
-              !props.noSidebar
+            marginLeft: `${!props.noSidebar
                 ? collapsed
                   ? layoutConfig.siderbarCollpasedWidth
                   : layoutConfig.siderbarWidth
                 : 0
-            }px`,
-            padding: `${props.py || 10}px ${props.px || 10}px ${
-              props.py || 10
-            }px ${props.px || 10}px`,
+              }px`,
+            padding: `${props.py || 10}px ${props.px || 10}px ${props.py || 10
+              }px ${props.px || 10}px`,
             minHeight: 280,
           }}
         >

@@ -3,7 +3,7 @@ import '../styles/components/login.css';
 import { useMutation } from '@apollo/client';
 import lightcartoon from '../assets/auth-v2-forgot-password-illustration-bordered-light.png';
 import mark from '../assets/misc-mask-light.png';
-import logo from '../assets/logo.png';
+import logo from '../assets/HRConnext.png';
 import { Link, useNavigate } from 'react-router-dom';
 import { Cookies } from 'react-cookie';
 import Swal from 'sweetalert2';
@@ -86,7 +86,8 @@ const Login: React.FC = () => {
             paddingRight: '40px',
           }}
         >
-          <img src={logo} width={210} height={60} />
+          <img src={logo} width={300} height={60} />
+          <br />
           <Typography.Title level={4}>เข้าสู่ระบบ</Typography.Title>
           <Form
             form={form}

@@ -1,7 +1,7 @@
 import { Layout, Menu } from 'antd';
 import layoutConfig from '../../config/layoutConfig';
-import logo from '../../assets/logo.png';
-import icon from '../../assets/icon.png';
+import logo from '../../assets/HRConnext.png';
+import icon from '../../assets/HR logo.png';
 import {
   useNavigate,
   useLocation,
