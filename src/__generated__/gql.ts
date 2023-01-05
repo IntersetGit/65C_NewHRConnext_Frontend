@@ -22,6 +22,7 @@ const documents = {
     "\n  mutation CreateAccount($data: CreateAccountInput!) {\n    createAccount(data: $data) {\n      status\n      message\n  }\n}": types.CreateAccountDocument,
     "\n  query Query($companyname: String!) {\n  verifyCompanycode(companyname: $companyname)\n}\n": types.QueryDocument,
     "\nquery GetownCompany {\n  getownCompany {\n    redirect\n    isOwner\n    company {\n      companyCode\n      icon\n      id\n      name\n    }\n    companies {\n      companyCode\n      icon\n      id\n      name\n    }\n  }\n}\n": types.GetownCompanyDocument,
+    "\nquery Users {\n    users {\n      email\n      profile {\n        id\n        firstname_th\n        firstname_en\n        lastname_th\n        lastname_en\n      }\n      Position {\n        id\n        name\n\n      }\n    }\n\n  }\n": types.UsersDocument,
 };
 
 /**
@@ -60,6 +61,10 @@ export function gql(source: "\n  query Query($companyname: String!) {\n  verifyC
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(source: "\nquery GetownCompany {\n  getownCompany {\n    redirect\n    isOwner\n    company {\n      companyCode\n      icon\n      id\n      name\n    }\n    companies {\n      companyCode\n      icon\n      id\n      name\n    }\n  }\n}\n"): (typeof documents)["\nquery GetownCompany {\n  getownCompany {\n    redirect\n    isOwner\n    company {\n      companyCode\n      icon\n      id\n      name\n    }\n    companies {\n      companyCode\n      icon\n      id\n      name\n    }\n  }\n}\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\nquery Users {\n    users {\n      email\n      profile {\n        id\n        firstname_th\n        firstname_en\n        lastname_th\n        lastname_en\n      }\n      Position {\n        id\n        name\n\n      }\n    }\n\n  }\n"): (typeof documents)["\nquery Users {\n    users {\n      email\n      profile {\n        id\n        firstname_th\n        firstname_en\n        lastname_th\n        lastname_en\n      }\n      Position {\n        id\n        name\n\n      }\n    }\n\n  }\n"];
 
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.

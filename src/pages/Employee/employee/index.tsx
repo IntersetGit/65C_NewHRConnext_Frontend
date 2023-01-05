@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { FaUserAlt } from 'react-icons/fa';
 import {
   Button,
@@ -18,6 +18,8 @@ import {
 import type { ColumnsType } from 'antd/es/table';
 import { useNavigate } from 'react-router-dom';
 import { MoreOutlined } from '@ant-design/icons';
+import { useQuery } from '@apollo/client';
+import { FETCH_GETALLUSER } from '../../../service/graphql/Users';
 
 const { useToken } = theme;
 
@@ -34,6 +36,9 @@ interface DataType {
 const Employee: React.FC = () => {
   const token = useToken();
   const navigate = useNavigate();
+  const [dataTable, setDataTable] = useState([])
+  const { data: userData, refetch } = useQuery(FETCH_GETALLUSER);
+
 
   const menuItems = [
     {
@@ -50,6 +55,10 @@ const Employee: React.FC = () => {
     },
   ];
 
+
+  const apiGetUsers = () => {
+    refetch();
+  }
   const onMenuClick = (event: any, record: any) => {
     const { key } = event;
     if (key === 'edit') {
@@ -68,8 +77,9 @@ const Employee: React.FC = () => {
     {
       title: 'ชื่อ-สกุล',
       key: 'name',
-      dataIndex: 'name',
+      dataIndex: 'profile',
       align: 'center',
+      render:(txt)=>txt.firstname_th + ' ' +txt.lastname_th
     },
     {
       title: 'ตำแหน่ง',
@@ -230,12 +240,13 @@ const Employee: React.FC = () => {
                 marginBottom: '10px',
                 backgroundColor: token.token.colorPrimary,
               }}
+              onClick={apiGetUsers}
             >
               Upload Excel
             </Button>
           </Space>
         </Col>
-        <Table columns={columns} dataSource={data}></Table>
+        <Table columns={columns} dataSource={userData?.users as any} rowKey={( i: any) => i.toString()} ></Table>
       </Card>
     </>
   );
