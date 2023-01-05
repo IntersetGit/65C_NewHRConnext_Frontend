@@ -253,7 +253,12 @@ const Newcompany = () => {
             {/*---------------- Facebook ----------------*/}
             <div className="relative flex flex-row items-center">
               <div className="flex flex-row ml-2 tems-center text-4xl">
-                <FaFacebookSquare />
+                {/* <FaFacebookSquare /> */}
+                <img
+                  src={`/public/Facebook-logo.png`}
+                  alt="Facebook-logo"
+                  style={{ width: '40px' }}
+                />
               </div>
               <div className="flex items-center ml-8 mt-6">
                 <Col span={24}>
@@ -264,7 +269,12 @@ const Newcompany = () => {
               </div>
               {/*---------------- in ----------------*/}
               <div className="flex flex-row items-center ml-6 text-4xl">
-                <FaLinkedin />
+                {/* <FaLinkedin /> */}
+                <img
+                  src={`/public/initials-logo.png`}
+                  alt="Facebook-logo"
+                  style={{ width: '40px' }}
+                />
               </div>
               <div className="flex items-center ml-8 mt-6">
                 <Col span={24}>
@@ -280,7 +290,12 @@ const Newcompany = () => {
             {/*---------------- instagram ----------------*/}
             <div className="relative flex flex-row items-center">
               <div className="flex flex-row ml-2 items-center text-4xl">
-                <FaInstagramSquare />
+                {/* <FaInstagramSquare /> */}
+                <img
+                  src={`/public/Instagram-logo.png`}
+                  alt="Facebook-logo"
+                  style={{ width: '40px' }}
+                />
               </div>
               <div className="flex items-center ml-8 mt-6">
                 <Col span={24}>
@@ -291,7 +306,12 @@ const Newcompany = () => {
               </div>
               {/*---------------- Line ----------------*/}
               <div className="flex flex-row items-center ml-6 text-4xl">
-                <FaLine />
+                {/* <FaLine /> */}
+                <img
+                  src={`/public/Line-logo.png`}
+                  alt="Facebook-logo"
+                  style={{ width: '40px' }}
+                />
               </div>
               <div className="flex items-center ml-8 mt-6">
                 <Col span={24}>
