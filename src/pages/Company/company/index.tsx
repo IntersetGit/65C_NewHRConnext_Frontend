@@ -104,15 +104,22 @@ const Companyniti: React.FC = () => {
   ];
 
   return (
-    <div className="px-2 py-2">
-      <div className="relative flex flex-row items-center">
-        <div className="flex">
-          <RiCommunityLine style={{ color: token.token.colorText }} size={30} />
-          <Typography.Title level={3}>จัดการบริษัท</Typography.Title>
-        </div>
+    <>
+      <div className="flex text-2xl ml-2 pt-4">
+        <RiCommunityLine size={30} />
+        <div className="ml-2 text-lg">จัดการบริษัท</div>
       </div>
-      <Divider style={{ backgroundColor: token.token.colorPrimary }} />
 
+      {/* <div className="px-2 py-2">
+        <div className="relative flex flex-row items-center">
+          <div className="flex">
+            <RiCommunityLine style={{ color: token.token.colorText }} size={30} />
+            <Typography.Title level={3}>จัดการบริษัท</Typography.Title>
+          </div>
+        </div>
+      </div> */}
+
+      <Divider style={{ backgroundColor: token.token.colorPrimary }} />
       <Card className="shadow-md mb-3">
         <Row gutter={5}>
           <Col xs={24} sm={24} md={24} lg={17} xl={20}>
@@ -170,7 +177,7 @@ const Companyniti: React.FC = () => {
           columns={columns}
         />
       </Card>
-    </div>
+    </>
   );
 };
 

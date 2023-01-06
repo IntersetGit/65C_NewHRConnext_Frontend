@@ -42,9 +42,16 @@ const getBase64 = (file: RcFile): Promise<string> =>
     reader.onerror = (error) => reject(error);
   });
 
+
+
 const UserEmployee: React.FC = () => {
   const navigate = useNavigate();
   const token = useToken();
+
+  const onSubmitForm = (value: any) => {
+    console.log('value', value);
+  }
+
   return (
     <>
       <div className="relative flex flex-row items-center">
@@ -58,16 +65,16 @@ const UserEmployee: React.FC = () => {
       <Divider style={{ backgroundColor: token.token.colorPrimary }} />
       <Card className="shadow-xl">
         <div className="text-base" style={{ color: token.token.colorPrimary }}>ข้อมูลพื้นฐาน</div>
-        <Form layout={'vertical'} size={'large'}>
+        <Form layout={'vertical'} onFinish={onSubmitForm} size={'large'}>
           <Row gutter={16}>
             <Col xs={24} sm={12} md={12} lg={4} xl={4}>
-              <Form.Item label={'รหัสพนักงาน'}>
+              <Form.Item name={"staff_code"} label={'รหัสพนักงาน'}>
                 <Input />
               </Form.Item>
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={4} xl={4}>
-              <Form.Item label={'Status'}>
+              <Form.Item name={"staff_status"} label={'Status'}>
                 <Select
                   options={[
                     {
@@ -84,13 +91,13 @@ const UserEmployee: React.FC = () => {
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={8} xl={8}>
-              <Form.Item label={'เลขประจำตัวประชาชน'}>
+              <Form.Item name="citizen_id" label={'เลขประจำตัวประชาชน'}>
                 <Input />
               </Form.Item>
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={8} xl={8}>
-              <Form.Item label={'หมายเลขประกันสังคม'}>
+              <Form.Item name={"contract_sameCitizen"} label={'หมายเลขประกันสังคม'}>
                 <Input />
               </Form.Item>
             </Col>
@@ -98,7 +105,7 @@ const UserEmployee: React.FC = () => {
 
           <Row gutter={16}>
             <Col xs={24} sm={12} md={12} lg={4} xl={4}>
-              <Form.Item label={'คำนำหน้า'}>
+              <Form.Item name={"prefix_th"} label={'คำนำหน้า'}>
                 <Select
                   options={[
                     {
@@ -120,7 +127,7 @@ const UserEmployee: React.FC = () => {
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={10} xl={10}>
-              <Form.Item label={'ชื่อ-สกุล'}>
+              <Form.Item name={"firstname_th"} label={'ชื่อ-สกุล'}>
                 <Input />
               </Form.Item>
             </Col>
@@ -132,7 +139,7 @@ const UserEmployee: React.FC = () => {
             </Col>
 
             <Col xs={24} sm={8} md={8} lg={3} xl={3}>
-              <Form.Item label={'เพศ'}>
+              <Form.Item name={"gender"} label={'เพศ'}>
                 <Select
                   options={[
                     {
@@ -150,7 +157,7 @@ const UserEmployee: React.FC = () => {
             </Col>
 
             <Col xs={24} sm={8} md={8} lg={3} xl={3}>
-              <Form.Item label={'กรุ๊ปเลือด'}>
+              <Form.Item name={"bio"} label={'กรุ๊ปเลือด'}>
                 <Select
                   options={[
                     {
@@ -178,7 +185,7 @@ const UserEmployee: React.FC = () => {
 
           <Row gutter={16}>
             <Col xs={24} sm={12} md={12} lg={4} xl={4}>
-              <Form.Item label={'Prename'}>
+              <Form.Item name={"prefix_en"} label={'Prename'}>
                 <Select
                   options={[
                     {
@@ -200,7 +207,7 @@ const UserEmployee: React.FC = () => {
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={10} xl={10}>
-              <Form.Item label={'Name-Surname'}>
+              <Form.Item name={"firstname_en"} label={'Name-Surname'}>
                 <Input />
               </Form.Item>
             </Col>
@@ -208,19 +215,19 @@ const UserEmployee: React.FC = () => {
 
           <Row gutter={16}>
             <Col xs={24} sm={12} md={8} lg={4} xl={4}>
-              <Form.Item label={'วัน/เดือน/ปี'}>
+              <Form.Item name={"dob"} label={'วัน/เดือน/ปี'}>
                 <DatePicker style={{ width: '195px' }} />
               </Form.Item>
             </Col>
 
             <Col xs={24} sm={12} md={8} lg={4} xl={4}>
-              <Form.Item label={'อายุ'}>
+              <Form.Item name={"age"} label={'อายุ'}>
                 <Input />
               </Form.Item>
             </Col>
 
             <Col xs={24} sm={8} md={8} lg={6} xl={6}>
-              <Form.Item label={'สถานภาพสมรส'}>
+              <Form.Item  label={'สถานภาพสมรส'}>
                 <Select
                   options={[
                     {
@@ -246,7 +253,7 @@ const UserEmployee: React.FC = () => {
             </Col>
 
             <Col xs={24} sm={8} md={12} lg={4} xl={4}>
-              <Form.Item label={'T-Shirt Size'}>
+              <Form.Item name={"shirt_size"} label={'T-Shirt Size'}>
                 <Select
                   options={[
                     {
@@ -276,7 +283,7 @@ const UserEmployee: React.FC = () => {
             </Col>
 
             <Col xs={24} sm={8} md={12} lg={6} xl={6}>
-              <Form.Item label={'สถานภาพพนักงาน'}>
+              <Form.Item name={""} label={'สถานภาพพนักงาน'}>
                 <Select
                   options={[
                     {
@@ -302,13 +309,13 @@ const UserEmployee: React.FC = () => {
 
           <Row gutter={16}>
             <Col xs={24} sm={12} md={12} lg={6} xl={6}>
-              <Form.Item label={'เลขที่บ้าน'}>
+              <Form.Item name={"citizen_addressnumber"} label={'เลขที่บ้าน'}>
                 <Input />
               </Form.Item>
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={18} xl={18}>
-              <Form.Item label={'หมู่บ้าน/คอนโด ซอย ถนน'}>
+              <Form.Item name={"citizen_address"} label={'หมู่บ้าน/คอนโด ซอย ถนน'}>
                 <Input />
               </Form.Item>
             </Col>
@@ -316,7 +323,7 @@ const UserEmployee: React.FC = () => {
 
           <Row gutter={16}>
             <Col xs={24} sm={12} md={12} lg={6} xl={6}>
-              <Form.Item label={'ประเทศ'}>
+              <Form.Item name={"citizen_country"} label={'ประเทศ'}>
                 <Select
                   options={[
                     {
@@ -330,7 +337,7 @@ const UserEmployee: React.FC = () => {
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={6} xl={6}>
-              <Form.Item label={'จังหวัด'}>
+              <Form.Item name={"citizen_province"} label={'จังหวัด'}>
                 <Select
                   options={[
                     {
@@ -344,7 +351,7 @@ const UserEmployee: React.FC = () => {
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={6} xl={6}>
-              <Form.Item label={'เขต/อำเภอ'}>
+              <Form.Item name={"citizen_district"} label={'เขต/อำเภอ'}>
                 <Select
                   options={[
                     {
@@ -358,7 +365,7 @@ const UserEmployee: React.FC = () => {
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={6} xl={6}>
-              <Form.Item label={'แขวง/ตำบล'}>
+              <Form.Item name={"citizen_state"} label={'แขวง/ตำบล'}>
                 <Select
                   options={[
                     {
@@ -374,13 +381,13 @@ const UserEmployee: React.FC = () => {
 
           <Row gutter={16}>
             <Col xs={24} sm={12} md={12} lg={6} xl={6}>
-              <Form.Item label={'รหัสไปรษณีย์'}>
+              <Form.Item name={"citizen_zipcode"} label={'รหัสไปรษณีย์'}>
                 <Input />
               </Form.Item>
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={6} xl={6}>
-              <Form.Item label={'โทรศัพท์บ้าน'}>
+              <Form.Item name={"citizen_tel"} label={'โทรศัพท์บ้าน'}>
                 <Input />
               </Form.Item>
             </Col>
@@ -397,13 +404,13 @@ const UserEmployee: React.FC = () => {
 
           <Row gutter={16}>
             <Col xs={24} sm={12} md={12} lg={6} xl={6}>
-              <Form.Item label={'เลขที่บ้าน'}>
+              <Form.Item name={"contract_addressnumber"} label={'เลขที่บ้าน'}>
                 <Input />
               </Form.Item>
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={18} xl={18}>
-              <Form.Item label={'หมู่บ้าน/คอนโด ซอย'}>
+              <Form.Item name={"contract_address"} label={'หมู่บ้าน/คอนโด ซอย'}>
                 <Input />
               </Form.Item>
             </Col>
@@ -411,7 +418,7 @@ const UserEmployee: React.FC = () => {
 
           <Row gutter={16}>
             <Col xs={24} sm={12} md={12} lg={6} xl={6}>
-              <Form.Item label={'จังหวัด'}>
+              <Form.Item name={"contract_province"} label={'จังหวัด'}>
                 <Select
                   options={[
                     {
@@ -425,7 +432,7 @@ const UserEmployee: React.FC = () => {
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={6} xl={6}>
-              <Form.Item label={'เขต/อำเภอ'}>
+              <Form.Item name={"contract_district"} label={'เขต/อำเภอ'}>
                 <Select
                   options={[
                     {
@@ -439,7 +446,7 @@ const UserEmployee: React.FC = () => {
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={6} xl={6}>
-              <Form.Item label={'แขวง/ตำบล'}>
+              <Form.Item name={"contract_state"} label={'แขวง/ตำบล'}>
                 <Select
                   options={[
                     {
@@ -453,7 +460,7 @@ const UserEmployee: React.FC = () => {
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={6} xl={6}>
-              <Form.Item label={'รหัสไปรษณีย์'}>
+              <Form.Item name={"contract_zipcode"} label={'รหัสไปรษณีย์'}>
                 <Input />
               </Form.Item>
             </Col>
@@ -461,7 +468,7 @@ const UserEmployee: React.FC = () => {
 
           <Row gutter={16}>
             <Col xs={24} sm={8} md={8} lg={8} xl={8}>
-              <Form.Item label={'Mobile Phone'}>
+              <Form.Item name={"tel"} label={'Mobile Phone'}>
                 <Input />
               </Form.Item>
             </Col>
@@ -563,7 +570,8 @@ const UserEmployee: React.FC = () => {
             <Form.Item>
               <Space>
                 <Button
-                  type="primary"
+                  htmlType="submit"
+                   type="primary"
                   style={{
                     marginBottom: '10px',
                     backgroundColor: token.token.colorPrimary,
