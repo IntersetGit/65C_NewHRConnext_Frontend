@@ -44,7 +44,7 @@ const MeLayout: React.FC<BaseLayoutProps> = (props) => {
         />
         <p>
           <Typography.Text>
-            {user?.me?.profile?.firstname} {user?.me?.profile?.lastname}
+            {user?.me?.profile?.firstname_th} {user?.me?.profile?.lastname_th}
           </Typography.Text>
         </p>
       </div>
