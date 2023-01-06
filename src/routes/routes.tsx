@@ -29,7 +29,9 @@ const Login = React.lazy(() => import('../pages/Login'));
 const Register = React.lazy(() => import('../pages/Register'));
 const Overview = React.lazy(() => import('../pages/Overview'));
 const MainCompany = React.lazy(() => import('../pages/Company'));
-const ManageRights = React.lazy(() => import('../pages/Rights'))
+const ManageRights = React.lazy(() => import('../pages/ManageRights'))
+const Rights = React.lazy(() => import('../pages/ManageRights/rights'))
+const UserRights = React.lazy(() => import('../pages/ManageRights/usergroups'))
 const Company = React.lazy(() => import('../pages/Company/company'))
 const ManageCompanyData = React.lazy(
   () => import('../pages/Company/company/newCompany'),
@@ -210,10 +212,27 @@ export const routing: RoutingType[] = [
         path: '/:companycode/campaign',
         label: 'แคมเปญการเงิน',
         icon: <RiHandCoinLine size={'18'} />,
-        element: <ManageRights />,
+        element: <></>,
       },
     ],
   },
+
+  {
+    path: '/:companycode/managerights',
+    element: <ManageRights />,
+    children: [
+      {
+        path: '/:companycode/managerights',
+        element: <Rights />,
+      },
+      {
+        path: '/:companycode/managerights/usergroups',
+        element: <UserRights />,
+      },
+
+    ],
+  },
+
   {
     path: '/me',
     element: <Mewrapper noSidebar={true} noCollapse />,

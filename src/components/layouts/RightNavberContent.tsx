@@ -15,8 +15,10 @@ import {
 
 import { CompanyBranchType } from '../../context/types';
 import { logout } from '../../App';
+import { useNavigate } from 'react-router-dom';
 
 const { useToken } = theme;
+
 
 type RightNavContentType = {
   user: MeQuery | undefined;
@@ -75,8 +77,10 @@ const RightNavbarContent: React.FC<RightNavContentType> = ({
   isUserloading,
 }) => {
   const token = useToken();
+  const navigate = useNavigate();
 
   const onClick: MenuProps['onClick'] = ({ key }) => {
+    if (key === '2') navigate('/:companycode/managerights');
     if (key === '6') logout();
   };
   return (
