@@ -105,8 +105,61 @@ export type CreateAccountInput = {
   userlimit?: InputMaybe<Scalars['Int']>;
 };
 
+export type CreateAccountUserInput = {
+  address?: InputMaybe<Scalars['String']>;
+  age?: InputMaybe<Scalars['String']>;
+  avatar?: InputMaybe<Scalars['String']>;
+  bio?: InputMaybe<Scalars['String']>;
+  citizen_address?: InputMaybe<Scalars['String']>;
+  citizen_addressnumber?: InputMaybe<Scalars['String']>;
+  citizen_country?: InputMaybe<Scalars['String']>;
+  citizen_district?: InputMaybe<Scalars['String']>;
+  citizen_id?: InputMaybe<Scalars['String']>;
+  citizen_province?: InputMaybe<Scalars['String']>;
+  citizen_state?: InputMaybe<Scalars['String']>;
+  citizen_tel?: InputMaybe<Scalars['String']>;
+  citizen_zipcode?: InputMaybe<Scalars['String']>;
+  contract_address?: InputMaybe<Scalars['String']>;
+  contract_addressnumber?: InputMaybe<Scalars['String']>;
+  contract_companyemail?: InputMaybe<Scalars['String']>;
+  contract_country?: InputMaybe<Scalars['String']>;
+  contract_district?: InputMaybe<Scalars['String']>;
+  contract_email?: InputMaybe<Scalars['String']>;
+  contract_province?: InputMaybe<Scalars['String']>;
+  contract_sameCitizen: Scalars['Boolean'];
+  contract_state?: InputMaybe<Scalars['String']>;
+  contract_zipcode?: InputMaybe<Scalars['String']>;
+  dob?: InputMaybe<Scalars['Date']>;
+  email: Scalars['String'];
+  firstname_en?: InputMaybe<Scalars['String']>;
+  firstname_th?: InputMaybe<Scalars['String']>;
+  gender?: InputMaybe<Scalars['String']>;
+  lastname_en?: InputMaybe<Scalars['String']>;
+  lastname_th?: InputMaybe<Scalars['String']>;
+  password: Scalars['String'];
+  prefix_en?: InputMaybe<Scalars['String']>;
+  prefix_th?: InputMaybe<Scalars['String']>;
+  relationship?: InputMaybe<Scalars['String']>;
+  religion?: InputMaybe<Scalars['String']>;
+  shirt_size?: InputMaybe<Scalars['String']>;
+  social_facebook?: InputMaybe<Scalars['String']>;
+  social_id?: InputMaybe<Scalars['String']>;
+  social_likedin?: InputMaybe<Scalars['String']>;
+  social_line?: InputMaybe<Scalars['String']>;
+  social_telegram?: InputMaybe<Scalars['String']>;
+  staff_code?: InputMaybe<Scalars['String']>;
+  staff_status?: InputMaybe<Scalars['String']>;
+  tel?: InputMaybe<Scalars['String']>;
+};
+
 export type CreateCompanyResponseType = {
   __typename?: 'CreateCompanyResponseType';
+  message?: Maybe<Scalars['String']>;
+  status?: Maybe<Scalars['Boolean']>;
+};
+
+export type CreateUserResponseType = {
+  __typename?: 'CreateUserResponseType';
   message?: Maybe<Scalars['String']>;
   status?: Maybe<Scalars['Boolean']>;
 };
@@ -203,6 +256,7 @@ export type MeprofileType = {
 export type Mutation = {
   __typename?: 'Mutation';
   createAccount?: Maybe<CreateCompanyResponseType>;
+  createAccountUser?: Maybe<CreateUserResponseType>;
   login?: Maybe<LoginResponse>;
   refreshToken?: Maybe<RefreshtokenResponseType>;
   validateRoute?: Maybe<ValidateRoute>;
@@ -211,6 +265,11 @@ export type Mutation = {
 
 export type MutationCreateAccountArgs = {
   data: CreateAccountInput;
+};
+
+
+export type MutationCreateAccountUserArgs = {
+  data: CreateAccountUserInput;
 };
 
 
@@ -407,12 +466,13 @@ export type User = {
   companyBranchId?: Maybe<Scalars['String']>;
   companyId?: Maybe<Scalars['String']>;
   createdAt?: Maybe<Scalars['Date']>;
-  email?: Maybe<Scalars['String']>;
+  email: Scalars['String'];
   id: Scalars['ID'];
   isActive: Scalars['Boolean'];
   isOwner: Scalars['Boolean'];
   islogin: Scalars['Boolean'];
   lastlogin?: Maybe<Scalars['Date']>;
+  password: Scalars['String'];
   positionId?: Maybe<Scalars['String']>;
   profile?: Maybe<Profile>;
   role?: Maybe<Role>;
@@ -483,7 +543,7 @@ export type GetownCompanyQuery = { __typename?: 'Query', getownCompany?: { __typ
 export type UsersQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type UsersQuery = { __typename?: 'Query', users?: Array<{ __typename?: 'User', email?: string | null, profile?: { __typename?: 'Profile', id: string, firstname_th?: string | null, firstname_en?: string | null, lastname_th?: string | null, lastname_en?: string | null } | null, Position?: { __typename?: 'Position', id: string, name?: string | null } | null } | null> | null };
+export type UsersQuery = { __typename?: 'Query', users?: Array<{ __typename?: 'User', email: string, profile?: { __typename?: 'Profile', id: string, firstname_th?: string | null, firstname_en?: string | null, lastname_th?: string | null, lastname_en?: string | null } | null, Position?: { __typename?: 'Position', id: string, name?: string | null } | null } | null> | null };
 
 
 export const RefreshTokenDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"refreshToken"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"refreshToken"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"access_token"}}]}}]}}]} as unknown as DocumentNode<RefreshTokenMutation, RefreshTokenMutationVariables>;
