@@ -111,7 +111,7 @@ const Companyniti: React.FC = () => {
           <Typography.Title level={3}>จัดการบริษัท</Typography.Title>
         </div>
       </div>
-      <Divider />
+      <Divider style={{ backgroundColor: token.token.colorPrimary }} />
 
       <Card className="shadow-md mb-3">
         <Row gutter={5}>

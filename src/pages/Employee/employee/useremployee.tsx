@@ -28,6 +28,7 @@ const { useToken } = theme;
 
 const UserEmployee: React.FC = () => {
   const navigate = useNavigate();
+  const token = useToken();
   return (
     <>
       <div className="relative flex flex-row items-center">
@@ -38,9 +39,9 @@ const UserEmployee: React.FC = () => {
           ข้อมูลพนักงาน
         </span>
       </div>
-      <Divider />
+      <Divider style={{ backgroundColor: token.token.colorPrimary }} />
       <Card className="shadow-xl">
-        <div className="text-[#FC6634] text-base">ข้อมูลพื้นฐาน</div>
+        <div className="text-base" style={{ color: token.token.colorPrimary }}>ข้อมูลพื้นฐาน</div>
         <Form layout={'vertical'} size={'large'}>
           <Row gutter={16}>
             <Col xs={24} sm={12} md={12} lg={4} xl={4}>
@@ -277,9 +278,9 @@ const UserEmployee: React.FC = () => {
             </Col>
           </Row>
 
-          <Divider />
+          <Divider style={{ backgroundColor: token.token.colorPrimary }} />
 
-          <div className="text-[#FC6634] text-base">
+          <div className="text-base" style={{ color: token.token.colorPrimary }} >
             ที่อยู่ ตามบัตรประจำตัวประชาชน
           </div>
 
@@ -369,9 +370,9 @@ const UserEmployee: React.FC = () => {
             </Col>
           </Row>
 
-          <Divider />
+          <Divider style={{ backgroundColor: token.token.colorPrimary }} />
 
-          <span className="text-[#FC6634] text-base">
+          <span className="text-base" style={{ color: token.token.colorPrimary }} >
             ที่อยู่ ที่สามารถติดต่อได้
             <Checkbox className="ml-2">
               ที่อยู่ที่เดียวกับ ที่อยู่ตามบัตรประจำตัวประชาชน
@@ -462,14 +463,20 @@ const UserEmployee: React.FC = () => {
             </Col>
           </Row>
 
-          <Divider />
+          <Divider style={{ backgroundColor: token.token.colorPrimary }} />
 
-          <div className="text-[#FC6634] text-base">Social Link</div>
+          <div className="text-base" style={{ color: token.token.colorPrimary }} >Social Link</div>
 
+          {/*---------------- Facebook ----------------*/}
           <Row gutter={16}>
             <div className="relative flex flex-row items-center">
               <div className="flex flex-row ml-2 tems-center text-4xl">
-                <FacebookFilled />
+                {/* <FacebookFilled /> */}
+                <img
+                  src={`/public/Facebook-logo.png`}
+                  alt="Facebook-logo"
+                  style={{ width: '40px' }}
+                />
               </div>
               <div className="flex items-center ml-8 mt-6">
                 <Col span={24}>
@@ -478,8 +485,53 @@ const UserEmployee: React.FC = () => {
                   </Form.Item>
                 </Col>
               </div>
+
+              {/*------------------- in ------------------*/}
               <div className="flex flex-row items-center ml-6 text-4xl">
-                <LinkedinFilled />
+                {/* <LinkedinFilled /> */}
+                <img
+                  src={`/public/initials-logo.png`}
+                  alt="Facebook-logo"
+                  style={{ width: '40px' }}
+                />
+              </div>
+              <div className="flex items-center ml-8 mt-6">
+                <Col span={24}>
+                  <Form.Item>
+                    <Input />
+                  </Form.Item>
+                </Col>
+              </div>
+            </div>
+          </Row>
+
+          {/*------------------ Line ------------------*/}
+          <Row gutter={16}>
+            <div className="relative flex flex-row items-center">
+              <div className="flex flex-row ml-2 items-center text-4xl">
+                {/* <FaLine /> */}
+                <img
+                  src={`/public/Line-logo.png`}
+                  alt="Facebook-logo"
+                  style={{ width: '40px' }}
+                />
+              </div>
+              <div className="flex items-center ml-8 mt-6">
+                <Col span={24}>
+                  <Form.Item>
+                    <Input />
+                  </Form.Item>
+                </Col>
+              </div>
+
+              {/*---------------- Telegram ----------------*/}
+              <div className="flex flex-row items-center ml-6 text-4xl">
+                {/* <BsTelegram /> */}
+                <img
+                  src={`/public/Telegram-logo.png`}
+                  alt="Facebook-logo"
+                  style={{ width: '40px' }}
+                />
               </div>
               <div className="flex items-center ml-8 mt-6">
                 <Col span={24}>
@@ -492,43 +544,30 @@ const UserEmployee: React.FC = () => {
           </Row>
 
           <Row gutter={16}>
-            <div className="relative flex flex-row items-center">
-              <div className="flex flex-row ml-2 items-center text-4xl">
-                <FaLine />
-              </div>
-              <div className="flex items-center ml-8 mt-6">
-                <Col span={24}>
-                  <Form.Item>
-                    <Input />
-                  </Form.Item>
-                </Col>
-              </div>
-
-              <div className="flex flex-row items-center ml-6 text-4xl">
-                <BsTelegram />
-              </div>
-              <div className="flex items-center ml-8 mt-6">
-                <Col span={24}>
-                  <Form.Item>
-                    <Input />
-                  </Form.Item>
-                </Col>
-              </div>
-            </div>
+            <Form.Item>
+              <Space>
+                <Button
+                  type="primary"
+                  style={{
+                    marginBottom: '10px',
+                    backgroundColor: token.token.colorPrimary,
+                  }}
+                >
+                  บันทึก
+                </Button>
+                <Button
+                  style={{
+                    marginBottom: '10px',
+                  }}
+                  onClick={() => {
+                    navigate(-1);
+                  }}
+                >
+                  ยกเลิก
+                </Button>
+              </Space>
+            </Form.Item>
           </Row>
-
-          <Form.Item>
-            <Space>
-              <Button htmlType="submit">บันทึก</Button>
-              <Button
-                onClick={() => {
-                  navigate(-1);
-                }}
-              >
-                ยกเลิก
-              </Button>
-            </Space>
-          </Form.Item>
         </Form>
       </Card>
     </>

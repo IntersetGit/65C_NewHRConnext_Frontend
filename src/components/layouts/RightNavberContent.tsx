@@ -9,6 +9,10 @@ import {
   HiOutlineComputerDesktop,
   HiOutlineQuestionMarkCircle,
 } from 'react-icons/hi2';
+import {
+  RiHotelLine,
+} from 'react-icons/ri';
+
 import { CompanyBranchType } from '../../context/types';
 import { logout } from '../../App';
 
@@ -36,18 +40,23 @@ const items: MenuProps['items'] = [
     icon: <HiOutlineClipboard size={'18'} />,
   },
   {
-    label: 'เลือกบริษัท',
+    label: 'จัดการสิทธิ์',
     key: '2',
     icon: <HiOutlineComputerDesktop size={'18'} />,
   },
   {
-    label: 'ช่วยเหลือ',
+    label: 'เลือกบริษัท',
     key: '3',
+    icon: <RiHotelLine size={'18'} />,
+  },
+  {
+    label: 'ช่วยเหลือ',
+    key: '4',
     icon: <HiOutlineQuestionMarkCircle size={'18'} />,
   },
   {
     label: 'ตั้งค่าผู้ใช้',
-    key: '4',
+    key: '5',
     icon: <HiOutlineCog6Tooth size={'18'} />,
   },
   {
@@ -55,7 +64,7 @@ const items: MenuProps['items'] = [
   },
   {
     label: 'ออกจากระบบ',
-    key: '5',
+    key: '6',
     icon: <HiOutlineArrowRightOnRectangle size={'18'} />,
   },
 ];
@@ -68,7 +77,7 @@ const RightNavbarContent: React.FC<RightNavContentType> = ({
   const token = useToken();
 
   const onClick: MenuProps['onClick'] = ({ key }) => {
-    if (key === '5') logout();
+    if (key === '6') logout();
   };
   return (
     <div

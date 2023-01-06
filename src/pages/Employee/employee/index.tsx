@@ -79,7 +79,7 @@ const Employee: React.FC = () => {
       key: 'name',
       dataIndex: 'profile',
       align: 'center',
-      render:(txt)=>txt.firstname_th + ' ' +txt.lastname_th
+      render: (txt) => txt.firstname_th + ' ' + txt.lastname_th
     },
     {
       title: 'ตำแหน่ง',
@@ -179,7 +179,7 @@ const Employee: React.FC = () => {
         <div className="ml-2 text-lg">พนักงาน</div>
       </div>
 
-      <Divider />
+      <Divider style={{ backgroundColor: token.token.colorPrimary }} />
       <Card className="shadow-xl">
         <Form size="middle">
           <Row gutter={16}>
@@ -204,7 +204,11 @@ const Employee: React.FC = () => {
             <Col xs={24} sm={24} md={24} lg={6} xl={6}>
               <Space style={{ float: 'right' }}>
                 <Form.Item>
-                  <Button>Reset</Button>
+                  <Button
+                    type="primary"
+                    style={{ backgroundColor: token.token.colorPrimary }}
+                  >
+                    Reset</Button>
                 </Form.Item>
 
                 <Form.Item>
@@ -246,7 +250,7 @@ const Employee: React.FC = () => {
             </Button>
           </Space>
         </Col>
-        <Table columns={columns} dataSource={userData?.users as any} rowKey={( i: any) => i.toString()} ></Table>
+        <Table columns={columns} dataSource={userData?.users as any} rowKey={(i: any) => i.toString()} ></Table>
       </Card>
     </>
   );

@@ -46,7 +46,7 @@ const Newcompany = () => {
           </Button>
         </span>
       </div>
-      <Divider />
+      <Divider style={{ backgroundColor: token.token.colorPrimary }} />
 
       <Card className="shadow-md">
         <Form>
@@ -242,7 +242,7 @@ const Newcompany = () => {
                 <RiCloseFill />
               </Button>
             </Col>
-            <Divider />
+            <Divider style={{ backgroundColor: token.token.colorPrimary }} />
           </Row>
 
           <div className="text-base" style={{ color: token.token.colorPrimary }}>
