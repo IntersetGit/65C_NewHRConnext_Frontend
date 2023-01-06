@@ -1,10 +1,12 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FaUserAlt } from 'react-icons/fa';
 import {
   HomeOutlined,
   FolderFilled,
   FacebookFilled,
   LinkedinFilled,
+  AntDesignOutlined,
+  UploadOutlined,
 } from '@ant-design/icons';
 import { BsTelegram } from 'react-icons/bs';
 import { FaLine } from 'react-icons/fa';
@@ -21,10 +23,24 @@ import {
   Space,
   theme,
   Card,
+  Upload,
+  Modal,
+  Avatar,
 } from 'antd';
 import { useNavigate } from 'react-router-dom';
+import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
+import type { UploadChangeParam } from 'antd/es/upload';
+import type { RcFile, UploadFile, UploadProps } from 'antd/es/upload/interface';
 
 const { useToken } = theme;
+
+const getBase64 = (file: RcFile): Promise<string> =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = (error) => reject(error);
+  });
 
 const UserEmployee: React.FC = () => {
   const navigate = useNavigate();
