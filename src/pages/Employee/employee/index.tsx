@@ -17,7 +17,7 @@ import {
 } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { useNavigate } from 'react-router-dom';
-import { MoreOutlined } from '@ant-design/icons';
+import { MenuOutlined, MoreOutlined } from '@ant-design/icons';
 import { useQuery } from '@apollo/client';
 import { FETCH_GETALLUSER } from '../../../service/graphql/Users';
 
@@ -39,21 +39,25 @@ const Employee: React.FC = () => {
   const [dataTable, setDataTable] = useState([]);
   const { data: userData, refetch } = useQuery(FETCH_GETALLUSER);
 
-  const menuItems = [
-    {
-      key: 'edit',
-      label: 'แก้ไข',
-
-    },
-    {
-      key: 'view',
-      label: 'ดูข้อมูล',
-    },
-    {
-      key: 'delete',
-      label: 'ลบข้อมูล',
-    },
-  ];
+  const genarateMenu = (record: any) => {
+    return [
+      {
+        key: 'edit',
+        label: 'แก้ไข',
+        onClick: (e: any) => onMenuClick(e, record),
+      },
+      {
+        key: 'view',
+        label: 'ดู',
+        onClick: (e: any) => onMenuClick(e, record),
+      },
+      {
+        key: 'delete',
+        label: 'ลบข้อมูล',
+        onClick: (e: any) => onMenuClick(e, record),
+      },
+    ];
+  };
 
   const apiGetUsers = () => {
     refetch();
@@ -61,11 +65,14 @@ const Employee: React.FC = () => {
   const onMenuClick = (event: any, record: any) => {
     const { key } = event;
     if (key === 'edit') {
-      navigate(`useremployee?id=${record.profile.id}`, { state: {...record?.profile ,mode:'edit'}});
+      navigate(`useremployee?id=${record.profile.id}`, {
+        state: { ...record?.profile, mode: 'edit' },
+      });
     } else if (key === 'view') {
-      navigate(`useremployee?id=${record.profile.id}`, { state: {...record?.profile ,mode:'view'}});
+      navigate(`useremployee?id=${record.profile.id}`, {
+        state: { ...record?.profile, mode: 'view' },
+      });
     } else if (key === 'delete') {
-
     }
   };
 
@@ -111,17 +118,15 @@ const Employee: React.FC = () => {
       title: 'Action',
       key: 'Action',
       align: 'center',
-      render: (_: any, record: any) => (
-        <Dropdown.Button
-          icon={<MoreOutlined />}
-          type="text"
-          overlay={
-            <Menu
-              items={menuItems}
-              onClick={(e: any) => onMenuClick(e, record)}
-            />
-          }
-        ></Dropdown.Button>
+      render: (record) => (
+        <Dropdown
+          menu={{
+            items: genarateMenu(record),
+          }}
+          arrow
+        >
+          <MoreOutlined />
+        </Dropdown>
       ),
     },
   ];
