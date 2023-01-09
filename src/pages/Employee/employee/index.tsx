@@ -43,6 +43,7 @@ const Employee: React.FC = () => {
     {
       key: 'edit',
       label: 'แก้ไข',
+
     },
     {
       key: 'view',
@@ -60,8 +61,11 @@ const Employee: React.FC = () => {
   const onMenuClick = (event: any, record: any) => {
     const { key } = event;
     if (key === 'edit') {
+      navigate(`useremployee?id=${record.profile.id}`, { state: {...record?.profile ,mode:'edit'}});
     } else if (key === 'view') {
+      navigate(`useremployee?id=${record.profile.id}`, { state: {...record?.profile ,mode:'view'}});
     } else if (key === 'delete') {
+
     }
   };
 

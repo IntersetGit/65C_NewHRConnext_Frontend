@@ -27,16 +27,17 @@ import {
   Modal,
   Avatar,
 } from 'antd';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import facebook from '../../../assets/Facebook-logo.png';
 import inittial from '../../../assets/initials-logo.png';
 import line from '../../../assets/Line-logo.png';
 import telegram from '../../../assets/Telegram-logo.png';
 import type { UploadProps } from 'antd';
 import { gql } from '../../../__generated__/gql';
-import { useQuery, useMutation } from '@apollo/client';
+import { useQuery, useMutation, from } from '@apollo/client';
 import axios from 'axios';
 import Swal from 'sweetalert2';
+import moment from 'moment';
 
 const { useToken } = theme;
 
@@ -109,8 +110,9 @@ mutation CreateAccountUser($data: CreateAccountUserInput!) {
   }
 }`);
 
-const UserEmployee: React.FC = () => {
+const UserEmployee: React.FC = (props) => {
   const navigate = useNavigate();
+  const location = useLocation();
   const token = useToken();
   const [form] = Form.useForm<RegisterEmployeeType>();
   const [picture, setPicture] = useState<string>();
@@ -131,10 +133,20 @@ const UserEmployee: React.FC = () => {
 
   const { data: province_data, refetch } = useQuery(GET_PROVINCE);
   const [createEmployeeAccount] = useMutation(CREATE_EMPLOYEE_ACCOUNT);
+  let propsstate = location.state as any;
 
   useEffect(() => {
     AllCounrty();
+    if (propsstate?.mode) {
+      getUserData();
+    }
   }, []);
+
+  const getUserData = () => {
+    form.setFieldsValue({
+      ...propsstate, ...propsstate?.user, dob: moment(propsstate?.dob)
+    })
+  }
 
   const AllCounrty = () => {
     axios.get('https://restcountries.com/v2/all').then((data) => {
@@ -241,7 +253,7 @@ const UserEmployee: React.FC = () => {
     form.setFieldValue('contract_zipcode', zipCode);
   };
 
-  const props: UploadProps = {
+  const propsupload: UploadProps = {
     beforeUpload(file) {
       return new Promise((resolve) => {
         const reader = new FileReader();
@@ -335,7 +347,7 @@ const UserEmployee: React.FC = () => {
 
           <Row>
             <div className="flex w-screen mt-4 mb-4 justify-center">
-              <Upload maxCount={1} {...props}>
+              <Upload maxCount={1} {...propsupload}>
                 <Button icon={<UploadOutlined />}>อัพโหลดรูปภาพ</Button>
               </Upload>
             </div>
@@ -843,7 +855,7 @@ const UserEmployee: React.FC = () => {
             </div>
           </Row>
 
-          <Row gutter={16}>
+          {propsstate?.mode !== "view" && <Row gutter={16}>
             <Form.Item>
               <Space>
                 <Button
@@ -869,6 +881,7 @@ const UserEmployee: React.FC = () => {
               </Space>
             </Form.Item>
           </Row>
+          }
         </Form>
       </Card>
     </>
