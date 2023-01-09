@@ -10,11 +10,13 @@ import {
   Table,
   Dropdown,
   Menu,
+  theme,
 } from 'antd';
 import { RxBackpack } from 'react-icons/rx';
 import type { ColumnsType } from 'antd/es/table';
 import { MoreOutlined } from '@ant-design/icons';
 
+const { useToken } = theme;
 interface DataType {
   key: number;
   date: string;
@@ -32,6 +34,7 @@ interface DataTypeProject {
 }
 
 const ProfileResume: React.FC = () => {
+  const token = useToken();
   const menuItems = [
     {
       key: 'edit',
@@ -196,10 +199,13 @@ const ProfileResume: React.FC = () => {
         <RxBackpack />
         <div className="ml-2 text-xl">ประวัติการทำงาน</div>
       </div>
-      <Divider />
+      <Divider style={{ backgroundColor: token.token.colorPrimary }} />
 
       <Card className="shadow-xl">
-        <div className="text-[#FC6634] font-bold text-lg mb-4">
+        <div
+          className="font-bold text-lg mb-4"
+          style={{ color: token.token.colorPrimary }}
+        >
           สภานภาพพนักงาน
         </div>
         <Form>
@@ -227,7 +233,10 @@ const ProfileResume: React.FC = () => {
             justifyContent: 'space-between',
           }}
         >
-          <div className="text-[#FC6634] font-bold text-lg mb-4">
+          <div
+            className="font-bold text-lg mb-4"
+            style={{ color: token.token.colorPrimary }}
+          >
             ตำแหน่ง / หน้าที่
           </div>
           <Button>+ เพิ่มตำแหน่ง/หน้าที่</Button>
@@ -237,7 +246,12 @@ const ProfileResume: React.FC = () => {
       </Card>
 
       <Card className="shadow-xl mt-4">
-        <div className="text-[#FC6634] font-bold text-lg mb-4">Project</div>
+        <div
+          className="font-bold text-lg mb-4"
+          style={{ color: token.token.colorPrimary }}
+        >
+          Project
+        </div>
         <Table columns={columnsProject} dataSource={dataProject}></Table>
       </Card>
     </>

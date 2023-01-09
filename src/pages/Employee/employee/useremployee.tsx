@@ -30,27 +30,49 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import type { UploadChangeParam } from 'antd/es/upload';
-import type { RcFile, UploadFile, UploadProps } from 'antd/es/upload/interface';
+import type { RcFile, UploadFile } from 'antd/es/upload/interface';
+import facebook from '../../../assets/Facebook-logo.png';
+import inittial from '../../../assets/initials-logo.png';
+import line from '../../../assets/Line-logo.png';
+import telegram from '../../../assets/Telegram-logo.png';
+import type { UploadProps } from 'antd';
 
 const { useToken } = theme;
-
-const getBase64 = (file: RcFile): Promise<string> =>
-  new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => resolve(reader.result as string);
-    reader.onerror = (error) => reject(error);
-  });
-
-
 
 const UserEmployee: React.FC = () => {
   const navigate = useNavigate();
   const token = useToken();
+  const [picture, setPicture] = useState('picture');
+
+  const props: UploadProps = {
+    beforeUpload(file) {
+      return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => {
+          const img = document.createElement('img');
+          img.src = reader.result as string;
+          img.onload = () => {
+            const canvas = document.createElement('canvas');
+            canvas.width = img.naturalWidth;
+            canvas.height = img.naturalHeight;
+            const ctx = canvas.getContext('2d')!;
+            ctx.drawImage(img, 0, 0);
+            ctx.fillStyle = 'red';
+            ctx.textBaseline = 'middle';
+            ctx.font = '33px Arial';
+            ctx.fillText('Ant Design', 20, 20);
+            canvas.toBlob((result) => resolve(result as any));
+            setPicture(canvas.toDataURL(resolve));
+          };
+        };
+      });
+    },
+  };
 
   const onSubmitForm = (value: any) => {
     console.log('value', value);
-  }
+  };
 
   return (
     <>
@@ -64,17 +86,37 @@ const UserEmployee: React.FC = () => {
       </div>
       <Divider style={{ backgroundColor: token.token.colorPrimary }} />
       <Card className="shadow-xl">
-        <div className="text-base" style={{ color: token.token.colorPrimary }}>ข้อมูลพื้นฐาน</div>
+        <div className="text-base" style={{ color: token.token.colorPrimary }}>
+          ข้อมูลพื้นฐาน
+        </div>
         <Form layout={'vertical'} onFinish={onSubmitForm} size={'large'}>
+          <Row>
+            <div className="flex w-screen mt-4 mb-4 justify-center">
+              <Avatar
+                size={{ xs: 24, sm: 32, md: 40, lg: 64, xl: 80, xxl: 100 }}
+                icon={<AntDesignOutlined />}
+                src={picture}
+              />
+            </div>
+          </Row>
+
+          <Row>
+            <div className="flex w-screen mt-4 mb-4 justify-center">
+              <Upload maxCount={1} {...props}>
+                <Button icon={<UploadOutlined />}>อัพโหลดรูปภาพ</Button>
+              </Upload>
+            </div>
+          </Row>
+
           <Row gutter={16}>
             <Col xs={24} sm={12} md={12} lg={4} xl={4}>
-              <Form.Item name={"staff_code"} label={'รหัสพนักงาน'}>
+              <Form.Item name={'staff_code'} label={'รหัสพนักงาน'}>
                 <Input />
               </Form.Item>
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={4} xl={4}>
-              <Form.Item name={"staff_status"} label={'Status'}>
+              <Form.Item name={'staff_status'} label={'Status'}>
                 <Select
                   options={[
                     {
@@ -97,7 +139,10 @@ const UserEmployee: React.FC = () => {
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={8} xl={8}>
-              <Form.Item name={"contract_sameCitizen"} label={'หมายเลขประกันสังคม'}>
+              <Form.Item
+                name={'contract_sameCitizen'}
+                label={'หมายเลขประกันสังคม'}
+              >
                 <Input />
               </Form.Item>
             </Col>
@@ -105,7 +150,7 @@ const UserEmployee: React.FC = () => {
 
           <Row gutter={16}>
             <Col xs={24} sm={12} md={12} lg={4} xl={4}>
-              <Form.Item name={"prefix_th"} label={'คำนำหน้า'}>
+              <Form.Item name={'prefix_th'} label={'คำนำหน้า'}>
                 <Select
                   options={[
                     {
@@ -127,7 +172,7 @@ const UserEmployee: React.FC = () => {
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={10} xl={10}>
-              <Form.Item name={"firstname_th"} label={'ชื่อ-สกุล'}>
+              <Form.Item name={'firstname_th'} label={'ชื่อ-สกุล'}>
                 <Input />
               </Form.Item>
             </Col>
@@ -139,7 +184,7 @@ const UserEmployee: React.FC = () => {
             </Col>
 
             <Col xs={24} sm={8} md={8} lg={3} xl={3}>
-              <Form.Item name={"gender"} label={'เพศ'}>
+              <Form.Item name={'gender'} label={'เพศ'}>
                 <Select
                   options={[
                     {
@@ -157,7 +202,7 @@ const UserEmployee: React.FC = () => {
             </Col>
 
             <Col xs={24} sm={8} md={8} lg={3} xl={3}>
-              <Form.Item name={"bio"} label={'กรุ๊ปเลือด'}>
+              <Form.Item name={'bio'} label={'กรุ๊ปเลือด'}>
                 <Select
                   options={[
                     {
@@ -185,7 +230,7 @@ const UserEmployee: React.FC = () => {
 
           <Row gutter={16}>
             <Col xs={24} sm={12} md={12} lg={4} xl={4}>
-              <Form.Item name={"prefix_en"} label={'Prename'}>
+              <Form.Item name={'prefix_en'} label={'Prename'}>
                 <Select
                   options={[
                     {
@@ -207,7 +252,7 @@ const UserEmployee: React.FC = () => {
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={10} xl={10}>
-              <Form.Item name={"firstname_en"} label={'Name-Surname'}>
+              <Form.Item name={'firstname_en'} label={'Name-Surname'}>
                 <Input />
               </Form.Item>
             </Col>
@@ -215,19 +260,19 @@ const UserEmployee: React.FC = () => {
 
           <Row gutter={16}>
             <Col xs={24} sm={12} md={8} lg={4} xl={4}>
-              <Form.Item name={"dob"} label={'วัน/เดือน/ปี'}>
+              <Form.Item name={'dob'} label={'วัน/เดือน/ปี'}>
                 <DatePicker style={{ width: '195px' }} />
               </Form.Item>
             </Col>
 
             <Col xs={24} sm={12} md={8} lg={4} xl={4}>
-              <Form.Item name={"age"} label={'อายุ'}>
+              <Form.Item name={'age'} label={'อายุ'}>
                 <Input />
               </Form.Item>
             </Col>
 
             <Col xs={24} sm={8} md={8} lg={6} xl={6}>
-              <Form.Item  label={'สถานภาพสมรส'}>
+              <Form.Item label={'สถานภาพสมรส'}>
                 <Select
                   options={[
                     {
@@ -253,7 +298,7 @@ const UserEmployee: React.FC = () => {
             </Col>
 
             <Col xs={24} sm={8} md={12} lg={4} xl={4}>
-              <Form.Item name={"shirt_size"} label={'T-Shirt Size'}>
+              <Form.Item name={'shirt_size'} label={'T-Shirt Size'}>
                 <Select
                   options={[
                     {
@@ -283,7 +328,7 @@ const UserEmployee: React.FC = () => {
             </Col>
 
             <Col xs={24} sm={8} md={12} lg={6} xl={6}>
-              <Form.Item name={""} label={'สถานภาพพนักงาน'}>
+              <Form.Item name={''} label={'สถานภาพพนักงาน'}>
                 <Select
                   options={[
                     {
@@ -303,19 +348,25 @@ const UserEmployee: React.FC = () => {
 
           <Divider style={{ backgroundColor: token.token.colorPrimary }} />
 
-          <div className="text-base" style={{ color: token.token.colorPrimary }} >
+          <div
+            className="text-base"
+            style={{ color: token.token.colorPrimary }}
+          >
             ที่อยู่ ตามบัตรประจำตัวประชาชน
           </div>
 
           <Row gutter={16}>
             <Col xs={24} sm={12} md={12} lg={6} xl={6}>
-              <Form.Item name={"citizen_addressnumber"} label={'เลขที่บ้าน'}>
+              <Form.Item name={'citizen_addressnumber'} label={'เลขที่บ้าน'}>
                 <Input />
               </Form.Item>
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={18} xl={18}>
-              <Form.Item name={"citizen_address"} label={'หมู่บ้าน/คอนโด ซอย ถนน'}>
+              <Form.Item
+                name={'citizen_address'}
+                label={'หมู่บ้าน/คอนโด ซอย ถนน'}
+              >
                 <Input />
               </Form.Item>
             </Col>
@@ -323,7 +374,7 @@ const UserEmployee: React.FC = () => {
 
           <Row gutter={16}>
             <Col xs={24} sm={12} md={12} lg={6} xl={6}>
-              <Form.Item name={"citizen_country"} label={'ประเทศ'}>
+              <Form.Item name={'citizen_country'} label={'ประเทศ'}>
                 <Select
                   options={[
                     {
@@ -337,7 +388,7 @@ const UserEmployee: React.FC = () => {
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={6} xl={6}>
-              <Form.Item name={"citizen_province"} label={'จังหวัด'}>
+              <Form.Item name={'citizen_province'} label={'จังหวัด'}>
                 <Select
                   options={[
                     {
@@ -351,7 +402,7 @@ const UserEmployee: React.FC = () => {
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={6} xl={6}>
-              <Form.Item name={"citizen_district"} label={'เขต/อำเภอ'}>
+              <Form.Item name={'citizen_district'} label={'เขต/อำเภอ'}>
                 <Select
                   options={[
                     {
@@ -365,7 +416,7 @@ const UserEmployee: React.FC = () => {
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={6} xl={6}>
-              <Form.Item name={"citizen_state"} label={'แขวง/ตำบล'}>
+              <Form.Item name={'citizen_state'} label={'แขวง/ตำบล'}>
                 <Select
                   options={[
                     {
@@ -381,13 +432,13 @@ const UserEmployee: React.FC = () => {
 
           <Row gutter={16}>
             <Col xs={24} sm={12} md={12} lg={6} xl={6}>
-              <Form.Item name={"citizen_zipcode"} label={'รหัสไปรษณีย์'}>
+              <Form.Item name={'citizen_zipcode'} label={'รหัสไปรษณีย์'}>
                 <Input />
               </Form.Item>
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={6} xl={6}>
-              <Form.Item name={"citizen_tel"} label={'โทรศัพท์บ้าน'}>
+              <Form.Item name={'citizen_tel'} label={'โทรศัพท์บ้าน'}>
                 <Input />
               </Form.Item>
             </Col>
@@ -395,7 +446,10 @@ const UserEmployee: React.FC = () => {
 
           <Divider style={{ backgroundColor: token.token.colorPrimary }} />
 
-          <span className="text-base" style={{ color: token.token.colorPrimary }} >
+          <span
+            className="text-base"
+            style={{ color: token.token.colorPrimary }}
+          >
             ที่อยู่ ที่สามารถติดต่อได้
             <Checkbox className="ml-2">
               ที่อยู่ที่เดียวกับ ที่อยู่ตามบัตรประจำตัวประชาชน
@@ -404,13 +458,13 @@ const UserEmployee: React.FC = () => {
 
           <Row gutter={16}>
             <Col xs={24} sm={12} md={12} lg={6} xl={6}>
-              <Form.Item name={"contract_addressnumber"} label={'เลขที่บ้าน'}>
+              <Form.Item name={'contract_addressnumber'} label={'เลขที่บ้าน'}>
                 <Input />
               </Form.Item>
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={18} xl={18}>
-              <Form.Item name={"contract_address"} label={'หมู่บ้าน/คอนโด ซอย'}>
+              <Form.Item name={'contract_address'} label={'หมู่บ้าน/คอนโด ซอย'}>
                 <Input />
               </Form.Item>
             </Col>
@@ -418,7 +472,7 @@ const UserEmployee: React.FC = () => {
 
           <Row gutter={16}>
             <Col xs={24} sm={12} md={12} lg={6} xl={6}>
-              <Form.Item name={"contract_province"} label={'จังหวัด'}>
+              <Form.Item name={'contract_province'} label={'จังหวัด'}>
                 <Select
                   options={[
                     {
@@ -432,7 +486,7 @@ const UserEmployee: React.FC = () => {
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={6} xl={6}>
-              <Form.Item name={"contract_district"} label={'เขต/อำเภอ'}>
+              <Form.Item name={'contract_district'} label={'เขต/อำเภอ'}>
                 <Select
                   options={[
                     {
@@ -446,7 +500,7 @@ const UserEmployee: React.FC = () => {
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={6} xl={6}>
-              <Form.Item name={"contract_state"} label={'แขวง/ตำบล'}>
+              <Form.Item name={'contract_state'} label={'แขวง/ตำบล'}>
                 <Select
                   options={[
                     {
@@ -460,7 +514,7 @@ const UserEmployee: React.FC = () => {
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={6} xl={6}>
-              <Form.Item name={"contract_zipcode"} label={'รหัสไปรษณีย์'}>
+              <Form.Item name={'contract_zipcode'} label={'รหัสไปรษณีย์'}>
                 <Input />
               </Form.Item>
             </Col>
@@ -468,7 +522,7 @@ const UserEmployee: React.FC = () => {
 
           <Row gutter={16}>
             <Col xs={24} sm={8} md={8} lg={8} xl={8}>
-              <Form.Item name={"tel"} label={'Mobile Phone'}>
+              <Form.Item name={'tel'} label={'Mobile Phone'}>
                 <Input />
               </Form.Item>
             </Col>
@@ -488,7 +542,12 @@ const UserEmployee: React.FC = () => {
 
           <Divider style={{ backgroundColor: token.token.colorPrimary }} />
 
-          <div className="text-base" style={{ color: token.token.colorPrimary }} >Social Link</div>
+          <div
+            className="text-base"
+            style={{ color: token.token.colorPrimary }}
+          >
+            Social Link
+          </div>
 
           {/*---------------- Facebook ----------------*/}
           <Row gutter={16}>
@@ -496,7 +555,7 @@ const UserEmployee: React.FC = () => {
               <div className="flex flex-row ml-2 tems-center text-4xl">
                 {/* <FacebookFilled /> */}
                 <img
-                  src={`/public/Facebook-logo.png`}
+                  src={facebook}
                   alt="Facebook-logo"
                   style={{ width: '40px' }}
                 />
@@ -513,7 +572,7 @@ const UserEmployee: React.FC = () => {
               <div className="flex flex-row items-center ml-6 text-4xl">
                 {/* <LinkedinFilled /> */}
                 <img
-                  src={`/public/initials-logo.png`}
+                  src={inittial}
                   alt="Facebook-logo"
                   style={{ width: '40px' }}
                 />
@@ -533,11 +592,7 @@ const UserEmployee: React.FC = () => {
             <div className="relative flex flex-row items-center">
               <div className="flex flex-row ml-2 items-center text-4xl">
                 {/* <FaLine /> */}
-                <img
-                  src={`/public/Line-logo.png`}
-                  alt="Facebook-logo"
-                  style={{ width: '40px' }}
-                />
+                <img src={line} alt="Facebook-logo" style={{ width: '40px' }} />
               </div>
               <div className="flex items-center ml-8 mt-6">
                 <Col span={24}>
@@ -551,7 +606,7 @@ const UserEmployee: React.FC = () => {
               <div className="flex flex-row items-center ml-6 text-4xl">
                 {/* <BsTelegram /> */}
                 <img
-                  src={`/public/Telegram-logo.png`}
+                  src={telegram}
                   alt="Facebook-logo"
                   style={{ width: '40px' }}
                 />
@@ -571,7 +626,7 @@ const UserEmployee: React.FC = () => {
               <Space>
                 <Button
                   htmlType="submit"
-                   type="primary"
+                  type="primary"
                   style={{
                     marginBottom: '10px',
                     backgroundColor: token.token.colorPrimary,

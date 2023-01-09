@@ -18,6 +18,10 @@ import {
 } from 'react-icons/fa';
 import { RiCloseFill, RiCommunityLine } from 'react-icons/ri';
 import { useNavigate } from 'react-router-dom';
+import facebook from '../../../assets/Facebook-logo.png';
+import initial from '../../../assets/initials-logo.png';
+import instagram from '../../../assets/Instagram-logo.png';
+import line from '../../../assets/Line-logo.png';
 
 const { useToken } = theme;
 
@@ -245,7 +249,10 @@ const Newcompany = () => {
             <Divider style={{ backgroundColor: token.token.colorPrimary }} />
           </Row>
 
-          <div className="text-base" style={{ color: token.token.colorPrimary }}>
+          <div
+            className="text-base"
+            style={{ color: token.token.colorPrimary }}
+          >
             Social Link
           </div>
 
@@ -255,7 +262,7 @@ const Newcompany = () => {
               <div className="flex flex-row ml-2 tems-center text-4xl">
                 {/* <FaFacebookSquare /> */}
                 <img
-                  src={`/public/Facebook-logo.png`}
+                  src={facebook}
                   alt="Facebook-logo"
                   style={{ width: '40px' }}
                 />
@@ -271,7 +278,7 @@ const Newcompany = () => {
               <div className="flex flex-row items-center ml-6 text-4xl">
                 {/* <FaLinkedin /> */}
                 <img
-                  src={`/public/initials-logo.png`}
+                  src={initial}
                   alt="Facebook-logo"
                   style={{ width: '40px' }}
                 />
@@ -292,7 +299,7 @@ const Newcompany = () => {
               <div className="flex flex-row ml-2 items-center text-4xl">
                 {/* <FaInstagramSquare /> */}
                 <img
-                  src={`/public/Instagram-logo.png`}
+                  src={instagram}
                   alt="Facebook-logo"
                   style={{ width: '40px' }}
                 />
@@ -307,11 +314,7 @@ const Newcompany = () => {
               {/*---------------- Line ----------------*/}
               <div className="flex flex-row items-center ml-6 text-4xl">
                 {/* <FaLine /> */}
-                <img
-                  src={`/public/Line-logo.png`}
-                  alt="Facebook-logo"
-                  style={{ width: '40px' }}
-                />
+                <img src={line} alt="Facebook-logo" style={{ width: '40px' }} />
               </div>
               <div className="flex items-center ml-8 mt-6">
                 <Col span={24}>
@@ -327,7 +330,10 @@ const Newcompany = () => {
       <br />
       <Card className="shadow-md">
         <Form>
-          <div className="text-base" style={{ color: token.token.colorPrimary }}>
+          <div
+            className="text-base"
+            style={{ color: token.token.colorPrimary }}
+          >
             ไฟล์เอกสารการเป็นนิติบุคคล ***
           </div>
           <br />
@@ -390,7 +396,10 @@ const Newcompany = () => {
             </Form.Item>
           </Row>
 
-          <div className="text-base" style={{ color: token.token.colorPrimary }}>
+          <div
+            className="text-base"
+            style={{ color: token.token.colorPrimary }}
+          >
             *** กรอกข้อมูล และ Upload เอกสารที่ถูกต้อง เพื่อรับสิทธิ์ การใช้ระบบ
             Report/Dash Bard สำหรับผู้บริหาร/หรือฝ่ายบุคคล ของบริษัทฯ
             ฟรีตลอดอายุการใช้งาน

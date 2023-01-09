@@ -9,16 +9,13 @@ import {
   HiOutlineComputerDesktop,
   HiOutlineQuestionMarkCircle,
 } from 'react-icons/hi2';
-import {
-  RiHotelLine,
-} from 'react-icons/ri';
+import { RiHotelLine } from 'react-icons/ri';
 
 import { CompanyBranchType } from '../../context/types';
 import { logout } from '../../App';
 import { useNavigate } from 'react-router-dom';
 
 const { useToken } = theme;
-
 
 type RightNavContentType = {
   user: MeQuery | undefined;

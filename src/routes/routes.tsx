@@ -29,10 +29,10 @@ const Login = React.lazy(() => import('../pages/Login'));
 const Register = React.lazy(() => import('../pages/Register'));
 const Overview = React.lazy(() => import('../pages/Overview'));
 const MainCompany = React.lazy(() => import('../pages/Company'));
-const ManageRights = React.lazy(() => import('../pages/ManageRights'))
-const Rights = React.lazy(() => import('../pages/ManageRights/rights'))
-const UserRights = React.lazy(() => import('../pages/ManageRights/usergroups'))
-const Company = React.lazy(() => import('../pages/Company/company'))
+const ManageRights = React.lazy(() => import('../pages/ManageRights'));
+const Rights = React.lazy(() => import('../pages/ManageRights/rights'));
+const UserRights = React.lazy(() => import('../pages/ManageRights/usergroups'));
+const Company = React.lazy(() => import('../pages/Company/company'));
 const ManageCompanyData = React.lazy(
   () => import('../pages/Company/company/newCompany'),
 );
@@ -229,7 +229,6 @@ export const routing: RoutingType[] = [
         path: '/:companycode/managerights/usergroups',
         element: <UserRights />,
       },
-
     ],
   },
 
@@ -278,4 +277,4 @@ export const routing: RoutingType[] = [
 const router = createBrowserRouter(routing);
 export default router;
 
-createBrowserRouter([{ loader: ({ }) => { } }]);
+createBrowserRouter([{ loader: ({}) => {} }]);
