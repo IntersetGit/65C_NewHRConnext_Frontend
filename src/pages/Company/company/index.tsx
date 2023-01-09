@@ -31,7 +31,6 @@ const GET_COMPANY = gql(/* GraphQL */ `
       branch {
         _count {
           users
-          positions
         }
         name
         address

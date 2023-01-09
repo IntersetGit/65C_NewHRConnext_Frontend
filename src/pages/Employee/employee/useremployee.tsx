@@ -28,21 +28,218 @@ import {
   Avatar,
 } from 'antd';
 import { useNavigate } from 'react-router-dom';
-import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
-import type { UploadChangeParam } from 'antd/es/upload';
-import type { RcFile, UploadFile } from 'antd/es/upload/interface';
 import facebook from '../../../assets/Facebook-logo.png';
 import inittial from '../../../assets/initials-logo.png';
 import line from '../../../assets/Line-logo.png';
 import telegram from '../../../assets/Telegram-logo.png';
 import type { UploadProps } from 'antd';
+import { gql } from '../../../__generated__/gql';
+import { useQuery, useMutation } from '@apollo/client';
+import axios from 'axios';
+import Swal from 'sweetalert2';
 
 const { useToken } = theme;
+
+type RegisterEmployeeType = {
+  email: string;
+  password: string;
+  tel: string;
+  dob: string;
+  address: string;
+  age: string;
+  citizen_address: string;
+  citizen_addressnumber: string;
+  citizen_country: string;
+  citizen_district: string;
+  citizen_id: string;
+  citizen_province: string;
+  citizen_state: string;
+  citizen_tel: string;
+  citizen_zipcode: string;
+  contract_address: string;
+  contract_addressnumber: string;
+  contract_companyemail: string;
+  contract_country: string;
+  contract_district: string;
+  contract_email: string;
+  contract_province: string;
+  contract_sameCitizen: boolean;
+  contract_state: string;
+  contract_zipcode: string;
+  firstname_en: string;
+  firstname_th: string;
+  gender: string;
+  id: string;
+  lastname_en: string;
+  lastname_th: string;
+  prefix_en: string;
+  prefix_th: string;
+  relationship: string;
+  religion: string;
+  shirt_size: string;
+  social_facebook: string;
+  social_id: string;
+  social_likedin: string;
+  social_line: string;
+  socail_telegram: string;
+  staff_code: string;
+  staff_status: string;
+};
+
+const GET_PROVINCE = gql(/* GraphQL */ `
+  query GetProvince {
+    getProvince {
+      name
+      district {
+        name
+        amphoe {
+          name
+          zipcode
+        }
+      }
+    }
+  }
+`);
+
+const CREATE_EMPLOYEE_ACCOUNT = gql(`
+mutation CreateAccountUser($data: CreateAccountUserInput!) {
+  createAccountUser(data: $data) {
+    message
+    status
+  }
+}`);
 
 const UserEmployee: React.FC = () => {
   const navigate = useNavigate();
   const token = useToken();
-  const [picture, setPicture] = useState('picture');
+  const [form] = Form.useForm<RegisterEmployeeType>();
+  const [picture, setPicture] = useState<string>();
+  const [country, setCounrty] = useState([]);
+  const [district, setDistrict] = useState<
+    { value?: string | null; label?: string | null }[] | undefined
+  >(undefined);
+  const [amphoe, setAmphoe] = useState<
+    { value?: string | null; label?: string | null }[] | undefined
+  >(undefined);
+
+  const [districtcontract, setDistrictContract] = useState<
+    { value?: string | null; label?: string | null }[] | undefined
+  >(undefined);
+  const [amphoecontract, setAmphoeContract] = useState<
+    { value?: string | null; label?: string | null }[] | undefined
+  >(undefined);
+
+  const { data: province_data, refetch } = useQuery(GET_PROVINCE);
+  const [createEmployeeAccount] = useMutation(CREATE_EMPLOYEE_ACCOUNT);
+
+  useEffect(() => {
+    AllCounrty();
+  }, []);
+
+  const AllCounrty = () => {
+    axios.get('https://restcountries.com/v2/all').then((data) => {
+      const items = data.data.map((e: any) => {
+        return {
+          label: e?.name,
+          value: e?.name,
+        };
+      });
+      setCounrty(items);
+    });
+  };
+
+  const province = province_data?.getProvince?.map((e) => {
+    return {
+      label: e?.name,
+      value: e?.name,
+    };
+  });
+
+  const onProvinceChangeCitizen = (value: string) => {
+    form.setFieldValue('citizen_district', null);
+    form.setFieldValue('citizen_state', null);
+    form.setFieldValue('citizen_zipcode', null);
+    const district = province_data?.getProvince
+      ?.find((e) => e?.name === value)
+      ?.district?.map((e) => {
+        return {
+          label: e?.name,
+          value: e?.name,
+        };
+      });
+    setDistrict(district ? district : []);
+  };
+
+  const onDistrictChangeCitizen = (value: string) => {
+    form.setFieldValue('citizen_state', null);
+    form.setFieldValue('citizen_zipcode', null);
+    const amphoe = province_data?.getProvince
+      ?.find((e) => e?.district?.find((_e) => _e?.name === value))
+      ?.district?.find((e) => e?.name === value)
+      ?.amphoe?.map((e) => {
+        return {
+          label: e?.name,
+          value: e?.name,
+        };
+      });
+    setAmphoe(amphoe ? amphoe : []);
+  };
+
+  const onAmphoeChangeCitizen = (value: string) => {
+    const zipCode = province_data?.getProvince
+      ?.find((e) =>
+        e?.district?.find((_e) =>
+          _e?.amphoe?.find((__e) => __e?.name === value),
+        ),
+      )
+      ?.district?.find((e) => e?.amphoe?.find((_e) => _e?.name === value))
+      ?.amphoe?.find((e) => e?.name === value)?.zipcode;
+
+    form.setFieldValue('citizen_zipcode', zipCode);
+  };
+
+  const onProvinceChangeContract = (value: string) => {
+    form.setFieldValue('contract_district', null);
+    form.setFieldValue('contract_state', null);
+    form.setFieldValue('contract_zipcode', null);
+    const district = province_data?.getProvince
+      ?.find((e) => e?.name === value)
+      ?.district?.map((e) => {
+        return {
+          label: e?.name,
+          value: e?.name,
+        };
+      });
+    setDistrictContract(district ? district : []);
+  };
+
+  const onDistrictChangeContract = (value: string) => {
+    form.setFieldValue('contract_state', null);
+    form.setFieldValue('contract_zipcode', null);
+    const amphoe = province_data?.getProvince
+      ?.find((e) => e?.district?.find((_e) => _e?.name === value))
+      ?.district?.find((e) => e?.name === value)
+      ?.amphoe?.map((e) => {
+        return {
+          label: e?.name,
+          value: e?.name,
+        };
+      });
+    setAmphoeContract(amphoe ? amphoe : []);
+  };
+
+  const onAmphoeChangeContract = (value: string) => {
+    const zipCode = province_data?.getProvince
+      ?.find((e) =>
+        e?.district?.find((_e) =>
+          _e?.amphoe?.find((__e) => __e?.name === value),
+        ),
+      )
+      ?.district?.find((e) => e?.amphoe?.find((_e) => _e?.name === value))
+      ?.amphoe?.find((e) => e?.name === value)?.zipcode;
+
+    form.setFieldValue('contract_zipcode', zipCode);
+  };
 
   const props: UploadProps = {
     beforeUpload(file) {
@@ -63,15 +260,46 @@ const UserEmployee: React.FC = () => {
             ctx.font = '33px Arial';
             ctx.fillText('Ant Design', 20, 20);
             canvas.toBlob((result) => resolve(result as any));
-            setPicture(canvas.toDataURL(resolve));
+            setPicture(canvas.toDataURL());
           };
         };
       });
     },
   };
 
-  const onSubmitForm = (value: any) => {
-    console.log('value', value);
+  const onSubmitForm = (value: RegisterEmployeeType) => {
+    Swal.fire({
+      title: 'ยืนยันการสร้างข้อมูลพนักงาน',
+      icon: 'warning',
+      showDenyButton: true,
+      showCancelButton: false,
+      confirmButtonColor: token.token.colorPrimary,
+      denyButtonColor: '#efefef',
+      confirmButtonText: 'ตกลง',
+      denyButtonText: `ยกเลิก`,
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        createEmployeeAccount({
+          variables: {
+            data: {
+              ...value,
+              contract_sameCitizen: true,
+            },
+          },
+        })
+          .then((val) => {
+            console.log(val);
+            if (val.data?.createAccountUser?.status) {
+              Swal.fire('สร้างข้อมูลพนักงานสำเร็จ!', '', 'success');
+              refetch();
+            }
+          })
+          .catch((err) => {
+            Swal.fire('สร้างข้อมูลพนักงานไม่สำเร็จ!', '', 'error');
+            console.error(err);
+          });
+      }
+    });
   };
 
   return (
@@ -89,7 +317,12 @@ const UserEmployee: React.FC = () => {
         <div className="text-base" style={{ color: token.token.colorPrimary }}>
           ข้อมูลพื้นฐาน
         </div>
-        <Form layout={'vertical'} onFinish={onSubmitForm} size={'large'}>
+        <Form
+          layout={'vertical'}
+          form={form}
+          onFinish={onSubmitForm}
+          size={'large'}
+        >
           <Row>
             <div className="flex w-screen mt-4 mb-4 justify-center">
               <Avatar
@@ -133,16 +366,13 @@ const UserEmployee: React.FC = () => {
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={8} xl={8}>
-              <Form.Item name="citizen_id" label={'เลขประจำตัวประชาชน'}>
+              <Form.Item name={'citizen_id'} label={'เลขประจำตัวประชาชน'}>
                 <Input />
               </Form.Item>
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={8} xl={8}>
-              <Form.Item
-                name={'contract_sameCitizen'}
-                label={'หมายเลขประกันสังคม'}
-              >
+              <Form.Item name={'social_id'} label={'หมายเลขประกันสังคม'}>
                 <Input />
               </Form.Item>
             </Col>
@@ -154,15 +384,15 @@ const UserEmployee: React.FC = () => {
                 <Select
                   options={[
                     {
-                      value: '1',
+                      value: 'นาย',
                       label: 'นาย',
                     },
                     {
-                      value: '2',
+                      value: 'นาง',
                       label: 'นาง',
                     },
                     {
-                      value: '3',
+                      value: 'นางสาว',
                       label: 'นางสาว',
                     },
                   ]}
@@ -171,28 +401,34 @@ const UserEmployee: React.FC = () => {
               </Form.Item>
             </Col>
 
-            <Col xs={24} sm={12} md={12} lg={10} xl={10}>
-              <Form.Item name={'firstname_th'} label={'ชื่อ-สกุล'}>
+            <Col xs={24} sm={12} md={12} lg={5} xl={5}>
+              <Form.Item name={'firstname_th'} label={'ชื่อ'}>
                 <Input />
               </Form.Item>
             </Col>
 
-            <Col xs={24} sm={8} md={8} lg={4} xl={4}>
+            <Col xs={24} sm={12} md={12} lg={5} xl={5}>
+              <Form.Item name={'lastname_th'} label={'นามสกุล'}>
+                <Input />
+              </Form.Item>
+            </Col>
+
+            <Col xs={24} sm={12} md={12} lg={4} xl={4}>
               <Form.Item label={'ชื่อเล่น'}>
                 <Input />
               </Form.Item>
             </Col>
 
-            <Col xs={24} sm={8} md={8} lg={3} xl={3}>
+            <Col xs={24} sm={12} md={12} lg={3} xl={3}>
               <Form.Item name={'gender'} label={'เพศ'}>
                 <Select
                   options={[
                     {
-                      value: '1',
+                      value: 'ชาย',
                       label: 'ชาย',
                     },
                     {
-                      value: '2',
+                      value: 'หญิง',
                       label: 'หญิง',
                     },
                   ]}
@@ -201,24 +437,24 @@ const UserEmployee: React.FC = () => {
               </Form.Item>
             </Col>
 
-            <Col xs={24} sm={8} md={8} lg={3} xl={3}>
-              <Form.Item name={'bio'} label={'กรุ๊ปเลือด'}>
+            <Col xs={24} sm={12} md={12} lg={3} xl={3}>
+              <Form.Item label={'กรุ๊ปเลือด'}>
                 <Select
                   options={[
                     {
-                      value: '1',
+                      value: 'A',
                       label: 'A',
                     },
                     {
-                      value: '2',
+                      value: 'B',
                       label: 'B',
                     },
                     {
-                      value: '3',
+                      value: 'O',
                       label: 'O',
                     },
                     {
-                      value: '4',
+                      value: 'AB',
                       label: 'AB',
                     },
                   ]}
@@ -234,15 +470,15 @@ const UserEmployee: React.FC = () => {
                 <Select
                   options={[
                     {
-                      value: '1',
+                      value: 'Mr.',
                       label: 'Mr.',
                     },
                     {
-                      value: '2',
+                      value: 'Mrs.',
                       label: 'Mrs.',
                     },
                     {
-                      value: '3',
+                      value: 'Ms.',
                       label: 'Ms.',
                     },
                   ]}
@@ -252,7 +488,13 @@ const UserEmployee: React.FC = () => {
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={10} xl={10}>
-              <Form.Item name={'firstname_en'} label={'Name-Surname'}>
+              <Form.Item name={'firstname_en'} label={'Name'}>
+                <Input />
+              </Form.Item>
+            </Col>
+
+            <Col xs={24} sm={12} md={12} lg={10} xl={10}>
+              <Form.Item name={'lastname_en'} label={'Surname'}>
                 <Input />
               </Form.Item>
             </Col>
@@ -261,7 +503,7 @@ const UserEmployee: React.FC = () => {
           <Row gutter={16}>
             <Col xs={24} sm={12} md={8} lg={4} xl={4}>
               <Form.Item name={'dob'} label={'วัน/เดือน/ปี'}>
-                <DatePicker style={{ width: '195px' }} />
+                <DatePicker format={'YYYY/MM/DD'} style={{ width: '195px' }} />
               </Form.Item>
             </Col>
 
@@ -272,23 +514,23 @@ const UserEmployee: React.FC = () => {
             </Col>
 
             <Col xs={24} sm={8} md={8} lg={6} xl={6}>
-              <Form.Item label={'สถานภาพสมรส'}>
+              <Form.Item name={'relationship'} label={'สถานภาพสมรส'}>
                 <Select
                   options={[
                     {
-                      value: '1',
+                      value: 'โสด',
                       label: 'โสด',
                     },
                     {
-                      value: '2',
+                      value: 'สมรส',
                       label: 'สมรส',
                     },
                     {
-                      value: '3',
+                      value: 'หย่าร้าง',
                       label: 'หย่าร้าง',
                     },
                     {
-                      value: '4',
+                      value: 'แยกกันอยู่',
                       label: 'แยกกันอยู่',
                     },
                   ]}
@@ -302,23 +544,23 @@ const UserEmployee: React.FC = () => {
                 <Select
                   options={[
                     {
-                      value: '1',
+                      value: 'S',
                       label: 'S',
                     },
                     {
-                      value: '2',
+                      value: 'M',
                       label: 'M',
                     },
                     {
-                      value: '3',
+                      value: 'L',
                       label: 'L',
                     },
                     {
-                      value: '4',
+                      value: 'XL',
                       label: 'XL',
                     },
                     {
-                      value: '5',
+                      value: 'XXL',
                       label: 'XXL',
                     },
                   ]}
@@ -328,15 +570,15 @@ const UserEmployee: React.FC = () => {
             </Col>
 
             <Col xs={24} sm={8} md={12} lg={6} xl={6}>
-              <Form.Item name={''} label={'สถานภาพพนักงาน'}>
+              <Form.Item label={'สถานภาพพนักงาน'}>
                 <Select
                   options={[
                     {
-                      value: '1',
+                      value: 'Full Time',
                       label: 'Full Time',
                     },
                     {
-                      value: '2',
+                      value: 'Full Time',
                       label: 'Part Time',
                     },
                   ]}
@@ -375,55 +617,38 @@ const UserEmployee: React.FC = () => {
           <Row gutter={16}>
             <Col xs={24} sm={12} md={12} lg={6} xl={6}>
               <Form.Item name={'citizen_country'} label={'ประเทศ'}>
-                <Select
-                  options={[
-                    {
-                      value: '1',
-                      label: 'Thailand',
-                    },
-                  ]}
-                  allowClear
-                />
+                <Select options={country} showSearch allowClear />
               </Form.Item>
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={6} xl={6}>
               <Form.Item name={'citizen_province'} label={'จังหวัด'}>
                 <Select
-                  options={[
-                    {
-                      value: '1',
-                      label: 'กรุงเทพมหานคร',
-                    },
-                  ]}
+                  showSearch
+                  options={province ? province : []}
+                  onChange={onProvinceChangeCitizen}
                   allowClear
                 />
               </Form.Item>
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={6} xl={6}>
-              <Form.Item name={'citizen_district'} label={'เขต/อำเภอ'}>
+              <Form.Item name={'citizen_district'} label={'แขวง/ตำบล'}>
                 <Select
-                  options={[
-                    {
-                      value: '1',
-                      label: 'จตุจักร',
-                    },
-                  ]}
+                  onChange={onDistrictChangeCitizen}
+                  showSearch
+                  options={district ? district : []}
                   allowClear
                 />
               </Form.Item>
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={6} xl={6}>
-              <Form.Item name={'citizen_state'} label={'แขวง/ตำบล'}>
+              <Form.Item name={'citizen_state'} label={'เขต/อำเภอ'}>
                 <Select
-                  options={[
-                    {
-                      value: '1',
-                      label: 'จอมพล',
-                    },
-                  ]}
+                  showSearch
+                  onChange={onAmphoeChangeCitizen}
+                  options={amphoe ? amphoe : []}
                   allowClear
                 />
               </Form.Item>
@@ -433,7 +658,7 @@ const UserEmployee: React.FC = () => {
           <Row gutter={16}>
             <Col xs={24} sm={12} md={12} lg={6} xl={6}>
               <Form.Item name={'citizen_zipcode'} label={'รหัสไปรษณีย์'}>
-                <Input />
+                <Input disabled />
               </Form.Item>
             </Col>
 
@@ -474,40 +699,31 @@ const UserEmployee: React.FC = () => {
             <Col xs={24} sm={12} md={12} lg={6} xl={6}>
               <Form.Item name={'contract_province'} label={'จังหวัด'}>
                 <Select
-                  options={[
-                    {
-                      value: '1',
-                      label: 'กรุงเทพมหานคร',
-                    },
-                  ]}
+                  showSearch
+                  options={province ? province : []}
+                  onChange={onProvinceChangeContract}
                   allowClear
                 />
               </Form.Item>
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={6} xl={6}>
-              <Form.Item name={'contract_district'} label={'เขต/อำเภอ'}>
+              <Form.Item name={'contract_district'} label={'แขวง/ตำบล'}>
                 <Select
-                  options={[
-                    {
-                      value: '1',
-                      label: 'จตุจักร',
-                    },
-                  ]}
+                  onChange={onDistrictChangeContract}
+                  showSearch
+                  options={districtcontract ? districtcontract : []}
                   allowClear
                 />
               </Form.Item>
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={6} xl={6}>
-              <Form.Item name={'contract_state'} label={'แขวง/ตำบล'}>
+              <Form.Item name={'contract_state'} label={'เขต/อำเภอ'}>
                 <Select
-                  options={[
-                    {
-                      value: '1',
-                      label: 'จอมพล',
-                    },
-                  ]}
+                  showSearch
+                  onChange={onAmphoeChangeContract}
+                  options={amphoecontract ? amphoecontract : []}
                   allowClear
                 />
               </Form.Item>
@@ -515,25 +731,31 @@ const UserEmployee: React.FC = () => {
 
             <Col xs={24} sm={12} md={12} lg={6} xl={6}>
               <Form.Item name={'contract_zipcode'} label={'รหัสไปรษณีย์'}>
-                <Input />
+                <Input disabled />
               </Form.Item>
             </Col>
           </Row>
 
           <Row gutter={16}>
-            <Col xs={24} sm={8} md={8} lg={8} xl={8}>
+            <Col xs={24} sm={6} md={6} lg={6} xl={6}>
               <Form.Item name={'tel'} label={'Mobile Phone'}>
                 <Input />
               </Form.Item>
             </Col>
 
-            <Col xs={24} sm={8} md={8} lg={8} xl={8}>
-              <Form.Item label={'E-Mail'}>
+            <Col xs={24} sm={6} md={6} lg={6} xl={6}>
+              <Form.Item name={'email'} label={'E-Mail'}>
                 <Input />
               </Form.Item>
             </Col>
 
-            <Col xs={24} sm={8} md={8} lg={8} xl={8}>
+            <Col xs={24} sm={6} md={6} lg={6} xl={6}>
+              <Form.Item name={'password'} label={'Password'}>
+                <Input />
+              </Form.Item>
+            </Col>
+
+            <Col xs={24} sm={6} md={6} lg={6} xl={6}>
               <Form.Item label={'E-Mail Company'}>
                 <Input />
               </Form.Item>

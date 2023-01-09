@@ -11,7 +11,7 @@ query Users {
         lastname_th
         lastname_en
       }
-      Position {
+      Role_Company {
         id
         name
 

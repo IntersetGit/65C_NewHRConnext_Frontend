@@ -12,33 +12,38 @@ const cookie = new Cookies();
 const GET_ME = gql(`
 query Me {
   me {
-    id
-    email
-    isOwner
-    companyBranch {
-      name
-      company {
-        name
-        id
-        icon
-        companyCode
-      }
-    }
-    role {
-      id
-      name
-    }
-    Position {
+    Role_Company {
       access
       id
       name
+      __typename
     }
+    companyBranch {
+      companyId
+      company {
+        companyCode
+        icon
+        id
+        name
+        __typename
+      }
+      createdAt
+      id
+      name
+      __typename
+    }
+    email
+    id
+    isOwner
     profile {
       firstname_th
-      lastname_th
-      firstname_en
       lastname_en
-      avatar
+      firstname_en
+      lastname_th
+      prefix_en
+      prefix_th
+      staff_code
+      __typename
     }
   }
 }`);
@@ -62,7 +67,7 @@ const AuthProvider = ({ children, company: companydata }: Props) => {
   const { data: user, loading } = useQuery(GET_ME);
   const defaultAbility: any[] = [];
   const ability = createMongoAbility(
-    user?.me?.Position?.access || defaultAbility,
+    user?.me?.Role_Company?.access || defaultAbility,
   );
   const [company, setCompany] = useState<CompanyBranchType | undefined>({
     branchId: companydata?.branchId,

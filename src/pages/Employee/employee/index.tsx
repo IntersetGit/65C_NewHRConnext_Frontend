@@ -36,9 +36,8 @@ interface DataType {
 const Employee: React.FC = () => {
   const token = useToken();
   const navigate = useNavigate();
-  const [dataTable, setDataTable] = useState([])
+  const [dataTable, setDataTable] = useState([]);
   const { data: userData, refetch } = useQuery(FETCH_GETALLUSER);
-
 
   const menuItems = [
     {
@@ -55,10 +54,9 @@ const Employee: React.FC = () => {
     },
   ];
 
-
   const apiGetUsers = () => {
     refetch();
-  }
+  };
   const onMenuClick = (event: any, record: any) => {
     const { key } = event;
     if (key === 'edit') {
@@ -79,7 +77,7 @@ const Employee: React.FC = () => {
       key: 'name',
       dataIndex: 'profile',
       align: 'center',
-      render: (txt) => txt.firstname_th + ' ' + txt.lastname_th
+      render: (txt) => txt.firstname_th + ' ' + txt.lastname_th,
     },
     {
       title: 'ตำแหน่ง',
@@ -208,7 +206,8 @@ const Employee: React.FC = () => {
                     type="primary"
                     style={{ backgroundColor: token.token.colorPrimary }}
                   >
-                    Reset</Button>
+                    Reset
+                  </Button>
                 </Form.Item>
 
                 <Form.Item>
@@ -250,7 +249,11 @@ const Employee: React.FC = () => {
             </Button>
           </Space>
         </Col>
-        <Table columns={columns} dataSource={userData?.users as any} rowKey={(i: any) => i.toString()} ></Table>
+        <Table
+          columns={columns}
+          dataSource={userData?.users as any}
+          rowKey={(i: any) => i.toString()}
+        ></Table>
       </Card>
     </>
   );
