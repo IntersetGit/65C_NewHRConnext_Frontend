@@ -25,6 +25,7 @@
     "graphql-tag": "^2.12.6",
     "localforage": "^1.10.0",
     "match-sorter": "^6.3.1",
+    "moment": "^2.29.4",
     "nprogress": "^0.2.0",
     "rc-virtual-list": "^3.4.11",
     "react": "^18.2.0",
