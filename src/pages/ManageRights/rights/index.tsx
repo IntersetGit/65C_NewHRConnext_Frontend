@@ -17,6 +17,7 @@ import { RiCommunityLine } from 'react-icons/ri';
 interface DataType {
   key: React.Key;
   menu: string;
+  subject: string;
   permissions: string;
 }
 
@@ -50,12 +51,31 @@ const Simpledata = [
       { action: ['add', 'edit', 'delete', 'read'], subject: 'campaign' },
     ],
   },
+  {
+    id: '1',
+    name: 'Finance',
+    acess: [
+      { action: ['add', 'edit', 'delete', 'read'], subject: 'company' },
+      { action: ['read'], subject: 'myprofile' },
+      { action: ['add'], subject: 'employee' },
+      { action: ['read'], subject: 'salary' },
+      { action: ['read'], subject: 'vacation' },
+      { action: ['add', 'edit', 'delete', 'read'], subject: 'training' },
+      { action: ['add', 'edit', 'delete', 'read'], subject: 'assessment' },
+      { action: ['add', 'edit', 'delete', 'read'], subject: 'project' },
+      { action: ['add', 'edit', 'delete', 'read'], subject: 'dashboard' },
+      { action: ['add', 'edit', 'delete', 'read'], subject: 'file' },
+      { action: ['add', 'edit', 'delete', 'read'], subject: 'activity' },
+      { action: ['add', 'edit', 'delete', 'read'], subject: 'campaign' },
+    ],
+  },
 ];
 
 const Rights: React.FC = () => {
   const token = useToken();
 
-  const expandedRowRender = () => {
+  const expandedRowRender = (record: DataType, index: number | string) => {
+    console.log(record, index);
     const columns: TableColumnsType<ExpandedDataType> = [
       { title: 'Roles', dataIndex: 'name', key: 'name' },
       { title: 'View', dataIndex: 'view', key: 'view' },
@@ -64,6 +84,8 @@ const Rights: React.FC = () => {
       { title: 'Delete', dataIndex: 'delete', key: 'delete' },
     ];
     const data = [];
+    const query_data = Simpledata;
+    console.log(query_data);
     for (let i = 0; i < 1; ++i) {
       data.push(
         {
@@ -95,6 +117,7 @@ const Rights: React.FC = () => {
     return (
       <Table
         size="small"
+        rowKey="id"
         columns={columns}
         dataSource={data}
         pagination={false}
@@ -127,61 +150,73 @@ const Rights: React.FC = () => {
       {
         key: '1',
         menu: 'บริษัท',
+        subject: 'company',
         permissions: '',
       },
       {
         key: '2',
         menu: 'ข้อมูลของฉัน',
+        subject: 'myprofile',
         permissions: '',
       },
       {
         key: '3',
         menu: 'พนักงาน',
+        subject: 'employee',
         permissions: '',
       },
       {
         key: '4',
         menu: 'เงินเดือน',
+        subject: 'salary',
         permissions: '',
       },
       {
         key: '5',
         menu: 'การลา',
+        subject: 'vacation',
         permissions: '',
       },
       {
         key: '6',
         menu: 'การฝึกอบรม',
+        subject: 'training',
         permissions: '',
       },
       {
         key: '7',
         menu: 'การประเมิน',
+        subject: 'assessment',
         permissions: '',
       },
       {
         key: '8',
         menu: 'โครงการ',
+        subject: 'project',
         permissions: '',
       },
       {
         key: '9',
         menu: 'Dash Board',
+        subject: 'dashboard',
         permissions: '',
       },
       {
         key: '10',
         menu: 'ไฟล์',
+        subject: 'file',
         permissions: '',
       },
       {
         key: '11',
         menu: 'กิจกรรม',
+        subject: 'activity',
         permissions: '',
       },
       {
         key: '12',
         menu: 'แคมเปญการเงิน',
+        subject: 'campaign',
         permissions: '',
       },
     );
