@@ -66,11 +66,11 @@ const Employee: React.FC = () => {
     const { key } = event;
     if (key === 'edit') {
       navigate(`useremployee?id=${record.profile.id}`, {
-        state: { ...record?.profile, mode: 'edit' },
+        state: { ...record?.profile, mode: 'edit', userId: record?.id },
       });
     } else if (key === 'view') {
       navigate(`useremployee?id=${record.profile.id}`, {
-        state: { ...record?.profile, mode: 'view' },
+        state: { ...record?.profile, mode: 'view', userId: record?.id },
       });
     } else if (key === 'delete') {
     }

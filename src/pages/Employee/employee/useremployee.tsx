@@ -299,7 +299,7 @@ const UserEmployee: React.FC = (props) => {
           variables: {
             data: {
               ...value,
-              id: propsstate?.id ? propsstate?.id : undefined,
+              id: propsstate?.userId ? propsstate?.userId : undefined,
               contract_sameCitizen: true,
             },
           },
