@@ -148,6 +148,7 @@ const UserEmployee: React.FC = (props) => {
     form.setFieldsValue({
       ...propsstate,
       ...propsstate?.user,
+      email: propsstate.contract_email,
       dob: moment(propsstate?.dob),
     });
   };

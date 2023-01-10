@@ -131,54 +131,6 @@ const Employee: React.FC = () => {
     },
   ];
 
-  const data: DataType[] = [
-    {
-      key: 1,
-      number: 1,
-      name: 'นาย สมใจ พิมพ์สวย',
-      position: 'โปรแกรมเมอร์',
-      department: 'พัฒนาซอฟต์แวร์',
-      tel: '086 555 4444',
-      email: 'utai.p@gmail.com',
-    },
-    {
-      key: 2,
-      number: 2,
-      name: 'นางสาว สมพร บัวชมพู',
-      position: 'เจ้าหน้าที่การเงิน',
-      department: 'บัญชี',
-      tel: '084 222 1456',
-      email: 'umaporn.b@gmail.com',
-    },
-    {
-      key: 3,
-      number: 3,
-      name: 'นาย สุรพงษ์ พิมพ์สวย',
-      position: 'โปรแกรมเมอร์',
-      department: 'พัฒนาซอฟต์แวร์',
-      tel: '065 555 4444',
-      email: 'utai.p@gmail.com',
-    },
-    {
-      key: 4,
-      number: 4,
-      name: 'นาย สมศักดิ์ พิมพ์สวย',
-      position: 'นักวิเคราห์และออกแบบระบบ',
-      department: 'พัฒนาซอฟต์แวร์',
-      tel: '065 555 4444',
-      email: 'utai.p@gmail.com',
-    },
-    {
-      key: 5,
-      number: 5,
-      name: 'นาย สมบูรณ์ พิมพ์สวย',
-      position: 'โปรแกรมเมอร์',
-      department: 'พัฒนาซอฟต์แวร์',
-      tel: '065 555 4444',
-      email: 'utai.p@gmail.com',
-    },
-  ];
-
   return (
     <>
       <div className="flex text-2xl ml-2 pt-4">
