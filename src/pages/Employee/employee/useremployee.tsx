@@ -135,6 +135,8 @@ const UserEmployee: React.FC = (props) => {
   const [createEmployeeAccount] = useMutation(CREATE_EMPLOYEE_ACCOUNT);
   let propsstate = location.state as any;
 
+  console.log(propsstate);
+
   useEffect(() => {
     AllCounrty();
     if (propsstate?.mode) {
@@ -144,9 +146,11 @@ const UserEmployee: React.FC = (props) => {
 
   const getUserData = () => {
     form.setFieldsValue({
-      ...propsstate, ...propsstate?.user, dob: moment(propsstate?.dob)
-    })
-  }
+      ...propsstate,
+      ...propsstate?.user,
+      dob: moment(propsstate?.dob),
+    });
+  };
 
   const AllCounrty = () => {
     axios.get('https://restcountries.com/v2/all').then((data) => {
@@ -281,7 +285,7 @@ const UserEmployee: React.FC = (props) => {
 
   const onSubmitForm = (value: RegisterEmployeeType) => {
     Swal.fire({
-      title: 'ยืนยันการสร้างข้อมูลพนักงาน',
+      title: `ยืนยันการ${propsstate?.id ? 'แก้ไข' : 'สร้าง'}ข้อมูลพนักงาน`,
       icon: 'warning',
       showDenyButton: true,
       showCancelButton: false,
@@ -295,6 +299,7 @@ const UserEmployee: React.FC = (props) => {
           variables: {
             data: {
               ...value,
+              id: propsstate?.id ? propsstate?.id : undefined,
               contract_sameCitizen: true,
             },
           },
@@ -302,12 +307,20 @@ const UserEmployee: React.FC = (props) => {
           .then((val) => {
             console.log(val);
             if (val.data?.createAccountUser?.status) {
-              Swal.fire('สร้างข้อมูลพนักงานสำเร็จ!', '', 'success');
+              Swal.fire(
+                `${propsstate?.id ? 'แก้ไข' : 'สร้าง'}ข้อมูลพนักงานสำเร็จ!`,
+                '',
+                'success',
+              );
               refetch();
             }
           })
           .catch((err) => {
-            Swal.fire('สร้างข้อมูลพนักงานไม่สำเร็จ!', '', 'error');
+            Swal.fire(
+              `${propsstate?.id ? 'แก้ไข' : 'สร้าง'}ข้อมูลพนักงานไม่สำเร็จ!`,
+              '',
+              'error',
+            );
             console.error(err);
           });
       }
@@ -356,36 +369,52 @@ const UserEmployee: React.FC = (props) => {
           <Row gutter={16}>
             <Col xs={24} sm={12} md={12} lg={4} xl={4}>
               <Form.Item name={'staff_code'} label={'รหัสพนักงาน'}>
-                <Input />
+                {propsstate.mode == 'view' ? <Input disabled /> : <Input />}
               </Form.Item>
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={4} xl={4}>
               <Form.Item name={'staff_status'} label={'Status'}>
-                <Select
-                  options={[
-                    {
-                      value: 'ใช้งาน',
-                      label: 'ใช้งาน',
-                    },
-                    {
-                      value: 'ไม่ใช้งาน',
-                      label: 'ไม่ใช้งาน',
-                    },
-                  ]}
-                ></Select>
+                {propsstate.mode == 'view' ? (
+                  <Select
+                    disabled
+                    options={[
+                      {
+                        value: 'ใช้งาน',
+                        label: 'ใช้งาน',
+                      },
+                      {
+                        value: 'ไม่ใช้งาน',
+                        label: 'ไม่ใช้งาน',
+                      },
+                    ]}
+                  ></Select>
+                ) : (
+                  <Select
+                    options={[
+                      {
+                        value: 'ใช้งาน',
+                        label: 'ใช้งาน',
+                      },
+                      {
+                        value: 'ไม่ใช้งาน',
+                        label: 'ไม่ใช้งาน',
+                      },
+                    ]}
+                  ></Select>
+                )}
               </Form.Item>
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={8} xl={8}>
               <Form.Item name={'citizen_id'} label={'เลขประจำตัวประชาชน'}>
-                <Input />
+                {propsstate.mode == 'view' ? <Input disabled /> : <Input />}
               </Form.Item>
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={8} xl={8}>
               <Form.Item name={'social_id'} label={'หมายเลขประกันสังคม'}>
-                <Input />
+                {propsstate.mode == 'view' ? <Input disabled /> : <Input />}
               </Form.Item>
             </Col>
           </Row>
@@ -393,85 +422,148 @@ const UserEmployee: React.FC = (props) => {
           <Row gutter={16}>
             <Col xs={24} sm={12} md={12} lg={4} xl={4}>
               <Form.Item name={'prefix_th'} label={'คำนำหน้า'}>
-                <Select
-                  options={[
-                    {
-                      value: 'นาย',
-                      label: 'นาย',
-                    },
-                    {
-                      value: 'นาง',
-                      label: 'นาง',
-                    },
-                    {
-                      value: 'นางสาว',
-                      label: 'นางสาว',
-                    },
-                  ]}
-                  allowClear
-                />
+                {propsstate.mode == 'view' ? (
+                  <Select
+                    disabled
+                    options={[
+                      {
+                        value: 'นาย',
+                        label: 'นาย',
+                      },
+                      {
+                        value: 'นาง',
+                        label: 'นาง',
+                      },
+                      {
+                        value: 'นางสาว',
+                        label: 'นางสาว',
+                      },
+                    ]}
+                    allowClear
+                  />
+                ) : (
+                  <Select
+                    options={[
+                      {
+                        value: 'นาย',
+                        label: 'นาย',
+                      },
+                      {
+                        value: 'นาง',
+                        label: 'นาง',
+                      },
+                      {
+                        value: 'นางสาว',
+                        label: 'นางสาว',
+                      },
+                    ]}
+                    allowClear
+                  />
+                )}
               </Form.Item>
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={5} xl={5}>
               <Form.Item name={'firstname_th'} label={'ชื่อ'}>
-                <Input />
+                {propsstate.mode == 'view' ? <Input disabled /> : <Input />}
               </Form.Item>
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={5} xl={5}>
               <Form.Item name={'lastname_th'} label={'นามสกุล'}>
-                <Input />
+                {propsstate.mode == 'view' ? <Input disabled /> : <Input />}
               </Form.Item>
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={4} xl={4}>
               <Form.Item label={'ชื่อเล่น'}>
-                <Input />
+                {propsstate.mode == 'view' ? <Input disabled /> : <Input />}
               </Form.Item>
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={3} xl={3}>
               <Form.Item name={'gender'} label={'เพศ'}>
-                <Select
-                  options={[
-                    {
-                      value: 'ชาย',
-                      label: 'ชาย',
-                    },
-                    {
-                      value: 'หญิง',
-                      label: 'หญิง',
-                    },
-                  ]}
-                  allowClear
-                />
+                {propsstate.mode == 'view' ? (
+                  <Select
+                    disabled
+                    options={[
+                      {
+                        value: 'ชาย',
+                        label: 'ชาย',
+                      },
+                      {
+                        value: 'หญิง',
+                        label: 'หญิง',
+                      },
+                    ]}
+                    allowClear
+                  />
+                ) : (
+                  <Select
+                    options={[
+                      {
+                        value: 'ชาย',
+                        label: 'ชาย',
+                      },
+                      {
+                        value: 'หญิง',
+                        label: 'หญิง',
+                      },
+                    ]}
+                    allowClear
+                  />
+                )}
               </Form.Item>
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={3} xl={3}>
               <Form.Item label={'กรุ๊ปเลือด'}>
-                <Select
-                  options={[
-                    {
-                      value: 'A',
-                      label: 'A',
-                    },
-                    {
-                      value: 'B',
-                      label: 'B',
-                    },
-                    {
-                      value: 'O',
-                      label: 'O',
-                    },
-                    {
-                      value: 'AB',
-                      label: 'AB',
-                    },
-                  ]}
-                  allowClear
-                />
+                {propsstate.mode == 'view' ? (
+                  <Select
+                    disabled
+                    options={[
+                      {
+                        value: 'A',
+                        label: 'A',
+                      },
+                      {
+                        value: 'B',
+                        label: 'B',
+                      },
+                      {
+                        value: 'O',
+                        label: 'O',
+                      },
+                      {
+                        value: 'AB',
+                        label: 'AB',
+                      },
+                    ]}
+                    allowClear
+                  />
+                ) : (
+                  <Select
+                    options={[
+                      {
+                        value: 'A',
+                        label: 'A',
+                      },
+                      {
+                        value: 'B',
+                        label: 'B',
+                      },
+                      {
+                        value: 'O',
+                        label: 'O',
+                      },
+                      {
+                        value: 'AB',
+                        label: 'AB',
+                      },
+                    ]}
+                    allowClear
+                  />
+                )}
               </Form.Item>
             </Col>
           </Row>
@@ -479,35 +571,56 @@ const UserEmployee: React.FC = (props) => {
           <Row gutter={16}>
             <Col xs={24} sm={12} md={12} lg={4} xl={4}>
               <Form.Item name={'prefix_en'} label={'Prename'}>
-                <Select
-                  options={[
-                    {
-                      value: 'Mr.',
-                      label: 'Mr.',
-                    },
-                    {
-                      value: 'Mrs.',
-                      label: 'Mrs.',
-                    },
-                    {
-                      value: 'Ms.',
-                      label: 'Ms.',
-                    },
-                  ]}
-                  allowClear
-                />
+                {propsstate.mode == 'view' ? (
+                  <Select
+                    disabled
+                    options={[
+                      {
+                        value: 'Mr.',
+                        label: 'Mr.',
+                      },
+                      {
+                        value: 'Mrs.',
+                        label: 'Mrs.',
+                      },
+                      {
+                        value: 'Ms.',
+                        label: 'Ms.',
+                      },
+                    ]}
+                    allowClear
+                  />
+                ) : (
+                  <Select
+                    options={[
+                      {
+                        value: 'Mr.',
+                        label: 'Mr.',
+                      },
+                      {
+                        value: 'Mrs.',
+                        label: 'Mrs.',
+                      },
+                      {
+                        value: 'Ms.',
+                        label: 'Ms.',
+                      },
+                    ]}
+                    allowClear
+                  />
+                )}
               </Form.Item>
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={10} xl={10}>
               <Form.Item name={'firstname_en'} label={'Name'}>
-                <Input />
+                {propsstate.mode == 'view' ? <Input disabled /> : <Input />}
               </Form.Item>
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={10} xl={10}>
               <Form.Item name={'lastname_en'} label={'Surname'}>
-                <Input />
+                {propsstate.mode == 'view' ? <Input disabled /> : <Input />}
               </Form.Item>
             </Col>
           </Row>
@@ -515,87 +628,187 @@ const UserEmployee: React.FC = (props) => {
           <Row gutter={16}>
             <Col xs={24} sm={12} md={8} lg={4} xl={4}>
               <Form.Item name={'dob'} label={'วัน/เดือน/ปี'}>
-                <DatePicker format={'YYYY/MM/DD'} style={{ width: '195px' }} />
+                {propsstate.mode == 'view' ? (
+                  <DatePicker
+                    format={'YYYY/MM/DD'}
+                    style={{ width: '195px' }}
+                    disabled
+                  />
+                ) : (
+                  <DatePicker
+                    format={'YYYY/MM/DD'}
+                    style={{ width: '195px' }}
+                  />
+                )}
               </Form.Item>
             </Col>
 
             <Col xs={24} sm={12} md={8} lg={4} xl={4}>
               <Form.Item name={'age'} label={'อายุ'}>
-                <Input />
+                {propsstate.mode == 'view' ? <Input disabled /> : <Input />}
               </Form.Item>
             </Col>
 
             <Col xs={24} sm={8} md={8} lg={6} xl={6}>
               <Form.Item name={'relationship'} label={'สถานภาพสมรส'}>
-                <Select
-                  options={[
-                    {
-                      value: 'โสด',
-                      label: 'โสด',
-                    },
-                    {
-                      value: 'สมรส',
-                      label: 'สมรส',
-                    },
-                    {
-                      value: 'หย่าร้าง',
-                      label: 'หย่าร้าง',
-                    },
-                    {
-                      value: 'แยกกันอยู่',
-                      label: 'แยกกันอยู่',
-                    },
-                  ]}
-                  allowClear
-                />
+                {propsstate.mode == 'view' ? (
+                  <Select
+                    disabled
+                    options={[
+                      {
+                        value: 'โสด',
+                        label: 'โสด',
+                      },
+                      {
+                        value: 'สมรส',
+                        label: 'สมรส',
+                      },
+                      {
+                        value: 'หย่าร้าง',
+                        label: 'หย่าร้าง',
+                      },
+                      {
+                        value: 'แยกกันอยู่',
+                        label: 'แยกกันอยู่',
+                      },
+                    ]}
+                    allowClear
+                  />
+                ) : (
+                  <Select
+                    options={[
+                      {
+                        value: 'โสด',
+                        label: 'โสด',
+                      },
+                      {
+                        value: 'สมรส',
+                        label: 'สมรส',
+                      },
+                      {
+                        value: 'หย่าร้าง',
+                        label: 'หย่าร้าง',
+                      },
+                      {
+                        value: 'แยกกันอยู่',
+                        label: 'แยกกันอยู่',
+                      },
+                    ]}
+                    allowClear
+                  />
+                )}
               </Form.Item>
             </Col>
 
             <Col xs={24} sm={8} md={12} lg={4} xl={4}>
               <Form.Item name={'shirt_size'} label={'T-Shirt Size'}>
-                <Select
-                  options={[
-                    {
-                      value: 'S',
-                      label: 'S',
-                    },
-                    {
-                      value: 'M',
-                      label: 'M',
-                    },
-                    {
-                      value: 'L',
-                      label: 'L',
-                    },
-                    {
-                      value: 'XL',
-                      label: 'XL',
-                    },
-                    {
-                      value: 'XXL',
-                      label: 'XXL',
-                    },
-                  ]}
-                  allowClear
-                />
+                {propsstate.mode == 'view' ? (
+                  <Select
+                    disabled
+                    options={[
+                      {
+                        value: 'S',
+                        label: 'S',
+                      },
+                      {
+                        value: 'M',
+                        label: 'M',
+                      },
+                      {
+                        value: 'L',
+                        label: 'L',
+                      },
+                      {
+                        value: 'XL',
+                        label: 'XL',
+                      },
+                      {
+                        value: 'XXL',
+                        label: 'XXL',
+                      },
+                    ]}
+                    allowClear
+                  />
+                ) : (
+                  <Select
+                    options={[
+                      {
+                        value: 'S',
+                        label: 'S',
+                      },
+                      {
+                        value: 'M',
+                        label: 'M',
+                      },
+                      {
+                        value: 'L',
+                        label: 'L',
+                      },
+                      {
+                        value: 'XL',
+                        label: 'XL',
+                      },
+                      {
+                        value: 'XXL',
+                        label: 'XXL',
+                      },
+                    ]}
+                    allowClear
+                  />
+                )}
               </Form.Item>
             </Col>
 
             <Col xs={24} sm={8} md={12} lg={6} xl={6}>
               <Form.Item label={'สถานภาพพนักงาน'}>
-                <Select
-                  options={[
-                    {
-                      value: 'Full Time',
-                      label: 'Full Time',
-                    },
-                    {
-                      value: 'Full Time',
-                      label: 'Part Time',
-                    },
-                  ]}
-                  allowClear
-                />
+                {propsstate.mode == 'view' ? (
+                  <Select
+                    disabled
+                    options={[
+                      {
+                        value: 'Full Time',
+                        label: 'Full Time',
+                      },
+                      {
+                        value: 'Full Time',
+                        label: 'Part Time',
+                      },
+                    ]}
+                    allowClear
+                  />
+                ) : (
+                  <Select
+                    options={[
+                      {
+                        value: 'Full Time',
+                        label: 'Full Time',
+                      },
+                      {
+                        value: 'Full Time',
+                        label: 'Part Time',
+                      },
+                    ]}
+                    allowClear
+                  />
+                )}
+              </Form.Item>
+            </Col>
+          </Row>
+
+          <Row gutter={16}>
+            <Col xs={24} sm={12} md={12} lg={6} xl={6}>
+              <Form.Item name={'email'} label={'E-Mail'}>
+                {propsstate.mode == 'view' ? <Input disabled /> : <Input />}
+              </Form.Item>
+            </Col>
+
+            <Col xs={24} sm={12} md={12} lg={6} xl={6}>
+              <Form.Item name={'password'} label={'Password'}>
+                {propsstate.mode == 'view' ? (
+                  <Input.Password disabled />
+                ) : (
+                  <Input.Password />
+                )}
               </Form.Item>
             </Col>
           </Row>
@@ -612,7 +825,7 @@ const UserEmployee: React.FC = (props) => {
           <Row gutter={16}>
             <Col xs={24} sm={12} md={12} lg={6} xl={6}>
               <Form.Item name={'citizen_addressnumber'} label={'เลขที่บ้าน'}>
-                <Input />
+                {propsstate.mode == 'view' ? <Input disabled /> : <Input />}
               </Form.Item>
             </Col>
 
@@ -621,7 +834,7 @@ const UserEmployee: React.FC = (props) => {
                 name={'citizen_address'}
                 label={'หมู่บ้าน/คอนโด ซอย ถนน'}
               >
-                <Input />
+                {propsstate.mode == 'view' ? <Input disabled /> : <Input />}
               </Form.Item>
             </Col>
           </Row>
@@ -629,40 +842,74 @@ const UserEmployee: React.FC = (props) => {
           <Row gutter={16}>
             <Col xs={24} sm={12} md={12} lg={6} xl={6}>
               <Form.Item name={'citizen_country'} label={'ประเทศ'}>
-                <Select options={country} showSearch allowClear />
+                {propsstate.mode == 'view' ? (
+                  <Select options={country} showSearch allowClear disabled />
+                ) : (
+                  <Select options={country} showSearch allowClear />
+                )}
               </Form.Item>
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={6} xl={6}>
               <Form.Item name={'citizen_province'} label={'จังหวัด'}>
-                <Select
-                  showSearch
-                  options={province ? province : []}
-                  onChange={onProvinceChangeCitizen}
-                  allowClear
-                />
+                {propsstate.mode == 'view' ? (
+                  <Select
+                    showSearch
+                    options={province ? province : []}
+                    onChange={onProvinceChangeCitizen}
+                    allowClear
+                    disabled
+                  />
+                ) : (
+                  <Select
+                    showSearch
+                    options={province ? province : []}
+                    onChange={onProvinceChangeCitizen}
+                    allowClear
+                  />
+                )}
               </Form.Item>
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={6} xl={6}>
               <Form.Item name={'citizen_district'} label={'แขวง/ตำบล'}>
-                <Select
-                  onChange={onDistrictChangeCitizen}
-                  showSearch
-                  options={district ? district : []}
-                  allowClear
-                />
+                {propsstate.mode == 'view' ? (
+                  <Select
+                    onChange={onDistrictChangeCitizen}
+                    showSearch
+                    options={district ? district : []}
+                    allowClear
+                    disabled
+                  />
+                ) : (
+                  <Select
+                    onChange={onDistrictChangeCitizen}
+                    showSearch
+                    options={district ? district : []}
+                    allowClear
+                  />
+                )}
               </Form.Item>
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={6} xl={6}>
               <Form.Item name={'citizen_state'} label={'เขต/อำเภอ'}>
-                <Select
-                  showSearch
-                  onChange={onAmphoeChangeCitizen}
-                  options={amphoe ? amphoe : []}
-                  allowClear
-                />
+                {propsstate.mode == 'view' ? (
+                  <Select
+                    showSearch
+                    onChange={onAmphoeChangeCitizen}
+                    options={amphoe ? amphoe : []}
+                    allowClear
+                    disabled
+                  />
+                ) : (
+                  <Select
+                    showSearch
+                    onChange={onAmphoeChangeCitizen}
+                    options={amphoe ? amphoe : []}
+                    allowClear
+                  />
+                )}
               </Form.Item>
             </Col>
           </Row>
@@ -676,7 +923,7 @@ const UserEmployee: React.FC = (props) => {
 
             <Col xs={24} sm={12} md={12} lg={6} xl={6}>
               <Form.Item name={'citizen_tel'} label={'โทรศัพท์บ้าน'}>
-                <Input />
+                {propsstate.mode == 'view' ? <Input disabled /> : <Input />}
               </Form.Item>
             </Col>
           </Row>
@@ -696,13 +943,13 @@ const UserEmployee: React.FC = (props) => {
           <Row gutter={16}>
             <Col xs={24} sm={12} md={12} lg={6} xl={6}>
               <Form.Item name={'contract_addressnumber'} label={'เลขที่บ้าน'}>
-                <Input />
+                {propsstate.mode == 'view' ? <Input disabled /> : <Input />}
               </Form.Item>
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={18} xl={18}>
               <Form.Item name={'contract_address'} label={'หมู่บ้าน/คอนโด ซอย'}>
-                <Input />
+                {propsstate.mode == 'view' ? <Input disabled /> : <Input />}
               </Form.Item>
             </Col>
           </Row>
@@ -710,34 +957,64 @@ const UserEmployee: React.FC = (props) => {
           <Row gutter={16}>
             <Col xs={24} sm={12} md={12} lg={6} xl={6}>
               <Form.Item name={'contract_province'} label={'จังหวัด'}>
-                <Select
-                  showSearch
-                  options={province ? province : []}
-                  onChange={onProvinceChangeContract}
-                  allowClear
-                />
+                {propsstate.mode == 'view' ? (
+                  <Select
+                    showSearch
+                    options={province ? province : []}
+                    onChange={onProvinceChangeContract}
+                    allowClear
+                    disabled
+                  />
+                ) : (
+                  <Select
+                    showSearch
+                    options={province ? province : []}
+                    onChange={onProvinceChangeContract}
+                    allowClear
+                  />
+                )}
               </Form.Item>
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={6} xl={6}>
               <Form.Item name={'contract_district'} label={'แขวง/ตำบล'}>
-                <Select
-                  onChange={onDistrictChangeContract}
-                  showSearch
-                  options={districtcontract ? districtcontract : []}
-                  allowClear
-                />
+                {propsstate.mode == 'view' ? (
+                  <Select
+                    onChange={onDistrictChangeContract}
+                    showSearch
+                    options={districtcontract ? districtcontract : []}
+                    allowClear
+                    disabled
+                  />
+                ) : (
+                  <Select
+                    onChange={onDistrictChangeContract}
+                    showSearch
+                    options={districtcontract ? districtcontract : []}
+                    allowClear
+                  />
+                )}
               </Form.Item>
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={6} xl={6}>
               <Form.Item name={'contract_state'} label={'เขต/อำเภอ'}>
-                <Select
-                  showSearch
-                  onChange={onAmphoeChangeContract}
-                  options={amphoecontract ? amphoecontract : []}
-                  allowClear
-                />
+                {propsstate.mode == 'view' ? (
+                  <Select
+                    showSearch
+                    onChange={onAmphoeChangeContract}
+                    options={amphoecontract ? amphoecontract : []}
+                    allowClear
+                    disabled
+                  />
+                ) : (
+                  <Select
+                    showSearch
+                    onChange={onAmphoeChangeContract}
+                    options={amphoecontract ? amphoecontract : []}
+                    allowClear
+                  />
+                )}
               </Form.Item>
             </Col>
 
@@ -749,27 +1026,15 @@ const UserEmployee: React.FC = (props) => {
           </Row>
 
           <Row gutter={16}>
-            <Col xs={24} sm={6} md={6} lg={6} xl={6}>
+            <Col xs={24} sm={12} md={12} lg={6} xl={6}>
               <Form.Item name={'tel'} label={'Mobile Phone'}>
-                <Input />
+                {propsstate.mode == 'view' ? <Input disabled /> : <Input />}
               </Form.Item>
             </Col>
 
-            <Col xs={24} sm={6} md={6} lg={6} xl={6}>
-              <Form.Item name={'email'} label={'E-Mail'}>
-                <Input />
-              </Form.Item>
-            </Col>
-
-            <Col xs={24} sm={6} md={6} lg={6} xl={6}>
-              <Form.Item name={'password'} label={'Password'}>
-                <Input />
-              </Form.Item>
-            </Col>
-
-            <Col xs={24} sm={6} md={6} lg={6} xl={6}>
+            <Col xs={24} sm={12} md={12} lg={6} xl={6}>
               <Form.Item label={'E-Mail Company'}>
-                <Input />
+                {propsstate.mode == 'view' ? <Input disabled /> : <Input />}
               </Form.Item>
             </Col>
           </Row>
@@ -796,8 +1061,8 @@ const UserEmployee: React.FC = (props) => {
               </div>
               <div className="flex items-center ml-8 mt-6">
                 <Col span={24}>
-                  <Form.Item>
-                    <Input />
+                  <Form.Item name={'social_facebook'}>
+                    {propsstate.mode == 'view' ? <Input disabled /> : <Input />}
                   </Form.Item>
                 </Col>
               </div>
@@ -807,14 +1072,14 @@ const UserEmployee: React.FC = (props) => {
                 {/* <LinkedinFilled /> */}
                 <img
                   src={inittial}
-                  alt="Facebook-logo"
+                  alt="inittia-logo"
                   style={{ width: '40px' }}
                 />
               </div>
               <div className="flex items-center ml-8 mt-6">
                 <Col span={24}>
-                  <Form.Item>
-                    <Input />
+                  <Form.Item name={'social_likedin'}>
+                    {propsstate.mode == 'view' ? <Input disabled /> : <Input />}
                   </Form.Item>
                 </Col>
               </div>
@@ -826,12 +1091,12 @@ const UserEmployee: React.FC = (props) => {
             <div className="relative flex flex-row items-center">
               <div className="flex flex-row ml-2 items-center text-4xl">
                 {/* <FaLine /> */}
-                <img src={line} alt="Facebook-logo" style={{ width: '40px' }} />
+                <img src={line} alt="Line-logo" style={{ width: '40px' }} />
               </div>
               <div className="flex items-center ml-8 mt-6">
                 <Col span={24}>
-                  <Form.Item>
-                    <Input />
+                  <Form.Item name={'social_line'}>
+                    {propsstate.mode == 'view' ? <Input disabled /> : <Input />}
                   </Form.Item>
                 </Col>
               </div>
@@ -841,47 +1106,48 @@ const UserEmployee: React.FC = (props) => {
                 {/* <BsTelegram /> */}
                 <img
                   src={telegram}
-                  alt="Facebook-logo"
+                  alt="Telegram-logo"
                   style={{ width: '40px' }}
                 />
               </div>
               <div className="flex items-center ml-8 mt-6">
                 <Col span={24}>
-                  <Form.Item>
-                    <Input />
+                  <Form.Item name={'social_telegram'}>
+                    {propsstate.mode == 'view' ? <Input disabled /> : <Input />}
                   </Form.Item>
                 </Col>
               </div>
             </div>
           </Row>
 
-          {propsstate?.mode !== "view" && <Row gutter={16}>
-            <Form.Item>
-              <Space>
-                <Button
-                  htmlType="submit"
-                  type="primary"
-                  style={{
-                    marginBottom: '10px',
-                    backgroundColor: token.token.colorPrimary,
-                  }}
-                >
-                  บันทึก
-                </Button>
-                <Button
-                  style={{
-                    marginBottom: '10px',
-                  }}
-                  onClick={() => {
-                    navigate(-1);
-                  }}
-                >
-                  ยกเลิก
-                </Button>
-              </Space>
-            </Form.Item>
-          </Row>
-          }
+          {propsstate?.mode !== 'view' && (
+            <Row gutter={16}>
+              <Form.Item>
+                <Space>
+                  <Button
+                    htmlType="submit"
+                    type="primary"
+                    style={{
+                      marginBottom: '10px',
+                      backgroundColor: token.token.colorPrimary,
+                    }}
+                  >
+                    บันทึก
+                  </Button>
+                  <Button
+                    style={{
+                      marginBottom: '10px',
+                    }}
+                    onClick={() => {
+                      navigate(-1);
+                    }}
+                  >
+                    ยกเลิก
+                  </Button>
+                </Space>
+              </Form.Item>
+            </Row>
+          )}
         </Form>
       </Card>
     </>
