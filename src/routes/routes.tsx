@@ -106,6 +106,11 @@ export const routing: RoutingType[] = [
             element: <ManageCompanyData />,
             hideInmenu: true,
           },
+          {
+            path: '/:companycode/company/CompanyStructure',
+            element: <CompanyStructure />,
+            hideInmenu: true,
+          },
         ],
       },
       // {
