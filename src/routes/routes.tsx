@@ -214,23 +214,26 @@ export const routing: RoutingType[] = [
         icon: <RiHandCoinLine size={'18'} />,
         element: <></>,
       },
+      {
+        path: '/:companycode/managerights',
+        element: <ManageRights />,
+        hideInmenu: true,
+        children: [
+          {
+            path: '/:companycode/managerights',
+            element: <Rights />,
+          },
+          {
+            path: '/:companycode/managerights/usergroups',
+            element: <UserRights />,
+          },
+
+        ],
+      },
     ],
   },
 
-  {
-    path: '/:companycode/managerights',
-    element: <ManageRights />,
-    children: [
-      {
-        path: '/:companycode/managerights',
-        element: <Rights />,
-      },
-      {
-        path: '/:companycode/managerights/usergroups',
-        element: <UserRights />,
-      },
-    ],
-  },
+
 
   {
     path: '/me',
@@ -277,4 +280,4 @@ export const routing: RoutingType[] = [
 const router = createBrowserRouter(routing);
 export default router;
 
-createBrowserRouter([{ loader: ({}) => {} }]);
+createBrowserRouter([{ loader: ({ }) => { } }]);

@@ -55,7 +55,7 @@ const Newcompany = () => {
       <Card className="shadow-md">
         <Form>
           <Row gutter={12}>
-            <Col span={8}>
+            <Col xs={24} sm={12} md={8} lg={8} xl={8}>
               <Form.Item
                 label={'ชื่อบริษัท'}
                 rules={[
@@ -69,13 +69,13 @@ const Newcompany = () => {
               </Form.Item>
             </Col>
 
-            <Col span={8}>
+            <Col xs={24} sm={12} md={8} lg={8} xl={8}>
               <Form.Item label={'เลขจดทะเบียนบริษัท'}>
                 <Input placeholder="กรุณากรอกเลขจดทะเบียนบริษัท" />
               </Form.Item>
             </Col>
 
-            <Col span={8}>
+            <Col xs={24} sm={12} md={8} lg={8} xl={8}>
               <Form.Item label={'เลขทะเบียนภาษีมูลค่าเพิ่ม'}>
                 <Input placeholder="กรุณากรอกเลขทะเบียนภาษีมูลค่าเพิ่ม" />
               </Form.Item>
@@ -97,7 +97,7 @@ const Newcompany = () => {
           </Row>
 
           <Row gutter={16}>
-            <Col span={8}>
+            <Col xs={24} sm={12} md={12} lg={6} xl={6}>
               <Form.Item label={'จังหวัด'}>
                 <Select
                   options={[
@@ -121,7 +121,7 @@ const Newcompany = () => {
                 />
               </Form.Item>
             </Col>
-            <Col span={8}>
+            <Col xs={24} sm={12} md={12} lg={6} xl={6}>
               <Form.Item label={'เขต/อำเภอ'}>
                 <Select
                   options={[
@@ -137,7 +137,23 @@ const Newcompany = () => {
                 />
               </Form.Item>
             </Col>
-            <Col span={8}>
+            <Col xs={24} sm={12} md={12} lg={6} xl={6}>
+              <Form.Item label={'เขต/อำเภอ'}>
+                <Select
+                  options={[
+                    {
+                      value: '1',
+                      label: 'ลาดพร้าว',
+                    },
+                    {
+                      value: '2',
+                      label: 'จอมพล',
+                    },
+                  ]}
+                />
+              </Form.Item>
+            </Col>
+            <Col xs={24} sm={12} md={12} lg={6} xl={6}>
               <Form.Item label={'รหัสไปรษรีย์'}>
                 <Input placeholder="กรุณากรอกรหัสไปรษรีย์" />
               </Form.Item>
