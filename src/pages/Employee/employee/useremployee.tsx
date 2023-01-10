@@ -369,13 +369,13 @@ const UserEmployee: React.FC = (props) => {
           <Row gutter={16}>
             <Col xs={24} sm={12} md={12} lg={4} xl={4}>
               <Form.Item name={'staff_code'} label={'รหัสพนักงาน'}>
-                {propsstate.mode == 'view' ? <Input disabled /> : <Input />}
+                {propsstate?.mode == 'view' ? <Input disabled /> : <Input />}
               </Form.Item>
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={4} xl={4}>
               <Form.Item name={'staff_status'} label={'Status'}>
-                {propsstate.mode == 'view' ? (
+                {propsstate?.mode == 'view' ? (
                   <Select
                     disabled
                     options={[
@@ -408,13 +408,13 @@ const UserEmployee: React.FC = (props) => {
 
             <Col xs={24} sm={12} md={12} lg={8} xl={8}>
               <Form.Item name={'citizen_id'} label={'เลขประจำตัวประชาชน'}>
-                {propsstate.mode == 'view' ? <Input disabled /> : <Input />}
+                {propsstate?.mode == 'view' ? <Input disabled /> : <Input />}
               </Form.Item>
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={8} xl={8}>
               <Form.Item name={'social_id'} label={'หมายเลขประกันสังคม'}>
-                {propsstate.mode == 'view' ? <Input disabled /> : <Input />}
+                {propsstate?.mode == 'view' ? <Input disabled /> : <Input />}
               </Form.Item>
             </Col>
           </Row>
@@ -422,7 +422,7 @@ const UserEmployee: React.FC = (props) => {
           <Row gutter={16}>
             <Col xs={24} sm={12} md={12} lg={4} xl={4}>
               <Form.Item name={'prefix_th'} label={'คำนำหน้า'}>
-                {propsstate.mode == 'view' ? (
+                {propsstate?.mode == 'view' ? (
                   <Select
                     disabled
                     options={[
@@ -465,25 +465,25 @@ const UserEmployee: React.FC = (props) => {
 
             <Col xs={24} sm={12} md={12} lg={5} xl={5}>
               <Form.Item name={'firstname_th'} label={'ชื่อ'}>
-                {propsstate.mode == 'view' ? <Input disabled /> : <Input />}
+                {propsstate?.mode == 'view' ? <Input disabled /> : <Input />}
               </Form.Item>
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={5} xl={5}>
               <Form.Item name={'lastname_th'} label={'นามสกุล'}>
-                {propsstate.mode == 'view' ? <Input disabled /> : <Input />}
+                {propsstate?.mode == 'view' ? <Input disabled /> : <Input />}
               </Form.Item>
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={4} xl={4}>
               <Form.Item label={'ชื่อเล่น'}>
-                {propsstate.mode == 'view' ? <Input disabled /> : <Input />}
+                {propsstate?.mode == 'view' ? <Input disabled /> : <Input />}
               </Form.Item>
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={3} xl={3}>
               <Form.Item name={'gender'} label={'เพศ'}>
-                {propsstate.mode == 'view' ? (
+                {propsstate?.mode == 'view' ? (
                   <Select
                     disabled
                     options={[
@@ -518,7 +518,7 @@ const UserEmployee: React.FC = (props) => {
 
             <Col xs={24} sm={12} md={12} lg={3} xl={3}>
               <Form.Item label={'กรุ๊ปเลือด'}>
-                {propsstate.mode == 'view' ? (
+                {propsstate?.mode == 'view' ? (
                   <Select
                     disabled
                     options={[
@@ -571,7 +571,7 @@ const UserEmployee: React.FC = (props) => {
           <Row gutter={16}>
             <Col xs={24} sm={12} md={12} lg={4} xl={4}>
               <Form.Item name={'prefix_en'} label={'Prename'}>
-                {propsstate.mode == 'view' ? (
+                {propsstate?.mode == 'view' ? (
                   <Select
                     disabled
                     options={[
@@ -614,13 +614,13 @@ const UserEmployee: React.FC = (props) => {
 
             <Col xs={24} sm={12} md={12} lg={10} xl={10}>
               <Form.Item name={'firstname_en'} label={'Name'}>
-                {propsstate.mode == 'view' ? <Input disabled /> : <Input />}
+                {propsstate?.mode == 'view' ? <Input disabled /> : <Input />}
               </Form.Item>
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={10} xl={10}>
               <Form.Item name={'lastname_en'} label={'Surname'}>
-                {propsstate.mode == 'view' ? <Input disabled /> : <Input />}
+                {propsstate?.mode == 'view' ? <Input disabled /> : <Input />}
               </Form.Item>
             </Col>
           </Row>
@@ -628,7 +628,7 @@ const UserEmployee: React.FC = (props) => {
           <Row gutter={16}>
             <Col xs={24} sm={12} md={8} lg={4} xl={4}>
               <Form.Item name={'dob'} label={'วัน/เดือน/ปี'}>
-                {propsstate.mode == 'view' ? (
+                {propsstate?.mode == 'view' ? (
                   <DatePicker
                     format={'YYYY/MM/DD'}
                     style={{ width: '195px' }}
@@ -645,13 +645,13 @@ const UserEmployee: React.FC = (props) => {
 
             <Col xs={24} sm={12} md={8} lg={4} xl={4}>
               <Form.Item name={'age'} label={'อายุ'}>
-                {propsstate.mode == 'view' ? <Input disabled /> : <Input />}
+                {propsstate?.mode == 'view' ? <Input disabled /> : <Input />}
               </Form.Item>
             </Col>
 
             <Col xs={24} sm={8} md={8} lg={6} xl={6}>
               <Form.Item name={'relationship'} label={'สถานภาพสมรส'}>
-                {propsstate.mode == 'view' ? (
+                {propsstate?.mode == 'view' ? (
                   <Select
                     disabled
                     options={[
@@ -702,7 +702,7 @@ const UserEmployee: React.FC = (props) => {
 
             <Col xs={24} sm={8} md={12} lg={4} xl={4}>
               <Form.Item name={'shirt_size'} label={'T-Shirt Size'}>
-                {propsstate.mode == 'view' ? (
+                {propsstate?.mode == 'view' ? (
                   <Select
                     disabled
                     options={[
@@ -761,7 +761,7 @@ const UserEmployee: React.FC = (props) => {
 
             <Col xs={24} sm={8} md={12} lg={6} xl={6}>
               <Form.Item label={'สถานภาพพนักงาน'}>
-                {propsstate.mode == 'view' ? (
+                {propsstate?.mode == 'view' ? (
                   <Select
                     disabled
                     options={[
@@ -798,13 +798,13 @@ const UserEmployee: React.FC = (props) => {
           <Row gutter={16}>
             <Col xs={24} sm={12} md={12} lg={6} xl={6}>
               <Form.Item name={'email'} label={'E-Mail'}>
-                {propsstate.mode == 'view' ? <Input disabled /> : <Input />}
+                {propsstate?.mode == 'view' ? <Input disabled /> : <Input />}
               </Form.Item>
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={6} xl={6}>
               <Form.Item name={'password'} label={'Password'}>
-                {propsstate.mode == 'view' ? (
+                {propsstate?.mode == 'view' ? (
                   <Input.Password disabled />
                 ) : (
                   <Input.Password />
@@ -825,7 +825,7 @@ const UserEmployee: React.FC = (props) => {
           <Row gutter={16}>
             <Col xs={24} sm={12} md={12} lg={6} xl={6}>
               <Form.Item name={'citizen_addressnumber'} label={'เลขที่บ้าน'}>
-                {propsstate.mode == 'view' ? <Input disabled /> : <Input />}
+                {propsstate?.mode == 'view' ? <Input disabled /> : <Input />}
               </Form.Item>
             </Col>
 
@@ -834,7 +834,7 @@ const UserEmployee: React.FC = (props) => {
                 name={'citizen_address'}
                 label={'หมู่บ้าน/คอนโด ซอย ถนน'}
               >
-                {propsstate.mode == 'view' ? <Input disabled /> : <Input />}
+                {propsstate?.mode == 'view' ? <Input disabled /> : <Input />}
               </Form.Item>
             </Col>
           </Row>
@@ -842,7 +842,7 @@ const UserEmployee: React.FC = (props) => {
           <Row gutter={16}>
             <Col xs={24} sm={12} md={12} lg={6} xl={6}>
               <Form.Item name={'citizen_country'} label={'ประเทศ'}>
-                {propsstate.mode == 'view' ? (
+                {propsstate?.mode == 'view' ? (
                   <Select options={country} showSearch allowClear disabled />
                 ) : (
                   <Select options={country} showSearch allowClear />
@@ -852,7 +852,7 @@ const UserEmployee: React.FC = (props) => {
 
             <Col xs={24} sm={12} md={12} lg={6} xl={6}>
               <Form.Item name={'citizen_province'} label={'จังหวัด'}>
-                {propsstate.mode == 'view' ? (
+                {propsstate?.mode == 'view' ? (
                   <Select
                     showSearch
                     options={province ? province : []}
@@ -873,7 +873,7 @@ const UserEmployee: React.FC = (props) => {
 
             <Col xs={24} sm={12} md={12} lg={6} xl={6}>
               <Form.Item name={'citizen_district'} label={'แขวง/ตำบล'}>
-                {propsstate.mode == 'view' ? (
+                {propsstate?.mode == 'view' ? (
                   <Select
                     onChange={onDistrictChangeCitizen}
                     showSearch
@@ -894,7 +894,7 @@ const UserEmployee: React.FC = (props) => {
 
             <Col xs={24} sm={12} md={12} lg={6} xl={6}>
               <Form.Item name={'citizen_state'} label={'เขต/อำเภอ'}>
-                {propsstate.mode == 'view' ? (
+                {propsstate?.mode == 'view' ? (
                   <Select
                     showSearch
                     onChange={onAmphoeChangeCitizen}
@@ -923,7 +923,7 @@ const UserEmployee: React.FC = (props) => {
 
             <Col xs={24} sm={12} md={12} lg={6} xl={6}>
               <Form.Item name={'citizen_tel'} label={'โทรศัพท์บ้าน'}>
-                {propsstate.mode == 'view' ? <Input disabled /> : <Input />}
+                {propsstate?.mode == 'view' ? <Input disabled /> : <Input />}
               </Form.Item>
             </Col>
           </Row>
@@ -943,13 +943,13 @@ const UserEmployee: React.FC = (props) => {
           <Row gutter={16}>
             <Col xs={24} sm={12} md={12} lg={6} xl={6}>
               <Form.Item name={'contract_addressnumber'} label={'เลขที่บ้าน'}>
-                {propsstate.mode == 'view' ? <Input disabled /> : <Input />}
+                {propsstate?.mode == 'view' ? <Input disabled /> : <Input />}
               </Form.Item>
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={18} xl={18}>
               <Form.Item name={'contract_address'} label={'หมู่บ้าน/คอนโด ซอย'}>
-                {propsstate.mode == 'view' ? <Input disabled /> : <Input />}
+                {propsstate?.mode == 'view' ? <Input disabled /> : <Input />}
               </Form.Item>
             </Col>
           </Row>
@@ -957,7 +957,7 @@ const UserEmployee: React.FC = (props) => {
           <Row gutter={16}>
             <Col xs={24} sm={12} md={12} lg={6} xl={6}>
               <Form.Item name={'contract_province'} label={'จังหวัด'}>
-                {propsstate.mode == 'view' ? (
+                {propsstate?.mode == 'view' ? (
                   <Select
                     showSearch
                     options={province ? province : []}
@@ -978,7 +978,7 @@ const UserEmployee: React.FC = (props) => {
 
             <Col xs={24} sm={12} md={12} lg={6} xl={6}>
               <Form.Item name={'contract_district'} label={'แขวง/ตำบล'}>
-                {propsstate.mode == 'view' ? (
+                {propsstate?.mode == 'view' ? (
                   <Select
                     onChange={onDistrictChangeContract}
                     showSearch
@@ -999,7 +999,7 @@ const UserEmployee: React.FC = (props) => {
 
             <Col xs={24} sm={12} md={12} lg={6} xl={6}>
               <Form.Item name={'contract_state'} label={'เขต/อำเภอ'}>
-                {propsstate.mode == 'view' ? (
+                {propsstate?.mode == 'view' ? (
                   <Select
                     showSearch
                     onChange={onAmphoeChangeContract}
@@ -1028,13 +1028,13 @@ const UserEmployee: React.FC = (props) => {
           <Row gutter={16}>
             <Col xs={24} sm={12} md={12} lg={6} xl={6}>
               <Form.Item name={'tel'} label={'Mobile Phone'}>
-                {propsstate.mode == 'view' ? <Input disabled /> : <Input />}
+                {propsstate?.mode == 'view' ? <Input disabled /> : <Input />}
               </Form.Item>
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={6} xl={6}>
               <Form.Item label={'E-Mail Company'}>
-                {propsstate.mode == 'view' ? <Input disabled /> : <Input />}
+                {propsstate?.mode == 'view' ? <Input disabled /> : <Input />}
               </Form.Item>
             </Col>
           </Row>
@@ -1062,7 +1062,11 @@ const UserEmployee: React.FC = (props) => {
               <div className="flex items-center ml-8 mt-6">
                 <Col span={24}>
                   <Form.Item name={'social_facebook'}>
-                    {propsstate.mode == 'view' ? <Input disabled /> : <Input />}
+                    {propsstate?.mode == 'view' ? (
+                      <Input disabled />
+                    ) : (
+                      <Input />
+                    )}
                   </Form.Item>
                 </Col>
               </div>
@@ -1079,7 +1083,11 @@ const UserEmployee: React.FC = (props) => {
               <div className="flex items-center ml-8 mt-6">
                 <Col span={24}>
                   <Form.Item name={'social_likedin'}>
-                    {propsstate.mode == 'view' ? <Input disabled /> : <Input />}
+                    {propsstate?.mode == 'view' ? (
+                      <Input disabled />
+                    ) : (
+                      <Input />
+                    )}
                   </Form.Item>
                 </Col>
               </div>
@@ -1096,7 +1104,11 @@ const UserEmployee: React.FC = (props) => {
               <div className="flex items-center ml-8 mt-6">
                 <Col span={24}>
                   <Form.Item name={'social_line'}>
-                    {propsstate.mode == 'view' ? <Input disabled /> : <Input />}
+                    {propsstate?.mode == 'view' ? (
+                      <Input disabled />
+                    ) : (
+                      <Input />
+                    )}
                   </Form.Item>
                 </Col>
               </div>
@@ -1113,7 +1125,11 @@ const UserEmployee: React.FC = (props) => {
               <div className="flex items-center ml-8 mt-6">
                 <Col span={24}>
                   <Form.Item name={'social_telegram'}>
-                    {propsstate.mode == 'view' ? <Input disabled /> : <Input />}
+                    {propsstate?.mode == 'view' ? (
+                      <Input disabled />
+                    ) : (
+                      <Input />
+                    )}
                   </Form.Item>
                 </Col>
               </div>
