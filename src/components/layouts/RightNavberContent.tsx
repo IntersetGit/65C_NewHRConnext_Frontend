@@ -13,7 +13,7 @@ import { RiHotelLine } from 'react-icons/ri';
 
 import { CompanyBranchType } from '../../context/types';
 import { logout } from '../../App';
-import { useNavigate } from 'react-router-dom';
+import { generatePath, useNavigate, useParams } from 'react-router-dom';
 
 const { useToken } = theme;
 
@@ -75,9 +75,10 @@ const RightNavbarContent: React.FC<RightNavContentType> = ({
 }) => {
   const token = useToken();
   const navigate = useNavigate();
+  let { companycode } = useParams();
 
   const onClick: MenuProps['onClick'] = ({ key }) => {
-    if (key === '2') navigate('/:companycode/managerights');
+    if (key === '2') navigate(`/${companycode}/roles`, { replace: true });
     if (key === '6') logout();
   };
   return (
@@ -158,7 +159,7 @@ const RightNavbarContent: React.FC<RightNavContentType> = ({
                   <Typography.Text
                     style={{ ...profileDetailstyle, fontSize: '0.85em' }}
                   >
-                    {user?.me?.role?.name}
+                    {user?.me?.Role_Company?.name}
                   </Typography.Text>
                   {company?.companyName && (
                     <Typography.Text

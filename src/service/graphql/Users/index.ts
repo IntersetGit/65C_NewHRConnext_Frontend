@@ -3,6 +3,7 @@ import { gql } from '../../../__generated__';
 export const FETCH_GETALLUSER = gql(`
 query Users {
     users {
+      id
       email
       profile {
         address

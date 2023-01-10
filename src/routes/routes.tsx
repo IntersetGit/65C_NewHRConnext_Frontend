@@ -220,25 +220,22 @@ export const routing: RoutingType[] = [
         element: <></>,
       },
       {
-        path: '/:companycode/managerights',
+        path: '/:companycode/roles',
         element: <ManageRights />,
         hideInmenu: true,
         children: [
           {
-            path: '/:companycode/managerights',
+            path: '/:companycode/roles',
             element: <Rights />,
           },
           {
-            path: '/:companycode/managerights/usergroups',
+            path: '/:companycode/roles/usergroups',
             element: <UserRights />,
           },
-
         ],
       },
     ],
   },
-
-
 
   {
     path: '/me',
@@ -285,4 +282,4 @@ export const routing: RoutingType[] = [
 const router = createBrowserRouter(routing);
 export default router;
 
-createBrowserRouter([{ loader: ({ }) => { } }]);
+createBrowserRouter([{ loader: ({}) => {} }]);
