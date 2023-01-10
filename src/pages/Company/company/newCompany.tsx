@@ -53,9 +53,9 @@ const Newcompany = () => {
       <Divider style={{ backgroundColor: token.token.colorPrimary }} />
 
       <Card className="shadow-md">
-        <Form>
+        <Form size={'large'}>
           <Row gutter={12}>
-            <Col xs={24} sm={12} md={8} lg={8} xl={8}>
+            <Col xs={24} sm={24} md={12} lg={12} xl={8}>
               <Form.Item
                 label={'ชื่อบริษัท'}
                 rules={[
@@ -69,13 +69,13 @@ const Newcompany = () => {
               </Form.Item>
             </Col>
 
-            <Col xs={24} sm={12} md={8} lg={8} xl={8}>
+            <Col xs={24} sm={24} md={12} lg={12} xl={8}>
               <Form.Item label={'เลขจดทะเบียนบริษัท'}>
                 <Input placeholder="กรุณากรอกเลขจดทะเบียนบริษัท" />
               </Form.Item>
             </Col>
 
-            <Col xs={24} sm={12} md={8} lg={8} xl={8}>
+            <Col xs={24} sm={24} md={24} lg={24} xl={8}>
               <Form.Item label={'เลขทะเบียนภาษีมูลค่าเพิ่ม'}>
                 <Input placeholder="กรุณากรอกเลขทะเบียนภาษีมูลค่าเพิ่ม" />
               </Form.Item>
@@ -83,13 +83,13 @@ const Newcompany = () => {
           </Row>
 
           <Row gutter={12}>
-            <Col span={12}>
+            <Col xs={24} sm={24} md={12} lg={12} xl={12}>
               <Form.Item label={'ที่อยู่ 1'}>
                 <Input placeholder="กรุณากรอกที่อยู่" />
               </Form.Item>
             </Col>
 
-            <Col span={12}>
+            <Col xs={24} sm={24} md={12} lg={12} xl={12}>
               <Form.Item label={'ที่อยู่ 2'}>
                 <Input />
               </Form.Item>
@@ -97,7 +97,7 @@ const Newcompany = () => {
           </Row>
 
           <Row gutter={16}>
-            <Col xs={24} sm={12} md={12} lg={6} xl={6}>
+            <Col xs={24} sm={24} md={12} lg={12} xl={6}>
               <Form.Item label={'จังหวัด'}>
                 <Select
                   options={[
@@ -121,7 +121,7 @@ const Newcompany = () => {
                 />
               </Form.Item>
             </Col>
-            <Col xs={24} sm={12} md={12} lg={6} xl={6}>
+            <Col xs={24} sm={24} md={12} lg={12} xl={6}>
               <Form.Item label={'เขต/อำเภอ'}>
                 <Select
                   options={[
@@ -137,7 +137,7 @@ const Newcompany = () => {
                 />
               </Form.Item>
             </Col>
-            <Col xs={24} sm={12} md={12} lg={6} xl={6}>
+            <Col xs={24} sm={24} md={12} lg={12} xl={6}>
               <Form.Item label={'เขต/อำเภอ'}>
                 <Select
                   options={[
@@ -153,7 +153,7 @@ const Newcompany = () => {
                 />
               </Form.Item>
             </Col>
-            <Col xs={24} sm={12} md={12} lg={6} xl={6}>
+            <Col xs={24} sm={24} md={12} lg={12} xl={6}>
               <Form.Item label={'รหัสไปรษรีย์'}>
                 <Input placeholder="กรุณากรอกรหัสไปรษรีย์" />
               </Form.Item>
@@ -161,12 +161,12 @@ const Newcompany = () => {
           </Row>
 
           <Row gutter={16}>
-            <Col span={8}>
+            <Col xs={24} sm={24} md={12} lg={12} xl={6}>
               <Form.Item label={'เบอร์โทรศัพท์'}>
                 <Input placeholder="กรุณากรอกเบอร์โทรศัพท์" />
               </Form.Item>
             </Col>
-            <Col span={8}>
+            <Col xs={24} sm={24} md={12} lg={12} xl={6}>
               <Form.Item label={'โทรสาร (Fax)'}>
                 <Input placeholder="กรุณากรอกโทรสาร (Fax)" />
               </Form.Item>
@@ -174,34 +174,34 @@ const Newcompany = () => {
           </Row>
 
           <Row gutter={16}>
-            <Col span={8}>
+            <Col xs={24} sm={24} md={12} lg={12} xl={6}>
               <Form.Item label={'Web Site'}>
                 <Input />
               </Form.Item>
             </Col>
-            <Col span={8}>
+            <Col xs={24} sm={24} md={12} lg={12} xl={6}>
               <Form.Item label={'แผนที่'}>
                 <Button>เปิดแผนที่</Button>
               </Form.Item>
             </Col>
-            <Col span={8}>
+            <Col xs={24} sm={24} md={12} lg={12} xl={6}>
               <Form.Item label={'พิกัด'}>
                 <Input />
               </Form.Item>
             </Col>
 
-            <Col span={12}>
+            <Col xs={24} sm={24} md={12} lg={12} xl={6}>
               <Form.Item label={'อีเมล์ #1'}>
                 <Input />
               </Form.Item>
             </Col>
-            <Col span={12}>
+            <Col xs={24} sm={24} md={12} lg={12} xl={6}>
               <Form.Item label={'อีเมล์ #2'}>
                 <Input />
               </Form.Item>
             </Col>
 
-            <Col span={8}>
+            <Col xs={24} sm={24} md={12} lg={12} xl={6}>
               <Form.Item label={'ประเภทของธุรกิจ หลัก'}>
                 <Select
                   options={[
@@ -217,7 +217,7 @@ const Newcompany = () => {
                 />
               </Form.Item>
             </Col>
-            <Col span={8}>
+            <Col xs={24} sm={24} md={12} lg={12} xl={6}>
               <Form.Item label={'ประเภทของธุรกิจ ย่อย'}>
                 <Select
                   options={[
@@ -233,7 +233,7 @@ const Newcompany = () => {
                 />
               </Form.Item>
             </Col>
-            <Col span={8}>
+            <Col xs={24} sm={24} md={12} lg={12} xl={6}>
               <Form.Item label={'ทุนจดทะเบียน ( บาท )'}>
                 <Input placeholder="( บาท )" />
               </Form.Item>
@@ -251,13 +251,13 @@ const Newcompany = () => {
             >
               โลโก้บริษัท
             </div>
-            <Col>
+            <Col xs={24} sm={6} md={5} lg={4} xl={6}>
               <Button>เลือกรูป</Button>
             </Col>
-            <Col span={12}>
+            <Col xs={24} sm={12} md={9} lg={10} xl={6}>
               <Input />
             </Col>
-            <Col>
+            <Col xs={24} sm={6} md={6} lg={4} xl={6}>
               <Button className="flex flex-row items-center text-2xl">
                 <RiCloseFill />
               </Button>
@@ -345,7 +345,7 @@ const Newcompany = () => {
       </Card>
       <br />
       <Card className="shadow-md">
-        <Form>
+        <Form size='large'>
           <div
             className="text-base"
             style={{ color: token.token.colorPrimary }}

@@ -15,6 +15,7 @@ import {
     Drawer,
     Input,
     Switch,
+    Avatar,
 } from "antd";
 import { ColumnsType } from "antd/es/table";
 import {
@@ -23,6 +24,9 @@ import {
 import edit from '../../../assets/Edit.png'
 import Del from '../../../assets/DEL.png'
 import { useNavigate } from 'react-router-dom';
+import { FETCH_GETALLROLE } from '../../../service/graphql/Role';
+import { useQuery, useMutation } from '@apollo/client';
+import { gql } from '../../../__generated__/gql';
 
 const { useToken } = theme;
 
@@ -32,33 +36,57 @@ interface DataType {
     status: string;
 }
 
-const menus = [
-    {
-        key: 'edit',
-        icon: <img style={{ width: '17px', height: '17px' }} src={edit} />,
-        label: 'แก้ไข',
-    },
-    {
-        key: 'delete',
-        icon: <img style={{ width: '20px', height: '20px' }} src={Del} />,
-        label: 'ลบข้อมูล',
-    },
-];
+const CREATE_ROLE = gql(`
+mutation Mutation($data: createRoleCompanyGroup!) {
+    createRoleCompany(data: $data) {
+      message
+      status
+    }
+  }
+`)
+
+const genarateMenu = (record: any) => {
+    return [
+        {
+            key: 'edit',
+            label: 'แก้ไข',
+            onClick: (e: any) => onMenuClick(e, record),
+            icon: <img style={{ width: '17px', height: '17px' }} src={edit} />,
+        },
+        {
+            key: 'delete',
+            label: 'ลบข้อมูล',
+            onClick: (e: any) => onMenuClick(e, record),
+            icon: <img style={{ width: '20px', height: '20px' }} src={Del} />,
+        },
+    ];
+};
 
 const columns: ColumnsType<DataType> = [
     { title: 'สิทธิ์ผู้ใช้งาน', dataIndex: 'name', key: 'name', },
-    { title: 'สถานะ', dataIndex: 'status', key: 'status', align: 'center', },
+    {
+        title: 'สถานะ',
+        dataIndex: 'status',
+        key: 'status',
+        align: 'center',
+        render: (record) => {
+            return <p>{record === 1 ? `เปิดการใช้งาน` : `ปิดการใช้งาน`}</p>;
+        },
+    },
     {
         title: 'จัดการ',
         dataIndex: '',
         align: 'center',
         key: 'x',
         render: (record) => (
-            <Dropdown.Button
-                icon={<MoreOutlined />}
-                type="text"
-                overlay={<Menu items={menus} onClick={(e) => onMenuClick(e, record)} />}
-            ></Dropdown.Button>
+            <Dropdown
+                menu={{
+                    items: genarateMenu(record),
+                }}
+                arrow
+            >
+                <MoreOutlined />
+            </Dropdown>
         ),
     },
 ];
@@ -89,6 +117,8 @@ const Manageuser: React.FC = () => {
     const [open, setOpen] = useState(false);
     const token = useToken();
     const navigate = useNavigate();
+    const { data: userData, refetch } = useQuery(FETCH_GETALLROLE);
+    const [createRole] = useMutation(CREATE_ROLE);
 
     const showDrawer = () => {
         setOpen(true);
@@ -209,7 +239,7 @@ const Manageuser: React.FC = () => {
                     </Col>
                     <Table
                         columns={columns}
-                        dataSource={data}
+                        dataSource={userData?.getcompanyRole as any}
                     />
                 </Form>
             </Card>
