@@ -25,6 +25,7 @@ interface DataType {
 
 interface ExpandedDataType {
   id: React.Key;
+  key: React.Key;
   name: string;
   idxOf?: string;
   read: boolean | undefined;
@@ -93,6 +94,7 @@ const Rights: React.FC = () => {
       'campaign',
     ];
     const query_data = Simpledata;
+    const arr: ExpandedDataType[] = [];
     module.forEach(async (e) => {
       const data: ExpandedDataType[] = query_data.map((_e) => {
         const access = _e.acess.find((__e) => __e.subject === e);
@@ -106,10 +108,10 @@ const Rights: React.FC = () => {
           delete: access?.action.includes('delete'),
         };
       });
-      const paired_value = [...datas, ...data];
-      setData(paired_value);
-      console.log(datas);
+      console.log(data);
+      arr.push(...data);
     });
+    setData(arr);
   }, []);
   const expandedRowRender = (record: DataType, index: number | string) => {
     console.log(record, index);
