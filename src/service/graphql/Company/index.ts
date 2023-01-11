@@ -20,3 +20,11 @@ query GetownCompany {
   }
 }
 `);
+
+export const CREATE_COMPANY_ACCOUNT = gql(`
+mutation CreateAndUpdateComBarance($data: createCompanyBranch) {
+  createAndUpdateComBarance(data: $data) {
+    message
+    status
+  }
+}`);
