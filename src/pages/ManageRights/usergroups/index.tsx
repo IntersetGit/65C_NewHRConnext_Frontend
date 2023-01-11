@@ -11,11 +11,9 @@ import {
     Button,
     Table,
     Dropdown,
-    Menu,
     Drawer,
     Input,
     Switch,
-    Avatar,
 } from "antd";
 import { ColumnsType } from "antd/es/table";
 import {
@@ -226,9 +224,9 @@ const Manageuser: React.FC = () => {
                                             style={{
                                                 marginBottom: '10px',
                                             }}
-                                        // onClick={() => {
-                                        //     navigate();
-                                        // }}
+                                            onClick={() => {
+                                                setOpen(false)
+                                            }}
                                         >
                                             ยกเลิก
                                         </Button>

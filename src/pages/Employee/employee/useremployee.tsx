@@ -291,7 +291,7 @@ const UserEmployee: React.FC = (props) => {
       showDenyButton: true,
       showCancelButton: false,
       confirmButtonColor: token.token.colorPrimary,
-      denyButtonColor: '#efefef',
+      denyButtonColor: '#ea4e4e',
       confirmButtonText: 'ตกลง',
       denyButtonText: `ยกเลิก`,
     }).then(async (result) => {
