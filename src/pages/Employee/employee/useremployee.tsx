@@ -330,13 +330,9 @@ const UserEmployee: React.FC = (props) => {
 
   return (
     <>
-      <div className="relative flex flex-row items-center">
-        <div className="flex flex-row items-center h-5 w-5 text-4xl">
-          <FolderFilled />
-        </div>
-        <span className="ml-8 text-lg tracking-wide truncate">
-          ข้อมูลพนักงาน
-        </span>
+      <div className="flex text-3xl ml-2 pt-4">
+        <FolderFilled />
+        <div className="ml-2 text-lg">ข้อมูลพนักงาน</div>
       </div>
       <Divider style={{ backgroundColor: token.token.colorPrimary }} />
       <Card className="shadow-xl">
