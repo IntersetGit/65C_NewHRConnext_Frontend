@@ -35,20 +35,26 @@ interface DataTypeProject {
 
 const ProfileResume: React.FC = () => {
   const token = useToken();
-  const menuItems = [
-    {
-      key: 'edit',
-      label: 'แก้ไข',
-    },
-    {
-      key: 'view',
-      label: 'ดูข้อมูล',
-    },
-    {
-      key: 'delete',
-      label: 'ลบข้อมูล',
-    },
-  ];
+
+  const genarateMenu = (record: any) => {
+    return [
+      {
+        key: 'edit',
+        label: 'แก้ไข',
+        onClick: (e: any) => onMenuClick(e, record),
+      },
+      {
+        key: 'view',
+        label: 'ดู',
+        onClick: (e: any) => onMenuClick(e, record),
+      },
+      {
+        key: 'delete',
+        label: 'ลบข้อมูล',
+        onClick: (e: any) => onMenuClick(e, record),
+      },
+    ];
+  };
 
   const onMenuClick = (event: any, record: any) => {
     const { key } = event;
@@ -88,16 +94,14 @@ const ProfileResume: React.FC = () => {
       key: 'Action',
       align: 'center',
       render: (_: any, record: any) => (
-        <Dropdown.Button
-          icon={<MoreOutlined />}
-          type="text"
-          overlay={
-            <Menu
-              items={menuItems}
-              onClick={(e: any) => onMenuClick(e, record)}
-            />
-          }
-        ></Dropdown.Button>
+        <Dropdown
+          menu={{
+            items: genarateMenu(record),
+          }}
+          arrow
+        >
+          <MoreOutlined />
+        </Dropdown>
       ),
     },
   ];
@@ -156,16 +160,14 @@ const ProfileResume: React.FC = () => {
       key: 'Action',
       align: 'center',
       render: (_: any, record: any) => (
-        <Dropdown.Button
-          icon={<MoreOutlined />}
-          type="text"
-          overlay={
-            <Menu
-              items={menuItems}
-              onClick={(e: any) => onMenuClick(e, record)}
-            />
-          }
-        ></Dropdown.Button>
+        <Dropdown
+          menu={{
+            items: genarateMenu(record),
+          }}
+          arrow
+        >
+          <MoreOutlined />
+        </Dropdown>
       ),
     },
   ];

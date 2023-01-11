@@ -1,37 +1,39 @@
 import React, { useState } from 'react';
-import { MoreOutlined } from "@ant-design/icons";
+import { MoreOutlined } from '@ant-design/icons';
 import {
-    Card,
-    Col,
-    Divider,
-    Row,
-    theme,
-    Form,
-    Space,
-    Button,
-    Table,
-    Dropdown,
-    Drawer,
-    Input,
-    Switch,
-} from "antd";
-import { ColumnsType } from "antd/es/table";
-import {
-    RiCommunityLine,
-} from "react-icons/ri"
-import edit from '../../../assets/Edit.png'
-import Del from '../../../assets/DEL.png'
+  Card,
+  Col,
+  Divider,
+  Row,
+  theme,
+  Form,
+  Space,
+  Button,
+  Table,
+  Dropdown,
+  Menu,
+  Drawer,
+  Input,
+  Switch,
+  Avatar,
+} from 'antd';
+import { ColumnsType } from 'antd/es/table';
+import { RiCommunityLine } from 'react-icons/ri';
+import edit from '../../../assets/Edit.png';
+import Del from '../../../assets/DEL.png';
 import { useNavigate } from 'react-router-dom';
 import { FETCH_GETALLROLE } from '../../../service/graphql/Role';
 import { useQuery, useMutation } from '@apollo/client';
 import { gql } from '../../../__generated__/gql';
+import Swal from 'sweetalert2';
+import { Role_Company } from '../../../__generated__/graphql';
 
 const { useToken } = theme;
 
 interface DataType {
-    key: React.Key;
-    name: string;
-    status: string;
+  key: React.Key;
+  name: string;
+  status: string;
 }
 
 const CREATE_ROLE = gql(`
@@ -41,212 +43,281 @@ mutation Mutation($data: createRoleCompanyGroup!) {
       status
     }
   }
-`)
-
-const genarateMenu = (record: any) => {
-    return [
-        {
-            key: 'edit',
-            label: 'แก้ไข',
-            onClick: (e: any) => onMenuClick(e, record),
-            icon: <img style={{ width: '17px', height: '17px' }} src={edit} />,
-        },
-        {
-            key: 'delete',
-            label: 'ลบข้อมูล',
-            onClick: (e: any) => onMenuClick(e, record),
-            icon: <img style={{ width: '20px', height: '20px' }} src={Del} />,
-        },
-    ];
-};
-
-const columns: ColumnsType<DataType> = [
-    { title: 'สิทธิ์ผู้ใช้งาน', dataIndex: 'name', key: 'name', },
-    {
-        title: 'สถานะ',
-        dataIndex: 'status',
-        key: 'status',
-        align: 'center',
-        render: (record) => {
-            return <p>{record === 1 ? `เปิดการใช้งาน` : `ปิดการใช้งาน`}</p>;
-        },
-    },
-    {
-        title: 'จัดการ',
-        dataIndex: '',
-        align: 'center',
-        key: 'x',
-        render: (record) => (
-            <Dropdown
-                menu={{
-                    items: genarateMenu(record),
-                }}
-                arrow
-            >
-                <MoreOutlined />
-            </Dropdown>
-        ),
-    },
-];
+`);
 
 const data: DataType[] = [
-    {
-        key: 1,
-        name: 'Company Admin',
-        status: 'เปิดใช้งาน',
-    },
-    {
-        key: 2,
-        name: 'Finance',
-        status: 'ปิดใช้งาน',
-    },
-    {
-        key: 3,
-        name: 'Employee',
-        status: 'เปิดใช้งาน',
-    },
+  {
+    key: 1,
+    name: 'Company Admin',
+    status: 'เปิดใช้งาน',
+  },
+  {
+    key: 2,
+    name: 'Finance',
+    status: 'ปิดใช้งาน',
+  },
+  {
+    key: 3,
+    name: 'Employee',
+    status: 'เปิดใช้งาน',
+  },
 ];
 
 const onChange = (checked: boolean) => {
-    console.log(`switch to ${checked}`);
+  console.log(`switch to ${checked}`);
 };
 
 const Manageuser: React.FC = () => {
-    const [open, setOpen] = useState(false);
-    const token = useToken();
-    const navigate = useNavigate();
-    const { data: userData, refetch } = useQuery(FETCH_GETALLROLE);
-    const [createRole] = useMutation(CREATE_ROLE);
+  const [open, setOpen] = useState(false);
+  const token = useToken();
+  const navigate = useNavigate();
+  const [form] = Form.useForm();
+  const { data: userData, refetch } = useQuery(FETCH_GETALLROLE);
+  const [createRole] = useMutation(CREATE_ROLE);
+  const [drawerType, setdrawerType] = useState(1);
+  const [selectedrow, setselectedrow] = useState<Role_Company>();
 
-    const showDrawer = () => {
-        setOpen(true);
-    };
+  const showDrawer = (type: any) => {
+    setdrawerType(type);
+    setOpen(true);
+  };
 
-    const onClose = () => {
-        setOpen(false);
-    };
-    return (
-        <>
-            <div className="px-2 py-2">
+  const onClose = () => {
+    setOpen(false);
+  };
 
-                <div className="flex text-2xl ml-2 pt-4">
-                    <RiCommunityLine size={30} />
-                    <div className="ml-2 text-lg">จัดการกลุ่มผู้ใช้งาน</div>
-                </div>
-            </div>
-            <Divider style={{ backgroundColor: token.token.colorPrimary }} />
+  const genarateMenu = (record: any) => {
+    return [
+      {
+        key: 'edit',
+        label: 'แก้ไข',
+        onClick: (e: any) => onMenuClick(e, record),
+        icon: <img style={{ width: '17px', height: '17px' }} src={edit} />,
+      },
+      // {
+      //   key: 'view',
+      //   label: 'ดู',
+      //   onClick: (e: any) => onMenuClick(e, record),
+      //   // icon: <img style={{ width: '17px', height: '17px' }} src={} />,
+      // },
+      {
+        key: 'delete',
+        label: 'ลบข้อมูล',
+        onClick: (e: any) => onMenuClick(e, record),
+        icon: <img style={{ width: '20px', height: '20px' }} src={Del} />,
+      },
+    ];
+  };
 
-            <Card className="shadow-md">
-                <Form layout="vertical">
-                    <Row gutter={16}>
-                        <Col>
-                            <Form.Item label={'กลุ่มผู้ใช้งาน'}>
-                                <Space>
-                                    <Button
-                                        style={{
-                                            marginBottom: '10px',
-                                        }}
-                                    >
-                                        Company Admin
-                                    </Button>
-                                    <Button
-                                        style={{
-                                            marginBottom: '10px',
-                                        }}
-                                    >
-                                        Finance
-                                    </Button>
-                                    <Button
-                                        style={{
-                                            marginBottom: '10px',
-                                        }}
-                                    >
-                                        Employee
-                                    </Button>
-                                </Space>
-                            </Form.Item>
-                        </Col>
-                    </Row>
-                    <Col className="flex justify-end">
-                        <Button
-                            type="primary"
-                            style={{
-                                marginBottom: '10px',
-                                backgroundColor: token.token.colorPrimary,
-                            }}
-                            onClick={showDrawer}
-                        >
-                            + เพิ่มกลุ่มผู้ใช้งาน
-                        </Button>
-                        <Drawer
-                            // title="เพิ่มกลุ่มผู้ใช้งาน"
-                            headerStyle={{ textAlign: 'center' }}
-                            placement="right"
-                            width="40%"
-                            onClose={onClose}
-                            open={open}
-                        >
-                            <div className="relative flex flex-row items-center py-2">
-                                <span className="ml-4 text-lg tracking-wide truncate">
-                                    เพิ่มสิทธิ์ผู้ใช้งาน
-                                </span>
-                            </div>
-                            <Card >
-                                <Col xl={24} lg={24} md={24} sm={24} xs={24}>
-                                    <Form.Item label={'สิทธิ์ผู้ใช้งาน'}>
-                                        <Input />
-                                    </Form.Item>
-                                </Col>
-                                <Col xl={24} lg={24} md={24} sm={24} xs={24}>
-                                    <div>
-                                        <div className="py-4">สถานะ</div>
-                                        <div>
-                                            <Switch defaultChecked onChange={onChange} />
-                                        </div>
-                                    </div>
-                                </Col>
-                            </Card>
+  const columns: ColumnsType<DataType> = [
+    { title: 'สิทธิ์ผู้ใช้งาน', dataIndex: 'name', key: 'name' },
+    {
+      title: 'สถานะ',
+      dataIndex: 'status',
+      key: 'status',
+      align: 'center',
+      render: (record) => {
+        return <p>{record === 1 ? `เปิดการใช้งาน` : `ปิดการใช้งาน`}</p>;
+      },
+    },
+    {
+      title: 'จัดการ',
+      dataIndex: '',
+      align: 'center',
+      key: 'x',
+      render: (record) => (
+        <Dropdown
+          menu={{
+            items: genarateMenu(record),
+          }}
+          arrow
+        >
+          <MoreOutlined />
+        </Dropdown>
+      ),
+    },
+  ];
 
-                            <Row className='py-6' gutter={16} style={{ position: 'absolute', right: '35px', height: '10px' }} >
-                                <Form.Item>
-                                    <Space>
-                                        <Button
-                                            htmlType="submit"
-                                            type="primary"
-                                            style={{
-                                                marginBottom: '10px',
-                                                backgroundColor: token.token.colorPrimary,
-                                            }}
-                                        >
-                                            บันทึก
-                                        </Button>
-                                        <Button
-                                            style={{
-                                                marginBottom: '10px',
-                                            }}
-                                            onClick={() => {
-                                                setOpen(false)
-                                            }}
-                                        >
-                                            ยกเลิก
-                                        </Button>
-                                    </Space>
-                                </Form.Item>
-                            </Row>
-                        </Drawer>
-                    </Col>
-                    <Table
-                        columns={columns}
-                        dataSource={userData?.getcompanyRole as any}
-                    />
-                </Form>
-            </Card>
-        </>
-    )
+  const onMenuClick = (event: any, record: any) => {
+    const { key } = event;
+    console.log(key);
+    if (key === 'edit') {
+      showDrawer(2);
+      setselectedrow(record);
+      form.setFieldsValue(record);
+    } else if (key === 'view') {
+      showDrawer(3);
+    } else if (key === 'delete') {
+    }
+  };
+
+  const onFinish = (value: any) => {
+    console.log(value);
+    drawerType === 1
+      ? Swal.fire({
+          title: 'บันทึกข้อมูล',
+          text: 'ยืนยันการบันทึกข้อมูล',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'ยืนยัน',
+          cancelButtonText: 'ยกเลิก',
+        }).then(async (result) => {
+          if (result.isConfirmed) {
+            createRole({
+              variables: {
+                data: { ...value, status: true ? 1 : 0 },
+              },
+            })
+              .then((val) => {
+                console.log(val);
+                if (val.data?.createRoleCompany?.status) {
+                  Swal.fire(`เพิ่มข้อมูล Roel สำเร็จ!`, '', 'success');
+                  setOpen(false);
+                  refetch();
+                }
+              })
+              .catch((err) => {
+                Swal.fire(`เพิ่มข้อมูล Role ไม่สำเร็จ!`, '', 'error');
+                console.error(err);
+              });
+          }
+        })
+      : Swal.fire({
+          title: 'แก้ไขข้อมูล',
+          text: 'ยืนยันการแก้ไขข้อมูล',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'ยืนยัน',
+          cancelButtonText: 'ยกเลิก',
+        }).then(async (result) => {
+          if (result.isConfirmed) {
+            createRole({
+              variables: {
+                data: { ...value, id: selectedrow?.id, status: true ? 1 : 0 },
+              },
+            })
+              .then((val) => {
+                console.log(val);
+                if (val.data?.createRoleCompany?.status) {
+                  Swal.fire(`แก้ไขข้อมูล Roel สำเร็จ!`, '', 'success');
+                  setOpen(false);
+                  refetch();
+                }
+              })
+              .catch((err) => {
+                Swal.fire(`แก้ไขข้อมูล Role ไม่สำเร็จ!`, '', 'error');
+                console.error(err);
+              });
+          }
+        });
+  };
+  return (
+    <>
+      <div className="px-2 py-2">
+        <div className="flex text-2xl ml-2 pt-4">
+          <RiCommunityLine size={30} />
+          <div className="ml-2 text-lg">จัดการกลุ่มผู้ใช้งาน</div>
+        </div>
+      </div>
+      <Divider style={{ backgroundColor: token.token.colorPrimary }} />
+
+      <Card className="shadow-md">
+        <Row gutter={16}>
+          <Col>
+            <Form.Item label={'กลุ่มผู้ใช้งาน'}>
+              <Space>
+                {userData?.getcompanyRole?.map((e: any) => {
+                  return (
+                    <div className="rounded-md py-1 px-4 border-solid border-2 border-blue-900 bg-blue-500 text-white text-xs">
+                      {e.name}
+                    </div>
+                  );
+                })}
+              </Space>
+            </Form.Item>
+          </Col>
+        </Row>
+        <Col className="flex justify-end">
+          <Button
+            type="primary"
+            style={{
+              marginBottom: '10px',
+              backgroundColor: token.token.colorPrimary,
+            }}
+            onClick={() => {
+              showDrawer(1);
+            }}
+          >
+            + เพิ่มกลุ่มผู้ใช้งาน
+          </Button>
+          <Drawer
+            // title="เพิ่มกลุ่มผู้ใช้งาน"
+            headerStyle={{ textAlign: 'center' }}
+            placement="right"
+            width="40%"
+            onClose={onClose}
+            open={open}
+          >
+            <Form layout="vertical" form={form} onFinish={onFinish}>
+              <div className="relative flex flex-row items-center py-2">
+                <span className="ml-4 text-lg tracking-wide truncate">
+                  เพิ่มสิทธิ์ผู้ใช้งาน
+                </span>
+              </div>
+              <Card>
+                <Col xl={24} lg={24} md={24} sm={24} xs={24}>
+                  <Form.Item name={'name'} label={'สิทธิ์ผู้ใช้งาน'}>
+                    <Input />
+                  </Form.Item>
+                </Col>
+                <Col xl={24} lg={24} md={24} sm={24} xs={24}>
+                  <Form.Item name={'status'} label={'สถานะ'}>
+                    <Switch defaultChecked onChange={onChange} />
+                  </Form.Item>
+                </Col>
+              </Card>
+
+              <Row
+                className="py-6"
+                gutter={16}
+                style={{ position: 'absolute', right: '35px', height: '10px' }}
+              >
+                <Form.Item>
+                  <Space>
+                    <Button
+                      htmlType="submit"
+                      type="primary"
+                      style={{
+                        marginBottom: '10px',
+                        backgroundColor: token.token.colorPrimary,
+                      }}
+                    >
+                      บันทึก
+                    </Button>
+                    <Button
+                      style={{
+                        marginBottom: '10px',
+                      }}
+                      onClick={() => {
+                        setOpen(false);
+                      }}
+                    >
+                      ยกเลิก
+                    </Button>
+                  </Space>
+                </Form.Item>
+              </Row>
+            </Form>
+          </Drawer>
+        </Col>
+        <Table columns={columns} dataSource={userData?.getcompanyRole as any} />
+      </Card>
+    </>
+  );
 };
 
 export default Manageuser;
-function onMenuClick(e: any, record: unknown): void {
-    throw new Error("Function not implemented.");
-}
-
