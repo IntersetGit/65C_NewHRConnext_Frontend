@@ -65,7 +65,7 @@ const BaseLayout: React.FC<BaseLayoutProps> = (props) => {
     }
   }, []);
 
-  if (validating) return <LoadingSpinner loadingtext="Validating route..." />;
+  //if (validating) return <LoadingSpinner loadingtext="Validating route..." />;
 
   return (
     <AuthProvider company={data?.validateRoute?.currentBranch}>

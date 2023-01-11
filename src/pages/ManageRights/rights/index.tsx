@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Button,
   Card,
+  Checkbox,
   Col,
   Divider,
   Form,
@@ -13,6 +14,7 @@ import {
   theme,
 } from 'antd';
 import { RiCommunityLine } from 'react-icons/ri';
+import _ from 'lodash';
 
 interface DataType {
   key: React.Key;
@@ -22,12 +24,13 @@ interface DataType {
 }
 
 interface ExpandedDataType {
-  key: React.Key;
+  id: React.Key;
   name: string;
-  view: string;
-  add: string;
-  edit: string;
-  delete: string;
+  idxOf?: string;
+  read: boolean | undefined;
+  add: boolean | undefined;
+  edit: boolean | undefined;
+  delete: boolean | undefined;
 }
 
 const { useToken } = theme;
@@ -37,7 +40,7 @@ const Simpledata = [
     id: '1',
     name: 'CompanyAdmin',
     acess: [
-      { action: ['add', 'edit', 'delete', 'read'], subject: 'company' },
+      { action: ['add', 'edit', 'delete'], subject: 'company' },
       { action: ['add', 'edit', 'delete', 'read'], subject: 'myprofile' },
       { action: ['add', 'edit', 'delete', 'read'], subject: 'employee' },
       { action: ['add', 'edit', 'delete', 'read'], subject: 'salary' },
@@ -73,53 +76,105 @@ const Simpledata = [
 
 const Rights: React.FC = () => {
   const token = useToken();
-
+  const [datas, setData] = useState<ExpandedDataType[]>([]);
+  useEffect(() => {
+    const module = [
+      'company',
+      'myprofile',
+      'employee',
+      'salary',
+      'vacation',
+      'training',
+      'assessment',
+      'project',
+      'dashboard',
+      'file',
+      'activity',
+      'campaign',
+    ];
+    const query_data = Simpledata;
+    module.forEach(async (e) => {
+      const data: ExpandedDataType[] = query_data.map((_e) => {
+        const access = _e.acess.find((__e) => __e.subject === e);
+        return {
+          id: _e.id,
+          name: _e.name,
+          idxOf: e,
+          read: access?.action.includes('read'),
+          add: access?.action.includes('add'),
+          edit: access?.action.includes('edit'),
+          delete: access?.action.includes('delete'),
+        };
+      });
+      const paired_value = [...datas, ...data];
+      setData(paired_value);
+      console.log(datas);
+    });
+  }, []);
   const expandedRowRender = (record: DataType, index: number | string) => {
     console.log(record, index);
     const columns: TableColumnsType<ExpandedDataType> = [
-      { title: 'Roles', dataIndex: 'name', key: 'name' },
-      { title: 'View', dataIndex: 'view', key: 'view' },
-      { title: 'Add', dataIndex: 'add', key: 'add' },
-      { title: 'Edit', dataIndex: 'edit', key: 'edit' },
-      { title: 'Delete', dataIndex: 'delete', key: 'delete' },
+      {
+        title: 'Roles',
+        dataIndex: 'name',
+        key: 'name',
+      },
+      {
+        title: 'Read',
+        dataIndex: 'read',
+        key: 'read',
+        render(value, rec) {
+          return <Checkbox value="read" checked={rec.read} />;
+        },
+      },
+      {
+        title: 'Add',
+        dataIndex: 'add',
+        key: 'add',
+        render(value, rec) {
+          return <Checkbox value="add" checked={rec.add} />;
+        },
+      },
+      {
+        title: 'Edit',
+        dataIndex: 'edit',
+        key: 'edit',
+        render(value, rec) {
+          value = 'read';
+          return <Checkbox value="edit" checked={rec.edit} />;
+        },
+      },
+      {
+        title: 'Delete',
+        dataIndex: 'delete',
+        key: 'delete',
+        render(value, rec) {
+          return <Checkbox value="delete" checked={rec.delete} />;
+        },
+      },
     ];
-    const data = [];
-    const query_data = Simpledata;
-    console.log(query_data);
-    for (let i = 0; i < 1; ++i) {
-      data.push(
-        {
-          key: i.toString(),
-          name: 'Company Admin',
-          view: 'View',
-          add: 'Add',
-          edit: 'Edit',
-          delete: 'Delete',
-        },
-        {
-          key: i.toString(),
-          name: 'Finance',
-          view: 'View',
-          add: 'Add',
-          edit: 'Edit',
-          delete: 'Delete',
-        },
-        {
-          key: i.toString(),
-          name: 'Employee',
-          view: 'View',
-          add: 'Add',
-          edit: 'Edit',
-          delete: 'Delete',
-        },
-      );
-    }
+    // const query_data = Simpledata;
+
+    // const data = query_data.map((e) => {
+    //   const access = e.acess.find((e) => e.subject === record.subject);
+    //   return {
+    //     id: e.id,
+    //     idxOf: record.subject,
+    //     name: e.name,
+    //     read: access?.action.includes('read'),
+    //     add: access?.action.includes('add'),
+    //     edit: access?.action.includes('edit'),
+    //     delete: access?.action.includes('delete'),
+    //   };
+    // });
+
+    // console.log(data);
     return (
       <Table
         size="small"
         rowKey="id"
         columns={columns}
-        dataSource={data}
+        dataSource={datas.filter((e) => e.idxOf === record.subject)}
         pagination={false}
       />
     );
@@ -135,7 +190,7 @@ const Rights: React.FC = () => {
     },
     Table.EXPAND_COLUMN,
 
-    Table.SELECTION_COLUMN,
+    // Table.SELECTION_COLUMN,
     {
       title: 'สิทธิ์การเข้าถึงระบบ',
       dataIndex: 'permissions',

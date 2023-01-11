@@ -282,4 +282,4 @@ export const routing: RoutingType[] = [
 const router = createBrowserRouter(routing);
 export default router;
 
-createBrowserRouter([{ loader: ({}) => {} }]);
+//createBrowserRouter([{ loader: ({}) => {} }]);
