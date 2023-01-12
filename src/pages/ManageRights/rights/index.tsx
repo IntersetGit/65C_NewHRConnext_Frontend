@@ -15,6 +15,13 @@ import {
 } from 'antd';
 import { RiCommunityLine } from 'react-icons/ri';
 import _ from 'lodash';
+import { CheckboxChangeEvent } from 'antd/es/checkbox';
+import { useMutation, useQuery } from '@apollo/client';
+import {
+  FETCH_GETALLROLE_MANAGEMENT,
+  SAVE_COMPANY_ROLE,
+} from '../../../service/graphql/Role';
+import Swal from 'sweetalert2';
 
 interface DataType {
   key: React.Key;
@@ -24,9 +31,11 @@ interface DataType {
 }
 
 interface ExpandedDataType {
-  id: React.Key;
+  [key: string]: any;
+  id: string | undefined;
+  sort: number;
   key: React.Key;
-  name: string;
+  name: string | null | undefined;
   idxOf?: string;
   read: boolean | undefined;
   add: boolean | undefined;
@@ -40,7 +49,7 @@ const Simpledata = [
   {
     id: '1',
     name: 'CompanyAdmin',
-    acess: [
+    access: [
       { action: ['add', 'edit', 'delete'], subject: 'company' },
       { action: ['add', 'edit', 'delete', 'read'], subject: 'myprofile' },
       { action: ['add', 'edit', 'delete', 'read'], subject: 'employee' },
@@ -56,9 +65,9 @@ const Simpledata = [
     ],
   },
   {
-    id: '1',
+    id: '2',
     name: 'Finance',
-    acess: [
+    access: [
       { action: ['add', 'edit', 'delete', 'read'], subject: 'company' },
       { action: ['read'], subject: 'myprofile' },
       { action: ['add'], subject: 'employee' },
@@ -73,48 +82,89 @@ const Simpledata = [
       { action: ['add', 'edit', 'delete', 'read'], subject: 'campaign' },
     ],
   },
+  {
+    id: '3',
+    name: 'Employee',
+    acess: [],
+  },
+];
+const module = [
+  'company',
+  'myprofile',
+  'employee',
+  'salary',
+  'vacation',
+  'training',
+  'assessment',
+  'project',
+  'dashboard',
+  'file',
+  'activity',
+  'campaign',
 ];
 
+const method = ['read', 'add', 'edit', 'delete'];
 const Rights: React.FC = () => {
   const token = useToken();
+  const {
+    data: rawdata,
+    loading,
+    refetch,
+  } = useQuery(FETCH_GETALLROLE_MANAGEMENT);
+  const [saveRolemanage] = useMutation(SAVE_COMPANY_ROLE);
   const [datas, setData] = useState<ExpandedDataType[]>([]);
+  const onChange = (e: CheckboxChangeEvent, rec: ExpandedDataType) => {
+    //console.log(e, rec);
+    console.time('Change checkbox time');
+    const rowData = datas.find((e) => e.key === rec.key);
+    const popData = datas.filter((e) => e.key !== rec.key);
+    /**
+     * PreventDefault Function
+     * ! no need this function
+     */
+    //e.preventDefault();
+    /**
+     * check if rowdata not undefined
+     */
+    if (!rowData) return;
+    /**
+     * check if method is undefinded then return
+     */
+    if (rowData[e.target.value] === undefined) return;
+    rowData[e.target.value] = e.target.checked;
+
+    const newData = [...popData, rowData];
+    setData(newData);
+    console.timeEnd('Change checkbox time');
+  };
   useEffect(() => {
-    const module = [
-      'company',
-      'myprofile',
-      'employee',
-      'salary',
-      'vacation',
-      'training',
-      'assessment',
-      'project',
-      'dashboard',
-      'file',
-      'activity',
-      'campaign',
-    ];
-    const query_data = Simpledata;
+    const query_data = rawdata;
     const arr: ExpandedDataType[] = [];
     module.forEach(async (e) => {
-      const data: ExpandedDataType[] = query_data.map((_e) => {
-        const access = _e.acess.find((__e) => __e.subject === e);
-        return {
-          id: _e.id,
-          name: _e.name,
-          idxOf: e,
-          read: access?.action.includes('read'),
-          add: access?.action.includes('add'),
-          edit: access?.action.includes('edit'),
-          delete: access?.action.includes('delete'),
-        };
-      });
-      console.log(data);
-      arr.push(...data);
+      const data: ExpandedDataType[] | undefined =
+        query_data?.getcompanyRole?.map((_e, i) => {
+          const access: { action: string[] } = _e?.access?.find(
+            (__e) => __e.subject === e,
+          );
+          return {
+            id: _e?.id,
+            sort: i + 1,
+            key: `${_e?.name}-${e}-${i + 1}`,
+            name: _e?.name,
+            idxOf: e,
+            read: access ? access.action.includes('read') : false,
+            add: access ? access.action.includes('add') : false,
+            edit: access ? access.action.includes('edit') : false,
+            delete: access ? access.action.includes('delete') : false,
+          };
+        });
+      const saveData = data ? data : [];
+      arr.push(...saveData);
     });
     setData(arr);
-  }, []);
+  }, [loading]);
   const expandedRowRender = (record: DataType, index: number | string) => {
-    console.log(record, index);
+    //console.log(record, index);
     const columns: TableColumnsType<ExpandedDataType> = [
       {
         title: 'Roles',
@@ -126,7 +176,13 @@ const Rights: React.FC = () => {
         dataIndex: 'read',
         key: 'read',
         render(value, rec) {
-          return <Checkbox value="read" checked={rec.read} />;
+          return (
+            <Checkbox
+              onChange={(e: CheckboxChangeEvent) => onChange(e, rec)}
+              value="read"
+              checked={rec.read}
+            />
+          );
         },
       },
       {
@@ -134,7 +190,13 @@ const Rights: React.FC = () => {
         dataIndex: 'add',
         key: 'add',
         render(value, rec) {
-          return <Checkbox value="add" checked={rec.add} />;
+          return (
+            <Checkbox
+              onChange={(e: CheckboxChangeEvent) => onChange(e, rec)}
+              value="add"
+              checked={rec.add}
+            />
+          );
         },
       },
       {
@@ -143,7 +205,13 @@ const Rights: React.FC = () => {
         key: 'edit',
         render(value, rec) {
           value = 'read';
-          return <Checkbox value="edit" checked={rec.edit} />;
+          return (
+            <Checkbox
+              onChange={(e: CheckboxChangeEvent) => onChange(e, rec)}
+              value="edit"
+              checked={rec.edit}
+            />
+          );
         },
       },
       {
@@ -151,35 +219,85 @@ const Rights: React.FC = () => {
         dataIndex: 'delete',
         key: 'delete',
         render(value, rec) {
-          return <Checkbox value="delete" checked={rec.delete} />;
+          return (
+            <Checkbox
+              onChange={(e: CheckboxChangeEvent) => onChange(e, rec)}
+              value="delete"
+              checked={rec.delete}
+            />
+          );
         },
       },
     ];
-    // const query_data = Simpledata;
 
-    // const data = query_data.map((e) => {
-    //   const access = e.acess.find((e) => e.subject === record.subject);
-    //   return {
-    //     id: e.id,
-    //     idxOf: record.subject,
-    //     name: e.name,
-    //     read: access?.action.includes('read'),
-    //     add: access?.action.includes('add'),
-    //     edit: access?.action.includes('edit'),
-    //     delete: access?.action.includes('delete'),
-    //   };
-    // });
-
-    // console.log(data);
     return (
       <Table
         size="small"
-        rowKey="id"
         columns={columns}
-        dataSource={datas.filter((e) => e.idxOf === record.subject)}
+        dataSource={datas
+          .filter((e) => e.idxOf === record.subject)
+          .sort((a, b) => a.sort - b.sort)}
         pagination={false}
       />
     );
+  };
+
+  const onClicksave = () => {
+    /** Merge to original object */
+    console.time('Merge save time');
+    const original = rawdata?.getcompanyRole?.map((e) => {
+      return {
+        id: e?.id as string,
+        //name: e?.name,
+        access: [
+          ...datas
+            .filter((_e) => _e.id === e?.id)
+            .map((e) => {
+              const accessControl: string[] = [];
+              method.forEach((_e) => {
+                if (e[_e]) accessControl.push(_e);
+              });
+
+              return {
+                subject: e.idxOf as string,
+                action: accessControl,
+              };
+            }),
+        ],
+      };
+    });
+    console.timeEnd('Merge save time');
+
+    if (!original) return;
+
+    Swal.fire({
+      title: 'บันทึกข้อมูล',
+      text: 'ยืนยันการบันทึกข้อมูล',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'ยืนยัน',
+      cancelButtonText: 'ยกเลิก',
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        saveRolemanage({
+          variables: {
+            data: original,
+          },
+        })
+          .then((val) => {
+            if (val.data?.updateRoleCompanyMangement?.status) {
+              Swal.fire(`เพิ่มข้อมูลสำเร็จ!`, '', 'success');
+              refetch();
+            }
+          })
+          .catch((err) => {
+            Swal.fire(`เพิ่มข้อมูลไม่สำเร็จ!`, '', 'error');
+            console.error(err);
+          });
+      }
+    });
   };
 
   const columns: TableColumnsType<DataType> = [
@@ -310,27 +428,18 @@ const Rights: React.FC = () => {
             <Col>
               <Form.Item label={'กลุ่มผู้ใช้งาน'}>
                 <Space>
-                  <Button
-                    style={{
-                      marginBottom: '10px',
-                    }}
-                  >
-                    Company Admin
-                  </Button>
-                  <Button
-                    style={{
-                      marginBottom: '10px',
-                    }}
-                  >
-                    Finance
-                  </Button>
-                  <Button
-                    style={{
-                      marginBottom: '10px',
-                    }}
-                  >
-                    Employee
-                  </Button>
+                  {rawdata?.getcompanyRole?.map((e) => {
+                    return (
+                      <Button
+                        key={e?.id}
+                        style={{
+                          marginBottom: '10px',
+                        }}
+                      >
+                        {e?.name}
+                      </Button>
+                    );
+                  })}
                 </Space>
               </Form.Item>
             </Col>
@@ -339,6 +448,7 @@ const Rights: React.FC = () => {
           <Col className="flex justify-end">
             <Button
               type="primary"
+              onClick={onClicksave}
               style={{
                 marginBottom: '10px',
                 backgroundColor: token.token.colorPrimary,
