@@ -17,6 +17,9 @@ import { GiReceiveMoney } from 'react-icons/gi';
 import type { ColumnsType } from 'antd/es/table';
 import { MoreOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
+import edit from '../../../assets/Edit.png';
+import Del from '../../../assets/DEL.png';
+import View from '../../../assets/View.png';
 
 const { useToken } = theme;
 
@@ -38,16 +41,19 @@ const Compensation: React.FC = () => {
       {
         key: 'edit',
         label: 'แก้ไข',
+        icon: <img style={{ width: '17px', height: '17px' }} src={edit} />,
         onClick: (e: any) => onMenuClick(e, record),
       },
       {
         key: 'view',
-        label: 'ดู',
+        label: 'ดูข้อมูล',
+        icon: <img style={{ width: '17px', height: '17px' }} src={View} />,
         onClick: (e: any) => onMenuClick(e, record),
       },
       {
         key: 'delete',
         label: 'ลบข้อมูล',
+        icon: <img style={{ width: '20px', height: '20px' }} src={Del} />,
         onClick: (e: any) => onMenuClick(e, record),
       },
     ];
@@ -219,7 +225,7 @@ const Compensation: React.FC = () => {
                 marginBottom: '10px',
                 backgroundColor: token.token.colorPrimary,
               }}
-              onClick={() => {}}
+              onClick={() => { }}
             >
               + จัดการข้อมูล
             </Button>

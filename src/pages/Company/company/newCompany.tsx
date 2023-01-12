@@ -441,7 +441,7 @@ const Newcompany = () => {
                 <Input autoComplete='off' />
               </Form.Item>
             </Col>
-            <Col xs={24} sm={6} md={6} lg={6} xl={2}>
+            <Col xs={24} sm={6} md={6} lg={6} xl={1}>
               <Button className="flex flex-row items-center text-2xl">
                 <RiCloseFill />
               </Button>
@@ -456,7 +456,7 @@ const Newcompany = () => {
                 <Input autoComplete='off' />
               </Form.Item>
             </Col>
-            <Col xs={24} sm={6} md={6} lg={6} xl={2}>
+            <Col xs={24} sm={6} md={6} lg={6} xl={1}>
               <Button className="flex flex-row items-center text-2xl">
                 <RiCloseFill />
               </Button>
@@ -500,6 +500,7 @@ const Newcompany = () => {
           </div>
         </Form>
       </Card>
+      <br />
     </>
   );
 };
