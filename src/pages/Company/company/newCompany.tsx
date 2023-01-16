@@ -23,6 +23,13 @@ import line from '../../../assets/Line-logo.png';
 import { CREATE_COMPANY_ACCOUNT } from '../../../service/graphql/Company';
 import { CreateCompanyBranch } from '../../../__generated__/graphql';
 
+// ------------------------- Upload------------------------------------ //
+import { PlusOutlined } from '@ant-design/icons';
+import { Modal, Upload } from 'antd';
+import type { RcFile, UploadProps } from 'antd/es/upload';
+import type { UploadFile } from 'antd/es/upload/interface';
+// ------------------------- Upload------------------------------------ //
+
 const { useToken } = theme;
 
 const GET_PROVINCE = gql(/* GraphQL */ `
@@ -40,6 +47,16 @@ const GET_PROVINCE = gql(/* GraphQL */ `
   }
 `);
 
+// ------------------------- Upload------------------------------------ //
+const getBase64 = (file: RcFile): Promise<string> =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = (error) => reject(error);
+  });
+// ------------------------- Upload------------------------------------ //
+
 const Newcompany = () => {
   const token = useToken();
   const navigate = useNavigate();
@@ -53,6 +70,42 @@ const Newcompany = () => {
     { value?: string | null; label?: string | null }[] | undefined
   >(undefined);
 
+  // ------------------------- Upload------------------------------------ //
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const [previewImage, setPreviewImage] = useState('');
+  const [previewTitle, setPreviewTitle] = useState('');
+  const [fileList, setFileList] = useState<UploadFile[]>([
+    {
+      uid: '-4',
+      name: 'image.png',
+      status: 'done',
+      url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+    },
+  ]);
+
+  const handleCancel = () => setPreviewOpen(false);
+
+  const handlePreview = async (file: UploadFile) => {
+    if (!file.url && !file.preview) {
+      file.preview = await getBase64(file.originFileObj as RcFile);
+    }
+
+    setPreviewImage(file.url || (file.preview as string));
+    setPreviewOpen(true);
+    setPreviewTitle(file.name || file.url!.substring(file.url!.lastIndexOf('/') + 1));
+  };
+
+  const handleChange: UploadProps['onChange'] = ({ fileList: newFileList }) =>
+    setFileList(newFileList);
+
+  const uploadButton = (
+    <div>
+      <PlusOutlined />
+      <div style={{ marginTop: 8 }}>Upload</div>
+    </div>
+  );
+  // ------------------------- Upload------------------------------------ //
+
   const province = province_data?.getProvince?.map((e) => {
     return {
       label: e?.name,
@@ -61,9 +114,9 @@ const Newcompany = () => {
   });
 
   const onProvinceChangeCitizen = (value: string) => {
-    form.setFieldValue('citizen_district', null);
-    form.setFieldValue('citizen_state', null);
-    form.setFieldValue('citizen_zipcode', null);
+    form.setFieldValue('city', null);
+    form.setFieldValue('state', null);
+    form.setFieldValue('zip', null);
     const district = province_data?.getProvince
       ?.find((e) => e?.name === value)
       ?.district?.map((e) => {
@@ -76,8 +129,8 @@ const Newcompany = () => {
   };
 
   const onDistrictChangeCitizen = (value: string) => {
-    form.setFieldValue('citizen_state', null);
-    form.setFieldValue('citizen_zipcode', null);
+    form.setFieldValue('city', null);
+    form.setFieldValue('zip', null);
     const amphoe = province_data?.getProvince
       ?.find((e) => e?.district?.find((_e) => _e?.name === value))
       ?.district?.find((e) => e?.name === value)
@@ -100,7 +153,7 @@ const Newcompany = () => {
       ?.district?.find((e) => e?.amphoe?.find((_e) => _e?.name === value))
       ?.amphoe?.find((e) => e?.name === value)?.zipcode;
 
-    form.setFieldValue('citizen_zipcode', zipCode);
+    form.setFieldValue('zip', zipCode);
   };
 
   const onSubmitForm = (value: CreateCompanyBranch) => {
@@ -124,7 +177,7 @@ const Newcompany = () => {
             console.log(val);
             if (val?.data?.createAndUpdateComBarance?.status) {
               Swal.fire(
-                `สร้างข้อมูลพนักงานสำเร็จ!`,
+                `สร้างข้อมูลบริษัทสำเร็จ!`,
                 '',
                 'success',
               );
@@ -133,7 +186,7 @@ const Newcompany = () => {
           })
           .catch((err) => {
             Swal.fire(
-              `'สร้างข้อมูลพนักงานไม่สำเร็จ!`,
+              `'สร้างข้อมูลบริษัทไม่สำเร็จ!`,
               '',
               'error',
             );
@@ -174,12 +227,31 @@ const Newcompany = () => {
         >
           <Row gutter={12}>
             <Col xs={24} sm={24} md={12} lg={12} xl={8}>
-              <Form.Item name={'name'} label={'ชื่อบริษัท'}>
+              <Form.Item
+                name={'name'}
+                label={'ชื่อบริษัท'}
+                rules={[
+                  {
+                    required: true,
+                    message: 'กรุณากรอกชื่อบริษัท',
+                  },
+                ]}
+              >
                 <Input autoComplete='off' placeholder="กรุณากรอกชื่อบริษัท" />
               </Form.Item>
             </Col>
+
             <Col xs={24} sm={24} md={12} lg={12} xl={8}>
-              <Form.Item name={'companyId'} label={'เลขจดทะเบียนบริษัท'}>
+              <Form.Item
+                name={'companyId'}
+                label={'เลขจดทะเบียนบริษัท'}
+                rules={[
+                  {
+                    required: true,
+                    message: 'กรุณากรอกเลขจดทะเบียนบริษัท',
+                  },
+                ]}
+              >
                 <Input autoComplete='off' placeholder="กรุณากรอกเลขจดทะเบียนบริษัท" />
               </Form.Item>
             </Col>
@@ -192,7 +264,16 @@ const Newcompany = () => {
 
           <Row gutter={12}>
             <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-              <Form.Item name={'address'} label={'ที่อยู่ 1'}>
+              <Form.Item
+                name={'address'}
+                label={'ที่อยู่ 1'}
+                rules={[
+                  {
+                    required: true,
+                    message: 'กรุณากรอกที่อยู่',
+                  },
+                ]}
+              >
                 <Input autoComplete='off' placeholder="กรุณากรอกที่อยู่" />
               </Form.Item>
             </Col>
@@ -206,7 +287,16 @@ const Newcompany = () => {
 
           <Row gutter={16}>
             <Col xs={24} sm={24} md={12} lg={12} xl={6}>
-              <Form.Item name={'citizen_province'} label={'จังหวัด'}>
+              <Form.Item
+                name={'country'}
+                label={'จังหวัด'}
+                rules={[
+                  {
+                    required: true,
+                    message: 'กรุณากรอกจังหวัด',
+                  },
+                ]}
+              >
                 <Select
                   placeholder="กรุณากรอกจังหวัด"
                   onChange={onProvinceChangeCitizen}
@@ -217,7 +307,16 @@ const Newcompany = () => {
               </Form.Item>
             </Col>
             <Col xs={24} sm={24} md={12} lg={12} xl={6}>
-              <Form.Item name={'citizen_district'} label={'เขต/อำเภอ'}>
+              <Form.Item
+                name={'state'}
+                label={'เขต/อำเภอ'}
+                rules={[
+                  {
+                    required: true,
+                    message: 'กรุณากรอกเขต/อำเภอ',
+                  },
+                ]}
+              >
                 <Select
                   placeholder="กรุณากรอกเขต/อำเภอ"
                   onChange={onDistrictChangeCitizen}
@@ -228,7 +327,16 @@ const Newcompany = () => {
               </Form.Item>
             </Col>
             <Col xs={24} sm={24} md={12} lg={12} xl={6}>
-              <Form.Item name={'citizen_state'} label={'แขวง/ตำบล'}>
+              <Form.Item
+                name={'city'}
+                label={'แขวง/ตำบล'}
+                rules={[
+                  {
+                    required: true,
+                    message: 'กรุณากรอกแขวง/ตำบล',
+                  },
+                ]}
+              >
                 <Select
                   placeholder="กรุณากรอกแขวง/ตำบล"
                   onChange={onAmphoeChangeCitizen}
@@ -239,7 +347,7 @@ const Newcompany = () => {
               </Form.Item>
             </Col>
             <Col xs={24} sm={24} md={12} lg={12} xl={6}>
-              <Form.Item name={'citizen_zipcode'} label={'รหัสไปรษรีย์'}>
+              <Form.Item name={'zip'} label={'รหัสไปรษรีย์'}>
                 <Input disabled />
               </Form.Item>
             </Col>
@@ -247,7 +355,16 @@ const Newcompany = () => {
 
           <Row gutter={16}>
             <Col xs={24} sm={24} md={12} lg={12} xl={6}>
-              <Form.Item name={'tel'} label={'เบอร์โทรศัพท์'}>
+              <Form.Item
+                name={'tel'}
+                label={'เบอร์โทรศัพท์'}
+                rules={[
+                  {
+                    required: true,
+                    message: 'กรุณากรอกเบอร์โทรศัพท์',
+                  },
+                ]}
+              >
                 <Input autoComplete='off' placeholder="กรุณากรอกเบอร์โทรศัพท์" />
               </Form.Item>
             </Col>
@@ -266,7 +383,14 @@ const Newcompany = () => {
             </Col>
             <Col xs={24} sm={24} md={12} lg={12} xl={6}>
               <Form.Item label={'แผนที่'}>
-                <Button>เปิดแผนที่</Button>
+                <Button
+                  type="primary"
+                  style={{
+                    width: '100%',
+                    marginBottom: '10px',
+                    backgroundColor: token.token.colorPrimary,
+                  }}
+                >เปิดแผนที่</Button>
               </Form.Item>
             </Col>
             <Col xs={24} sm={24} md={12} lg={12} xl={6}>
@@ -277,7 +401,7 @@ const Newcompany = () => {
 
             <Col xs={24} sm={24} md={12} lg={12} xl={6}>
               <Form.Item name={'email'} label={'อีเมล์ #1'}>
-                <Input autoComplete='off' placeholder="กรุณากรอกอีเมล์" />
+                <Input autoComplete='off' />
               </Form.Item>
             </Col>
             <Col xs={24} sm={24} md={12} lg={12} xl={6}>
@@ -331,7 +455,27 @@ const Newcompany = () => {
           </div>
           <Row gutter={16} className="px-2">
             <Col xs={24} sm={6} md={6} lg={6} xl={4}>
-              <Button>เลือกรูป</Button>
+              <Button
+                type="primary"
+                style={{
+                  width: '100%',
+                  marginBottom: '10px',
+                  backgroundColor: token.token.colorPrimary,
+                }}
+              >เลือกรูป</Button>
+
+              <Upload
+                listType="picture-card"
+                fileList={fileList}
+                onPreview={handlePreview}
+                onChange={handleChange}
+              >
+                {fileList.length >= 1 ? null : uploadButton}
+              </Upload>
+              <Modal open={previewOpen} title={previewTitle} footer={null} onCancel={handleCancel}>
+                <img alt="example" style={{ width: '100%' }} src={previewImage} />
+              </Modal>
+
             </Col>
             <Col xs={24} sm={14} md={14} lg={14} xl={14}>
               <Input autoComplete='off' />
@@ -372,7 +516,7 @@ const Newcompany = () => {
                   {/* <FaLinkedin /> */}
                   <img
                     src={initial}
-                    alt="Facebook-logo"
+                    alt="likedin-logo"
                     style={{ width: '40px' }}
                   />
                 </div>
@@ -395,7 +539,7 @@ const Newcompany = () => {
                   {/* <FaInstagramSquare /> */}
                   <img
                     src={instagram}
-                    alt="Facebook-logo"
+                    alt="instagram-logo"
                     style={{ width: '40px' }}
                   />
                 </div>
@@ -409,7 +553,7 @@ const Newcompany = () => {
                 {/*---------------- Line ----------------*/}
                 <div className="flex flex-row items-center ml-6 text-4xl">
                   {/* <FaLine /> */}
-                  <img src={line} alt="Facebook-logo" style={{ width: '40px' }} />
+                  <img src={line} alt="line-logo" style={{ width: '40px' }} />
                 </div>
                 <div className="flex items-center ml-8 mt-6">
                   <Col span={24}>
@@ -433,7 +577,15 @@ const Newcompany = () => {
           <Row gutter={16}>
             <Col>
               <Form.Item label="หนังสือรับรอง">
-                <Button>เลือกไฟล์เอกสาร</Button>
+                <Button
+                  type="primary"
+                  style={{
+                    width: '100%',
+                    marginBottom: '10px',
+                    backgroundColor: token.token.colorPrimary,
+                  }}
+                >
+                  เลือกไฟล์เอกสาร</Button>
               </Form.Item>
             </Col>
             <Col xs={24} sm={18} md={6} lg={8} xl={6}>
@@ -448,7 +600,15 @@ const Newcompany = () => {
             </Col>
             <Col>
               <Form.Item label="ก.พ. 20">
-                <Button>เลือกไฟล์เอกสาร</Button>
+                <Button
+                  type="primary"
+                  style={{
+                    width: '100%',
+                    marginBottom: '10px',
+                    backgroundColor: token.token.colorPrimary,
+                  }}
+                >
+                  เลือกไฟล์เอกสาร</Button>
               </Form.Item>
             </Col>
             <Col xs={24} sm={18} md={6} lg={8} xl={6}>
