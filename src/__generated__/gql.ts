@@ -27,7 +27,7 @@ const documents = {
     "\n  mutation UpdateRoleCompanyMangement($data: [UpdateRoleCompanyMangementType!]!) {\n    updateRoleCompanyMangement(data: $data) {\n      status\n      message\n    }\n  }\n": types.UpdateRoleCompanyMangementDocument,
     "\nquery GetcompanyRole {\n    getcompanyRole {\n      access\n      id\n      name\n      status\n    }\n  }\n": types.GetcompanyRoleDocument,
     "\n  query GetcompanyRoleManagement {\n    getcompanyRole {\n      access\n      id\n      name\n  }\n}": types.GetcompanyRoleManagementDocument,
-    "\n  mutation CreateAndUpdateComBarance($data: [UpdateRoleCompanyMangementType!]!) {\n    updateRoleCompanyMangement(data: $data) {\n      message\n      status\n    }\n  }\n": types.CreateAndUpdateComBaranceDocument,
+    "\n  mutation updateRoleCompanyManagement($data: [UpdateRoleCompanyMangementType!]!) {\n    updateRoleCompanyMangement(data: $data) {\n      message\n      status\n    }\n  }\n": types.UpdateRoleCompanyManagementDocument,
     "\nquery Users {\n    users {\n      id\n      email\n      profile {\n        address\n        age\n        avatar\n        bio\n        citizen_address\n        citizen_addressnumber\n        citizen_country\n        citizen_district\n        citizen_id\n        citizen_province\n        citizen_state\n        citizen_tel\n        citizen_zipcode\n        contract_address\n        contract_addressnumber\n        contract_companyemail\n        contract_country\n        contract_district\n        id\n        firstname_th\n        lastname_th\n        firstname_en\n        lastname_en\n        dob\n        relationship\n        shirt_size\n        prefix_th\n        prefix_en\n        social_id\n        staff_status\n        tel\n        gender\n        staff_code\n        religion\n        userId\n        contract_sameCitizen\n        contract_province\n        contract_state\n        contract_zipcode\n        contract_email\n        social_facebook\n        social_likedin\n        social_line\n        social_telegram\n        user {\n          email\n          password\n        }\n      }\n      Role_Company {\n        id\n        name\n\n      }\n    }\n\n  }\n": types.UsersDocument,
 };
 
@@ -104,7 +104,7 @@ export function gql(source: "\n  query GetcompanyRoleManagement {\n    getcompan
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "\n  mutation CreateAndUpdateComBarance($data: [UpdateRoleCompanyMangementType!]!) {\n    updateRoleCompanyMangement(data: $data) {\n      message\n      status\n    }\n  }\n"): (typeof documents)["\n  mutation CreateAndUpdateComBarance($data: [UpdateRoleCompanyMangementType!]!) {\n    updateRoleCompanyMangement(data: $data) {\n      message\n      status\n    }\n  }\n"];
+export function gql(source: "\n  mutation updateRoleCompanyManagement($data: [UpdateRoleCompanyMangementType!]!) {\n    updateRoleCompanyMangement(data: $data) {\n      message\n      status\n    }\n  }\n"): (typeof documents)["\n  mutation updateRoleCompanyManagement($data: [UpdateRoleCompanyMangementType!]!) {\n    updateRoleCompanyMangement(data: $data) {\n      message\n      status\n    }\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

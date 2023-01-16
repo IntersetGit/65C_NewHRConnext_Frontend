@@ -21,7 +21,7 @@ export const FETCH_GETALLROLE_MANAGEMENT = gql(`
 }`);
 
 export const SAVE_COMPANY_ROLE = gql(`
-  mutation CreateAndUpdateComBarance($data: [UpdateRoleCompanyMangementType!]!) {
+  mutation updateRoleCompanyManagement($data: [UpdateRoleCompanyMangementType!]!) {
     updateRoleCompanyMangement(data: $data) {
       message
       status
