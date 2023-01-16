@@ -144,7 +144,7 @@ const Rights: React.FC = () => {
       const data: ExpandedDataType[] | undefined =
         query_data?.getcompanyRole?.map((_e, i) => {
           const access: { action: string[] } = _e?.access?.find(
-            (__e) => __e.subject === e,
+            (__e: { subject: string }) => __e.subject === e,
           );
           return {
             id: _e?.id,
