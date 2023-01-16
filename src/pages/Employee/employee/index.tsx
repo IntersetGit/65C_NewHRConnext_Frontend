@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import { FaUserAlt } from 'react-icons/fa';
+import { BsFillTelephoneFill, BsFacebook } from 'react-icons/bs';
+import { AiTwotoneMail, AiOutlineMobile } from 'react-icons/ai';
 import {
   Button,
   Card,
@@ -14,15 +16,26 @@ import {
   theme,
   Dropdown,
   Menu,
+  Segmented,
+  Descriptions,
+  Avatar,
+  List,
 } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { useNavigate } from 'react-router-dom';
-import { MenuOutlined, MoreOutlined } from '@ant-design/icons';
+import {
+  MenuOutlined,
+  MoreOutlined,
+  AppstoreOutlined,
+  BarsOutlined,
+} from '@ant-design/icons';
 import { useQuery } from '@apollo/client';
 import { FETCH_GETALLUSER } from '../../../service/graphql/Users';
 import edit from '../../../assets/Edit.png';
 import Del from '../../../assets/DEL.png';
 import View from '../../../assets/View.png';
+import { User } from '../../../__generated__/graphql';
+import { divide } from 'lodash';
 
 const { useToken } = theme;
 
@@ -41,6 +54,11 @@ const Employee: React.FC = () => {
   const navigate = useNavigate();
   const [dataTable, setDataTable] = useState([]);
   const { data: userData, refetch } = useQuery(FETCH_GETALLUSER);
+  const [isDisplayfield, setDisplayfield] = useState(true);
+
+  useEffect(() => {
+    refetch();
+  }, []);
 
   const genarateMenu = (record: any) => {
     return [
@@ -71,6 +89,7 @@ const Employee: React.FC = () => {
   const onMenuClick = (event: any, record: any) => {
     const { key } = event;
     if (key === 'edit') {
+      console.log(record);
       navigate(`useremployee?id=${record.profile.id}`, {
         state: { ...record?.profile, mode: 'edit', userId: record?.id },
       });
@@ -88,6 +107,9 @@ const Employee: React.FC = () => {
       key: 'number',
       dataIndex: 'number',
       align: 'center',
+      render: (record) => {
+        return <p></p>;
+      },
     },
     {
       title: 'ชื่อ-สกุล',
@@ -110,9 +132,10 @@ const Employee: React.FC = () => {
     },
     {
       title: 'เบอร์โทร',
-      key: 'tel',
-      dataIndex: 'tel',
+      key: 'profile',
+      dataIndex: 'profile',
       align: 'center',
+      render: (record) => record.tel,
     },
     {
       title: 'e-mail',
@@ -187,42 +210,169 @@ const Employee: React.FC = () => {
       </Card>
 
       <Card className="shadow-xl mt-4">
-        <Col>
-          <Space>
-            <Button
-              type="primary"
-              size="middle"
-              style={{
-                marginBottom: '10px',
-                backgroundColor: token.token.colorPrimary,
-              }}
-              onClick={() => {
-                navigate('useremployee');
-              }}
-            >
-              + เพิ่มพนักงาน
-            </Button>
+        <Row>
+          <div
+            style={{
+              width: '100%',
+              display: 'flex',
+              justifyContent: 'space-between',
+            }}
+          >
+            <Space>
+              <Col>
+                <Button
+                  type="primary"
+                  size="middle"
+                  style={{
+                    marginBottom: '10px',
+                    backgroundColor: token.token.colorPrimary,
+                  }}
+                  onClick={() => {
+                    navigate('useremployee');
+                  }}
+                >
+                  + เพิ่มพนักงาน
+                </Button>
+              </Col>
 
-            <Button
-              type="primary"
-              size="middle"
-              style={{
-                marginBottom: '10px',
-                backgroundColor: token.token.colorPrimary,
+              <Col>
+                <Button
+                  type="primary"
+                  size="middle"
+                  style={{
+                    marginBottom: '10px',
+                    backgroundColor: token.token.colorPrimary,
+                  }}
+                  onClick={apiGetUsers}
+                >
+                  Upload Excel
+                </Button>
+              </Col>
+            </Space>
+
+            <Segmented
+              className="custom-segmented"
+              onChange={(e) => {
+                console.log(e);
+                if (e === 'Table') {
+                  setDisplayfield(true);
+                } else {
+                  setDisplayfield(false);
+                }
               }}
-              onClick={apiGetUsers}
-            >
-              Upload Excel
-            </Button>
-          </Space>
-        </Col>
-        <Table
-          columns={columns}
-          dataSource={userData?.users as any}
-          rowKey={(i: any) => i.toString()}
-        ></Table>
+              options={[
+                {
+                  value: 'Table',
+                  icon: <BarsOutlined />,
+                },
+                {
+                  value: 'Display',
+                  icon: <AppstoreOutlined />,
+                },
+              ]}
+            />
+          </div>
+        </Row>
+
+        {isDisplayfield ? (
+          <Table
+            columns={columns}
+            dataSource={userData?.users as any}
+            rowKey={(i: any) => i.toString()}
+          ></Table>
+        ) : (
+          <List
+            itemLayout="vertical"
+            size="large"
+            pagination={{
+              onChange: (page) => {
+                console.log(page);
+              },
+              pageSize: 3,
+            }}
+            dataSource={userData?.users as any}
+            renderItem={(item: User, index: any) => (
+              <List.Item key={index}>
+                {/* <List.Item.Meta
+                  avatar={
+                    <Avatar
+                      style={{ width: 100, height: 100 }}
+                      src={item.profile?.avatar}
+                    />
+                  }
+                  title={
+                    <a
+                      style={{
+                        paddingLeft: '64px',
+                        paddingRight: '64px',
+                        color: 'blue',
+                      }}
+                    >
+                      {item.profile?.prefix_th} {item.profile?.firstname_th}{' '}
+                      {item.profile?.lastname_th}
+                    </a>
+                  }
+                  description={
+                    <p className="px-16">
+                      {item.profile?.citizen_address}{' '}
+                      <p>{item.profile?.citizen_zipcode}</p>
+                    </p>
+                  }
+                /> */}
+                <CardItem item={item} />
+              </List.Item>
+            )}
+          ></List>
+        )}
       </Card>
     </>
+  );
+};
+type Props = {
+  item: User;
+};
+const CardItem = ({ item }: Props) => {
+  return (
+    <Row>
+      <Col span={6}>
+        <Avatar
+          style={{ width: 100, height: 100 }}
+          src={item.profile?.avatar}
+        />
+      </Col>
+      <Col span={8}>
+        <a style={{ color: 'blue', fontSize: '16px', fontWeight: 'bold' }}>
+          <u>
+            {item.profile?.prefix_th} {item.profile?.firstname_th}{' '}
+            {item.profile?.lastname_th}
+          </u>
+        </a>
+        <p>
+          {item.profile?.citizen_address}
+          <p>{item.profile?.citizen_zipcode}</p>
+        </p>
+      </Col>
+      <Col span={8}>
+        <div>
+          <Row>
+            <AiTwotoneMail size={'20'} />
+            <div className="px-2">{item.email}</div>
+          </Row>
+          <Row>
+            <BsFillTelephoneFill size={'20'} />
+            <div className="px-2">{item.profile?.citizen_tel}</div>
+          </Row>
+          <Row>
+            <AiOutlineMobile size={'20'} />
+            <div className="px-2">{item.profile?.tel}</div>
+          </Row>
+          <Row>
+            <BsFacebook size={'20'} />
+            <div className="px-2">{item.profile?.social_facebook}</div>
+          </Row>
+        </div>
+      </Col>
+    </Row>
   );
 };
 
