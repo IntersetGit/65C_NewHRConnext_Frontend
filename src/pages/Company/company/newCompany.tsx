@@ -124,7 +124,7 @@ const Newcompany = () => {
             console.log(val);
             if (val?.data?.createAndUpdateComBarance?.status) {
               Swal.fire(
-                `สร้างข้อมูลพนักงานสำเร็จ!`,
+                `สร้างข้อมูลบริษัทสำเร็จ!`,
                 '',
                 'success',
               );
@@ -133,7 +133,7 @@ const Newcompany = () => {
           })
           .catch((err) => {
             Swal.fire(
-              `'สร้างข้อมูลพนักงานไม่สำเร็จ!`,
+              `'สร้างข้อมูลบริษัทไม่สำเร็จ!`,
               '',
               'error',
             );

@@ -22,10 +22,10 @@ query GetownCompany {
 `);
 
 export const CREATE_COMPANY_ACCOUNT = gql(`
-  mutation UpdateRoleCompanyMangement($data: [UpdateRoleCompanyMangementType!]!) {
-    updateRoleCompanyMangement(data: $data) {
-      status
-      message
-    }
+mutation CreateAndUpdateComBarance($data: createCompanyBranch) {
+  createAndUpdateComBarance(data: $data) {
+    message
+    status
   }
+
 `);
