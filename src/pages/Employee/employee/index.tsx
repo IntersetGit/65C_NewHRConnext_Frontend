@@ -28,6 +28,7 @@ import {
   MoreOutlined,
   AppstoreOutlined,
   BarsOutlined,
+  ApartmentOutlined,
 } from '@ant-design/icons';
 import { useQuery } from '@apollo/client';
 import { FETCH_GETALLUSER } from '../../../service/graphql/Users';
@@ -39,22 +40,12 @@ import { divide } from 'lodash';
 
 const { useToken } = theme;
 
-interface DataType {
-  key: number;
-  name: string;
-  number: number;
-  position: string;
-  department: string;
-  tel: string;
-  email: string;
-}
-
 const Employee: React.FC = () => {
   const token = useToken();
   const navigate = useNavigate();
   const [dataTable, setDataTable] = useState([]);
   const { data: userData, refetch } = useQuery(FETCH_GETALLUSER);
-  const [isDisplayfield, setDisplayfield] = useState(true);
+  const [isDisplayfield, setDisplayfield] = useState(1);
 
   useEffect(() => {
     refetch();
@@ -101,33 +92,31 @@ const Employee: React.FC = () => {
     }
   };
 
-  const columns: ColumnsType<DataType> = [
+  const columns: ColumnsType<User> = [
     {
       title: 'ลำดับ',
-      key: 'number',
-      dataIndex: 'number',
       align: 'center',
-      render: (record) => {
-        return <p></p>;
+      render: (_, record, index) => {
+        return index + 1;
       },
     },
     {
       title: 'ชื่อ-สกุล',
-      key: 'name',
+      key: 'profile',
       dataIndex: 'profile',
       align: 'center',
       render: (txt) => txt.firstname_th + ' ' + txt.lastname_th,
     },
     {
       title: 'ตำแหน่ง',
-      key: 'position',
-      dataIndex: 'position',
+      key: 'profile',
+      dataIndex: 'profile',
       align: 'center',
     },
     {
       title: 'แผนก/ฝ่าย',
-      key: 'department',
-      dataIndex: 'department',
+      key: 'profile',
+      dataIndex: 'profile',
       align: 'center',
     },
     {
@@ -253,11 +242,12 @@ const Employee: React.FC = () => {
             <Segmented
               className="custom-segmented"
               onChange={(e) => {
-                console.log(e);
                 if (e === 'Table') {
-                  setDisplayfield(true);
+                  setDisplayfield(1);
+                } else if (e === 'List') {
+                  setDisplayfield(2);
                 } else {
-                  setDisplayfield(false);
+                  setDisplayfield(3);
                 }
               }}
               options={[
@@ -266,21 +256,25 @@ const Employee: React.FC = () => {
                   icon: <BarsOutlined />,
                 },
                 {
-                  value: 'Display',
+                  value: 'List',
                   icon: <AppstoreOutlined />,
+                },
+                {
+                  value: 'Tree',
+                  icon: <ApartmentOutlined />,
                 },
               ]}
             />
           </div>
         </Row>
 
-        {isDisplayfield ? (
+        {isDisplayfield === 1 ? (
           <Table
             columns={columns}
             dataSource={userData?.users as any}
-            rowKey={(i: any) => i.toString()}
+            rowKey={'id'}
           ></Table>
-        ) : (
+        ) : isDisplayfield === 2 ? (
           <List
             itemLayout="vertical"
             size="large"
@@ -293,36 +287,12 @@ const Employee: React.FC = () => {
             dataSource={userData?.users as any}
             renderItem={(item: User, index: any) => (
               <List.Item key={index}>
-                {/* <List.Item.Meta
-                  avatar={
-                    <Avatar
-                      style={{ width: 100, height: 100 }}
-                      src={item.profile?.avatar}
-                    />
-                  }
-                  title={
-                    <a
-                      style={{
-                        paddingLeft: '64px',
-                        paddingRight: '64px',
-                        color: 'blue',
-                      }}
-                    >
-                      {item.profile?.prefix_th} {item.profile?.firstname_th}{' '}
-                      {item.profile?.lastname_th}
-                    </a>
-                  }
-                  description={
-                    <p className="px-16">
-                      {item.profile?.citizen_address}{' '}
-                      <p>{item.profile?.citizen_zipcode}</p>
-                    </p>
-                  }
-                /> */}
-                <CardItem item={item} />
+                <CardItem item={item} genarateMenu={genarateMenu} />
               </List.Item>
             )}
           ></List>
+        ) : (
+          'ยังไม่มีครับ'
         )}
       </Card>
     </>
@@ -330,29 +300,32 @@ const Employee: React.FC = () => {
 };
 type Props = {
   item: User;
+  genarateMenu(record: any): any[];
 };
-const CardItem = ({ item }: Props) => {
+const CardItem = ({ item, genarateMenu }: Props) => {
   return (
     <Row>
-      <Col span={6}>
+      <Col span={4}>
         <Avatar
           style={{ width: 100, height: 100 }}
           src={item.profile?.avatar}
         />
       </Col>
-      <Col span={8}>
+      <Col span={9}>
         <a style={{ color: 'blue', fontSize: '16px', fontWeight: 'bold' }}>
           <u>
             {item.profile?.prefix_th} {item.profile?.firstname_th}{' '}
             {item.profile?.lastname_th}
           </u>
         </a>
-        <p>
-          {item.profile?.citizen_address}
-          <p>{item.profile?.citizen_zipcode}</p>
-        </p>
+        <Row>
+          <div>{item.profile?.citizen_address}</div>
+        </Row>
+        <Row>
+          <div>{item.profile?.citizen_zipcode}</div>
+        </Row>
       </Col>
-      <Col span={8}>
+      <Col span={9}>
         <div>
           <Row>
             <AiTwotoneMail size={'20'} />
@@ -371,6 +344,16 @@ const CardItem = ({ item }: Props) => {
             <div className="px-2">{item.profile?.social_facebook}</div>
           </Row>
         </div>
+      </Col>
+
+      <Col span={2}>
+        <Dropdown
+          className="flex h-full justify-items-center"
+          menu={{ items: genarateMenu(item) }}
+          arrow
+        >
+          <MoreOutlined />
+        </Dropdown>
       </Col>
     </Row>
   );

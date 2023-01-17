@@ -314,6 +314,7 @@ const UserEmployee: React.FC = (props) => {
                 'success',
               );
               refetch();
+              navigate(-1);
             }
           })
           .catch((err) => {
