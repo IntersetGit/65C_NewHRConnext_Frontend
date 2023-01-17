@@ -46,6 +46,7 @@ const Employee: React.FC = () => {
   const [dataTable, setDataTable] = useState([]);
   const { data: userData, refetch } = useQuery(FETCH_GETALLUSER);
   const [isDisplayfield, setDisplayfield] = useState(1);
+  const [pagecurrent, setPageCurrent] = useState<number>(2);
 
   useEffect(() => {
     refetch();
@@ -273,6 +274,13 @@ const Employee: React.FC = () => {
             columns={columns}
             dataSource={userData?.users as any}
             rowKey={'id'}
+            pagination={{
+              onChange: (page) => {
+                setPageCurrent(page);
+              },
+              current: pagecurrent,
+              pageSize: 10,
+            }}
           ></Table>
         ) : isDisplayfield === 2 ? (
           <List
@@ -280,9 +288,10 @@ const Employee: React.FC = () => {
             size="large"
             pagination={{
               onChange: (page) => {
-                console.log(page);
+                setPageCurrent(page);
               },
-              pageSize: 3,
+              current: pagecurrent,
+              pageSize: 10,
             }}
             dataSource={userData?.users as any}
             renderItem={(item: User, index: any) => (
@@ -292,7 +301,7 @@ const Employee: React.FC = () => {
             )}
           ></List>
         ) : (
-          'ยังไม่มีครับ'
+          <></>
         )}
       </Card>
     </>
