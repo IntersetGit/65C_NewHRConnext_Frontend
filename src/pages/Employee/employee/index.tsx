@@ -36,7 +36,7 @@ import edit from '../../../assets/Edit.png';
 import Del from '../../../assets/DEL.png';
 import View from '../../../assets/View.png';
 import { User } from '../../../__generated__/graphql';
-import { divide } from 'lodash';
+
 
 const { useToken } = theme;
 
