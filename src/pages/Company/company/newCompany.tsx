@@ -22,23 +22,9 @@ import instagram from '../../../assets/Instagram-logo.png';
 import line from '../../../assets/Line-logo.png';
 import { CREATE_COMPANY_ACCOUNT } from '../../../service/graphql/Company';
 import { CreateCompanyBranch } from '../../../__generated__/graphql';
+import { GET_PROVINCE } from '../../../service/graphql/Province';
 
 const { useToken } = theme;
-
-const GET_PROVINCE = gql(/* GraphQL */ `
-  query GetProvince {
-    getProvince {
-      name
-      district {
-        name
-        amphoe {
-          name
-          zipcode
-        }
-      }
-    }
-  }
-`);
 
 const Newcompany = () => {
   const token = useToken();
@@ -54,12 +40,12 @@ const Newcompany = () => {
     { value?: string | null; label?: string | null }[] | undefined
   >(undefined);
 
-  let Editdata = location.state as any
-  console.log(Editdata)
+  let Editdata = location.state as any;
+  console.log(Editdata);
 
   useEffect(() => {
     if (Editdata?.mode) {
-      getUserData()
+      getUserData();
     }
   }, []);
 
@@ -134,7 +120,7 @@ const Newcompany = () => {
             data: {
               ...value,
               id: Editdata?.id ? Editdata?.id : undefined,
-            }
+            },
           },
         })
           .then((val) => {
@@ -185,11 +171,7 @@ const Newcompany = () => {
       <Divider style={{ backgroundColor: token.token.colorPrimary }} />
 
       <Card className="shadow-md">
-        <Form
-          size={'large'}
-          form={form}
-          onFinish={onSubmitForm}
-        >
+        <Form size={'large'} form={form} onFinish={onSubmitForm}>
           <Row gutter={12}>
             <Col xs={24} sm={24} md={12} lg={12} xl={8}>
               <Form.Item
@@ -203,9 +185,13 @@ const Newcompany = () => {
                 ]}
               >
                 {Editdata?.mode == 'view' ? (
-                  <Input disabled autoComplete='off' placeholder="กรุณากรอกชื่อบริษัท" />
+                  <Input
+                    disabled
+                    autoComplete="off"
+                    placeholder="กรุณากรอกชื่อบริษัท"
+                  />
                 ) : (
-                  <Input autoComplete='off' placeholder="กรุณากรอกชื่อบริษัท" />
+                  <Input autoComplete="off" placeholder="กรุณากรอกชื่อบริษัท" />
                 )}
               </Form.Item>
             </Col>
@@ -222,18 +208,32 @@ const Newcompany = () => {
                 ]}
               >
                 {Editdata?.mode == 'view' ? (
-                  <Input disabled autoComplete='off' placeholder="กรุณากรอกเลขจดทะเบียนบริษัท" />
+                  <Input
+                    disabled
+                    autoComplete="off"
+                    placeholder="กรุณากรอกเลขจดทะเบียนบริษัท"
+                  />
                 ) : (
-                  <Input autoComplete='off' placeholder="กรุณากรอกเลขจดทะเบียนบริษัท" />
+                  <Input
+                    autoComplete="off"
+                    placeholder="กรุณากรอกเลขจดทะเบียนบริษัท"
+                  />
                 )}
               </Form.Item>
             </Col>
             <Col xs={24} sm={24} md={24} lg={24} xl={8}>
               <Form.Item label={'เลขทะเบียนภาษีมูลค่าเพิ่ม'}>
                 {Editdata?.mode == 'view' ? (
-                  <Input disabled autoComplete='off' placeholder="กรุณากรอกเลขทะเบียนภาษีมูลค่าเพิ่ม" />
+                  <Input
+                    disabled
+                    autoComplete="off"
+                    placeholder="กรุณากรอกเลขทะเบียนภาษีมูลค่าเพิ่ม"
+                  />
                 ) : (
-                  <Input autoComplete='off' placeholder="กรุณากรอกเลขทะเบียนภาษีมูลค่าเพิ่ม" />
+                  <Input
+                    autoComplete="off"
+                    placeholder="กรุณากรอกเลขทะเบียนภาษีมูลค่าเพิ่ม"
+                  />
                 )}
               </Form.Item>
             </Col>
@@ -252,9 +252,13 @@ const Newcompany = () => {
                 ]}
               >
                 {Editdata?.mode == 'view' ? (
-                  <Input disabled autoComplete='off' placeholder="กรุณากรอกที่อยู่" />
+                  <Input
+                    disabled
+                    autoComplete="off"
+                    placeholder="กรุณากรอกที่อยู่"
+                  />
                 ) : (
-                  <Input autoComplete='off' placeholder="กรุณากรอกที่อยู่" />
+                  <Input autoComplete="off" placeholder="กรุณากรอกที่อยู่" />
                 )}
               </Form.Item>
             </Col>
@@ -262,9 +266,13 @@ const Newcompany = () => {
             <Col xs={24} sm={24} md={12} lg={12} xl={12}>
               <Form.Item name={'address_2'} label={'ที่อยู่ 2'}>
                 {Editdata?.mode == 'view' ? (
-                  <Input disabled autoComplete='off' placeholder="กรุณากรอกที่อยู่" />
+                  <Input
+                    disabled
+                    autoComplete="off"
+                    placeholder="กรุณากรอกที่อยู่"
+                  />
                 ) : (
-                  <Input autoComplete='off' placeholder="กรุณากรอกที่อยู่" />
+                  <Input autoComplete="off" placeholder="กรุณากรอกที่อยู่" />
                 )}
               </Form.Item>
             </Col>
@@ -384,18 +392,32 @@ const Newcompany = () => {
                 ]}
               >
                 {Editdata?.mode == 'view' ? (
-                  <Input disabled autoComplete='off' placeholder="กรุณากรอกเบอร์โทรศัพท์" />
+                  <Input
+                    disabled
+                    autoComplete="off"
+                    placeholder="กรุณากรอกเบอร์โทรศัพท์"
+                  />
                 ) : (
-                  <Input autoComplete='off' placeholder="กรุณากรอกเบอร์โทรศัพท์" />
+                  <Input
+                    autoComplete="off"
+                    placeholder="กรุณากรอกเบอร์โทรศัพท์"
+                  />
                 )}
               </Form.Item>
             </Col>
             <Col xs={24} sm={24} md={12} lg={12} xl={6}>
               <Form.Item name={'fax'} label={'โทรสาร (Fax)'}>
                 {Editdata?.mode == 'view' ? (
-                  <Input disabled autoComplete='off' placeholder="กรุณากรอกโทรสาร (Fax)" />
+                  <Input
+                    disabled
+                    autoComplete="off"
+                    placeholder="กรุณากรอกโทรสาร (Fax)"
+                  />
                 ) : (
-                  <Input autoComplete='off' placeholder="กรุณากรอกโทรสาร (Fax)" />
+                  <Input
+                    autoComplete="off"
+                    placeholder="กรุณากรอกโทรสาร (Fax)"
+                  />
                 )}
               </Form.Item>
             </Col>
@@ -405,9 +427,9 @@ const Newcompany = () => {
             <Col xs={24} sm={24} md={12} lg={12} xl={6}>
               <Form.Item name={'website'} label={'Web Site'}>
                 {Editdata?.mode == 'view' ? (
-                  <Input disabled autoComplete='off' />
+                  <Input disabled autoComplete="off" />
                 ) : (
-                  <Input autoComplete='off' />
+                  <Input autoComplete="off" />
                 )}
               </Form.Item>
             </Col>
@@ -422,7 +444,9 @@ const Newcompany = () => {
                       marginBottom: '10px',
                       backgroundColor: token.token.colorPrimary,
                     }}
-                  >เปิดแผนที่</Button>
+                  >
+                    เปิดแผนที่
+                  </Button>
                 ) : (
                   <Button
                     type="primary"
@@ -431,16 +455,18 @@ const Newcompany = () => {
                       marginBottom: '10px',
                       backgroundColor: token.token.colorPrimary,
                     }}
-                  >เปิดแผนที่</Button>
+                  >
+                    เปิดแผนที่
+                  </Button>
                 )}
               </Form.Item>
             </Col>
             <Col xs={24} sm={24} md={12} lg={12} xl={6}>
               <Form.Item label={'พิกัด'}>
                 {Editdata?.mode == 'view' ? (
-                  <Input disabled autoComplete='off' />
+                  <Input disabled autoComplete="off" />
                 ) : (
-                  <Input autoComplete='off' />
+                  <Input autoComplete="off" />
                 )}
               </Form.Item>
             </Col>
@@ -448,18 +474,18 @@ const Newcompany = () => {
             <Col xs={24} sm={24} md={12} lg={12} xl={6}>
               <Form.Item name={'email'} label={'อีเมล์ #1'}>
                 {Editdata?.mode == 'view' ? (
-                  <Input disabled autoComplete='off' />
+                  <Input disabled autoComplete="off" />
                 ) : (
-                  <Input autoComplete='off' />
+                  <Input autoComplete="off" />
                 )}
               </Form.Item>
             </Col>
             <Col xs={24} sm={24} md={12} lg={12} xl={6}>
               <Form.Item name={'email_2'} label={'อีเมล์ #2'}>
                 {Editdata?.mode == 'view' ? (
-                  <Input disabled autoComplete='off' />
+                  <Input disabled autoComplete="off" />
                 ) : (
-                  <Input autoComplete='off' />
+                  <Input autoComplete="off" />
                 )}
               </Form.Item>
             </Col>
@@ -497,7 +523,10 @@ const Newcompany = () => {
               </Form.Item>
             </Col>
             <Col xs={24} sm={24} md={12} lg={12} xl={6}>
-              <Form.Item name={'sub_company_type'} label={'ประเภทของธุรกิจ ย่อย'}>
+              <Form.Item
+                name={'sub_company_type'}
+                label={'ประเภทของธุรกิจ ย่อย'}
+              >
                 {Editdata?.mode == 'view' ? (
                   <Select
                     disabled
@@ -529,18 +558,24 @@ const Newcompany = () => {
               </Form.Item>
             </Col>
             <Col xs={24} sm={24} md={12} lg={12} xl={6}>
-              <Form.Item name={'registeredamount'} label={'ทุนจดทะเบียน ( บาท )'}>
+              <Form.Item
+                name={'registeredamount'}
+                label={'ทุนจดทะเบียน ( บาท )'}
+              >
                 {Editdata?.mode == 'view' ? (
-                  <Input disabled autoComplete='off' placeholder="( บาท )" />
+                  <Input disabled autoComplete="off" placeholder="( บาท )" />
                 ) : (
-                  <Input autoComplete='off' placeholder="( บาท )" />
+                  <Input autoComplete="off" placeholder="( บาท )" />
                 )}
               </Form.Item>
             </Col>
           </Row>
           <Divider style={{ backgroundColor: token.token.colorPrimary }} />
 
-          <div className="text-base py-2" style={{ color: token.token.colorPrimary }}>
+          <div
+            className="text-base py-2"
+            style={{ color: token.token.colorPrimary }}
+          >
             โลโก้บริษัท
           </div>
           <Row gutter={16} className="px-2">
@@ -554,7 +589,9 @@ const Newcompany = () => {
                     marginBottom: '10px',
                     backgroundColor: token.token.colorPrimary,
                   }}
-                >เลือกรูป</Button>
+                >
+                  เลือกรูป
+                </Button>
               ) : (
                 <Button
                   type="primary"
@@ -563,19 +600,24 @@ const Newcompany = () => {
                     marginBottom: '10px',
                     backgroundColor: token.token.colorPrimary,
                   }}
-                >เลือกรูป</Button>
+                >
+                  เลือกรูป
+                </Button>
               )}
             </Col>
             <Col xs={24} sm={14} md={14} lg={14} xl={14}>
               {Editdata?.mode == 'view' ? (
-                <Input disabled autoComplete='off' />
+                <Input disabled autoComplete="off" />
               ) : (
-                <Input autoComplete='off' />
+                <Input autoComplete="off" />
               )}
             </Col>
             <Col xs={24} sm={4} md={4} lg={4} xl={4}>
               {Editdata?.mode == 'view' ? (
-                <Button disabled className="flex flex-row items-center text-2xl">
+                <Button
+                  disabled
+                  className="flex flex-row items-center text-2xl"
+                >
                   <RiCloseFill />
                 </Button>
               ) : (
@@ -587,7 +629,10 @@ const Newcompany = () => {
           </Row>
           <Divider style={{ backgroundColor: token.token.colorPrimary }} />
 
-          <div className="text-base" style={{ color: token.token.colorPrimary }}>
+          <div
+            className="text-base"
+            style={{ color: token.token.colorPrimary }}
+          >
             Social Link
           </div>
 
@@ -607,9 +652,9 @@ const Newcompany = () => {
                   <Col span={24}>
                     <Form.Item name={'social_facebook'}>
                       {Editdata?.mode == 'view' ? (
-                        <Input disabled autoComplete='off' />
+                        <Input disabled autoComplete="off" />
                       ) : (
-                        <Input autoComplete='off' />
+                        <Input autoComplete="off" />
                       )}
                     </Form.Item>
                   </Col>
@@ -627,9 +672,9 @@ const Newcompany = () => {
                   <Col span={24}>
                     <Form.Item name={'social_likedin'}>
                       {Editdata?.mode == 'view' ? (
-                        <Input disabled autoComplete='off' />
+                        <Input disabled autoComplete="off" />
                       ) : (
-                        <Input autoComplete='off' />
+                        <Input autoComplete="off" />
                       )}
                     </Form.Item>
                   </Col>
@@ -654,9 +699,9 @@ const Newcompany = () => {
                   <Col span={24}>
                     <Form.Item name={'social_instragram'}>
                       {Editdata?.mode == 'view' ? (
-                        <Input disabled autoComplete='off' />
+                        <Input disabled autoComplete="off" />
                       ) : (
-                        <Input autoComplete='off' />
+                        <Input autoComplete="off" />
                       )}
                     </Form.Item>
                   </Col>
@@ -670,9 +715,9 @@ const Newcompany = () => {
                   <Col span={24}>
                     <Form.Item name={'social_line'}>
                       {Editdata?.mode == 'view' ? (
-                        <Input disabled autoComplete='off' />
+                        <Input disabled autoComplete="off" />
                       ) : (
-                        <Input autoComplete='off' />
+                        <Input autoComplete="off" />
                       )}
                     </Form.Item>
                   </Col>
@@ -702,7 +747,8 @@ const Newcompany = () => {
                       backgroundColor: token.token.colorPrimary,
                     }}
                   >
-                    เลือกไฟล์เอกสาร</Button>
+                    เลือกไฟล์เอกสาร
+                  </Button>
                 ) : (
                   <Button
                     type="primary"
@@ -712,22 +758,26 @@ const Newcompany = () => {
                       backgroundColor: token.token.colorPrimary,
                     }}
                   >
-                    เลือกไฟล์เอกสาร</Button>
+                    เลือกไฟล์เอกสาร
+                  </Button>
                 )}
               </Form.Item>
             </Col>
             <Col xs={24} sm={18} md={6} lg={8} xl={6}>
               <Form.Item>
                 {Editdata?.mode == 'view' ? (
-                  <Input disabled autoComplete='off' />
+                  <Input disabled autoComplete="off" />
                 ) : (
-                  <Input autoComplete='off' />
+                  <Input autoComplete="off" />
                 )}
               </Form.Item>
             </Col>
             <Col xs={24} sm={6} md={6} lg={6} xl={1}>
               {Editdata?.mode == 'view' ? (
-                <Button disabled className="flex flex-row items-center text-2xl">
+                <Button
+                  disabled
+                  className="flex flex-row items-center text-2xl"
+                >
                   <RiCloseFill />
                 </Button>
               ) : (
@@ -748,7 +798,8 @@ const Newcompany = () => {
                       backgroundColor: token.token.colorPrimary,
                     }}
                   >
-                    เลือกไฟล์เอกสาร</Button>
+                    เลือกไฟล์เอกสาร
+                  </Button>
                 ) : (
                   <Button
                     type="primary"
@@ -758,23 +809,26 @@ const Newcompany = () => {
                       backgroundColor: token.token.colorPrimary,
                     }}
                   >
-                    เลือกไฟล์เอกสาร</Button>
+                    เลือกไฟล์เอกสาร
+                  </Button>
                 )}
-
               </Form.Item>
             </Col>
             <Col xs={24} sm={18} md={6} lg={8} xl={6}>
               <Form.Item>
                 {Editdata?.mode == 'view' ? (
-                  <Input disabled autoComplete='off' />
+                  <Input disabled autoComplete="off" />
                 ) : (
-                  <Input autoComplete='off' />
+                  <Input autoComplete="off" />
                 )}
               </Form.Item>
             </Col>
             <Col xs={24} sm={6} md={6} lg={6} xl={1}>
               {Editdata?.mode == 'view' ? (
-                <Button disabled className="flex flex-row items-center text-2xl">
+                <Button
+                  disabled
+                  className="flex flex-row items-center text-2xl"
+                >
                   <RiCloseFill />
                 </Button>
               ) : (

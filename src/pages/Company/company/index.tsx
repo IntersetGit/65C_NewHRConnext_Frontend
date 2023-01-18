@@ -76,7 +76,7 @@ const Companyniti: React.FC = () => {
 
   const onMenuClick = (event: any, record: any) => {
     const { key } = event;
-    console.log(record)
+    console.log(record);
     if (key === 'edit') {
       navigate(`newCompany?id=${record?.id}`, {
         state: { ...record, mode: 'edit' },
@@ -99,29 +99,22 @@ const Companyniti: React.FC = () => {
         if (result.isConfirmed) {
           deletecomapany({
             variables: {
-              deleteComBaranceId: record?.id
-            }
-          }).then((val) => {
-            console.log(val);
-            if (val?.data?.deleteComBarance?.status) {
-              Swal.fire(
-                `ลบข้อมูลบริษัทสำเร็จ!`,
-                '',
-                'success',
-              );
-              refetch();
-            }
-          }).catch((err) => {
-            Swal.fire(
-              `ลบข้อมูลบริษัทไม่สำเร็จ!`,
-              '',
-              'error',
-            );
-            console.error(err);
-          });
+              deleteComBaranceId: record?.id,
+            },
+          })
+            .then((val) => {
+              console.log(val);
+              if (val?.data?.deleteComBarance?.status) {
+                Swal.fire(`ลบข้อมูลบริษัทสำเร็จ!`, '', 'success');
+                refetch();
+              }
+            })
+            .catch((err) => {
+              Swal.fire(`ลบข้อมูลบริษัทไม่สำเร็จ!`, '', 'error');
+              console.error(err);
+            });
         }
-      })
-
+      });
     }
   };
 
@@ -165,6 +158,14 @@ const Companyniti: React.FC = () => {
       title: 'ชื่อบริษัท/สาขา',
       dataIndex: 'name',
       align: 'center',
+      render: (_, rec) => {
+        console.log('Hello');
+        return (
+          <p>
+            {data?.company?.name} {_}
+          </p>
+        );
+      },
     },
     {
       title: 'จำนวนพนักงาน',
