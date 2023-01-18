@@ -29,6 +29,7 @@ const GQL_QUERY = gql(
       }
       acess
       reAccess
+      reFresh
     }
   }
   `,
@@ -54,6 +55,13 @@ const BaseLayout: React.FC<BaseLayoutProps> = (props) => {
 
           if (data?.acess && data?.reAccess) {
             cookie.set('access', data?.reAccess, {
+              sameSite: 'lax',
+              path: '/',
+            });
+          }
+
+          if (data?.acess && data?.reFresh) {
+            cookie.set('refresh_token', data?.reFresh, {
               sameSite: 'lax',
               path: '/',
             });
