@@ -21,6 +21,7 @@ import { ColumnsType } from 'antd/es/table';
 import { RiCommunityLine } from 'react-icons/ri';
 import edit from '../../../assets/Edit.png';
 import Del from '../../../assets/DEL.png';
+import view from '../../../assets/View.png';
 import { useNavigate } from 'react-router-dom';
 import { FETCH_GETALLROLE } from '../../../service/graphql/Role';
 import { useQuery, useMutation } from '@apollo/client';
@@ -29,7 +30,6 @@ import Swal from 'sweetalert2';
 import { Role_Company } from '../../../__generated__/graphql';
 
 const { useToken } = theme;
-
 interface DataType {
   key: React.Key;
   name: string;
@@ -45,23 +45,13 @@ mutation Mutation($data: createRoleCompanyGroup!) {
   }
 `);
 
-const data: DataType[] = [
-  {
-    key: 1,
-    name: 'Company Admin',
-    status: 'เปิดใช้งาน',
-  },
-  {
-    key: 2,
-    name: 'Finance',
-    status: 'ปิดใช้งาน',
-  },
-  {
-    key: 3,
-    name: 'Employee',
-    status: 'เปิดใช้งาน',
-  },
-];
+const DELETE_ROLE = gql(`
+mutation DeleteRoleCompany($deleteRoleCompanyId: ID!) {
+  deleteRoleCompany(id: $deleteRoleCompanyId) {
+    message
+    status
+  }
+}`);
 
 const onChange = (checked: boolean) => {
   console.log(`switch to ${checked}`);
@@ -73,6 +63,7 @@ const Manageuser: React.FC = () => {
   const navigate = useNavigate();
   const [form] = Form.useForm();
   const { data: userData, refetch } = useQuery(FETCH_GETALLROLE);
+  const [deleteRole] = useMutation(DELETE_ROLE);
   const [createRole] = useMutation(CREATE_ROLE);
   const [drawerType, setdrawerType] = useState(1);
   const [selectedrow, setselectedrow] = useState<Role_Company>();
@@ -94,12 +85,12 @@ const Manageuser: React.FC = () => {
         onClick: (e: any) => onMenuClick(e, record),
         icon: <img style={{ width: '17px', height: '17px' }} src={edit} />,
       },
-      // {
-      //   key: 'view',
-      //   label: 'ดู',
-      //   onClick: (e: any) => onMenuClick(e, record),
-      //   // icon: <img style={{ width: '17px', height: '17px' }} src={} />,
-      // },
+      {
+        key: 'view',
+        label: 'ดู',
+        onClick: (e: any) => onMenuClick(e, record),
+        icon: <img style={{ width: '17px', height: '17px' }} src={view} />,
+      },
       {
         key: 'delete',
         label: 'ลบข้อมูล',
@@ -148,6 +139,34 @@ const Manageuser: React.FC = () => {
     } else if (key === 'view') {
       showDrawer(3);
     } else if (key === 'delete') {
+      Swal.fire({
+        title: `ยืนยันการลบข้อมูล Role`,
+        icon: 'warning',
+        showDenyButton: true,
+        showCancelButton: false,
+        confirmButtonColor: token.token.colorPrimary,
+        denyButtonColor: '#ea4e4e',
+        confirmButtonText: 'ตกลง',
+        denyButtonText: `ยกเลิก`,
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          deleteRole({
+            variables: {
+              deleteRoleCompanyId: record.id,
+            },
+          })
+            .then((val) => {
+              if (val.data?.deleteRoleCompany?.status) {
+                Swal.fire(`ลบข้อมูล Role สำเร็จ!`, '', 'success');
+                refetch();
+              }
+            })
+            .catch((err) => {
+              Swal.fire(`ลบข้อมูล Role ไม่สำเร็จ!`, '', 'error');
+              console.error(err);
+            });
+        }
+      });
     }
   };
 
@@ -173,7 +192,7 @@ const Manageuser: React.FC = () => {
               .then((val) => {
                 console.log(val);
                 if (val.data?.createRoleCompany?.status) {
-                  Swal.fire(`เพิ่มข้อมูล Roel สำเร็จ!`, '', 'success');
+                  Swal.fire(`เพิ่มข้อมูล Role สำเร็จ!`, '', 'success');
                   setOpen(false);
                   refetch();
                 }
@@ -203,7 +222,7 @@ const Manageuser: React.FC = () => {
               .then((val) => {
                 console.log(val);
                 if (val.data?.createRoleCompany?.status) {
-                  Swal.fire(`แก้ไขข้อมูล Roel สำเร็จ!`, '', 'success');
+                  Swal.fire(`แก้ไขข้อมูล Role สำเร็จ!`, '', 'success');
                   setOpen(false);
                   refetch();
                 }
@@ -255,7 +274,13 @@ const Manageuser: React.FC = () => {
             + เพิ่มกลุ่มผู้ใช้งาน
           </Button>
           <Drawer
-            // title="เพิ่มกลุ่มผู้ใช้งาน"
+            title={`${
+              drawerType == 1
+                ? 'เพิ่มสิทธ์ผู้ใช้งาน'
+                : drawerType == 2
+                ? 'แก้ไขสิทธ์ผู้ใช้งาน'
+                : 'ดูสิทธ์ผู้ใช้งาน'
+            }`}
             headerStyle={{ textAlign: 'center' }}
             placement="right"
             width="40%"
@@ -263,20 +288,39 @@ const Manageuser: React.FC = () => {
             open={open}
           >
             <Form layout="vertical" form={form} onFinish={onFinish}>
-              <div className="relative flex flex-row items-center py-2">
+              {/* <div className="relative flex flex-row items-center py-2">
                 <span className="ml-4 text-lg tracking-wide truncate">
                   เพิ่มสิทธิ์ผู้ใช้งาน
                 </span>
-              </div>
+              </div> */}
               <Card>
                 <Col xl={24} lg={24} md={24} sm={24} xs={24}>
-                  <Form.Item name={'name'} label={'สิทธิ์ผู้ใช้งาน'}>
-                    <Input />
-                  </Form.Item>
+                  {drawerType == 3 ? (
+                    <Form.Item name={'name'} label={'สิทธิ์ผู้ใช้งาน'}>
+                      <Input disabled />
+                    </Form.Item>
+                  ) : (
+                    <Form.Item name={'name'} label={'สิทธิ์ผู้ใช้งาน'}>
+                      <Input />
+                    </Form.Item>
+                  )}
                 </Col>
                 <Col xl={24} lg={24} md={24} sm={24} xs={24}>
                   <Form.Item name={'status'} label={'สถานะ'}>
-                    <Switch defaultChecked onChange={onChange} />
+                    {drawerType == 3 ? (
+                      <Switch
+                        className="bg-gray-600"
+                        defaultChecked
+                        onChange={onChange}
+                        disabled
+                      />
+                    ) : (
+                      <Switch
+                        className="bg-gray-600"
+                        defaultChecked
+                        onChange={onChange}
+                      />
+                    )}
                   </Form.Item>
                 </Col>
               </Card>

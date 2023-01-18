@@ -21,6 +21,7 @@ const documents = {
     "\nmutation CreateAccountUser($data: CreateAccountUserInput!) {\n  createAccountUser(data: $data) {\n    message\n    status\n  }\n}": types.CreateAccountUserDocument,
     "\n  mutation Login($data: LoginaInput!) {\n    login(data: $data) {\n      access_token\n      refresh_token\n      status\n    }\n  }\n": types.LoginDocument,
     "\nmutation Mutation($data: createRoleCompanyGroup!) {\n    createRoleCompany(data: $data) {\n      message\n      status\n    }\n  }\n": types.MutationDocument,
+    "\nmutation DeleteRoleCompany($deleteRoleCompanyId: ID!) {\n  deleteRoleCompany(id: $deleteRoleCompanyId) {\n    message\n    status\n  }\n}": types.DeleteRoleCompanyDocument,
     "\n  mutation CreateAccount($data: CreateAccountInput!) {\n    createAccount(data: $data) {\n      status\n      message\n  }\n}": types.CreateAccountDocument,
     "\n  query Query($companyname: String!) {\n  verifyCompanycode(companyname: $companyname)\n}\n": types.QueryDocument,
     "\nquery GetownCompany {\n  getownCompany {\n    redirect\n    isOwner\n    company {\n      companyCode\n      icon\n      id\n      name\n    }\n    companies {\n      companyCode\n      icon\n      id\n      name\n    }\n  }\n}\n": types.GetownCompanyDocument,
@@ -65,6 +66,10 @@ export function gql(source: "\n  mutation Login($data: LoginaInput!) {\n    logi
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(source: "\nmutation Mutation($data: createRoleCompanyGroup!) {\n    createRoleCompany(data: $data) {\n      message\n      status\n    }\n  }\n"): (typeof documents)["\nmutation Mutation($data: createRoleCompanyGroup!) {\n    createRoleCompany(data: $data) {\n      message\n      status\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\nmutation DeleteRoleCompany($deleteRoleCompanyId: ID!) {\n  deleteRoleCompany(id: $deleteRoleCompanyId) {\n    message\n    status\n  }\n}"): (typeof documents)["\nmutation DeleteRoleCompany($deleteRoleCompanyId: ID!) {\n  deleteRoleCompany(id: $deleteRoleCompanyId) {\n    message\n    status\n  }\n}"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

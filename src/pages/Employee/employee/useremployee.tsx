@@ -39,6 +39,7 @@ import axios from 'axios';
 import Swal from 'sweetalert2';
 import moment from 'moment';
 import { GET_PROVINCE } from '../../../service/graphql/Province';
+import type { CheckboxChangeEvent } from 'antd/es/checkbox';
 
 const { useToken } = theme;
 
@@ -88,8 +89,6 @@ type RegisterEmployeeType = {
   staff_status: string;
 };
 
-
-
 const CREATE_EMPLOYEE_ACCOUNT = gql(`
 mutation CreateAccountUser($data: CreateAccountUserInput!) {
   createAccountUser(data: $data) {
@@ -123,8 +122,6 @@ const UserEmployee: React.FC = (props) => {
   const [createEmployeeAccount] = useMutation(CREATE_EMPLOYEE_ACCOUNT);
   let propsstate = location.state as any;
 
-  console.log(propsstate);
-
   useEffect(() => {
     AllCounrty();
     if (propsstate?.mode) {
@@ -156,7 +153,7 @@ const UserEmployee: React.FC = (props) => {
   const province = province_data?.getProvince?.map((e) => {
     return {
       label: e?.name,
-      value: e?.name,
+      value: e?.id,
     };
   });
 
@@ -165,11 +162,11 @@ const UserEmployee: React.FC = (props) => {
     form.setFieldValue('citizen_state', null);
     form.setFieldValue('citizen_zipcode', null);
     const district = province_data?.getProvince
-      ?.find((e) => e?.name === value)
+      ?.find((e) => e?.id === value)
       ?.district?.map((e) => {
         return {
           label: e?.name,
-          value: e?.name,
+          value: e?.id,
         };
       });
     setDistrict(district ? district : []);
@@ -179,12 +176,12 @@ const UserEmployee: React.FC = (props) => {
     form.setFieldValue('citizen_state', null);
     form.setFieldValue('citizen_zipcode', null);
     const amphoe = province_data?.getProvince
-      ?.find((e) => e?.district?.find((_e) => _e?.name === value))
-      ?.district?.find((e) => e?.name === value)
+      ?.find((e) => e?.district?.find((_e) => _e?.id === value))
+      ?.district?.find((e) => e?.id === value)
       ?.amphoe?.map((e) => {
         return {
           label: e?.name,
-          value: e?.name,
+          value: e?.id,
         };
       });
     setAmphoe(amphoe ? amphoe : []);
@@ -193,12 +190,10 @@ const UserEmployee: React.FC = (props) => {
   const onAmphoeChangeCitizen = (value: string) => {
     const zipCode = province_data?.getProvince
       ?.find((e) =>
-        e?.district?.find((_e) =>
-          _e?.amphoe?.find((__e) => __e?.name === value),
-        ),
+        e?.district?.find((_e) => _e?.amphoe?.find((__e) => __e?.id === value)),
       )
-      ?.district?.find((e) => e?.amphoe?.find((_e) => _e?.name === value))
-      ?.amphoe?.find((e) => e?.name === value)?.zipcode;
+      ?.district?.find((e) => e?.amphoe?.find((_e) => _e?.id === value))
+      ?.amphoe?.find((e) => e?.id === value)?.zipcode;
 
     form.setFieldValue('citizen_zipcode', zipCode);
   };
@@ -208,11 +203,11 @@ const UserEmployee: React.FC = (props) => {
     form.setFieldValue('contract_state', null);
     form.setFieldValue('contract_zipcode', null);
     const district = province_data?.getProvince
-      ?.find((e) => e?.name === value)
+      ?.find((e) => e?.id === value)
       ?.district?.map((e) => {
         return {
           label: e?.name,
-          value: e?.name,
+          value: e?.id,
         };
       });
     setDistrictContract(district ? district : []);
@@ -222,12 +217,12 @@ const UserEmployee: React.FC = (props) => {
     form.setFieldValue('contract_state', null);
     form.setFieldValue('contract_zipcode', null);
     const amphoe = province_data?.getProvince
-      ?.find((e) => e?.district?.find((_e) => _e?.name === value))
-      ?.district?.find((e) => e?.name === value)
+      ?.find((e) => e?.district?.find((_e) => _e?.id === value))
+      ?.district?.find((e) => e?.id === value)
       ?.amphoe?.map((e) => {
         return {
           label: e?.name,
-          value: e?.name,
+          value: e?.id,
         };
       });
     setAmphoeContract(amphoe ? amphoe : []);
@@ -236,14 +231,38 @@ const UserEmployee: React.FC = (props) => {
   const onAmphoeChangeContract = (value: string) => {
     const zipCode = province_data?.getProvince
       ?.find((e) =>
-        e?.district?.find((_e) =>
-          _e?.amphoe?.find((__e) => __e?.name === value),
-        ),
+        e?.district?.find((_e) => _e?.amphoe?.find((__e) => __e?.id === value)),
       )
-      ?.district?.find((e) => e?.amphoe?.find((_e) => _e?.name === value))
-      ?.amphoe?.find((e) => e?.name === value)?.zipcode;
+      ?.district?.find((e) => e?.amphoe?.find((_e) => _e?.id === value))
+      ?.amphoe?.find((e) => e?.id === value)?.zipcode;
 
     form.setFieldValue('contract_zipcode', zipCode);
+  };
+
+  const checkBoxOnChange = (e: CheckboxChangeEvent) => {
+    const value = form.getFieldsValue();
+    if (e.target.checked == true) {
+      onProvinceChangeContract(value.citizen_province);
+      onDistrictChangeContract(value.citizen_district);
+      onAmphoeChangeContract(value.citizen_state);
+      form.setFieldsValue({
+        contract_addressnumber: value.citizen_addressnumber,
+        contract_address: value.citizen_address,
+        contract_province: value.citizen_province,
+        contract_district: value.citizen_district,
+        contract_state: value.citizen_state,
+        contract_zipcode: value.citizen_zipcode,
+      });
+    } else {
+      form.setFieldsValue({
+        contract_addressnumber: '',
+        contract_address: '',
+        contract_province: '',
+        contract_district: '',
+        contract_state: '',
+        contract_zipcode: '',
+      });
+    }
   };
 
   const propsupload: UploadProps = {
@@ -921,7 +940,7 @@ const UserEmployee: React.FC = (props) => {
             style={{ color: token.token.colorPrimary }}
           >
             ที่อยู่ ที่สามารถติดต่อได้
-            <Checkbox className="ml-2">
+            <Checkbox onChange={checkBoxOnChange} className="ml-2">
               ที่อยู่ที่เดียวกับ ที่อยู่ตามบัตรประจำตัวประชาชน
             </Checkbox>
           </span>
