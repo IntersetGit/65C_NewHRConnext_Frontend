@@ -14,6 +14,7 @@ import {
     Drawer,
     Input,
 } from "antd";
+import TableHoliday from '../HolidayCalendar/tableholiday'
 import edit from '../../../assets/Edit.png';
 import Del from '../../../assets/DEL.png';
 import View from '../../../assets/View.png';
@@ -101,7 +102,11 @@ const Holidaypage: React.FC = () => {
     const [open, setOpen] = useState(false);
     const [form] = Form.useForm();
 
-    const showDrawer = () => {
+    const showDraweryear = () => {
+        setOpen(true);
+    };
+
+    const showDrawerday = () => {
         setOpen(true);
     };
 
@@ -160,7 +165,7 @@ const Holidaypage: React.FC = () => {
                                             marginBottom: '10px',
                                             backgroundColor: token.token.colorPrimary,
                                         }}
-                                        onClick={showDrawer}
+                                        onClick={showDraweryear}
                                     >
                                         + เพิ่มวันหยุดรายปี
                                     </Button>
@@ -222,7 +227,8 @@ const Holidaypage: React.FC = () => {
                                                     <Input />
                                                 </Col>
                                             </Row>
-                                            <Table<DataSourceType> dataSource={dataSources} columns={columns} />
+                                            <TableHoliday />
+
                                             <Space className='flex justify-center'>
                                                 <Button
                                                     htmlType="submit"
@@ -257,15 +263,23 @@ const Holidaypage: React.FC = () => {
                                             marginBottom: '10px',
                                             backgroundColor: token.token.colorPrimary,
                                         }}
+                                        onClick={showDrawerday}
                                     >
-                                        + เพิ่มวันหยุดรายวัน+
+                                        + เพิ่มวันหยุดรายวัน
                                     </Button>
+                                    <Drawer>
+
+                                    </Drawer>
                                 </Col>
                             </Space>
 
                         </div>
                     </Row>
                     <Table<DataSourceType> dataSource={dataSources} columns={columns} />
+                </Card>
+
+                <Card className="shadow-md mb-3">
+                    <TableHoliday />
                 </Card>
             </Form>
         </>

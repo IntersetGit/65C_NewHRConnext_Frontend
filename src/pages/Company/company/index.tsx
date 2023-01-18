@@ -16,12 +16,14 @@ import Del from '../../../assets/DEL.png';
 import View from '../../../assets/View.png';
 import { RiCommunityLine } from 'react-icons/ri';
 import { gql } from '../../../__generated__/gql';
-import { useQuery } from '@apollo/client';
+import { useQuery, useMutation } from '@apollo/client';
 import Spinner from '../../../components/Spinner';
 import type { ColumnsType } from 'antd/es/table';
+import { DELETE_COMPANY } from '../../../service/graphql/Company';
 import { CompanyQuery } from '../../../__generated__/graphql';
 import { useNavigate } from 'react-router-dom';
 import { MoreOutlined } from '@ant-design/icons';
+import Swal from 'sweetalert2';
 
 const { useToken } = theme;
 
@@ -69,6 +71,7 @@ const GET_COMPANY = gql(/* GraphQL */ `
 const Companyniti: React.FC = () => {
   const token = useToken();
   const { loading, data, refetch } = useQuery(GET_COMPANY);
+  const [deletecomapany] = useMutation(DELETE_COMPANY);
   const navigate = useNavigate();
 
   const onMenuClick = (event: any, record: any) => {
@@ -83,9 +86,42 @@ const Companyniti: React.FC = () => {
         state: { ...record, mode: 'view' },
       });
     } else if (key === 'delete') {
-      navigate(`newCompany?id=${record.id}`, {
-        state: { ...record, mode: 'delete' },
-      });
+      Swal.fire({
+        title: `ลบข้อมูลบริษัท!`,
+        icon: 'warning',
+        showDenyButton: true,
+        showCancelButton: false,
+        confirmButtonColor: token.token.colorPrimary,
+        denyButtonColor: '#ea4e4e',
+        confirmButtonText: 'ตกลง',
+        denyButtonText: `ยกเลิก`,
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          deletecomapany({
+            variables: {
+              deleteComBaranceId: record?.id
+            }
+          }).then((val) => {
+            console.log(val);
+            if (val?.data?.deleteComBarance?.status) {
+              Swal.fire(
+                `ลบข้อมูลบริษัทสำเร็จ!`,
+                '',
+                'success',
+              );
+              refetch();
+            }
+          }).catch((err) => {
+            Swal.fire(
+              `ลบข้อมูลบริษัทไม่สำเร็จ!`,
+              '',
+              'error',
+            );
+            console.error(err);
+          });
+        }
+      })
+
     }
   };
 

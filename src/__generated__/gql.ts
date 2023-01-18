@@ -25,6 +25,7 @@ const documents = {
     "\n  query Query($companyname: String!) {\n  verifyCompanycode(companyname: $companyname)\n}\n": types.QueryDocument,
     "\nquery GetownCompany {\n  getownCompany {\n    redirect\n    isOwner\n    company {\n      companyCode\n      icon\n      id\n      name\n    }\n    companies {\n      companyCode\n      icon\n      id\n      name\n    }\n  }\n}\n": types.GetownCompanyDocument,
     "\nmutation CreateAndUpdateComBarance($data: createCompanyBranch!) {\n  createAndUpdateComBarance(data: $data) {\n    message\n    status\n  }\n}\n": types.CreateAndUpdateComBaranceDocument,
+    "\nmutation DeleteComBarance($deleteComBaranceId: ID!) {\n  deleteComBarance(id: $deleteComBaranceId) {\n    message\n    status\n  }\n}\n": types.DeleteComBaranceDocument,
     "\nquery GetcompanyRole {\n    getcompanyRole {\n      access\n      id\n      name\n      status\n    }\n  }\n": types.GetcompanyRoleDocument,
     "\n  query GetcompanyRoleManagement {\n    getcompanyRole {\n      access\n      id\n      name\n  }\n}": types.GetcompanyRoleManagementDocument,
     "\n  mutation updateRoleCompanyManagement($data: [UpdateRoleCompanyMangementType!]!) {\n    updateRoleCompanyMangement(data: $data) {\n      message\n      status\n    }\n  }\n": types.UpdateRoleCompanyManagementDocument,
@@ -79,6 +80,10 @@ export function gql(source: "\nquery GetownCompany {\n  getownCompany {\n    red
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(source: "\nmutation CreateAndUpdateComBarance($data: createCompanyBranch!) {\n  createAndUpdateComBarance(data: $data) {\n    message\n    status\n  }\n}\n"): (typeof documents)["\nmutation CreateAndUpdateComBarance($data: createCompanyBranch!) {\n  createAndUpdateComBarance(data: $data) {\n    message\n    status\n  }\n}\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\nmutation DeleteComBarance($deleteComBaranceId: ID!) {\n  deleteComBarance(id: $deleteComBaranceId) {\n    message\n    status\n  }\n}\n"): (typeof documents)["\nmutation DeleteComBarance($deleteComBaranceId: ID!) {\n  deleteComBarance(id: $deleteComBaranceId) {\n    message\n    status\n  }\n}\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

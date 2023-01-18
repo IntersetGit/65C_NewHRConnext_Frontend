@@ -29,3 +29,12 @@ mutation CreateAndUpdateComBarance($data: createCompanyBranch!) {
   }
 }
 `);
+
+export const DELETE_COMPANY = gql(`
+mutation DeleteComBarance($deleteComBaranceId: ID!) {
+  deleteComBarance(id: $deleteComBaranceId) {
+    message
+    status
+  }
+}
+`);
