@@ -29,37 +29,37 @@ export default function NodeStructure({ titleNodes, title, onAddChild, onDelhild
     return (
         <div className='card-tree'>
             <span>{titleNodes}: </span> <span>{title}</span>
-            <div className='toolbox' >
-                {onDelhild &&
-                    <Tooltip title="ลบ">
-                        <ItemTool color='red'>
-                            <IoTrashBin onClick={onDelhild} style={{
+                <div className='toolbox' >
+                    {onDelhild &&
+                        <Tooltip title="ลบ">
+                            <ItemTool color='red'>
+                                <IoTrashBin onClick={onDelhild} style={{
+                                    fontSize: '18px',
+                                    color: 'white',
+                                }} />
+                            </ItemTool>
+                        </Tooltip>
+                    }
+                    {onEditChild &&
+                        <Tooltip title="แก้ไข"><ItemTool color='#F95'>
+                            <IoPencil onClick={onEditChild} style={{
+                                fontSize: '18px',
+                                color: 'white',
+                            }} />
+                        </ItemTool></Tooltip>
+                    }
+                    {onAddChild &&
+                        <Tooltip title="เพิ่ม"><ItemTool>
+                            <IoDuplicate onClick={onAddChild} style={{
                                 fontSize: '18px',
                                 color: 'white',
                             }} />
                         </ItemTool>
-                    </Tooltip>
-                }
-                {!onEditChild &&
-                    <Tooltip title="แก้ไข"><ItemTool color='#F95'>
-                        <IoPencil style={{
-                            fontSize: '18px',
-                            color: 'white',
-                        }} />
-                    </ItemTool></Tooltip>
-                }
-                {onAddChild &&
-                    <Tooltip title="เพิ่ม"><ItemTool>
-                        <IoDuplicate onClick={onAddChild} style={{
-                            fontSize: '18px',
-                            color: 'white',
-                        }} />
-                    </ItemTool>
-                    </Tooltip>
-                }
+                        </Tooltip>
+                    }
 
 
-            </div>
+                </div>
         </div>
     )
 }

@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { RiCommunityLine } from 'react-icons/ri';
+import { IoSwapVerticalOutline } from 'react-icons/io5';
+
 import {
     Button,
     Card,
@@ -19,6 +21,7 @@ import type { DataNode, TreeProps } from 'antd/es/tree';
 import styled from 'styled-components';
 import NodeStructure from './component/NodeStructure';
 import { faker } from '@faker-js/faker';
+import Swal from 'sweetalert2';
 
 const { TreeNode } = Tree
 
@@ -52,6 +55,30 @@ const StyledTree = styled(Tree)`
  :where(.css-dev-only-do-not-override-b7k9jm)[class^="ant-tree"] [class^="ant-tree"], :where(.css-dev-only-do-not-override-b7k9jm)[class*=" ant-tree"] [class^="ant-tree"] {
         overflow: hidden;
   }
+  .ant-tree-indent-unit:before {
+    position: absolute;
+    top: 0;
+    inset-inline-end: 12px;
+    bottom: -4px;
+    border-inline-end: 1px solid gray;
+    content: "";
+  }
+  .ant-tree-switcher-leaf-line:before {
+    position: absolute;
+    top: 0;
+    inset-inline-end: 12px;
+    bottom: -4px;
+    margin-inline-start: -1px;
+    border-inline-end: 1px solid gray;
+    content: "";
+  }
+  .ant-tree-switcher-leaf-line:after {
+    position: absolute;
+    width: 9.600000000000001px;
+    height: 12px;
+    border-bottom: 1px solid gray;
+    content: "";
+ }
 `
 const StyledTreeCompany = styled(StyledTree)`
     .ant-tree-switcher-noop {
@@ -95,13 +122,15 @@ const generateData = (_level: number, _preKey?: React.Key, _tns?: DataNode[]) =>
     });
 };
 generateData(z);
-console.log('defaultData :>> ', defaultData);
 
 const CompanyStructure: React.FC = () => {
     const { useToken } = theme;
+    const [form] = Form.useForm();
+    const [formEdit] = Form.useForm();
     const token = useToken();
     const [open, setOpen] = useState(false);
-    const [dataStructure, setDataStructure] = useState(undefined);
+    const [open2, setOpen2] = useState(false);
+    const [dataStructure, setDataStructure] = useState<any>(undefined);
     const [treestructure, setTreestructure] = useState(defaultData);
     const [treecompany, setTreecompany] = useState([
         {
@@ -337,7 +366,7 @@ const CompanyStructure: React.FC = () => {
             if (item?.children) {
                 return (
                     <TreeNode title={
-                        <NodeStructure titleNodes={titlenode} title={item.title} />
+                        <NodeStructure titleNodes={titlenode} title={item.title} onDelhild={() => delChildStructure(text)} onEditChild={() => EditChildStructure(text)} />
                     } key={item.key} data={item} >
                         {renderTreeNodesStructure(item.children, keysindex)}
                         <TreeNode disabled key={`add ${keysindex}`} title={
@@ -356,32 +385,68 @@ const CompanyStructure: React.FC = () => {
                 )
             }
             return (<TreeNode key={item.key} title={
-                <NodeStructure onDelhild={() => delChildStructure(text)} titleNodes={titlenode} title={item?.title} onAddChild={!isNotChildeAndLast ? () => addChildStructure(text, true) : false} />
+                <NodeStructure titleNodes={titlenode} title={item?.title} onDelhild={() => delChildStructure(text)} onEditChild={() => EditChildStructure(text)} onAddChild={!isNotChildeAndLast ? () => addChildStructure(text, true) : false} />
             } data={item}></TreeNode>)
         })
     }
     const delChildStructure = (key: any, child = false) => {
-        let KeysPosition = (key.toString()).split('-');
-        let kut = KeysPosition.slice(1)
-        let a: any = treestructure
-        let current: any = a;
-        for (let i = 0; i < kut.length - 1; i++) {
-            let index = kut[i];
-            current = current[index]?.children || current[index];
-        }
-        let deleteIndex = kut[kut.length - 1];
-        current.splice(deleteIndex, 1);
-        setTreestructure([...a]);
+        Swal.fire({
+            title: 'คุณต้องการลบ?',
+            text: "โปรดตรวจสอบให้แน่ใจว่าคุณต้องการลบโนดต่อไปนี้!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'ลบ!',
+            cancelButtonText: 'ยกเลิก',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                let KeysPosition = (key.toString()).split('-');
+                let kut = KeysPosition.slice(1)
+                let a: any = treestructure
+                let current: any = a;
+                for (let i = 0; i < kut.length - 1; i++) {
+                    let index = kut[i];
+                    current = current[index]?.children || current[index];
+                }
+                let deleteIndex = kut[kut.length - 1];
+                current.splice(deleteIndex, 1);
+                setTreestructure([...a]);
+                Swal.fire(
+                    'ลบข้อมูลสำเร็จ!',
+                    '',
+                    'success'
+                )
+            }
+        })
+
     }
     const addChildStructure = (key: any, child = false) => {
         setOpen(true);
         setDataStructure({ key, child } as any);
-
     }
-    const onAddChildStructure = () => {
+    const EditChildStructure = (key: any, child = false) => {
+        setOpen2(true);
+        setDataStructure({ key, child } as any);
+        let KeysPosition = (key?.toString()).split('-');
+        let kut = KeysPosition.slice(1)
+        let current: any = treestructure;
+        for (let i = 0; i < kut.length; i++) {
+            let index = parseInt(kut[i], 10);
+            if (i == kut.length - 1) {
+                current = current[index];
+            } else {
+                current = current[index].children || current[index];
+            }
+        }
+        formEdit.setFieldsValue({ name_th: current.title })
+    }
+    const onAddChildStructure = (value: any) => {
+        form.resetFields();
+        const { key, child } = dataStructure;
         const randomName = faker.company.catchPhraseDescriptor();
         const randomUid = faker.datatype.uuid();
-        let KeysPosition = (dataStructure?.key.toString()).split('-');
+        let KeysPosition = (key?.toString()).split('-');
         let kut = KeysPosition.slice(1)
         // console.log('addChildStructure', KeysPosition);
         // console.log('kut', kut);
@@ -396,8 +461,29 @@ const CompanyStructure: React.FC = () => {
             }
         }
         // console.log('current', current)
-        current.push({ title: randomName, key: randomUid })
+        current.push({ title: value?.name_th, key: randomUid })
         setTreestructure([...a]);
+        setOpen(false);
+    }
+    const onEditChildStructure = (value: any) => {
+        formEdit.resetFields();
+        const { key, child } = dataStructure;
+        const randomUid = faker.datatype.uuid();
+        let KeysPosition = (key?.toString()).split('-');
+        let kut = KeysPosition.slice(1)
+        let a: any = treestructure
+        let current: any = a;
+        for (let i = 0; i < kut.length; i++) {
+            let index = parseInt(kut[i], 10);
+            if (i == kut.length - 1) {
+                current[index].title = value.name_th;
+                current[index].key = randomUid;
+            } else {
+                current = current[index].children || current[index];
+            }
+        }
+        setTreestructure([...a]);
+        setOpen2(false);
     }
     const addChildCompany = (key: any) => {
         const randomName = faker.commerce.department();
@@ -473,15 +559,18 @@ const CompanyStructure: React.FC = () => {
                         className="draggable-tree"
                         // defaultExpandAll
                         // defaultExpandedKeys={expandedKeys}
-                        draggable
+                        draggable={{
+                            icon: <IoSwapVerticalOutline  style={{
+                                fontSize: '18px',
+                                stroke: "#000",
+                            }} />
+                        }}
                         blockNode
                         // checkable
                         multiple
                         showLine
                         onDragEnter={onDragEnter}
                         onDrop={onDrop}
-
-                    // treeData={gData}
                     >
                         {renderTreeNodesStructure(treestructure, '0')}
                         <TreeNode disabled key={"add"} title={
@@ -503,9 +592,36 @@ const CompanyStructure: React.FC = () => {
                 </Col>
             </Row>
             <Drawer title="เพิ่ม" placement="right" onClose={() => setOpen(false)} open={open}>
-                <p>Some contents...</p>
-                <p>Some contents...</p>
-                <p>Some contents...</p>
+                <Form form={form} layout="vertical" onFinish={onAddChildStructure}>
+                    <Form.Item label="รหัส" name="number">
+                        <Input />
+                    </Form.Item>
+                    <Form.Item label="ชื่อโครงสร้างภาษาไทย" name="name_th">
+                        <Input />
+                    </Form.Item>
+                    <Button htmlType='submit' type='primary' style={{
+                        width: '100%',
+                        backgroundColor: token.token.colorPrimary,
+                    }}>
+                        บันทึก
+                    </Button>
+                </Form>
+            </Drawer>
+            <Drawer title="แก้ไข" placement="right" onClose={() => setOpen2(false)} open={open2}>
+                <Form form={formEdit} layout="vertical" onFinish={onEditChildStructure}>
+                    <Form.Item label="รหัส" name="number">
+                        <Input />
+                    </Form.Item>
+                    <Form.Item label="ชื่อโครงสร้างภาษาไทย" name="name_th">
+                        <Input />
+                    </Form.Item>
+                    <Button htmlType='submit' type='primary' style={{
+                        width: '100%',
+                        backgroundColor: token.token.colorPrimary,
+                    }}>
+                        บันทึก
+                    </Button>
+                </Form>
             </Drawer>
         </React.Fragment>
     )

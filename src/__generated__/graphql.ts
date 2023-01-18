@@ -560,7 +560,6 @@ export type ValidateRoute = {
   reFresh?: Maybe<Scalars['String']>;
 };
 
-
 export type CreateCompanyBranch = {
   address?: InputMaybe<Scalars['String']>;
   address_2?: InputMaybe<Scalars['String']>;

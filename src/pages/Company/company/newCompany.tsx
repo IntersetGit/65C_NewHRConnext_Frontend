@@ -173,6 +173,7 @@ const Newcompany = () => {
         <span style={{ position: 'absolute', right: '10px', height: '10px' }}>
           <Button
             type="primary"
+            onClick={()=> navigate('/:companycode/company/CompanyStructure')}
             style={{
               marginBottom: '10px',
               backgroundColor: token.token.colorPrimary,
