@@ -152,6 +152,12 @@ export type CreateAccountUserInput = {
   tel?: InputMaybe<Scalars['String']>;
 };
 
+export type CreateComapnyBranchResponseType = {
+  __typename?: 'CreateComapnyBranchResponseType';
+  message?: Maybe<Scalars['String']>;
+  status?: Maybe<Scalars['Boolean']>;
+};
+
 export type CreateCompanyResponseType = {
   __typename?: 'CreateCompanyResponseType';
   message?: Maybe<Scalars['String']>;
@@ -166,6 +172,12 @@ export type CreateRoleCompanyResponseType = {
 
 export type CreateUserResponseType = {
   __typename?: 'CreateUserResponseType';
+  message?: Maybe<Scalars['String']>;
+  status?: Maybe<Scalars['Boolean']>;
+};
+
+export type DeleteComapnyBranchResponseType = {
+  __typename?: 'DeleteComapnyBranchResponseType';
   message?: Maybe<Scalars['String']>;
   status?: Maybe<Scalars['Boolean']>;
 };
@@ -263,9 +275,12 @@ export type Mutation = {
   __typename?: 'Mutation';
   createAccount?: Maybe<CreateCompanyResponseType>;
   createAccountUser?: Maybe<CreateUserResponseType>;
+  createAndUpdateComBarance?: Maybe<CreateComapnyBranchResponseType>;
   createRoleCompany?: Maybe<CreateRoleCompanyResponseType>;
+  deleteComBarance?: Maybe<DeleteComapnyBranchResponseType>;
   login?: Maybe<LoginResponse>;
   refreshToken?: Maybe<RefreshtokenResponseType>;
+  updateRoleCompanyMangement?: Maybe<CreateRoleCompanyResponseType>;
   validateRoute?: Maybe<ValidateRoute>;
 };
 
@@ -280,13 +295,28 @@ export type MutationCreateAccountUserArgs = {
 };
 
 
+export type MutationCreateAndUpdateComBaranceArgs = {
+  data: CreateCompanyBranch;
+};
+
+
 export type MutationCreateRoleCompanyArgs = {
   data: CreateRoleCompanyGroup;
 };
 
 
+export type MutationDeleteComBaranceArgs = {
+  id: Scalars['ID'];
+};
+
+
 export type MutationLoginArgs = {
   data: LoginaInput;
+};
+
+
+export type MutationUpdateRoleCompanyMangementArgs = {
+  data: Array<UpdateRoleCompanyMangementType>;
 };
 
 
@@ -361,6 +391,7 @@ export type Province = {
 export type Query = {
   __typename?: 'Query';
   company?: Maybe<ResponseCompany>;
+  getAllcompany?: Maybe<Array<Maybe<CompanyBranch>>>;
   getProvince?: Maybe<Array<Maybe<Province>>>;
   getcompanyRole?: Maybe<Array<Maybe<Role_Company>>>;
   getownCompany?: Maybe<GetOwncompanytype>;
@@ -371,6 +402,11 @@ export type Query = {
 
 
 export type QueryCompanyArgs = {
+  name?: InputMaybe<Scalars['String']>;
+};
+
+
+export type QueryGetAllcompanyArgs = {
   name?: InputMaybe<Scalars['String']>;
 };
 
@@ -477,6 +513,11 @@ export type Role_Company = {
   users?: Maybe<Array<Maybe<User>>>;
 };
 
+export type UpdateRoleCompanyMangementType = {
+  access: Array<Scalars['JSON']>;
+  id: Scalars['ID'];
+};
+
 export type User = {
   __typename?: 'User';
   RoleCompanyID?: Maybe<Scalars['String']>;
@@ -504,6 +545,34 @@ export type ValidateRoute = {
   currentBranch?: Maybe<ResponseBranchValidateRouteType>;
   path?: Maybe<Scalars['String']>;
   reAccess?: Maybe<Scalars['String']>;
+};
+
+export type CreateCompanyBranch = {
+  address?: InputMaybe<Scalars['String']>;
+  address_2?: InputMaybe<Scalars['String']>;
+  city?: InputMaybe<Scalars['String']>;
+  companyId?: InputMaybe<Scalars['String']>;
+  company_type?: InputMaybe<Scalars['String']>;
+  country?: InputMaybe<Scalars['String']>;
+  createdAt?: InputMaybe<Scalars['Date']>;
+  email?: InputMaybe<Scalars['String']>;
+  email_2?: InputMaybe<Scalars['String']>;
+  fax?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['ID']>;
+  lat?: InputMaybe<Scalars['String']>;
+  lng?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  registeredamount?: InputMaybe<Scalars['String']>;
+  social_facebook?: InputMaybe<Scalars['String']>;
+  social_instragram?: InputMaybe<Scalars['String']>;
+  social_likedin?: InputMaybe<Scalars['String']>;
+  social_line?: InputMaybe<Scalars['String']>;
+  state?: InputMaybe<Scalars['String']>;
+  sub_company_type?: InputMaybe<Scalars['String']>;
+  tel?: InputMaybe<Scalars['String']>;
+  updatedAt?: InputMaybe<Scalars['Date']>;
+  website?: InputMaybe<Scalars['String']>;
+  zip?: InputMaybe<Scalars['String']>;
 };
 
 export type CreateRoleCompanyGroup = {

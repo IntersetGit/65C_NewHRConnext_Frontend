@@ -12,10 +12,13 @@ import {
     Space,
     theme,
     Tree,
-    TreeDataNode
+    TreeDataNode,
+    Drawer
 } from 'antd';
 import type { DataNode, TreeProps } from 'antd/es/tree';
 import styled from 'styled-components';
+import NodeStructure from './component/NodeStructure';
+import { faker } from '@faker-js/faker';
 
 const { TreeNode } = Tree
 
@@ -35,13 +38,20 @@ const StyledTree = styled(Tree)`
   .ant-tree-switcher_open {
     align-self: auto !important;
   }
+
   .ant-tree-treenode-disabled .ant-tree-node-content-wrapper {
     all: unset;
- }
+  }
+ .ant-tree-node-content-wrapper {
+    overflow:hidden;
+  }
   .ant-tree-treenode-draggable.ant-tree-treenode-disabled .ant-tree-draggable-icon {
     visibility: hidden;
     display: none;
-}
+ }
+ :where(.css-dev-only-do-not-override-b7k9jm)[class^="ant-tree"] [class^="ant-tree"], :where(.css-dev-only-do-not-override-b7k9jm)[class*=" ant-tree"] [class^="ant-tree"] {
+        overflow: hidden;
+  }
 `
 const StyledTreeCompany = styled(StyledTree)`
     .ant-tree-switcher-noop {
@@ -54,15 +64,8 @@ type AppProps = {
     title: string;
 };
 
-const OnRenderedNumberComponents = ({ number, title }: AppProps): JSX.Element => {
-    return (
-        <div key={number} style={{ border: '1px solid', borderRadius: 10, height: 50, width: '100%', backgroundColor: 'aquamarine', padding: 10, display: 'flex', alignItems: 'center' }}>
-            <span>ระดับ : {number ?? number}</span> <span>{title ?? title}</span>
-        </div>
-    )
-}
 
-const x = 2;
+const x = 1;
 const y = 1;
 const z = 1;
 const defaultData: DataNode[] = [];
@@ -70,15 +73,12 @@ const defaultData: DataNode[] = [];
 const generateData = (_level: number, _preKey?: React.Key, _tns?: DataNode[]) => {
     const preKey = _preKey || '0';
     const tns = _tns || defaultData;
-
+    const randomName = faker.company.catchPhraseDescriptor();
     const children: React.Key[] = [];
     for (let i = 0; i < x; i++) {
         const key = `${preKey}-${i}`;
         tns.push({
-            title:
-                <div draggable style={{ border: '1px solid', borderRadius: 10, height: 50, width: '100%', backgroundColor: 'aquamarine', padding: 10, display: 'flex', alignItems: 'center' }}>
-                    <span>ระดับ : </span> <span>{key}</span>
-                </div>
+            title: randomName
             , key
         });
         if (i < y) {
@@ -95,28 +95,33 @@ const generateData = (_level: number, _preKey?: React.Key, _tns?: DataNode[]) =>
     });
 };
 generateData(z);
-// console.log('defaultData :>> ', defaultData);
+console.log('defaultData :>> ', defaultData);
 
 const CompanyStructure: React.FC = () => {
     const { useToken } = theme;
     const token = useToken();
-    const [treestructure, serTreestructure] = useState(defaultData);
+    const [open, setOpen] = useState(false);
+    const [dataStructure, setDataStructure] = useState(undefined);
+    const [treestructure, setTreestructure] = useState(defaultData);
     const [treecompany, setTreecompany] = useState([
         {
-            title: <OnRenderedNumberComponents title='ฝ่าย' number={"1"} />, key: "1" ,data:{title:'ฝ่าย',number:"1"}
+            title: 'ฝ่าย', key: "1456", data: { title: 'ฝ่าย', number: "1" }
         },
         {
-            title: <OnRenderedNumberComponents title='แผนก' number={"2"} />, key: "2",data:{title:'แผนก',number:"2"}
+            title: 'แผนก', key: "245", data: { title: 'แผนก', number: "2" }
         },
         {
-            title: <OnRenderedNumberComponents title='สาขา' number={"3"} />, key: "3",data:{title:'สาขา',number:"3"}
+            title: 'สาขา', key: "3213", data: { title: 'สาขา', number: "3" }
         }
     ]);
-    const [expandedKeys] = useState(['0-0', '0-0-0', '0-0-0-0']);
+    const [expandedKeys] = useState(['0-0-1']);
+    useEffect(() => {
+        console.log("treestructure", treestructure)
 
+    }, [treestructure])
     const onDragEnter: TreeProps['onDragEnter'] = (info) => {
-        // console.log(info);
-        // expandedKeys 需要受控时设置
+        // console.log("onDrageEnter");
+        // expandedKeys
         // setExpandedKeys(info.expandedKeys)
     };
 
@@ -126,7 +131,24 @@ const CompanyStructure: React.FC = () => {
         const dragKey = info.dragNode.key;
         const dropPos = info.node.pos.split('-');
         const dropPosition = info.dropPosition - Number(dropPos[dropPos.length - 1]);
+        const dragNodePos = info.dragNode.pos.split('-');
+        const checkKeyAdd = dropKey.toString().split(" ");
+        console.log('dropPos', dropPos, dragNodePos)
+        // console.log('checkKeyAdd', checkKeyAdd)
+        // console.log('showinfo', dropKey, dropPos, dropPosition)
+        if (checkKeyAdd[0] == 'add') return;
 
+        if (dropPos.length > treecompany.length) {
+            if (!info.dropToGap) {
+                return;
+            }
+        }
+        if (dropPos.length !== dragNodePos.length) {
+            if (!info.dropToGap) {
+                return;
+            }
+        }
+        // ------------------------------
         const loop = (
             data: DataNode[],
             key: React.Key,
@@ -152,9 +174,11 @@ const CompanyStructure: React.FC = () => {
 
         if (!info.dropToGap) {
             // Drop on the content
+            console.log("info.dropToGap1");
+
             loop(data, dropKey, (item) => {
                 item.children = item.children || [];
-                // where to insert 示例添加到头部，可以是随意位置
+                // where to insert
                 item.children.unshift(dragObj);
             });
         } else if (
@@ -162,14 +186,16 @@ const CompanyStructure: React.FC = () => {
             (info.node as any).props.expanded && // Is expanded
             dropPosition === 1 // On the bottom gap
         ) {
+            console.log("info.dropToGap2");
             loop(data, dropKey, (item) => {
                 item.children = item.children || [];
-                // where to insert 示例添加到头部，可以是随意位置
+                // where to insert
                 item.children.unshift(dragObj);
                 // in previous version, we use item.children.push(dragObj) to insert the
                 // item to the tail of the children
             });
         } else {
+            console.log("info.dropToGap3");
             let ar: DataNode[] = [];
             let i: number;
             loop(data, dropKey, (_item, index, arr) => {
@@ -182,7 +208,7 @@ const CompanyStructure: React.FC = () => {
                 ar.splice(i! + 1, 0, dragObj!);
             }
         }
-        serTreestructure(data);
+        setTreestructure(data);
     };
     const onDropCompany: TreeProps['onDrop'] = (info) => {
         console.log(info);
@@ -190,6 +216,11 @@ const CompanyStructure: React.FC = () => {
         const dragKey = info.dragNode.key;
         const dropPos = info.node.pos.split('-');
         const dropPosition = info.dropPosition - Number(dropPos[dropPos.length - 1]);
+
+        const checkKeyAdd = dropKey.toString().split(" ");
+        // console.log('checkKeyAdd', checkKeyAdd)
+        // console.log('showinfo', dropKey,dropPos,dropPosition)
+        if (checkKeyAdd[0] == 'add') return;
 
         const loop = (
             data: DataNode[],
@@ -216,11 +247,12 @@ const CompanyStructure: React.FC = () => {
 
         if (!info.dropToGap) {
             // Drop on the content
-            loop(data, dropKey, (item) => {
-                item.children = item.children || [];
-                // where to insert 示例添加到头部，可以是随意位置
-                item.children.unshift(dragObj);
-            });
+            // loop(data, dropKey, (item) => {
+            //     item.children = item.children || [];
+            //     // where to insert
+            //     item.children.unshift(dragObj);
+            // });
+            return;
         } else if (
             ((info.node as any).props.children || []).length > 0 && // Has children
             (info.node as any).props.expanded && // Is expanded
@@ -249,14 +281,26 @@ const CompanyStructure: React.FC = () => {
         console.log('setTreecompany', data)
         setTreecompany(data);
     };
-    const renderTreeNodes = (data: any) => {
-        return data?.map((item: any) => {
+    const renderTreeNodes = (data: any, keys: any) => {
+        return data?.map((item: any, index: any) => {
+            let keysindex = `${keys}-${index.toString()}`;
+            let keysindexadd = keysindex.split('-');
+            let text: any = '';
+            keysindexadd.forEach((number: string) => {
+                text += (text && '-') + number;
+            });
+            // console.log('text', text);
             if (item?.children) {
                 return (
-                    <TreeNode title={item.title} key={item.key} data={item} >
-                        {renderTreeNodes(item.children)}
-                        <TreeNode disabled key={Math.floor(Math.random() * 300)} title={
+                    <TreeNode title={
+                        <div style={{ border: '1px solid', borderRadius: 10, height: 50, width: '100%', backgroundColor: 'aquamarine', padding: 10, display: 'flex', alignItems: 'center' }}>
+                            <span>ระดับ {index + 1} : </span> <span>{item.title}</span>
+                        </div>
+                    } key={item.key} data={item} >
+                        {renderTreeNodes(item.children, keysindex)}
+                        <TreeNode disabled key={`add ${keysindex}`} title={
                             <Button
+                                onClick={() => addChildStructure(text)}
                                 type="primary"
                                 size='large'
                                 style={{
@@ -269,8 +313,108 @@ const CompanyStructure: React.FC = () => {
                     </TreeNode>
                 )
             }
-            return (<TreeNode key={item.key} {...item} data={item}></TreeNode>)
+            return (<TreeNode key={item.key} title={
+                <div style={{ border: '1px solid', borderRadius: 10, height: 50, width: '100%', backgroundColor: 'aquamarine', padding: 10, display: 'flex', alignItems: 'center' }}>
+                    <span>ระดับ {index + 1}: </span> <span>{item.title}</span>
+                </div>
+            } data={item}></TreeNode>)
         })
+    }
+
+    const renderTreeNodesStructure = (data: any, keys: any) => {
+        return data?.map((item: any, index: any) => {
+            let keysindex = `${keys}-${index.toString()}`;
+            let keysindexadd = keysindex.split('-');
+            let titlenode = treecompany[keysindexadd['length'] - 2]?.title;
+            let titlebuttonadd = treecompany[keysindexadd['length'] - 1]?.title;
+            let isNotChildeAndLast = treecompany['length'] == keysindexadd['length'] - 1 ? true : false;
+            // console.log('isNotChildeAndLast', keysindexadd['length']-1, isNotChildeAndLast);
+            let text: any = '';
+            keysindexadd.forEach((number: string) => {
+                text += (text && '-') + number;
+            });
+            // console.log('text', text);
+            if (item?.children) {
+                return (
+                    <TreeNode title={
+                        <NodeStructure titleNodes={titlenode} title={item.title} />
+                    } key={item.key} data={item} >
+                        {renderTreeNodesStructure(item.children, keysindex)}
+                        <TreeNode disabled key={`add ${keysindex}`} title={
+                            <Button
+                                onClick={() => addChildStructure(text)}
+                                type="primary"
+                                size='large'
+                                style={{
+                                    width: '100%',
+                                    backgroundColor: token.token.colorPrimary,
+                                }}
+                            >
+                                เพิ่ม {titlebuttonadd} ใหม่
+                            </Button>} />
+                    </TreeNode>
+                )
+            }
+            return (<TreeNode key={item.key} title={
+                <NodeStructure onDelhild={() => delChildStructure(text)} titleNodes={titlenode} title={item?.title} onAddChild={!isNotChildeAndLast ? () => addChildStructure(text, true) : false} />
+            } data={item}></TreeNode>)
+        })
+    }
+    const delChildStructure = (key: any, child = false) => {
+        let KeysPosition = (key.toString()).split('-');
+        let kut = KeysPosition.slice(1)
+        let a: any = treestructure
+        let current: any = a;
+        for (let i = 0; i < kut.length - 1; i++) {
+            let index = kut[i];
+            current = current[index]?.children || current[index];
+        }
+        let deleteIndex = kut[kut.length - 1];
+        current.splice(deleteIndex, 1);
+        setTreestructure([...a]);
+    }
+    const addChildStructure = (key: any, child = false) => {
+        setOpen(true);
+        setDataStructure({ key, child } as any);
+
+    }
+    const onAddChildStructure = () => {
+        const randomName = faker.company.catchPhraseDescriptor();
+        const randomUid = faker.datatype.uuid();
+        let KeysPosition = (dataStructure?.key.toString()).split('-');
+        let kut = KeysPosition.slice(1)
+        // console.log('addChildStructure', KeysPosition);
+        // console.log('kut', kut);
+        let a: any = treestructure
+        let current: any = a;
+        for (let i = 0; i < kut.length; i++) {
+            let index = kut[i];
+            if (kut.length - 1 == i && child) {
+                current = current[index].children = [];
+            } else {
+                current = current[index].children || current;
+            }
+        }
+        // console.log('current', current)
+        current.push({ title: randomName, key: randomUid })
+        setTreestructure([...a]);
+    }
+    const addChildCompany = (key: any) => {
+        const randomName = faker.commerce.department();
+        const randomUid = faker.datatype.uuid();
+        let KeysPosition = (key.toString()).split('-');
+        let kut = KeysPosition.slice(1)
+        // console.log('addChildStructure', kut);
+        // console.log('treestructure', treestructure);
+        let a: any = treecompany
+        let current: any = a;
+        for (let i = 0; i < kut.length; i++) {
+            let index = kut[i];
+            current = current[index].children || current;
+        }
+        console.log('current', current)
+        current.push({ title: randomName, key: randomUid })
+        setTreecompany([...a]);
     }
 
     return (
@@ -302,9 +446,10 @@ const CompanyStructure: React.FC = () => {
                                 onDrop={onDropCompany}
                             // treeData={gData}
                             >
-                                {renderTreeNodes(treecompany)}
-                                <TreeNode disabled key={Math.floor(Math.random() * 300)} title={
+                                {renderTreeNodes(treecompany, '0')}
+                                {/* <TreeNode disabled key={"add"} title={
                                     <Button
+                                        onClick={() => addChildCompany(0)}
                                         type="primary"
                                         size='large'
                                         style={{
@@ -315,7 +460,7 @@ const CompanyStructure: React.FC = () => {
                                     >
                                         เพิ่มตำแหน่งใหม่
                                     </Button>
-                                } />
+                                } /> */}
                             </StyledTreeCompany>
                         </div>
 
@@ -335,11 +480,13 @@ const CompanyStructure: React.FC = () => {
                         showLine
                         onDragEnter={onDragEnter}
                         onDrop={onDrop}
+
                     // treeData={gData}
                     >
-                        {renderTreeNodes(treestructure)}
-                        <TreeNode disabled key={Math.floor(Math.random() * 300)} title={
+                        {renderTreeNodesStructure(treestructure, '0')}
+                        <TreeNode disabled key={"add"} title={
                             <Button
+                                onClick={() => addChildStructure(0)}
                                 type="primary"
                                 size='large'
                                 style={{
@@ -351,10 +498,15 @@ const CompanyStructure: React.FC = () => {
                                 เพิ่มตำแหน่งใหม่
                             </Button>
                         } />
+
                     </StyledTree>
                 </Col>
             </Row>
-
+            <Drawer title="เพิ่ม" placement="right" onClose={() => setOpen(false)} open={open}>
+                <p>Some contents...</p>
+                <p>Some contents...</p>
+                <p>Some contents...</p>
+            </Drawer>
         </React.Fragment>
     )
 }
