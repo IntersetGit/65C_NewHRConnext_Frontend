@@ -38,6 +38,7 @@ import { useQuery, useMutation, from } from '@apollo/client';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import moment from 'moment';
+import { GET_PROVINCE } from '../../../service/graphql/Province';
 
 const { useToken } = theme;
 
@@ -87,20 +88,7 @@ type RegisterEmployeeType = {
   staff_status: string;
 };
 
-const GET_PROVINCE = gql(/* GraphQL */ `
-  query GetProvince {
-    getProvince {
-      name
-      district {
-        name
-        amphoe {
-          name
-          zipcode
-        }
-      }
-    }
-  }
-`);
+
 
 const CREATE_EMPLOYEE_ACCOUNT = gql(`
 mutation CreateAccountUser($data: CreateAccountUserInput!) {

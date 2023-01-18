@@ -23,7 +23,9 @@ const Overview: React.FC = () => {
   }
 
   if (companyData?.getownCompany?.redirect) {
-    navigate(`/${companyData.getownCompany.company?.companyCode}`);
+    navigate(`/${companyData.getownCompany.company?.companyCode}`, {
+      replace: true,
+    });
   }
 
   return (

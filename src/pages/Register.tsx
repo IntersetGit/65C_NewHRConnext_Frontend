@@ -20,23 +20,9 @@ import Swal from 'sweetalert2';
 import human from '../assets/500.png';
 import logo from '../assets/HR logo.png';
 import { gql } from '../__generated__/gql';
+import { GET_PROVINCE } from '../service/graphql/Province';
 
 const { useToken } = theme;
-
-const GET_PROVINCE = gql(/* GraphQL */ `
-  query GetProvince {
-    getProvince {
-      name
-      district {
-        name
-        amphoe {
-          name
-          zipcode
-        }
-      }
-    }
-  }
-`);
 
 const CREATE_ACCOUNT = gql(`
   mutation CreateAccount($data: CreateAccountInput!) {
@@ -133,7 +119,7 @@ const Register: React.FC = () => {
   const province = province_data?.getProvince?.map((e) => {
     return {
       label: e?.name,
-      value: e?.name,
+      value: e?.id,
     };
   });
 
@@ -142,11 +128,11 @@ const Register: React.FC = () => {
     form.setFieldValue('company_city', null);
     form.setFieldValue('company_zip', null);
     const district = province_data?.getProvince
-      ?.find((e) => e?.name === value)
+      ?.find((e) => e?.id === value)
       ?.district?.map((e) => {
         return {
           label: e?.name,
-          value: e?.name,
+          value: e?.id,
         };
       });
     setDistrict(district ? district : []);
@@ -156,26 +142,25 @@ const Register: React.FC = () => {
     form.setFieldValue('company_city', null);
     form.setFieldValue('company_zip', null);
     const amphoe = province_data?.getProvince
-      ?.find((e) => e?.district?.find((_e) => _e?.name === value))
-      ?.district?.find((e) => e?.name === value)
+      ?.find((e) => e?.district?.find((_e) => _e?.id === value))
+      ?.district?.find((e) => e?.id === value)
       ?.amphoe?.map((e) => {
         return {
           label: e?.name,
-          value: e?.name,
+          value: e?.id,
         };
       });
     setAmphoe(amphoe ? amphoe : []);
   };
 
   const onAmphoeChange = (value: string) => {
+    console.log(value);
     const zipCode = province_data?.getProvince
       ?.find((e) =>
-        e?.district?.find((_e) =>
-          _e?.amphoe?.find((__e) => __e?.name === value),
-        ),
+        e?.district?.find((_e) => _e?.amphoe?.find((__e) => __e?.id === value)),
       )
-      ?.district?.find((e) => e?.amphoe?.find((_e) => _e?.name === value))
-      ?.amphoe?.find((e) => e?.name === value)?.zipcode;
+      ?.district?.find((e) => e?.amphoe?.find((_e) => _e?.id === value))
+      ?.amphoe?.find((e) => e?.id === value)?.zipcode;
 
     form.setFieldValue('company_zip', zipCode);
   };
@@ -440,6 +425,11 @@ const Register: React.FC = () => {
                   placeholder="เลือกจังหวัด"
                   style={{ width: '25%' }}
                   showSearch
+                  filterOption={(input, option) =>
+                    (option?.label ?? '')
+                      .toLowerCase()
+                      .includes(input.toLowerCase())
+                  }
                   options={province ? province : []}
                   onChange={onProvinceChange}
                 />
@@ -454,6 +444,11 @@ const Register: React.FC = () => {
                   placeholder="เลือกตำบล"
                   onChange={onDistrictChange}
                   showSearch
+                  filterOption={(input, option) =>
+                    (option?.label ?? '')
+                      .toLowerCase()
+                      .includes(input.toLowerCase())
+                  }
                   options={district ? district : []}
                 />
               </Form.Item>
@@ -466,6 +461,11 @@ const Register: React.FC = () => {
                   style={{ width: '25%' }}
                   placeholder="เลือกอำเภอ"
                   showSearch
+                  filterOption={(input, option) =>
+                    (option?.label ?? '')
+                      .toLowerCase()
+                      .includes(input.toLowerCase())
+                  }
                   onChange={onAmphoeChange}
                   options={amphoe ? amphoe : []}
                 />
