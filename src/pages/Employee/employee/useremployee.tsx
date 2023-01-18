@@ -870,7 +870,7 @@ const UserEmployee: React.FC = (props) => {
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={6} xl={6}>
-              <Form.Item name={'citizen_district'} label={'แขวง/ตำบล'}>
+              <Form.Item name={'citizen_district'} label={'เขต/อำเภอ'}>
                 {propsstate?.mode == 'view' ? (
                   <Select
                     onChange={onDistrictChangeCitizen}
@@ -891,7 +891,7 @@ const UserEmployee: React.FC = (props) => {
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={6} xl={6}>
-              <Form.Item name={'citizen_state'} label={'เขต/อำเภอ'}>
+              <Form.Item name={'citizen_state'} label={'แขวง/ตำบล'}>
                 {propsstate?.mode == 'view' ? (
                   <Select
                     showSearch
@@ -975,7 +975,7 @@ const UserEmployee: React.FC = (props) => {
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={6} xl={6}>
-              <Form.Item name={'contract_district'} label={'แขวง/ตำบล'}>
+              <Form.Item name={'contract_district'} label={'เขต/อำเภอ'}>
                 {propsstate?.mode == 'view' ? (
                   <Select
                     onChange={onDistrictChangeContract}
@@ -996,7 +996,7 @@ const UserEmployee: React.FC = (props) => {
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={6} xl={6}>
-              <Form.Item name={'contract_state'} label={'เขต/อำเภอ'}>
+              <Form.Item name={'contract_state'} label={'แขวง/ตำบล'}>
                 {propsstate?.mode == 'view' ? (
                   <Select
                     showSearch

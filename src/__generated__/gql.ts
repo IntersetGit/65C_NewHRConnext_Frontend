@@ -18,6 +18,7 @@ const documents = {
     "\nquery Me {\n  me {\n    Role_Company {\n      access\n      id\n      name\n      __typename\n    }\n    companyBranch {\n      companyId\n      company {\n        companyCode\n        icon\n        id\n        name\n        __typename\n      }\n      createdAt\n      id\n      name\n      __typename\n    }\n    email\n    id\n    isOwner\n    profile {\n      firstname_th\n      lastname_en\n      firstname_en\n      lastname_th\n      prefix_en\n      prefix_th\n      staff_code\n      __typename\n    }\n  }\n}": types.MeDocument,
     "\n  query Company {\n    company {\n      _count {\n        branch\n      }\n      branch {\n        _count {\n          users\n        }\n        id\n        name\n        address\n        address_2\n        city\n        state\n        zip\n        country\n        tel\n        fax\n        website\n        lat\n        lng\n        email\n        email_2\n        company_type\n        sub_company_type\n        registeredamount\n        social_facebook\n        social_likedin\n        social_instragram\n        social_line\n        createdAt\n        updatedAt\n      }\n      userlimit\n      name\n    }\n  }\n": types.CompanyDocument,
     "\n  query GetProvince {\n    getProvince {\n      name\n      district {\n        name\n        amphoe {\n          name\n          zipcode\n        }\n      }\n    }\n  }\n": types.GetProvinceDocument,
+    "\nmutation DeleteAccountUser($deleteAccountUserId: ID!) {\n  deleteAccountUser(id: $deleteAccountUserId) {\n    message\n    status\n  }\n}": types.DeleteAccountUserDocument,
     "\nmutation CreateAccountUser($data: CreateAccountUserInput!) {\n  createAccountUser(data: $data) {\n    message\n    status\n  }\n}": types.CreateAccountUserDocument,
     "\n  mutation Login($data: LoginaInput!) {\n    login(data: $data) {\n      access_token\n      refresh_token\n      status\n    }\n  }\n": types.LoginDocument,
     "\nmutation Mutation($data: createRoleCompanyGroup!) {\n    createRoleCompany(data: $data) {\n      message\n      status\n    }\n  }\n": types.MutationDocument,
@@ -65,6 +66,10 @@ export function gql(source: "\n  query Company {\n    company {\n      _count {\
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(source: "\n  query GetProvince {\n    getProvince {\n      name\n      district {\n        name\n        amphoe {\n          name\n          zipcode\n        }\n      }\n    }\n  }\n"): (typeof documents)["\n  query GetProvince {\n    getProvince {\n      name\n      district {\n        name\n        amphoe {\n          name\n          zipcode\n        }\n      }\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\nmutation DeleteAccountUser($deleteAccountUserId: ID!) {\n  deleteAccountUser(id: $deleteAccountUserId) {\n    message\n    status\n  }\n}"): (typeof documents)["\nmutation DeleteAccountUser($deleteAccountUserId: ID!) {\n  deleteAccountUser(id: $deleteAccountUserId) {\n    message\n    status\n  }\n}"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

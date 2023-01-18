@@ -30,21 +30,31 @@ import {
   BarsOutlined,
   ApartmentOutlined,
 } from '@ant-design/icons';
-import { useQuery } from '@apollo/client';
+import { useQuery, useMutation } from '@apollo/client';
 import { FETCH_GETALLUSER } from '../../../service/graphql/Users';
 import edit from '../../../assets/Edit.png';
 import Del from '../../../assets/DEL.png';
 import View from '../../../assets/View.png';
 import { User } from '../../../__generated__/graphql';
-
+import { gql } from '../../../__generated__';
+import Swal from 'sweetalert2';
 
 const { useToken } = theme;
+
+const DELETE_EMPLOYEE_ACCOUNT = gql(`
+mutation DeleteAccountUser($deleteAccountUserId: ID!) {
+  deleteAccountUser(id: $deleteAccountUserId) {
+    message
+    status
+  }
+}`);
 
 const Employee: React.FC = () => {
   const token = useToken();
   const navigate = useNavigate();
   const [dataTable, setDataTable] = useState([]);
   const { data: userData, refetch } = useQuery(FETCH_GETALLUSER);
+  const [deleteEmployeeAccount] = useMutation(DELETE_EMPLOYEE_ACCOUNT);
   const [isDisplayfield, setDisplayfield] = useState(1);
   const [pagecurrent, setPageCurrent] = useState<number>(2);
 
@@ -90,6 +100,34 @@ const Employee: React.FC = () => {
         state: { ...record?.profile, mode: 'view', userId: record?.id },
       });
     } else if (key === 'delete') {
+      Swal.fire({
+        title: `ยืนยันการลบข้อมูลพนักงาน`,
+        icon: 'warning',
+        showDenyButton: true,
+        showCancelButton: false,
+        confirmButtonColor: token.token.colorPrimary,
+        denyButtonColor: '#ea4e4e',
+        confirmButtonText: 'ตกลง',
+        denyButtonText: `ยกเลิก`,
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          deleteEmployeeAccount({
+            variables: {
+              deleteAccountUserId: record.id,
+            },
+          })
+            .then((val) => {
+              if (val.data?.deleteAccountUser?.status) {
+                Swal.fire(`ลบข้อมูลพนักงานสำเร็จ!`, '', 'success');
+                refetch();
+              }
+            })
+            .catch((err) => {
+              Swal.fire(`ลบข้อมูลพนักงานไม่สำเร็จ!`, '', 'error');
+              console.error(err);
+            });
+        }
+      });
     }
   };
 
