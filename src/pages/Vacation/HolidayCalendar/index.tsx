@@ -13,6 +13,7 @@ import {
     Dropdown,
     Drawer,
     Input,
+    Select,
 } from "antd";
 import TableHoliday from '../HolidayCalendar/tableholiday'
 import edit from '../../../assets/Edit.png';
@@ -99,19 +100,24 @@ const onChange: DatePickerProps['onChange'] = (date, dateString) => {
 
 const Holidaypage: React.FC = () => {
     const token = useToken();
-    const [open, setOpen] = useState(false);
+    const [openyear, setOpenyear] = useState(false);
+    const [openday, setOpenday] = useState(false);
     const [form] = Form.useForm();
 
     const showDraweryear = () => {
-        setOpen(true);
+        setOpenyear(true);
+    };
+
+    const onCloseyear = () => {
+        setOpenyear(false);
     };
 
     const showDrawerday = () => {
-        setOpen(true);
+        setOpenday(true);
     };
 
-    const onClose = () => {
-        setOpen(false);
+    const onCloseday = () => {
+        setOpenday(false);
     };
 
     return (
@@ -122,166 +128,251 @@ const Holidaypage: React.FC = () => {
             </div>
             <Divider style={{ backgroundColor: token.token.colorPrimary }} />
 
-            <Form>
-                <Card className="shadow-md mb-3">
-                    <Row gutter={5}>
-                        <Col xs={24} sm={24} md={16} lg={16} xl={8} >
-                            <Form.Item label={<b> เลือกปี </b>}>
-                                <DatePicker
-                                    style={{ width: '100%' }}
-                                    onChange={onChange}
-                                    picker="year"
-                                />
+            <Card className="shadow-md mb-3">
+                <Row gutter={5}>
+                    <Col xs={24} sm={24} md={16} lg={16} xl={8} >
+                        <Form.Item label={<b> เลือกปี </b>}>
+                            <DatePicker
+                                style={{ width: '100%' }}
+                                onChange={onChange}
+                                picker="year"
+                            />
+                        </Form.Item>
+                    </Col>
+                    <Col xs={24} sm={24} md={8} lg={8} xl={16}>
+                        <div className="flex items-center justify-end justify-items-center">
+                            <Button
+                                type="primary"
+                                style={{ backgroundColor: token.token.colorPrimary }}
+                            >
+                                Search
+                            </Button>
+                        </div>
+                    </Col>
+                </Row>
+            </Card>
+
+            <Card className="shadow-md mb-3">
+                <Row gutter={8}>
+                    <Col>
+                        <Button
+                            type="primary"
+                            size="middle"
+                            style={{
+                                marginBottom: '10px',
+                                backgroundColor: token.token.colorPrimary,
+                            }}
+                            onClick={showDraweryear}
+                        >
+                            + เพิ่มวันหยุดรายปี
+                        </Button>
+                    </Col>
+                    <Col>
+                        <Button
+                            type="primary"
+                            size="middle"
+                            style={{
+                                marginBottom: '10px',
+                                backgroundColor: token.token.colorPrimary,
+                            }}
+                            onClick={showDrawerday}
+                        >
+                            + เพิ่มวันหยุดรายวัน
+                        </Button>
+                    </Col>
+                </Row>
+                <Table<DataSourceType> dataSource={dataSources} columns={columns} />
+            </Card>
+
+            <Drawer
+                title="เพิ่มวันหยุดรายปี"
+                headerStyle={{ textAlign: 'center' }}
+                placement="right"
+                onClose={onCloseyear}
+                open={openyear}
+                width="40%"
+            >
+                <Form>
+                    <div className="flex text-2xl" style={{ color: token.token.colorPrimary }}>
+                        <TbCalendarTime size={30} />
+                        <div
+                            className="ml-2 text-lg"
+                            style={{ color: token.token.colorPrimary }}
+                        > รายละเอียดปฏิทิน
+                        </div>
+                    </div>
+                    <Divider style={{ backgroundColor: token.token.colorPrimary }} />
+
+                    <Row >
+                        <Col xs={24} sm={6} md={12} lg={12} xl={5}>
+                            <Form.Item
+                                name={''}
+                                label={'เลือกปี'}
+                            >
                             </Form.Item>
                         </Col>
-                        <Col xs={24} sm={24} md={8} lg={8} xl={16}>
-                            <div className="flex items-center justify-end justify-items-center">
-                                <Button
-                                    type="primary"
-                                    style={{ backgroundColor: token.token.colorPrimary }}
-                                >
-                                    Search
-                                </Button>
-                            </div>
+                        <Col xs={24} sm={18} md={12} lg={12} xl={10}>
+                            <DatePicker
+                                style={{ width: '100%' }}
+                                onChange={onChange}
+                                picker="year"
+                            />
                         </Col>
                     </Row>
-                </Card>
-
-                <Card className="shadow-md mb-3">
-                    <Row>
-                        <div
-                            style={{
-                                width: '100%',
-                                display: 'flex',
-                                justifyContent: 'space-between',
-                            }}
-                        >
-                            <Space>
-                                <Col>
-                                    <Button
-                                        type="primary"
-                                        size="middle"
-                                        style={{
-                                            marginBottom: '10px',
-                                            backgroundColor: token.token.colorPrimary,
-                                        }}
-                                        onClick={showDraweryear}
-                                    >
-                                        + เพิ่มวันหยุดรายปี
-                                    </Button>
-                                    <Drawer
-                                        title="เพิ่มวันหยุดรายปี"
-                                        headerStyle={{ textAlign: 'center' }}
-                                        placement="right"
-                                        onClose={onClose}
-                                        open={open}
-                                        width="40%"
-                                    // closable={true}
-                                    // maskClosable={false}
-                                    // keyboard={false}
-                                    >
-                                        <div className="flex text-2xl" style={{ color: token.token.colorPrimary }}>
-                                            <TbCalendarTime size={30} />
-                                            <div
-                                                className="ml-2 text-lg"
-                                                style={{ color: token.token.colorPrimary }}
-                                            > รายละเอียดปฏิทินวันหยุด
-                                            </div>
-                                        </div>
-                                        <Divider style={{ backgroundColor: token.token.colorPrimary }} />
-
-                                        <Form>
-                                            <Row>
-                                                <Col >
-                                                    <Form.Item
-                                                        name={''}
-                                                        label={'เลือกปี'}
-                                                    >
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col >
-                                                    <DatePicker
-                                                        style={{ width: '100%' }}
-                                                        onChange={onChange}
-                                                        picker="year"
-                                                    />
-                                                </Col>
-                                                <Col className='ml-5'>
-                                                    <Button
-                                                        type="primary"
-                                                        style={{ backgroundColor: token.token.colorPrimary }}
-                                                    >
-                                                        Search
-                                                    </Button>
-                                                </Col>
-                                            </Row>
-                                            <Row>
-                                                <Col >
-                                                    <Form.Item
-                                                        name={''}
-                                                        label={'จำนวนวันหยุด'}
-                                                    >
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col >
-                                                    <Input />
-                                                </Col>
-                                            </Row>
-                                            <TableHoliday />
-
-                                            <Space className='flex justify-center'>
-                                                <Button
-                                                    htmlType="submit"
-                                                    type="primary"
-                                                    style={{
-                                                        marginBottom: '10px',
-                                                        backgroundColor: token.token.colorPrimary,
-                                                    }}
-                                                >
-                                                    บันทึก
-                                                </Button>
-                                                <Button
-                                                    style={{
-                                                        marginBottom: '10px',
-                                                    }}
-                                                    onClick={() => {
-                                                        setOpen(false);
-                                                    }}
-                                                >
-                                                    ยกเลิก
-                                                </Button>
-                                            </Space>
-                                        </Form>
-                                    </Drawer>
-                                </Col>
-
-                                <Col>
-                                    <Button
-                                        type="primary"
-                                        size="middle"
-                                        style={{
-                                            marginBottom: '10px',
-                                            backgroundColor: token.token.colorPrimary,
-                                        }}
-                                        onClick={showDrawerday}
-                                    >
-                                        + เพิ่มวันหยุดรายวัน
-                                    </Button>
-                                    <Drawer>
-
-                                    </Drawer>
-                                </Col>
-                            </Space>
-
-                        </div>
+                    <Row >
+                        <Col xs={24} sm={10} md={12} lg={12} xl={5}>
+                            <Form.Item
+                                name={''}
+                                label={'จำนวนวันหยุด'}
+                            >
+                            </Form.Item>
+                        </Col>
+                        <Col xs={24} sm={14} md={12} lg={12} xl={10}>
+                            <Input />
+                        </Col>
                     </Row>
-                    <Table<DataSourceType> dataSource={dataSources} columns={columns} />
-                </Card>
 
-                <Card className="shadow-md mb-3">
                     <TableHoliday />
-                </Card>
-            </Form>
+
+                    <Row gutter={16} style={{ position: 'relative', display: 'flex', top: '20px' }}>
+                        <Form.Item>
+                            <Space>
+                                <Button
+                                    htmlType="submit"
+                                    type="primary"
+                                    style={{
+                                        marginBottom: '10px',
+                                        backgroundColor: token.token.colorPrimary,
+                                    }}
+                                >
+                                    บันทึก
+                                </Button>
+                                <Button
+                                    style={{
+                                        marginBottom: '10px',
+                                    }}
+                                    onClick={() => {
+                                        setOpenyear(false);
+                                    }}
+                                >
+                                    ยกเลิก
+                                </Button>
+                            </Space>
+                        </Form.Item>
+                    </Row>
+                </Form>
+            </Drawer>
+
+            <Drawer
+                title="เพิ่มวันหยุดรายวัน"
+                headerStyle={{ textAlign: 'center' }}
+                placement="right"
+                onClose={onCloseday}
+                open={openday}
+                width="40%"
+            >
+                <Form>
+                    <div className="flex text-2xl" style={{ color: token.token.colorPrimary }}>
+                        <TbCalendarTime size={30} />
+                        <div
+                            className="ml-2 text-lg"
+                            style={{ color: token.token.colorPrimary }}
+                        > รายละเอียดปฏิทิน
+                        </div>
+                    </div>
+                    <Divider style={{ backgroundColor: token.token.colorPrimary }} />
+                    <Row>
+                        <Col>
+                            <Form.Item
+                                name={''}
+                                label={'เลือก วัน/เดือน/ปี'}
+                            >
+                            </Form.Item>
+                        </Col>
+                        <Col >
+                            <DatePicker onChange={onChange} />
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col>
+                            <Form.Item
+                                name={''}
+                                label={'ชื่อวันหยุด'}
+                            >
+                            </Form.Item>
+                        </Col>
+                        <Col>
+                            <Select
+                                showSearch
+                                style={{ width: 200 }}
+                                placeholder="กรุณาเลือกวันที่จะหยุด"
+                                optionFilterProp="children"
+                                filterOption={(input, option) => (option?.label ?? '').includes(input)}
+                                filterSort={(optionA, optionB) =>
+                                    (optionA?.label ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
+                                }
+                                options={[
+                                    {
+                                        value: '1',
+                                        label: 'วันจักรี',
+                                    },
+                                    {
+                                        value: '2',
+                                        label: 'วันสงกรานต์',
+                                    },
+                                    {
+                                        value: '3',
+                                        label: 'วันแรงงานแห่งชาติ',
+                                    },
+                                    {
+                                        value: '4',
+                                        label: 'วันฉัตรมงคล',
+                                    },
+                                    {
+                                        value: '5',
+                                        label: 'วันวิสาขบูชา',
+                                    },
+                                    {
+                                        value: '6',
+                                        label: 'วันอาสาฬหบูชา',
+                                    },
+                                ]}
+                            />
+                        </Col>
+                    </Row>
+                    <Row
+                        className="py-6"
+                        gutter={16}
+                        style={{ position: 'relative' }}
+                    >
+                        <Form.Item>
+                            <Space>
+                                <Button
+                                    htmlType="submit"
+                                    type="primary"
+                                    style={{
+                                        marginBottom: '10px',
+                                        backgroundColor: token.token.colorPrimary,
+                                    }}
+                                >
+                                    บันทึก
+                                </Button>
+                                <Button
+                                    style={{
+                                        marginBottom: '10px',
+                                    }}
+                                    onClick={() => {
+                                        setOpenday(false);
+                                    }}
+                                >
+                                    ยกเลิก
+                                </Button>
+                            </Space>
+                        </Form.Item>
+                    </Row>
+                </Form>
+            </Drawer>
+
         </>
     )
 };
