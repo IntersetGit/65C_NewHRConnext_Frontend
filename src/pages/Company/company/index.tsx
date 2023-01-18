@@ -149,11 +149,11 @@ const Companyniti: React.FC = () => {
         return index + 1;
       },
     },
-    {
-      title: 'ประเภทบริษัท',
-      align: 'center',
-      dataIndex: 'company_type',
-    },
+    // {
+    //   title: 'ประเภทบริษัท',
+    //   align: 'center',
+    //   dataIndex: 'company_type',
+    // },
     {
       title: 'ชื่อบริษัท/สาขา',
       dataIndex: 'name',

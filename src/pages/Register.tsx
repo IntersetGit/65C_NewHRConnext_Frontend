@@ -124,6 +124,10 @@ const Register: React.FC = () => {
   });
 
   const onProvinceChange = (value: string) => {
+    if (!value) {
+      setDistrict([]);
+      setAmphoe([]);
+    }
     form.setFieldValue('company_state', null);
     form.setFieldValue('company_city', null);
     form.setFieldValue('company_zip', null);
@@ -154,7 +158,6 @@ const Register: React.FC = () => {
   };
 
   const onAmphoeChange = (value: string) => {
-    console.log(value);
     const zipCode = province_data?.getProvince
       ?.find((e) =>
         e?.district?.find((_e) => _e?.amphoe?.find((__e) => __e?.id === value)),
@@ -425,6 +428,7 @@ const Register: React.FC = () => {
                   placeholder="เลือกจังหวัด"
                   style={{ width: '25%' }}
                   showSearch
+                  allowClear
                   filterOption={(input, option) =>
                     (option?.label ?? '')
                       .toLowerCase()
@@ -455,7 +459,7 @@ const Register: React.FC = () => {
               <Form.Item
                 name={'company_city'}
                 noStyle
-                rules={[{ required: true, message: 'กรุถณาเลือกอำเภอ' }]}
+                rules={[{ required: true, message: 'กรุณาเลือกอำเภอ' }]}
               >
                 <Select
                   style={{ width: '25%' }}
