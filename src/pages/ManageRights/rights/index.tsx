@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Button,
   Card,
+  Checkbox,
   Col,
   Divider,
   Form,
@@ -13,6 +14,14 @@ import {
   theme,
 } from 'antd';
 import { RiCommunityLine } from 'react-icons/ri';
+import _ from 'lodash';
+import { CheckboxChangeEvent } from 'antd/es/checkbox';
+import { useMutation, useQuery } from '@apollo/client';
+import {
+  FETCH_GETALLROLE_MANAGEMENT,
+  SAVE_COMPANY_ROLE,
+} from '../../../service/graphql/Role';
+import Swal from 'sweetalert2';
 
 interface DataType {
   key: React.Key;
@@ -22,12 +31,16 @@ interface DataType {
 }
 
 interface ExpandedDataType {
+  [key: string]: any;
+  id: string | undefined;
+  sort: number;
   key: React.Key;
-  name: string;
-  view: string;
-  add: string;
-  edit: string;
-  delete: string;
+  name: string | null | undefined;
+  idxOf?: string;
+  read: boolean | undefined;
+  add: boolean | undefined;
+  edit: boolean | undefined;
+  delete: boolean | undefined;
 }
 
 const { useToken } = theme;
@@ -36,8 +49,8 @@ const Simpledata = [
   {
     id: '1',
     name: 'CompanyAdmin',
-    acess: [
-      { action: ['add', 'edit', 'delete', 'read'], subject: 'company' },
+    access: [
+      { action: ['add', 'edit', 'delete'], subject: 'company' },
       { action: ['add', 'edit', 'delete', 'read'], subject: 'myprofile' },
       { action: ['add', 'edit', 'delete', 'read'], subject: 'employee' },
       { action: ['add', 'edit', 'delete', 'read'], subject: 'salary' },
@@ -52,9 +65,9 @@ const Simpledata = [
     ],
   },
   {
-    id: '1',
+    id: '2',
     name: 'Finance',
-    acess: [
+    access: [
       { action: ['add', 'edit', 'delete', 'read'], subject: 'company' },
       { action: ['read'], subject: 'myprofile' },
       { action: ['add'], subject: 'employee' },
@@ -69,60 +82,222 @@ const Simpledata = [
       { action: ['add', 'edit', 'delete', 'read'], subject: 'campaign' },
     ],
   },
+  {
+    id: '3',
+    name: 'Employee',
+    acess: [],
+  },
+];
+const module = [
+  'company',
+  'myprofile',
+  'employee',
+  'salary',
+  'vacation',
+  'training',
+  'assessment',
+  'project',
+  'dashboard',
+  'file',
+  'activity',
+  'campaign',
 ];
 
+const method = ['read', 'add', 'edit', 'delete'];
 const Rights: React.FC = () => {
   const token = useToken();
+  const {
+    data: rawdata,
+    loading,
+    refetch,
+  } = useQuery(FETCH_GETALLROLE_MANAGEMENT);
+  const [saveRolemanage] = useMutation(SAVE_COMPANY_ROLE);
+  const [datas, setData] = useState<ExpandedDataType[]>([]);
+  const onChange = (e: CheckboxChangeEvent, rec: ExpandedDataType) => {
+    //console.log(e, rec);
+    console.time('Change checkbox time');
+    const rowData = datas.find((e) => e.key === rec.key);
+    const popData = datas.filter((e) => e.key !== rec.key);
+    /**
+     * PreventDefault Function
+     * ! no need this function
+     */
+    //e.preventDefault();
+    /**
+     * check if rowdata not undefined
+     */
+    if (!rowData) return;
+    /**
+     * check if method is undefinded then return
+     */
+    if (rowData[e.target.value] === undefined) return;
+    rowData[e.target.value] = e.target.checked;
 
+    const newData = [...popData, rowData];
+    setData(newData);
+    console.timeEnd('Change checkbox time');
+  };
+  useEffect(() => {
+    const query_data = rawdata;
+    const arr: ExpandedDataType[] = [];
+    module.forEach(async (e) => {
+      const data: ExpandedDataType[] | undefined =
+        query_data?.getcompanyRole?.map((_e, i) => {
+          const access: { action: string[] } = _e?.access?.find(
+            (__e: { subject: string }) => __e.subject === e,
+          );
+          return {
+            id: _e?.id,
+            sort: i + 1,
+            key: `${_e?.name}-${e}-${i + 1}`,
+            name: _e?.name,
+            idxOf: e,
+            read: access ? access.action.includes('read') : false,
+            add: access ? access.action.includes('add') : false,
+            edit: access ? access.action.includes('edit') : false,
+            delete: access ? access.action.includes('delete') : false,
+          };
+        });
+      const saveData = data ? data : [];
+      arr.push(...saveData);
+    });
+    setData(arr);
+  }, [loading]);
   const expandedRowRender = (record: DataType, index: number | string) => {
-    console.log(record, index);
+    //console.log(record, index);
     const columns: TableColumnsType<ExpandedDataType> = [
-      { title: 'Roles', dataIndex: 'name', key: 'name' },
-      { title: 'View', dataIndex: 'view', key: 'view' },
-      { title: 'Add', dataIndex: 'add', key: 'add' },
-      { title: 'Edit', dataIndex: 'edit', key: 'edit' },
-      { title: 'Delete', dataIndex: 'delete', key: 'delete' },
+      {
+        title: 'Roles',
+        dataIndex: 'name',
+        key: 'name',
+      },
+      {
+        title: 'Read',
+        dataIndex: 'read',
+        key: 'read',
+        render(value, rec) {
+          return (
+            <Checkbox
+              onChange={(e: CheckboxChangeEvent) => onChange(e, rec)}
+              value="read"
+              checked={rec.read}
+            />
+          );
+        },
+      },
+      {
+        title: 'Add',
+        dataIndex: 'add',
+        key: 'add',
+        render(value, rec) {
+          return (
+            <Checkbox
+              onChange={(e: CheckboxChangeEvent) => onChange(e, rec)}
+              value="add"
+              checked={rec.add}
+            />
+          );
+        },
+      },
+      {
+        title: 'Edit',
+        dataIndex: 'edit',
+        key: 'edit',
+        render(value, rec) {
+          value = 'read';
+          return (
+            <Checkbox
+              onChange={(e: CheckboxChangeEvent) => onChange(e, rec)}
+              value="edit"
+              checked={rec.edit}
+            />
+          );
+        },
+      },
+      {
+        title: 'Delete',
+        dataIndex: 'delete',
+        key: 'delete',
+        render(value, rec) {
+          return (
+            <Checkbox
+              onChange={(e: CheckboxChangeEvent) => onChange(e, rec)}
+              value="delete"
+              checked={rec.delete}
+            />
+          );
+        },
+      },
     ];
-    const data = [];
-    const query_data = Simpledata;
-    console.log(query_data);
-    for (let i = 0; i < 1; ++i) {
-      data.push(
-        {
-          key: i.toString(),
-          name: 'Company Admin',
-          view: 'View',
-          add: 'Add',
-          edit: 'Edit',
-          delete: 'Delete',
-        },
-        {
-          key: i.toString(),
-          name: 'Finance',
-          view: 'View',
-          add: 'Add',
-          edit: 'Edit',
-          delete: 'Delete',
-        },
-        {
-          key: i.toString(),
-          name: 'Employee',
-          view: 'View',
-          add: 'Add',
-          edit: 'Edit',
-          delete: 'Delete',
-        },
-      );
-    }
+
     return (
       <Table
         size="small"
-        rowKey="id"
         columns={columns}
-        dataSource={data}
+        dataSource={datas
+          .filter((e) => e.idxOf === record.subject)
+          .sort((a, b) => a.sort - b.sort)}
         pagination={false}
       />
     );
+  };
+
+  const onClicksave = () => {
+    /** Merge to original object */
+    console.time('Merge save time');
+    const original = rawdata?.getcompanyRole?.map((e) => {
+      return {
+        id: e?.id as string,
+        //name: e?.name,
+        access: [
+          ...datas
+            .filter((_e) => _e.id === e?.id)
+            .map((e) => {
+              const accessControl: string[] = [];
+              method.forEach((_e) => {
+                if (e[_e]) accessControl.push(_e);
+              });
+
+              return {
+                subject: e.idxOf as string,
+                action: accessControl,
+              };
+            }),
+        ],
+      };
+    });
+    console.timeEnd('Merge save time');
+
+    if (!original) return;
+
+    Swal.fire({
+      title: 'บันทึกข้อมูล',
+      text: 'ยืนยันการบันทึกข้อมูล',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'ยืนยัน',
+      cancelButtonText: 'ยกเลิก',
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        saveRolemanage({
+          variables: {
+            data: original,
+          },
+        })
+          .then((val) => {
+            if (val.data?.updateRoleCompanyMangement?.status) {
+              Swal.fire(`เพิ่มข้อมูลสำเร็จ!`, '', 'success');
+              refetch();
+            }
+          })
+          .catch((err) => {
+            Swal.fire(`เพิ่มข้อมูลไม่สำเร็จ!`, '', 'error');
+            console.error(err);
+          });
+      }
+    });
   };
 
   const columns: TableColumnsType<DataType> = [
@@ -135,7 +310,7 @@ const Rights: React.FC = () => {
     },
     Table.EXPAND_COLUMN,
 
-    Table.SELECTION_COLUMN,
+    // Table.SELECTION_COLUMN,
     {
       title: 'สิทธิ์การเข้าถึงระบบ',
       dataIndex: 'permissions',
@@ -253,27 +428,18 @@ const Rights: React.FC = () => {
             <Col>
               <Form.Item label={'กลุ่มผู้ใช้งาน'}>
                 <Space>
-                  <Button
-                    style={{
-                      marginBottom: '10px',
-                    }}
-                  >
-                    Company Admin
-                  </Button>
-                  <Button
-                    style={{
-                      marginBottom: '10px',
-                    }}
-                  >
-                    Finance
-                  </Button>
-                  <Button
-                    style={{
-                      marginBottom: '10px',
-                    }}
-                  >
-                    Employee
-                  </Button>
+                  {rawdata?.getcompanyRole?.map((e) => {
+                    return (
+                      <Button
+                        key={e?.id}
+                        style={{
+                          marginBottom: '10px',
+                        }}
+                      >
+                        {e?.name}
+                      </Button>
+                    );
+                  })}
                 </Space>
               </Form.Item>
             </Col>
@@ -282,6 +448,7 @@ const Rights: React.FC = () => {
           <Col className="flex justify-end">
             <Button
               type="primary"
+              onClick={onClicksave}
               style={{
                 marginBottom: '10px',
                 backgroundColor: token.token.colorPrimary,

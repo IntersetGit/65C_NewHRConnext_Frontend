@@ -6,19 +6,24 @@ import {
   Divider,
   Form,
   Input,
-  Popconfirm,
   Row,
   Table,
   Card,
-  Typography,
+  Dropdown,
 } from 'antd';
+import edit from '../../../assets/Edit.png';
+import Del from '../../../assets/DEL.png';
+import View from '../../../assets/View.png';
 import { RiCommunityLine } from 'react-icons/ri';
 import { gql } from '../../../__generated__/gql';
-import { useQuery } from '@apollo/client';
+import { useQuery, useMutation } from '@apollo/client';
 import Spinner from '../../../components/Spinner';
 import type { ColumnsType } from 'antd/es/table';
+import { DELETE_COMPANY } from '../../../service/graphql/Company';
 import { CompanyQuery } from '../../../__generated__/graphql';
 import { useNavigate } from 'react-router-dom';
+import { MoreOutlined } from '@ant-design/icons';
+import Swal from 'sweetalert2';
 
 const { useToken } = theme;
 
@@ -32,11 +37,30 @@ const GET_COMPANY = gql(/* GraphQL */ `
         _count {
           users
         }
+        id
         name
         address
+        address_2
+        city
+        state
+        zip
+        country
         tel
+        fax
         website
-        id
+        lat
+        lng
+        email
+        email_2
+        company_type
+        sub_company_type
+        registeredamount
+        social_facebook
+        social_likedin
+        social_instragram
+        social_line
+        createdAt
+        updatedAt
       }
       userlimit
       name
@@ -47,7 +71,82 @@ const GET_COMPANY = gql(/* GraphQL */ `
 const Companyniti: React.FC = () => {
   const token = useToken();
   const { loading, data, refetch } = useQuery(GET_COMPANY);
+  const [deletecomapany] = useMutation(DELETE_COMPANY);
   const navigate = useNavigate();
+
+  const onMenuClick = (event: any, record: any) => {
+    const { key } = event;
+    console.log(record)
+    if (key === 'edit') {
+      navigate(`newCompany?id=${record?.id}`, {
+        state: { ...record, mode: 'edit' },
+      });
+    } else if (key === 'view') {
+      navigate(`newCompany?id=${record.id}`, {
+        state: { ...record, mode: 'view' },
+      });
+    } else if (key === 'delete') {
+      Swal.fire({
+        title: `ลบข้อมูลบริษัท!`,
+        icon: 'warning',
+        showDenyButton: true,
+        showCancelButton: false,
+        confirmButtonColor: token.token.colorPrimary,
+        denyButtonColor: '#ea4e4e',
+        confirmButtonText: 'ตกลง',
+        denyButtonText: `ยกเลิก`,
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          deletecomapany({
+            variables: {
+              deleteComBaranceId: record?.id
+            }
+          }).then((val) => {
+            console.log(val);
+            if (val?.data?.deleteComBarance?.status) {
+              Swal.fire(
+                `ลบข้อมูลบริษัทสำเร็จ!`,
+                '',
+                'success',
+              );
+              refetch();
+            }
+          }).catch((err) => {
+            Swal.fire(
+              `ลบข้อมูลบริษัทไม่สำเร็จ!`,
+              '',
+              'error',
+            );
+            console.error(err);
+          });
+        }
+      })
+
+    }
+  };
+
+  const genarateMenu = (record: any) => {
+    return [
+      {
+        key: 'edit',
+        label: 'แก้ไข',
+        icon: <img style={{ width: '17px', height: '17px' }} src={edit} />,
+        onClick: (e: any) => onMenuClick(e, record),
+      },
+      {
+        key: 'view',
+        label: 'ดูข้อมูล',
+        icon: <img style={{ width: '17px', height: '17px' }} src={View} />,
+        onClick: (e: any) => onMenuClick(e, record),
+      },
+      {
+        key: 'delete',
+        label: 'ลบข้อมูล',
+        icon: <img style={{ width: '20px', height: '20px' }} src={Del} />,
+        onClick: (e: any) => onMenuClick(e, record),
+      },
+    ];
+  };
 
   const columns: ColumnsType<CompanyQuery> = [
     {
@@ -60,7 +159,7 @@ const Companyniti: React.FC = () => {
     {
       title: 'ประเภทบริษัท',
       align: 'center',
-      dataIndex: 'type',
+      dataIndex: 'company_type',
     },
     {
       title: 'ชื่อบริษัท/สาขา',
@@ -92,13 +191,17 @@ const Companyniti: React.FC = () => {
     },
     {
       title: 'Actions',
-      render: (text: any) => {
-        return (
-          <Popconfirm title="Delete?">
-            <Button>Delete</Button>
-          </Popconfirm>
-        );
-      },
+      align: 'center',
+      render: (record) => (
+        <Dropdown
+          menu={{
+            items: genarateMenu(record),
+          }}
+          arrow
+        >
+          <MoreOutlined />
+        </Dropdown>
+      ),
     },
   ];
 
@@ -108,15 +211,6 @@ const Companyniti: React.FC = () => {
         <RiCommunityLine size={30} />
         <div className="ml-2 text-lg">จัดการบริษัท</div>
       </div>
-
-      {/* <div className="px-2 py-2">
-        <div className="relative flex flex-row items-center">
-          <div className="flex">
-            <RiCommunityLine style={{ color: token.token.colorText }} size={30} />
-            <Typography.Title level={3}>จัดการบริษัท</Typography.Title>
-          </div>
-        </div>
-      </div> */}
 
       <Divider style={{ backgroundColor: token.token.colorPrimary }} />
       <Card className="shadow-md mb-3">

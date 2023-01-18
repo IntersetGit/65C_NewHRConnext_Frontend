@@ -291,7 +291,7 @@ const UserEmployee: React.FC = (props) => {
       showDenyButton: true,
       showCancelButton: false,
       confirmButtonColor: token.token.colorPrimary,
-      denyButtonColor: '#efefef',
+      denyButtonColor: '#ea4e4e',
       confirmButtonText: 'ตกลง',
       denyButtonText: `ยกเลิก`,
     }).then(async (result) => {
@@ -314,6 +314,7 @@ const UserEmployee: React.FC = (props) => {
                 'success',
               );
               refetch();
+              navigate(-1);
             }
           })
           .catch((err) => {
@@ -330,13 +331,9 @@ const UserEmployee: React.FC = (props) => {
 
   return (
     <>
-      <div className="relative flex flex-row items-center">
-        <div className="flex flex-row items-center h-5 w-5 text-4xl">
-          <FolderFilled />
-        </div>
-        <span className="ml-8 text-lg tracking-wide truncate">
-          ข้อมูลพนักงาน
-        </span>
+      <div className="flex text-3xl ml-2 pt-4">
+        <FolderFilled />
+        <div className="ml-2 text-lg">ข้อมูลพนักงาน</div>
       </div>
       <Divider style={{ backgroundColor: token.token.colorPrimary }} />
       <Card className="shadow-xl">
@@ -873,7 +870,7 @@ const UserEmployee: React.FC = (props) => {
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={6} xl={6}>
-              <Form.Item name={'citizen_district'} label={'แขวง/ตำบล'}>
+              <Form.Item name={'citizen_district'} label={'เขต/อำเภอ'}>
                 {propsstate?.mode == 'view' ? (
                   <Select
                     onChange={onDistrictChangeCitizen}
@@ -894,7 +891,7 @@ const UserEmployee: React.FC = (props) => {
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={6} xl={6}>
-              <Form.Item name={'citizen_state'} label={'เขต/อำเภอ'}>
+              <Form.Item name={'citizen_state'} label={'แขวง/ตำบล'}>
                 {propsstate?.mode == 'view' ? (
                   <Select
                     showSearch
@@ -978,7 +975,7 @@ const UserEmployee: React.FC = (props) => {
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={6} xl={6}>
-              <Form.Item name={'contract_district'} label={'แขวง/ตำบล'}>
+              <Form.Item name={'contract_district'} label={'เขต/อำเภอ'}>
                 {propsstate?.mode == 'view' ? (
                   <Select
                     onChange={onDistrictChangeContract}
@@ -999,7 +996,7 @@ const UserEmployee: React.FC = (props) => {
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={6} xl={6}>
-              <Form.Item name={'contract_state'} label={'เขต/อำเภอ'}>
+              <Form.Item name={'contract_state'} label={'แขวง/ตำบล'}>
                 {propsstate?.mode == 'view' ? (
                   <Select
                     showSearch

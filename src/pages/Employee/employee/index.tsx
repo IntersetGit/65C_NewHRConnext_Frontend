@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import { FaUserAlt } from 'react-icons/fa';
+import { BsFillTelephoneFill, BsFacebook } from 'react-icons/bs';
+import { AiTwotoneMail, AiOutlineMobile } from 'react-icons/ai';
 import {
   Button,
   Card,
@@ -14,46 +16,70 @@ import {
   theme,
   Dropdown,
   Menu,
+  Segmented,
+  Descriptions,
+  Avatar,
+  List,
 } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { useNavigate } from 'react-router-dom';
-import { MenuOutlined, MoreOutlined } from '@ant-design/icons';
-import { useQuery } from '@apollo/client';
+import {
+  MenuOutlined,
+  MoreOutlined,
+  AppstoreOutlined,
+  BarsOutlined,
+  ApartmentOutlined,
+} from '@ant-design/icons';
+import { useQuery, useMutation } from '@apollo/client';
 import { FETCH_GETALLUSER } from '../../../service/graphql/Users';
+import edit from '../../../assets/Edit.png';
+import Del from '../../../assets/DEL.png';
+import View from '../../../assets/View.png';
+import { User } from '../../../__generated__/graphql';
+import { gql } from '../../../__generated__';
+import Swal from 'sweetalert2';
 
 const { useToken } = theme;
 
-interface DataType {
-  key: number;
-  name: string;
-  number: number;
-  position: string;
-  department: string;
-  tel: string;
-  email: string;
-}
+const DELETE_EMPLOYEE_ACCOUNT = gql(`
+mutation DeleteAccountUser($deleteAccountUserId: ID!) {
+  deleteAccountUser(id: $deleteAccountUserId) {
+    message
+    status
+  }
+}`);
 
 const Employee: React.FC = () => {
   const token = useToken();
   const navigate = useNavigate();
   const [dataTable, setDataTable] = useState([]);
   const { data: userData, refetch } = useQuery(FETCH_GETALLUSER);
+  const [deleteEmployeeAccount] = useMutation(DELETE_EMPLOYEE_ACCOUNT);
+  const [isDisplayfield, setDisplayfield] = useState(1);
+  const [pagecurrent, setPageCurrent] = useState<number>(2);
+
+  useEffect(() => {
+    refetch();
+  }, []);
 
   const genarateMenu = (record: any) => {
     return [
       {
         key: 'edit',
         label: 'แก้ไข',
+        icon: <img style={{ width: '17px', height: '17px' }} src={edit} />,
         onClick: (e: any) => onMenuClick(e, record),
       },
       {
         key: 'view',
-        label: 'ดู',
+        label: 'ดูข้อมูล',
+        icon: <img style={{ width: '17px', height: '17px' }} src={View} />,
         onClick: (e: any) => onMenuClick(e, record),
       },
       {
         key: 'delete',
         label: 'ลบข้อมูล',
+        icon: <img style={{ width: '20px', height: '20px' }} src={Del} />,
         onClick: (e: any) => onMenuClick(e, record),
       },
     ];
@@ -65,6 +91,7 @@ const Employee: React.FC = () => {
   const onMenuClick = (event: any, record: any) => {
     const { key } = event;
     if (key === 'edit') {
+      console.log(record);
       navigate(`useremployee?id=${record.profile.id}`, {
         state: { ...record?.profile, mode: 'edit', userId: record?.id },
       });
@@ -73,40 +100,70 @@ const Employee: React.FC = () => {
         state: { ...record?.profile, mode: 'view', userId: record?.id },
       });
     } else if (key === 'delete') {
+      Swal.fire({
+        title: `ยืนยันการลบข้อมูลพนักงาน`,
+        icon: 'warning',
+        showDenyButton: true,
+        showCancelButton: false,
+        confirmButtonColor: token.token.colorPrimary,
+        denyButtonColor: '#ea4e4e',
+        confirmButtonText: 'ตกลง',
+        denyButtonText: `ยกเลิก`,
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          deleteEmployeeAccount({
+            variables: {
+              deleteAccountUserId: record.id,
+            },
+          })
+            .then((val) => {
+              if (val.data?.deleteAccountUser?.status) {
+                Swal.fire(`ลบข้อมูลพนักงานสำเร็จ!`, '', 'success');
+                refetch();
+              }
+            })
+            .catch((err) => {
+              Swal.fire(`ลบข้อมูลพนักงานไม่สำเร็จ!`, '', 'error');
+              console.error(err);
+            });
+        }
+      });
     }
   };
 
-  const columns: ColumnsType<DataType> = [
+  const columns: ColumnsType<User> = [
     {
       title: 'ลำดับ',
-      key: 'number',
-      dataIndex: 'number',
       align: 'center',
+      render: (_, record, index) => {
+        return index + 1;
+      },
     },
     {
       title: 'ชื่อ-สกุล',
-      key: 'name',
+      key: 'profile',
       dataIndex: 'profile',
       align: 'center',
       render: (txt) => txt.firstname_th + ' ' + txt.lastname_th,
     },
     {
       title: 'ตำแหน่ง',
-      key: 'position',
-      dataIndex: 'position',
+      key: 'profile',
+      dataIndex: 'profile',
       align: 'center',
     },
     {
       title: 'แผนก/ฝ่าย',
-      key: 'department',
-      dataIndex: 'department',
+      key: 'profile',
+      dataIndex: 'profile',
       align: 'center',
     },
     {
       title: 'เบอร์โทร',
-      key: 'tel',
-      dataIndex: 'tel',
+      key: 'profile',
+      dataIndex: 'profile',
       align: 'center',
+      render: (record) => record.tel,
     },
     {
       title: 'e-mail',
@@ -181,42 +238,171 @@ const Employee: React.FC = () => {
       </Card>
 
       <Card className="shadow-xl mt-4">
-        <Col>
-          <Space>
-            <Button
-              type="primary"
-              size="middle"
-              style={{
-                marginBottom: '10px',
-                backgroundColor: token.token.colorPrimary,
-              }}
-              onClick={() => {
-                navigate('useremployee');
-              }}
-            >
-              + เพิ่มพนักงาน
-            </Button>
+        <Row>
+          <div
+            style={{
+              width: '100%',
+              display: 'flex',
+              justifyContent: 'space-between',
+            }}
+          >
+            <Space>
+              <Col>
+                <Button
+                  type="primary"
+                  size="middle"
+                  style={{
+                    marginBottom: '10px',
+                    backgroundColor: token.token.colorPrimary,
+                  }}
+                  onClick={() => {
+                    navigate('useremployee');
+                  }}
+                >
+                  + เพิ่มพนักงาน
+                </Button>
+              </Col>
 
-            <Button
-              type="primary"
-              size="middle"
-              style={{
-                marginBottom: '10px',
-                backgroundColor: token.token.colorPrimary,
+              <Col>
+                <Button
+                  type="primary"
+                  size="middle"
+                  style={{
+                    marginBottom: '10px',
+                    backgroundColor: token.token.colorPrimary,
+                  }}
+                  onClick={apiGetUsers}
+                >
+                  Upload Excel
+                </Button>
+              </Col>
+            </Space>
+
+            <Segmented
+              className="custom-segmented"
+              onChange={(e) => {
+                if (e === 'Table') {
+                  setDisplayfield(1);
+                } else if (e === 'List') {
+                  setDisplayfield(2);
+                } else {
+                  setDisplayfield(3);
+                }
               }}
-              onClick={apiGetUsers}
-            >
-              Upload Excel
-            </Button>
-          </Space>
-        </Col>
-        <Table
-          columns={columns}
-          dataSource={userData?.users as any}
-          rowKey={(i: any) => i.toString()}
-        ></Table>
+              options={[
+                {
+                  value: 'Table',
+                  icon: <BarsOutlined />,
+                },
+                {
+                  value: 'List',
+                  icon: <AppstoreOutlined />,
+                },
+                {
+                  value: 'Tree',
+                  icon: <ApartmentOutlined />,
+                },
+              ]}
+            />
+          </div>
+        </Row>
+
+        {isDisplayfield === 1 ? (
+          <Table
+            columns={columns}
+            dataSource={userData?.users as any}
+            rowKey={'id'}
+            pagination={{
+              onChange: (page) => {
+                setPageCurrent(page);
+              },
+              current: pagecurrent,
+              pageSize: 10,
+            }}
+          ></Table>
+        ) : isDisplayfield === 2 ? (
+          <List
+            itemLayout="vertical"
+            size="large"
+            pagination={{
+              onChange: (page) => {
+                setPageCurrent(page);
+              },
+              current: pagecurrent,
+              pageSize: 10,
+            }}
+            dataSource={userData?.users as any}
+            renderItem={(item: User, index: any) => (
+              <List.Item key={index}>
+                <CardItem item={item} genarateMenu={genarateMenu} />
+              </List.Item>
+            )}
+          ></List>
+        ) : (
+          <></>
+        )}
       </Card>
     </>
+  );
+};
+type Props = {
+  item: User;
+  genarateMenu(record: any): any[];
+};
+const CardItem = ({ item, genarateMenu }: Props) => {
+  return (
+    <Row>
+      <Col span={4}>
+        <Avatar
+          style={{ width: 100, height: 100 }}
+          src={item.profile?.avatar}
+        />
+      </Col>
+      <Col span={9}>
+        <a style={{ color: 'blue', fontSize: '16px', fontWeight: 'bold' }}>
+          <u>
+            {item.profile?.prefix_th} {item.profile?.firstname_th}{' '}
+            {item.profile?.lastname_th}
+          </u>
+        </a>
+        <Row>
+          <div>{item.profile?.citizen_address}</div>
+        </Row>
+        <Row>
+          <div>{item.profile?.citizen_zipcode}</div>
+        </Row>
+      </Col>
+      <Col span={9}>
+        <div>
+          <Row>
+            <AiTwotoneMail size={'20'} />
+            <div className="px-2">{item.email}</div>
+          </Row>
+          <Row>
+            <BsFillTelephoneFill size={'20'} />
+            <div className="px-2">{item.profile?.citizen_tel}</div>
+          </Row>
+          <Row>
+            <AiOutlineMobile size={'20'} />
+            <div className="px-2">{item.profile?.tel}</div>
+          </Row>
+          <Row>
+            <BsFacebook size={'20'} />
+            <div className="px-2">{item.profile?.social_facebook}</div>
+          </Row>
+        </div>
+      </Col>
+
+      <Col span={2}>
+        <Dropdown
+          className="flex h-full justify-items-center"
+          menu={{ items: genarateMenu(item) }}
+          arrow
+        >
+          <MoreOutlined />
+        </Dropdown>
+      </Col>
+    </Row>
   );
 };
 

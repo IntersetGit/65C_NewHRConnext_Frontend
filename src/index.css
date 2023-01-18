@@ -4,5 +4,12 @@
 @tailwind utilities;
 
 .right-tab .ant-tabs-nav-wrap {
-    justify-content : end;
+  justify-content: end;
+}
+
+/* .custom-segmented .ant-segmented-item-selected {
+  background-color: #6399f1 !important;
+} */
+.custom-segmented {
+  height: 32px;
 }

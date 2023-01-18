@@ -11,6 +11,9 @@ const BaseLayout = React.lazy(() => import('../components/layouts'));
  * ? Components
  */
 const CompanyLocation = React.lazy(() => import('../pages/Company/location'));
+const Holidays = React.lazy(() => import('../pages/Vacation'))
+const HolidayCalendar = React.lazy(() => import('../pages/Vacation/HolidayCalendar'))
+const Leave = React.lazy(() => import('../pages/Vacation/Leave'))
 const Home = React.lazy(() => import('../pages/Home'));
 const Companyroot = React.lazy(() => import('../pages/Company'));
 const CompanyStructure = React.lazy(() => import('../pages/Company/structure'));
@@ -173,15 +176,26 @@ export const routing: RoutingType[] = [
       },
       {
         path: '/:companycode/vacation',
-        label: 'การลา',
+        label: 'วันหยุดและการลา',
+        forcerendermenu: true,
         icon: <RiHistoryLine size={'18'} />,
-        element: <CompanyLocation />,
+        element: <Holidays />,
+        children: [
+          {
+            path: '/:companycode/vacation',
+            element: <HolidayCalendar />,
+          },
+          {
+            path: '/:companycode/vacation/Leave',
+            element: <Leave />,
+          },
+        ],
       },
       {
         path: '/:companycode/training',
         label: 'การฝึกอบรม',
         icon: <RiSlideshow3Line size={'18'} />,
-        element: <></>,
+        element: <CompanyLocation />,
       },
       {
         path: '/:companycode/assessment',
@@ -282,4 +296,4 @@ export const routing: RoutingType[] = [
 const router = createBrowserRouter(routing);
 export default router;
 
-createBrowserRouter([{ loader: ({}) => {} }]);
+//createBrowserRouter([{ loader: ({}) => {} }]);
