@@ -58,35 +58,54 @@ const Newcompany = () => {
   const province = province_data?.getProvince?.map((e) => {
     return {
       label: e?.name,
-      value: e?.name,
+      value: e?.id,
     };
   });
 
-  const onProvinceChangeCitizen = (value: string) => {
+  const onProvinceChange = (value: string) => {
+    if (!value) {
+      setDistrict([]);
+      setAmphoe([]);
+    }
     form.setFieldValue('city', null);
     form.setFieldValue('state', null);
     form.setFieldValue('zip', null);
     const district = province_data?.getProvince
-      ?.find((e) => e?.name === value)
+      ?.find((e) => e?.id === value)
       ?.district?.map((e) => {
         return {
           label: e?.name,
-          value: e?.name,
+          value: e?.id,
         };
       });
     setDistrict(district ? district : []);
   };
 
+  // const onProvinceChangeCitizen = (value: string) => {
+  //   form.setFieldValue('city', null);
+  //   form.setFieldValue('state', null);
+  //   form.setFieldValue('zip', null);
+  //   const district = province_data?.getProvince
+  //     ?.find((e) => e?.id === value)
+  //     ?.district?.map((e) => {
+  //       return {
+  //         label: e?.name,
+  //         value: e?.id,
+  //       };
+  //     });
+  //   setDistrict(district ? district : []);
+  // };
+
   const onDistrictChangeCitizen = (value: string) => {
     form.setFieldValue('city', null);
     form.setFieldValue('zip', null);
     const amphoe = province_data?.getProvince
-      ?.find((e) => e?.district?.find((_e) => _e?.name === value))
-      ?.district?.find((e) => e?.name === value)
+      ?.find((e) => e?.district?.find((_e) => _e?.id === value))
+      ?.district?.find((e) => e?.id === value)
       ?.amphoe?.map((e) => {
         return {
           label: e?.name,
-          value: e?.name,
+          value: e?.id,
         };
       });
     setAmphoe(amphoe ? amphoe : []);
@@ -96,11 +115,11 @@ const Newcompany = () => {
     const zipCode = province_data?.getProvince
       ?.find((e) =>
         e?.district?.find((_e) =>
-          _e?.amphoe?.find((__e) => __e?.name === value),
+          _e?.amphoe?.find((__e) => __e?.id === value),
         ),
       )
-      ?.district?.find((e) => e?.amphoe?.find((_e) => _e?.name === value))
-      ?.amphoe?.find((e) => e?.name === value)?.zipcode;
+      ?.district?.find((e) => e?.amphoe?.find((_e) => _e?.id === value))
+      ?.amphoe?.find((e) => e?.id === value)?.zipcode;
 
     form.setFieldValue('zip', zipCode);
   };
@@ -298,7 +317,12 @@ const Newcompany = () => {
                 {Editdata?.mode == 'view' ? (
                   <Select
                     placeholder="กรุณากรอกจังหวัด"
-                    onChange={onProvinceChangeCitizen}
+                    onChange={onProvinceChange}
+                    filterOption={(input, option) =>
+                      (option?.label ?? '')
+                        .toLowerCase()
+                        .includes(input.toLowerCase())
+                    }
                     options={province ? province : []}
                     allowClear
                     showSearch
@@ -307,7 +331,12 @@ const Newcompany = () => {
                 ) : (
                   <Select
                     placeholder="กรุณากรอกจังหวัด"
-                    onChange={onProvinceChangeCitizen}
+                    onChange={onProvinceChange}
+                    filterOption={(input, option) =>
+                      (option?.label ?? '')
+                        .toLowerCase()
+                        .includes(input.toLowerCase())
+                    }
                     options={province ? province : []}
                     allowClear
                     showSearch
@@ -330,6 +359,11 @@ const Newcompany = () => {
                   <Select
                     placeholder="กรุณากรอกเขต/อำเภอ"
                     onChange={onDistrictChangeCitizen}
+                    filterOption={(input, option) =>
+                      (option?.label ?? '')
+                        .toLowerCase()
+                        .includes(input.toLowerCase())
+                    }
                     options={district ? district : []}
                     allowClear
                     showSearch
@@ -339,6 +373,11 @@ const Newcompany = () => {
                   <Select
                     placeholder="กรุณากรอกเขต/อำเภอ"
                     onChange={onDistrictChangeCitizen}
+                    filterOption={(input, option) =>
+                      (option?.label ?? '')
+                        .toLowerCase()
+                        .includes(input.toLowerCase())
+                    }
                     options={district ? district : []}
                     allowClear
                     showSearch
@@ -361,6 +400,11 @@ const Newcompany = () => {
                   <Select
                     placeholder="กรุณากรอกแขวง/ตำบล"
                     onChange={onAmphoeChangeCitizen}
+                    filterOption={(input, option) =>
+                      (option?.label ?? '')
+                        .toLowerCase()
+                        .includes(input.toLowerCase())
+                    }
                     options={amphoe ? amphoe : []}
                     allowClear
                     showSearch
@@ -370,6 +414,11 @@ const Newcompany = () => {
                   <Select
                     placeholder="กรุณากรอกแขวง/ตำบล"
                     onChange={onAmphoeChangeCitizen}
+                    filterOption={(input, option) =>
+                      (option?.label ?? '')
+                        .toLowerCase()
+                        .includes(input.toLowerCase())
+                    }
                     options={amphoe ? amphoe : []}
                     allowClear
                     showSearch
