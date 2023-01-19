@@ -203,7 +203,7 @@ const Holidaypage: React.FC = () => {
                     </div>
                     <Divider style={{ backgroundColor: token.token.colorPrimary }} />
 
-                    <Row >
+                    <Row>
                         <Col xs={24} sm={6} md={12} lg={12} xl={5}>
                             <Form.Item
                                 name={''}
@@ -213,6 +213,7 @@ const Holidaypage: React.FC = () => {
                         </Col>
                         <Col xs={24} sm={18} md={12} lg={12} xl={10}>
                             <DatePicker
+                                className='mb-5'
                                 style={{ width: '100%' }}
                                 onChange={onChange}
                                 picker="year"
@@ -228,13 +229,14 @@ const Holidaypage: React.FC = () => {
                             </Form.Item>
                         </Col>
                         <Col xs={24} sm={14} md={12} lg={12} xl={10}>
-                            <Input />
+                            <Input
+                                className='mb-5'
+                            />
                         </Col>
                     </Row>
-
                     <TableHoliday />
 
-                    <Row gutter={16} style={{ position: 'relative', display: 'flex', top: '20px' }}>
+                    <Row gutter={16} style={{ position: 'relative', top: '20px', float: 'right' }}>
                         <Form.Item>
                             <Space>
                                 <Button
@@ -282,29 +284,32 @@ const Holidaypage: React.FC = () => {
                     </div>
                     <Divider style={{ backgroundColor: token.token.colorPrimary }} />
                     <Row>
-                        <Col>
+                        <Col xs={24} sm={16} md={12} lg={12} xl={8}>
                             <Form.Item
                                 name={''}
                                 label={'เลือก วัน/เดือน/ปี'}
                             >
                             </Form.Item>
                         </Col>
-                        <Col >
-                            <DatePicker onChange={onChange} />
+                        <Col xs={24} sm={18} md={12} lg={12} xl={10}>
+                            <DatePicker
+                                className='mb-5'
+                                style={{ width: '100%' }}
+                                onChange={onChange} />
                         </Col>
                     </Row>
                     <Row>
-                        <Col>
+                        <Col xs={24} sm={8} md={12} lg={12} xl={8}>
                             <Form.Item
                                 name={''}
                                 label={'ชื่อวันหยุด'}
                             >
                             </Form.Item>
                         </Col>
-                        <Col>
+                        <Col xs={24} sm={24} md={12} lg={12} xl={10}>
                             <Select
                                 showSearch
-                                style={{ width: 200 }}
+                                style={{ width: '100%' }}
                                 placeholder="กรุณาเลือกวันที่จะหยุด"
                                 optionFilterProp="children"
                                 filterOption={(input, option) => (option?.label ?? '').includes(input)}
@@ -340,10 +345,11 @@ const Holidaypage: React.FC = () => {
                             />
                         </Col>
                     </Row>
+
                     <Row
                         className="py-6"
                         gutter={16}
-                        style={{ position: 'relative' }}
+                        style={{ position: 'relative', display: 'flex', top: '20px', float: 'right' }}
                     >
                         <Form.Item>
                             <Space>
