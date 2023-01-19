@@ -26,8 +26,14 @@ import {
   Upload,
   Modal,
   Avatar,
+  Tabs,
 } from 'antd';
-import { useNavigate, useLocation } from 'react-router-dom';
+import {
+  useNavigate,
+  useLocation,
+  generatePath,
+  useParams,
+} from 'react-router-dom';
 import facebook from '../../../assets/Facebook-logo.png';
 import inittial from '../../../assets/initials-logo.png';
 import line from '../../../assets/Line-logo.png';
@@ -40,6 +46,7 @@ import Swal from 'sweetalert2';
 import moment from 'moment';
 import { GET_PROVINCE } from '../../../service/graphql/Province';
 import type { CheckboxChangeEvent } from 'antd/es/checkbox';
+import { useAuth } from '../../../hooks/useAuth';
 
 const { useToken } = theme;
 
@@ -121,6 +128,8 @@ const UserEmployee: React.FC = (props) => {
   const { data: province_data, refetch } = useQuery(GET_PROVINCE);
   const [createEmployeeAccount] = useMutation(CREATE_EMPLOYEE_ACCOUNT);
   let propsstate = location.state as any;
+  let { companycode } = useParams();
+  const { companyNavigate } = useAuth();
 
   useEffect(() => {
     AllCounrty();
@@ -150,6 +159,12 @@ const UserEmployee: React.FC = (props) => {
     });
   };
 
+  const onChange = (key: string) => {
+    navigate(generatePath(key, { companycode }), {
+      state: propsstate,
+    });
+  };
+
   const province = province_data?.getProvince?.map((e) => {
     return {
       label: e?.name,
@@ -158,6 +173,10 @@ const UserEmployee: React.FC = (props) => {
   });
 
   const onProvinceChangeCitizen = (value: string) => {
+    if (!value) {
+      setDistrict([]);
+      setAmphoe([]);
+    }
     form.setFieldValue('citizen_district', null);
     form.setFieldValue('citizen_state', null);
     form.setFieldValue('citizen_zipcode', null);
@@ -199,6 +218,10 @@ const UserEmployee: React.FC = (props) => {
   };
 
   const onProvinceChangeContract = (value: string) => {
+    if (!value) {
+      setDistrict([]);
+      setAmphoe([]);
+    }
     form.setFieldValue('contract_district', null);
     form.setFieldValue('contract_state', null);
     form.setFieldValue('contract_zipcode', null);
@@ -321,7 +344,7 @@ const UserEmployee: React.FC = (props) => {
                 'success',
               );
               refetch();
-              navigate(-1);
+              companyNavigate('/:companycode/employee');
             }
           })
           .catch((err) => {
@@ -338,6 +361,25 @@ const UserEmployee: React.FC = (props) => {
 
   return (
     <>
+      {!propsstate?.mode || (
+        <>
+          <Tabs
+            defaultActiveKey="/:companycode/employee/useremployee"
+            className="right-tab"
+            onChange={onChange}
+            items={[
+              {
+                label: `ข้อมูลพนักงาน`,
+                key: '/:companycode/employee/useremployee',
+              },
+              {
+                label: `ตำแหน่งงาน`,
+                key: '/:companycode/employee/positionemployee',
+              },
+            ]}
+          />
+        </>
+      )}
       <div className="flex text-3xl ml-2 pt-4">
         <FolderFilled />
         <div className="ml-2 text-lg">ข้อมูลพนักงาน</div>
@@ -636,14 +678,11 @@ const UserEmployee: React.FC = (props) => {
                 {propsstate?.mode == 'view' ? (
                   <DatePicker
                     format={'YYYY/MM/DD'}
-                    style={{ width: '195px' }}
+                    style={{ width: '100%' }}
                     disabled
                   />
                 ) : (
-                  <DatePicker
-                    format={'YYYY/MM/DD'}
-                    style={{ width: '195px' }}
-                  />
+                  <DatePicker format={'YYYY/MM/DD'} style={{ width: '100%' }} />
                 )}
               </Form.Item>
             </Col>
@@ -1160,7 +1199,7 @@ const UserEmployee: React.FC = (props) => {
                       marginBottom: '10px',
                     }}
                     onClick={() => {
-                      navigate(-1);
+                      companyNavigate('/:companycode/employee');
                     }}
                   >
                     ยกเลิก

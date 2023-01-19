@@ -65,7 +65,7 @@ const Companyroot: React.FC = () => {
           },
         ]}
       /> */}
-       <Outlet />
+      <Outlet />
     </>
   );
 };

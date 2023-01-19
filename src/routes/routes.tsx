@@ -11,15 +11,20 @@ const BaseLayout = React.lazy(() => import('../components/layouts'));
  * ? Components
  */
 const CompanyLocation = React.lazy(() => import('../pages/Company/location'));
-const Holidays = React.lazy(() => import('../pages/Vacation'))
-const HolidayCalendar = React.lazy(() => import('../pages/Vacation/HolidayCalendar'))
-const Leave = React.lazy(() => import('../pages/Vacation/Leave'))
+const Holidays = React.lazy(() => import('../pages/Vacation'));
+const HolidayCalendar = React.lazy(
+  () => import('../pages/Vacation/HolidayCalendar'),
+);
+const Leave = React.lazy(() => import('../pages/Vacation/Leave'));
 const Home = React.lazy(() => import('../pages/Home'));
 const Companyroot = React.lazy(() => import('../pages/Company'));
 const CompanyStructure = React.lazy(() => import('../pages/Company/structure'));
 const CompanyPosition = React.lazy(() => import('../pages/Company/position'));
 const Employeeroot = React.lazy(() => import('../pages/Employee'));
 const Employee = React.lazy(() => import('../pages/Employee/employee'));
+const PositionEmployee = React.lazy(
+  () => import('../pages/Employee/employeeposition'),
+);
 const Resumeroot = React.lazy(() => import('../pages/Resume'));
 const ProfileResume = React.lazy(() => import('../pages/Resume/profileresume'));
 const Summaryroot = React.lazy(() => import('../pages/Summary'));
@@ -137,6 +142,11 @@ export const routing: RoutingType[] = [
           {
             path: '/:companycode/employee/useremployee',
             element: <UserEmployee />,
+            hideInmenu: true,
+          },
+          {
+            path: '/:companycode/employee/positionemployee',
+            element: <PositionEmployee />,
             hideInmenu: true,
           },
         ],
