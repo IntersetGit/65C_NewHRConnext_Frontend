@@ -131,12 +131,12 @@ const gqlClient = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
-export const logout = () => {
-  cookie.remove('access');
-  cookie.remove('refresh_token');
-  router.navigate('/auth');
+export const logout = async () => {
+  cookie.remove('access', { path: '/', sameSite: 'lax' });
+  cookie.remove('refresh_token', { path: '/', sameSite: 'lax' });
   gqlClient.clearStore();
   gqlClient.cache.reset();
+  router.navigate('/auth');
 };
 
 const refreshToken = async () => {

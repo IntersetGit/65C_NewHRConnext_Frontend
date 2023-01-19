@@ -1,6 +1,7 @@
 import { AbilityTuple, MongoAbility, MongoQuery, Subject } from '@casl/ability';
 import { AnyObject } from '@casl/ability/dist/types/types';
 import { MeQuery } from '../__generated__/graphql';
+import { NavigateOptions } from 'react-router-dom';
 
 export type ErrCallbackType = (err: { [key: string]: string }) => void;
 
@@ -29,7 +30,9 @@ export type CompanyBranchType = {
 export type AuthValuesType = {
   loading: boolean;
   user: MeQuery | undefined;
+  companycode: string | undefined | null;
   setCompany: (value: CompanyBranchType | undefined) => void;
+  companyNavigate: (path: string, opts?: NavigateOptions | undefined) => void;
   company: CompanyBranchType | undefined;
   ability: MongoAbility<AbilityTuple<string, Subject>, MongoQuery<AnyObject>>;
 };

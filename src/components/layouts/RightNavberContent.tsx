@@ -77,9 +77,9 @@ const RightNavbarContent: React.FC<RightNavContentType> = ({
   const navigate = useNavigate();
   let { companycode } = useParams();
 
-  const onClick: MenuProps['onClick'] = ({ key }) => {
+  const onClick: MenuProps['onClick'] = async ({ key }) => {
     if (key === '2') navigate(`/${companycode}/roles`, { replace: true });
-    if (key === '6') logout();
+    if (key === '6') await logout();
   };
   return (
     <div

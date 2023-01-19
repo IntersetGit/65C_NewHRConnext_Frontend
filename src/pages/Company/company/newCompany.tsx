@@ -23,11 +23,13 @@ import line from '../../../assets/Line-logo.png';
 import { CREATE_COMPANY_ACCOUNT } from '../../../service/graphql/Company';
 import { CreateCompanyBranch } from '../../../__generated__/graphql';
 import { GET_PROVINCE } from '../../../service/graphql/Province';
+import { useAuth } from '../../../hooks/useAuth';
 
 const { useToken } = theme;
 
 const Newcompany = () => {
   const token = useToken();
+  const { companyNavigate } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
   const [form] = Form.useForm<CreateCompanyBranch>();
@@ -159,7 +161,9 @@ const Newcompany = () => {
         <span style={{ position: 'absolute', right: '10px', height: '10px' }}>
           <Button
             type="primary"
-            onClick={()=> navigate('/:companycode/company/CompanyStructure')}
+            onClick={() =>
+              companyNavigate('/:companycode/company/CompanyStructure')
+            }
             style={{
               marginBottom: '10px',
               backgroundColor: token.token.colorPrimary,

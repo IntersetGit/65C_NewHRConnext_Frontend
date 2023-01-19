@@ -6,6 +6,12 @@ import { useQuery } from '@apollo/client';
 import { MeQuery } from '../__generated__/graphql';
 import { AbilityContext } from './AbilityContext';
 import { createMongoAbility } from '@casl/ability';
+import {
+  NavigateOptions,
+  generatePath,
+  useNavigate,
+  useParams,
+} from 'react-router-dom';
 
 const cookie = new Cookies();
 
@@ -54,6 +60,8 @@ const defaultProvider: AuthValuesType = {
   ability: createMongoAbility([]),
   company: undefined,
   setCompany: () => null,
+  companycode: undefined,
+  companyNavigate: () => null,
 };
 
 const AuthContext = createContext(defaultProvider);
@@ -75,6 +83,19 @@ const AuthProvider = ({ children, company: companydata }: Props) => {
     companyId: companydata?.companyId,
     companyName: companydata?.companyName,
   });
+  const navigate = useNavigate();
+
+  const { companycode } = useParams();
+
+  const companyNavigate = (
+    path: string,
+    opts?: NavigateOptions | undefined,
+  ) => {
+    if (!companycode) {
+      console.error('Company code not found.');
+    }
+    return navigate(generatePath(path, { companycode }), opts);
+  };
 
   const value = {
     user,
@@ -82,6 +103,8 @@ const AuthProvider = ({ children, company: companydata }: Props) => {
     ability,
     setCompany,
     company,
+    companyNavigate,
+    companycode,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
