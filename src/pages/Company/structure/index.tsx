@@ -52,9 +52,7 @@ const StyledTree = styled(Tree)`
     visibility: hidden;
     display: none;
  }
- :where(.css-dev-only-do-not-override-b7k9jm)[class^="ant-tree"] [class^="ant-tree"], :where(.css-dev-only-do-not-override-b7k9jm)[class*=" ant-tree"] [class^="ant-tree"] {
-        overflow: hidden;
-  }
+
   .ant-tree-indent-unit:before {
     position: absolute;
     top: 0;
