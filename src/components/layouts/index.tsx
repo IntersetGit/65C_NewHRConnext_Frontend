@@ -71,9 +71,9 @@ const BaseLayout: React.FC<BaseLayoutProps> = (props) => {
           navaigate('/overview');
         });
     }
-  }, []);
+  }, [location.pathname]);
 
-  if (validating) return <LoadingSpinner loadingtext="Validating route..." />;
+  if (validating) return <LoadingSpinner />;
 
   return (
     <AuthProvider company={data?.validateRoute?.currentBranch}>

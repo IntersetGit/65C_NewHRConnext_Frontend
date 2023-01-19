@@ -159,7 +159,6 @@ const Companyniti: React.FC = () => {
       dataIndex: 'name',
       align: 'center',
       render: (_, rec) => {
-        console.log('Hello');
         return (
           <p>
             {data?.company?.name} {_}

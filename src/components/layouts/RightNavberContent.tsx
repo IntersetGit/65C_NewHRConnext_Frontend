@@ -14,6 +14,7 @@ import { RiHotelLine } from 'react-icons/ri';
 import { CompanyBranchType } from '../../context/types';
 import { logout } from '../../App';
 import { generatePath, useNavigate, useParams } from 'react-router-dom';
+import CompanySelect from './CompantSelect';
 
 const { useToken } = theme;
 
@@ -99,6 +100,7 @@ const RightNavbarContent: React.FC<RightNavContentType> = ({
           <div
             className="dropdown-content"
             style={{
+              minWidth: '300px',
               borderRadius: token.token.borderRadius,
             }}
           >
@@ -115,7 +117,7 @@ const RightNavbarContent: React.FC<RightNavContentType> = ({
               <div
                 style={{
                   display: 'flex',
-                  justifyContent: 'center',
+                  //justifyContent: 'center',
                   alignItems: 'center',
                   justifyItems: 'center',
                 }}
@@ -161,16 +163,18 @@ const RightNavbarContent: React.FC<RightNavContentType> = ({
                   >
                     {user?.me?.Role_Company?.name}
                   </Typography.Text>
-                  {company?.companyName && (
+                  {/* {company?.companyName && (
                     <Typography.Text
                       style={{ ...profileDetailstyle, fontSize: '0.85em' }}
                     >
                       {company?.companyName} {company?.branchName}
                     </Typography.Text>
-                  )}
+                  )} */}
                 </div>
               </div>
             </div>
+            <Divider style={{ margin: 0 }} />
+            <CompanySelect />
             <Divider style={{ margin: 0 }} />
             {menu}
           </div>

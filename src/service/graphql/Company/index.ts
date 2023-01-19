@@ -1,5 +1,21 @@
 import { gql } from '../../../__generated__';
 
+export const FETCH_COMPANY_SELECT = gql(`
+  query FetchcompanySelect {
+    company {
+      name
+      branch{
+        _count{
+          users
+        }
+        id
+        name
+        address
+      }
+    }
+  }
+`);
+
 export const FETCH_OWNCOMAPNY = gql(`
 query GetownCompany {
   getownCompany {

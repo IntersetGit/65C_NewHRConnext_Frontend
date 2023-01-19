@@ -44,10 +44,11 @@ const Layouts: React.FC<BaseLayoutProps> = (props) => {
                 collapsed ? MenuUnfoldOutlined : MenuFoldOutlined,
                 {
                   style: {
-                    marginLeft: `${collapsed
+                    marginLeft: `${
+                      collapsed
                         ? layoutConfig.siderbarCollpasedWidth
                         : layoutConfig.siderbarWidth
-                      }px`,
+                    }px`,
                   },
                   className: 'trigger',
                   onClick: () => setCollapsed(!collapsed),
@@ -60,7 +61,7 @@ const Layouts: React.FC<BaseLayoutProps> = (props) => {
                     userSelect: 'none',
                   }}
                 >
-                  {/* {user?.me?.company?.name} */}
+                  {company?.companyName} | {company?.branchName}
                 </Typography.Text>
               ) : (
                 <img src={icon} width={50} />
@@ -79,14 +80,16 @@ const Layouts: React.FC<BaseLayoutProps> = (props) => {
           style={{
             height: '100vh',
             marginTop: `${layoutConfig.headerHeight}px`,
-            marginLeft: `${!props.noSidebar
+            marginLeft: `${
+              !props.noSidebar
                 ? collapsed
                   ? layoutConfig.siderbarCollpasedWidth
                   : layoutConfig.siderbarWidth
                 : 0
-              }px`,
-            padding: `${props.py || 10}px ${props.px || 10}px ${props.py || 10
-              }px ${props.px || 10}px`,
+            }px`,
+            padding: `${props.py || 10}px ${props.px || 10}px ${
+              props.py || 10
+            }px ${props.px || 10}px`,
             minHeight: 280,
           }}
         >

@@ -10,8 +10,10 @@ const Lazyapp = React.lazy(() => import('./App'));
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <>
-    <Suspense fallback={<LoadingSpinner />}>
-      <Lazyapp />
-    </Suspense>
+    <React.StrictMode>
+      <Suspense fallback={<LoadingSpinner />}>
+        <Lazyapp />
+      </Suspense>
+    </React.StrictMode>
   </>,
 );
