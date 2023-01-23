@@ -39,7 +39,7 @@ const Login: React.FC = () => {
           path: '/',
           sameSite: 'lax',
         });
-        navigate('/');
+        navigate('/overview');
       })
       .catch((error) =>
         Swal.fire('เข้าสู่ระบบไม่สำเร็จ', error.message, 'error'),

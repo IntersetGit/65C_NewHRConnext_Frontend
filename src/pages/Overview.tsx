@@ -6,7 +6,7 @@ import { RiHotelLine } from 'react-icons/ri';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { FETCH_OWNCOMAPNY } from '../service/graphql/Company';
-import LoadingSpinner from '../components/loading-spinner';
+import { useEffect } from 'react';
 
 const { useToken } = theme;
 const ContainerHeight = 560;
@@ -18,15 +18,25 @@ const Overview: React.FC = () => {
   const { data: companyData, loading: companyLoading } =
     useQuery(FETCH_OWNCOMAPNY);
 
-  if (companyLoading) {
-    return <LoadingSpinner loadingtext="Loading company data...." />;
+  useEffect(() => {
+    if (companyData?.getownCompany?.redirect) {
+      navigate(`/${companyData.getownCompany.company?.companyCode}`, {
+        replace: true,
+      });
+    }
+  });
+
+  if (!companyData?.getownCompany?.isOwner) {
+    return null;
   }
 
-  if (companyData?.getownCompany?.redirect) {
-    navigate(`/${companyData.getownCompany.company?.companyCode}`, {
-      replace: true,
-    });
+  if (companyLoading) {
+    return null;
   }
+
+  // if (companyData?.getownCompany?.redirect) {
+  //   navigate(`/${companyData.getownCompany.company?.companyCode}`, {});
+  // }
 
   return (
     <div

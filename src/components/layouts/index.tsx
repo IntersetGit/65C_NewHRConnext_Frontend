@@ -41,11 +41,8 @@ const BaseLayout: React.FC<BaseLayoutProps> = (props) => {
   const location = useLocation();
   const [validateRoute, { loading: validating, error: validaterror, data }] =
     useMutation(GQL_QUERY);
-
   useEffect(() => {
-    if (!companycode) {
-      navaigate('/overview');
-    } else {
+    if (companycode) {
       validateRoute({ variables: { args: companycode } })
         .then((res) => {
           const data = res.data?.validateRoute;
@@ -71,9 +68,9 @@ const BaseLayout: React.FC<BaseLayoutProps> = (props) => {
           navaigate('/overview');
         });
     }
-  }, [location.pathname]);
+  }, [companycode]);
 
-  if (validating) return <LoadingSpinner />;
+  if (validating) return null;
 
   return (
     <AuthProvider company={data?.validateRoute?.currentBranch}>
