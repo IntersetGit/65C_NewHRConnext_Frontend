@@ -53,14 +53,15 @@ const Employee: React.FC = () => {
   const token = useToken();
   const navigate = useNavigate();
   const [dataTable, setDataTable] = useState([]);
-  const { data: userData, refetch } = useQuery(FETCH_GETALLUSER);
+  const { data: userData, loading, refetch } = useQuery(FETCH_GETALLUSER);
   const [deleteEmployeeAccount] = useMutation(DELETE_EMPLOYEE_ACCOUNT);
   const [isDisplayfield, setDisplayfield] = useState(1);
   const [pagecurrent, setPageCurrent] = useState<number>(2);
 
-  useEffect(() => {
-    refetch();
-  }, []);
+  // useEffect(() => {
+  //   refetch();
+  // }, [loading]);
+  // if (loading) return null;
 
   const genarateMenu = (record: any) => {
     return [
@@ -229,7 +230,9 @@ const Employee: React.FC = () => {
                 </Form.Item>
 
                 <Form.Item>
-                  <Button htmlType="submit">Search</Button>
+                  <Button loading={loading} htmlType="submit">
+                    Search
+                  </Button>
                 </Form.Item>
               </Space>
             </Col>

@@ -56,6 +56,7 @@ const clearCookieandcache = () => {
   router.navigate('/auth');
   cookie.remove('access', { path: '/', sameSite: 'lax' });
   cookie.remove('refresh_token', { path: '/', sameSite: 'lax' });
+  cookie.remove('branch', { path: '/', sameSite: 'lax' });
   gqlClient.clearStore();
   gqlClient.cache.reset();
 };
@@ -134,6 +135,7 @@ const gqlClient = new ApolloClient({
 export const logout = async () => {
   cookie.remove('access', { path: '/', sameSite: 'lax' });
   cookie.remove('refresh_token', { path: '/', sameSite: 'lax' });
+  cookie.remove('branch', { path: '/', sameSite: 'lax' });
   gqlClient.clearStore();
   gqlClient.cache.reset();
   router.navigate('/auth');

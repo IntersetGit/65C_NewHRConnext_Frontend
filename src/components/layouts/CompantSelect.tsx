@@ -3,6 +3,7 @@ import { Button, Divider, Dropdown, MenuProps, Typography, theme } from 'antd';
 import { HiOutlineChevronLeft, HiOutlineUser } from 'react-icons/hi2';
 import { FETCH_COMPANY_SELECT } from '../../service/graphql/Company';
 import { ResponseCompany_Branch } from '../../__generated__/graphql';
+import { useSearchParams } from 'react-router-dom';
 
 const { useToken } = theme;
 
@@ -30,15 +31,13 @@ const CompanyCard: React.FC<CompanyCardProps> = ({ data }) => {
 };
 const CompanySelect: React.FC = () => {
   const token = useToken();
+  let [searchparam, setSearchparam] = useSearchParams();
   const { data, loading, refetch } = useQuery(FETCH_COMPANY_SELECT, {
     notifyOnNetworkStatusChange: true,
   });
-  const menuitem: MenuProps['items'] = [
-    {
-      key: '1',
-      label: 'interset',
-    },
-  ];
+  const onClick: MenuProps['onClick'] = async ({ key }) => {
+    setSearchparam(`branch=${key}`);
+  };
   return (
     <div className="px-1 py-2">
       <Dropdown
@@ -80,6 +79,7 @@ const CompanySelect: React.FC = () => {
               className: 'border-gray-100 border-[1.5px]',
             };
           }) as MenuProps['items'],
+          onClick,
         }}
       >
         <Button
