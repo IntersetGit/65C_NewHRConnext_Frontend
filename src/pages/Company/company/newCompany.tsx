@@ -81,21 +81,6 @@ const Newcompany = () => {
     setDistrict(district ? district : []);
   };
 
-  // const onProvinceChangeCitizen = (value: string) => {
-  //   form.setFieldValue('city', null);
-  //   form.setFieldValue('state', null);
-  //   form.setFieldValue('zip', null);
-  //   const district = province_data?.getProvince
-  //     ?.find((e) => e?.id === value)
-  //     ?.district?.map((e) => {
-  //       return {
-  //         label: e?.name,
-  //         value: e?.id,
-  //       };
-  //     });
-  //   setDistrict(district ? district : []);
-  // };
-
   const onDistrictChangeCitizen = (value: string) => {
     form.setFieldValue('city', null);
     form.setFieldValue('zip', null);
