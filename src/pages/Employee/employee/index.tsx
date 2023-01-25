@@ -154,7 +154,7 @@ const Employee: React.FC = () => {
       align: 'center',
     },
     {
-      title: 'แผนก/ฝ่าย',
+      title: 'แผนก',
       key: 'profile',
       dataIndex: 'profile',
       align: 'center',
@@ -207,7 +207,7 @@ const Employee: React.FC = () => {
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={6} xl={6}>
-              <Form.Item name="search" colon={false} label={'แผนก/ฝ่าย'}>
+              <Form.Item name="search" colon={false} label={'แผนก'}>
                 <Select allowClear></Select>
               </Form.Item>
             </Col>

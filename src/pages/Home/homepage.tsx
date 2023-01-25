@@ -25,7 +25,6 @@ const HomePage: React.FC = () => {
                 </div>
             </Card>
 
-
             <Form>
                 <Row gutter={16}>
                     <Col xs={24} sm={24} md={24} lg={9} xl={9}>

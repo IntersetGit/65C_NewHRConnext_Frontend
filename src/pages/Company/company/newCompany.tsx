@@ -11,7 +11,6 @@ import {
   Space,
   theme,
 } from 'antd';
-import { gql } from '../../../__generated__/gql';
 import { useEffect, useState } from 'react';
 import { RiCloseFill, RiCommunityLine } from 'react-icons/ri';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -43,7 +42,6 @@ const Newcompany = () => {
   >(undefined);
 
   let Editdata = location.state as any;
-  console.log(Editdata);
 
   useEffect(() => {
     if (Editdata?.mode) {
@@ -896,7 +894,7 @@ const Newcompany = () => {
                     marginBottom: '10px',
                   }}
                   onClick={() => {
-                    navigate('/:companycode/company');
+                    companyNavigate('/:companycode/company');
                   }}
                 >
                   ยกเลิก
