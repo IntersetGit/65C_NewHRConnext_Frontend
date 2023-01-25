@@ -1,15 +1,10 @@
 import { useEffect, useState } from 'react';
-import { FaUserAlt } from 'react-icons/fa';
 import {
-  HomeOutlined,
   FolderFilled,
-  FacebookFilled,
-  LinkedinFilled,
   AntDesignOutlined,
   UploadOutlined,
 } from '@ant-design/icons';
 import { BsTelegram } from 'react-icons/bs';
-import { FaLine } from 'react-icons/fa';
 import {
   Button,
   Checkbox,
@@ -24,7 +19,6 @@ import {
   theme,
   Card,
   Upload,
-  Modal,
   Avatar,
   Tabs,
 } from 'antd';
@@ -41,12 +35,14 @@ import telegram from '../../../assets/Telegram-logo.png';
 import type { UploadProps } from 'antd';
 import { gql } from '../../../__generated__/gql';
 import { useQuery, useMutation, from } from '@apollo/client';
+import { FETCH_GETALLUSER } from '../../../service/graphql/Users';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import moment from 'moment';
 import { GET_PROVINCE } from '../../../service/graphql/Province';
 import type { CheckboxChangeEvent } from 'antd/es/checkbox';
 import { useAuth } from '../../../hooks/useAuth';
+import { User, UsersQuery } from '../../../__generated__/graphql';
 
 const { useToken } = theme;
 
@@ -126,6 +122,7 @@ const UserEmployee: React.FC = (props) => {
   >(undefined);
 
   const { data: province_data, refetch } = useQuery(GET_PROVINCE);
+  const { data: role_company } = useQuery(FETCH_GETALLUSER);
   const [createEmployeeAccount] = useMutation(CREATE_EMPLOYEE_ACCOUNT);
   let propsstate = location.state as any;
   let { companycode } = useParams();
@@ -164,6 +161,21 @@ const UserEmployee: React.FC = (props) => {
       state: propsstate,
     });
   };
+
+  // const arrcompay: any[] = [];
+  // role_company?.users?.forEach((e) => {
+  //   if (
+  //     arrcompay.includes(
+  //       (_e: User) => _e.Role_Company?.id === e?.Role_Company?.id,
+  //     )
+  //   )
+  //     return;
+  //   arrcompay.push({
+  //     label: e?.Role_Company?.name,
+  //     value: e?.Role_Company?.id,
+  //   });
+  // });
+  // console.log(arrcompay);
 
   const province = province_data?.getProvince?.map((e) => {
     return {
@@ -855,6 +867,12 @@ const UserEmployee: React.FC = (props) => {
                 )}
               </Form.Item>
             </Col>
+
+            {/* <Col xs={24} sm={12} md={12} lg={6} xl={6}>
+              <Form.Item name={'rolecompany'} label={'ROLE'}>
+                <Select options={arrcompay} allowClear />
+              </Form.Item>
+            </Col> */}
           </Row>
 
           <Divider style={{ backgroundColor: token.token.colorPrimary }} />

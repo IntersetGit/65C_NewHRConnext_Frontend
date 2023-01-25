@@ -155,7 +155,7 @@ const PositionEmployee: React.FC = (props) => {
         items={[
           {
             label: `ข้อมูลพนักงาน`,
-            key: `/:companycode/employee/useremployee?id=${propsstate.id}`,
+            key: `/:companycode/employee/useremployee?id=${propsstate?.id}`,
           },
           {
             label: `ตำแหน่งงาน`,
@@ -184,10 +184,10 @@ const PositionEmployee: React.FC = (props) => {
           <Col xs={24} sm={24} md={4} lg={4} xl={4}>
             <div className="text-lg font-bold">
               <u className="text-blue-800">
-                {propsstate.prefix_th} {propsstate.firstname_th}{' '}
-                {propsstate.lastname_th}
+                {propsstate?.prefix_th} {propsstate?.firstname_th}{' '}
+                {propsstate?.lastname_th}
               </u>
-              <div className="mt-4">{propsstate.firstname_en}</div>
+              <div className="mt-4">{propsstate?.firstname_en}</div>
             </div>
           </Col>
         </Row>
@@ -203,7 +203,7 @@ const PositionEmployee: React.FC = (props) => {
           </Col>
           <Col xs={24} sm={12} md={12} lg={8} xl={8}>
             <div className="py-3">หมายเลขประจำตัวผู้เสียภาษี</div>
-            <Input defaultValue={propsstate.citizen_id} size="large" />
+            <Input defaultValue={propsstate?.citizen_id} size="large" />
           </Col>
         </Row>
 
