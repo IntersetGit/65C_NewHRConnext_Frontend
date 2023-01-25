@@ -69,7 +69,8 @@ import {
   RiFile3Line,
   RiTeamLine,
   RiHandCoinLine,
-  RiFileCopyLine,
+  RiFileCopy2Line,
+  RiCalendarCheckLine,
 } from 'react-icons/ri';
 import { HiOutlineClipboardDocumentCheck } from 'react-icons/hi2';
 
@@ -154,7 +155,7 @@ export const routing: RoutingType[] = [
       {
         path: '/:companycode/resume',
         label: 'ประวัติการทำงาน',
-        icon: <RiFileCopyLine />,
+        icon: <RiFileCopy2Line size={'18'} />,
         forcerendermenu: true,
         element: <Resumeroot />,
         children: [
@@ -202,15 +203,22 @@ export const routing: RoutingType[] = [
         ],
       },
       {
+        path: '/:companycode/approveleave',
+        label: 'การอนุมัติใบลา',
+        icon: <RiCalendarCheckLine size={'18'} />,
+        element: <></>,
+      },
+      {
         path: '/:companycode/training',
         label: 'การฝึกอบรม',
         icon: <RiSlideshow3Line size={'18'} />,
         element: <CompanyLocation />,
       },
+
       {
         path: '/:companycode/assessment',
         label: 'การประเมิน',
-        icon: <HiOutlineClipboardDocumentCheck size={'18'} />,
+        icon: <HiOutlineClipboardDocumentCheck size={'20'} />,
         element: <></>,
       },
       {

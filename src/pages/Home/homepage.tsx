@@ -41,7 +41,13 @@ const HomePage: React.FC = () => {
                                     laboriosam ipsa,doloribus officia iste quae ex molestias? Quod architecto eius esse, nisi deserunt
                                     sint mollitia.
                                 </Form.Item>
-                                <Form.Item>
+                                <Form.Item
+                                    style={{
+                                        display: 'flex',
+                                        justifyItems: 'center',
+                                        alignItems: 'center',
+                                        justifyContent: 'center'
+                                    }}>
                                     <Image
                                         width={200}
                                         height={200}
@@ -67,7 +73,14 @@ const HomePage: React.FC = () => {
                                     laboriosam ipsa,doloribus officia iste quae ex molestias? Quod architecto eius esse, nisi deserunt
                                     sint mollitia.
                                 </Form.Item>
-                                <Form.Item>
+                                <Form.Item
+                                    style={{
+                                        display: 'flex',
+                                        justifyItems: 'center',
+                                        alignItems: 'center',
+                                        justifyContent: 'center'
+                                    }}
+                                >
                                     <Image
                                         width={200}
                                         height={200}
@@ -139,7 +152,14 @@ const HomePage: React.FC = () => {
                                     laboriosam ipsa,doloribus officia iste quae ex molestias? Quod architecto eius esse, nisi deserunt
                                     sint mollitia.
                                 </Form.Item>
-                                <Form.Item>
+                                <Form.Item
+                                    style={{
+                                        display: 'flex',
+                                        justifyItems: 'center',
+                                        alignItems: 'center',
+                                        justifyContent: 'center'
+                                    }}
+                                >
                                     <Image
                                         width={200}
                                         height={200}
@@ -165,7 +185,14 @@ const HomePage: React.FC = () => {
                                     laboriosam ipsa,doloribus officia iste quae ex molestias? Quod architecto eius esse, nisi deserunt
                                     sint mollitia.
                                 </Form.Item>
-                                <Form.Item>
+                                <Form.Item
+                                    style={{
+                                        display: 'flex',
+                                        justifyItems: 'center',
+                                        alignItems: 'center',
+                                        justifyContent: 'center'
+                                    }}
+                                >
                                     <Image
                                         width={200}
                                         height={200}
