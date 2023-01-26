@@ -17,7 +17,12 @@ import {
   Select,
   Space,
 } from 'antd';
-import { RiCalendar2Line } from 'react-icons/ri';
+import { RiCalendar2Line, RiBriefcase5Line } from 'react-icons/ri';
+import {
+  MdOutlineLocalHospital,
+  MdAirplanemodeActive,
+  MdDragIndicator,
+} from 'react-icons/md';
 import edit from '../../../assets/Edit.png';
 import Del from '../../../assets/DEL.png';
 import View from '../../../assets/View.png';
@@ -47,37 +52,37 @@ const Approve: React.FC = () => {
 
   const genarateMenu = (record: any) => {
     return [
-      {
-        key: 'edit',
-        label: 'แก้ไข',
-        icon: <img style={{ width: '17px', height: '17px' }} src={edit} />,
-        onClick: (e: any) => onMenuClick(e, record),
-      },
+      // {
+      //   key: 'edit',
+      //   label: 'แก้ไข',
+      //   icon: <img style={{ width: '17px', height: '17px' }} src={edit} />,
+      //   onClick: (e: any) => onMenuClick(e, record),
+      // },
       {
         key: 'view',
         label: 'ดูข้อมูล',
         icon: <img style={{ width: '17px', height: '17px' }} src={View} />,
         onClick: (e: any) => onMenuClick(e, record),
       },
-      {
-        key: 'delete',
-        label: 'ลบข้อมูล',
-        icon: <img style={{ width: '20px', height: '20px' }} src={Del} />,
-        onClick: (e: any) => onMenuClick(e, record),
-      },
+      // {
+      //   key: 'delete',
+      //   label: 'ลบข้อมูล',
+      //   icon: <img style={{ width: '20px', height: '20px' }} src={Del} />,
+      //   onClick: (e: any) => onMenuClick(e, record),
+      // },
     ];
   };
 
   const onMenuClick = (event: any, record: any) => {
     const { key } = event;
     if (key === 'edit') {
+    } else if (key === 'view') {
       showDrawer();
       form.setFieldsValue({
         ...record,
         from_date: moment(record.from_date) as any,
         to_date: moment(record.to_date) as any,
       });
-    } else if (key === 'view') {
     } else if (key === 'delete') {
     }
   };
@@ -167,19 +172,26 @@ const Approve: React.FC = () => {
       <Divider style={{ backgroundColor: token.token.colorPrimary }} />
 
       <Card className="shadow-xl">
-        <Row gutter={16}>
+        <Row className="py-6" gutter={16}>
           <Col xs={24} sm={24} md={4} lg={4} xl={4}>
             <div>
               <Avatar
                 size={{ xs: 24, sm: 32, md: 40, lg: 64, xl: 80, xxl: 100 }}
-                style={{ width: 100, height: 100 }}
+                style={{ width: 150, height: 150 }}
               ></Avatar>
             </div>
           </Col>
 
-          <Col xs={24} sm={24} md={4} lg={4} xl={4}>
+          <Col
+            className="flex justify-center items-center"
+            xs={24}
+            sm={24}
+            md={4}
+            lg={4}
+            xl={4}
+          >
             <div className="text-lg font-bold">
-              <u className="text-blue-800">
+              <u style={{ color: token.token.colorPrimary }}>
                 {propsstate?.firstname_th} {propsstate?.lastname_th}
               </u>
               <div className="my-4">{propsstate?.position}</div>
@@ -187,31 +199,38 @@ const Approve: React.FC = () => {
           </Col>
         </Row>
 
-        <Row className="my-4" gutter={16}>
-          <Col span={6}>
-            <Card className="border-4 border-gray-600">
-              <div className="flex text-lg font-bold justify-center">
+        <Row className="my-4" gutter={[16, 8]}>
+          <Col xs={24} sm={24} md={12} lg={12} xl={6}>
+            <Card className="shadow-lg border-4 border-[#8cb369] bg-[#8cb369]">
+              <div className="flex text-lg font-bold justify-center items-center mx-12">
+                <MdAirplanemodeActive className="text-green-900" size={'38'} />{' '}
                 ลาพักร้อน {propsstate?.leave_vacation}
               </div>
             </Card>
           </Col>
-          <Col span={6}>
-            <Card className="border-4 border-gray-600">
-              <div className="flex text-lg font-bold justify-center">
+          <Col xs={24} sm={24} md={12} lg={12} xl={6}>
+            <Card className="shadow-lg border-4 border-[#f4e285] bg-[#f4e285]">
+              <div className="flex text-lg font-bold justify-center items-center">
+                <RiBriefcase5Line className="text-[#b48a4d]" size={'38'} />{' '}
                 ลากิจ {propsstate?.leave_bussiness}
               </div>
             </Card>
           </Col>
-          <Col span={6}>
-            <Card className="border-4 border-gray-600">
-              <div className="flex text-lg font-bold justify-center">
+          <Col xs={24} sm={24} md={12} lg={12} xl={6}>
+            <Card className="shadow-lg border-4 border-[#f4a259] bg-[#f4a259]">
+              <div className="flex text-lg font-bold justify-center items-center">
+                <MdOutlineLocalHospital
+                  className="text-[#e2711d]"
+                  size={'38'}
+                />{' '}
                 ลาป่วย {propsstate?.leave_sick}
               </div>
             </Card>
           </Col>
-          <Col span={6}>
-            <Card className="border-4 border-gray-600">
-              <div className="flex text-lg font-bold justify-center">
+          <Col xs={24} sm={24} md={12} lg={12} xl={6}>
+            <Card className="shadow-lg border-4 border-[#5b8e7d] bg-[#5b8e7d]">
+              <div className="flex text-lg font-bold justify-center items-center">
+                <MdDragIndicator className="text-emerald-900" size={'38'} />{' '}
                 ลาอื่น ๆ {propsstate?.leave_other}
               </div>
             </Card>

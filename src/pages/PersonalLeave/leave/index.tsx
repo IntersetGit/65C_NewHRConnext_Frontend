@@ -28,34 +28,34 @@ const Leave: React.FC = () => {
 
   const genarateMenu = (record: any) => {
     return [
-      {
-        key: 'edit',
-        label: 'แก้ไข',
-        icon: <img style={{ width: '17px', height: '17px' }} src={edit} />,
-        onClick: (e: any) => onMenuClick(e, record),
-      },
+      // {
+      //   key: 'edit',
+      //   label: 'แก้ไข',
+      //   icon: <img style={{ width: '17px', height: '17px' }} src={edit} />,
+      //   onClick: (e: any) => onMenuClick(e, record),
+      // },
       {
         key: 'view',
         label: 'ดูข้อมูล',
         icon: <img style={{ width: '17px', height: '17px' }} src={View} />,
         onClick: (e: any) => onMenuClick(e, record),
       },
-      {
-        key: 'delete',
-        label: 'ลบข้อมูล',
-        icon: <img style={{ width: '20px', height: '20px' }} src={Del} />,
-        onClick: (e: any) => onMenuClick(e, record),
-      },
+      // {
+      //   key: 'delete',
+      //   label: 'ลบข้อมูล',
+      //   icon: <img style={{ width: '20px', height: '20px' }} src={Del} />,
+      //   onClick: (e: any) => onMenuClick(e, record),
+      // },
     ];
   };
 
   const onMenuClick = (event: any, record: any) => {
     const { key } = event;
     if (key === 'edit') {
+    } else if (key === 'view') {
       navigate(`approve?id=${record.profile.id}`, {
         state: { ...record?.profile, mode: 'edit' },
       });
-    } else if (key === 'view') {
     } else if (key === 'delete') {
     }
   };
