@@ -20,6 +20,7 @@ const Home = React.lazy(() => import('../pages/Home'));
 const Companyroot = React.lazy(() => import('../pages/Company'));
 const CompanyStructure = React.lazy(() => import('../pages/Company/structure'));
 const CompanyPosition = React.lazy(() => import('../pages/Company/position'));
+const ApproveLeave = React.lazy(() => import('../pages/Approve'))
 const Employeeroot = React.lazy(() => import('../pages/Employee'));
 const Employee = React.lazy(() => import('../pages/Employee/employee'));
 const PositionEmployee = React.lazy(
@@ -73,8 +74,8 @@ import {
   RiTeamLine,
   RiHandCoinLine,
   RiFileCopy2Line,
-  RiFileCopyLine,
   RiCalendarCheckLine,
+  RiSuitcaseLine,
 } from 'react-icons/ri';
 import { HiOutlineClipboardDocumentCheck } from 'react-icons/hi2';
 
@@ -207,16 +208,10 @@ export const routing: RoutingType[] = [
         ],
       },
       {
-        path: '/:companycode/approveleave',
-        label: 'การอนุมัติใบลา',
-        icon: <RiCalendarCheckLine size={'18'} />,
-        element: <></>,
-      },
-      {
         path: '/:companycode/personalleave',
         label: 'การลา',
         forcerendermenu: true,
-        icon: <RiCalendarCheckLine size={'18'} />,
+        icon: <RiSuitcaseLine size={'18'} />,
         element: <PersonalLeave />,
         children: [
           {
@@ -228,6 +223,12 @@ export const routing: RoutingType[] = [
             element: <Approve />,
           },
         ],
+      },
+      {
+        path: '/:companycode/approveleave',
+        label: 'การอนุมัติใบลา',
+        icon: <RiCalendarCheckLine size={'18'} />,
+        element: <ApproveLeave />,
       },
       {
         path: '/:companycode/training',

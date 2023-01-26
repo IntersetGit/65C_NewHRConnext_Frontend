@@ -176,6 +176,26 @@ export type CreateUserResponseType = {
   status?: Maybe<Scalars['Boolean']>;
 };
 
+export type CreatedAndUpdatePosition = {
+  code_position1?: InputMaybe<Scalars['String']>;
+  level_Position1?: InputMaybe<Scalars['Int']>;
+  masPosition2?: InputMaybe<Array<InputMaybe<CreatedmasPosition2>>>;
+  name_Position1?: InputMaybe<Scalars['String']>;
+};
+
+export type CreatedmasPosition2 = {
+  code_position2?: InputMaybe<Scalars['String']>;
+  level_Position2?: InputMaybe<Scalars['Int']>;
+  masPosition3?: InputMaybe<Array<InputMaybe<CreatedmasPosition3>>>;
+  name_Position2?: InputMaybe<Scalars['String']>;
+};
+
+export type CreatedmasPosition3 = {
+  code_position3?: InputMaybe<Scalars['String']>;
+  level_Position3?: InputMaybe<Scalars['Int']>;
+  name_Position3?: InputMaybe<Scalars['String']>;
+};
+
 export type CreatepositionResponseType = {
   __typename?: 'CreatepositionResponseType';
   message?: Maybe<Scalars['String']>;
@@ -291,11 +311,11 @@ export type MeprofileType = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  CreatedAndEditPosition?: Maybe<CreatepositionResponseType>;
   createAccount?: Maybe<CreateCompanyResponseType>;
   createAccountUser?: Maybe<CreateUserResponseType>;
   createAndUpdateComBarance?: Maybe<CreateComapnyBranchResponseType>;
   createRoleCompany?: Maybe<CreateRoleCompanyResponseType>;
-  createdandEditposition?: Maybe<Array<Maybe<CreatepositionResponseType>>>;
   deleteAccountUser?: Maybe<DeleteAccountUserResponseType>;
   deleteComBarance?: Maybe<DeleteComapnyBranchResponseType>;
   deleteRoleCompany?: Maybe<DeleteRoleCompanyRespnsetType>;
@@ -303,6 +323,11 @@ export type Mutation = {
   refreshToken?: Maybe<RefreshtokenResponseType>;
   updateRoleCompanyMangement?: Maybe<CreateRoleCompanyResponseType>;
   validateRoute?: Maybe<ValidateRoute>;
+};
+
+
+export type MutationCreatedAndEditPositionArgs = {
+  data?: InputMaybe<Array<CreatedAndUpdatePosition>>;
 };
 
 
@@ -323,11 +348,6 @@ export type MutationCreateAndUpdateComBaranceArgs = {
 
 export type MutationCreateRoleCompanyArgs = {
   data: CreateRoleCompanyGroup;
-};
-
-
-export type MutationCreatedandEditpositionArgs = {
-  data?: InputMaybe<Array<Createdandupdate>>;
 };
 
 
@@ -441,7 +461,7 @@ export type Query = {
   company?: Maybe<ResponseCompany>;
   getAllcompany?: Maybe<Array<Maybe<CompanyBranch>>>;
   getHoliday?: Maybe<Array<Maybe<Holiday_Year>>>;
-  getMasPositon?: Maybe<Array<Maybe<Mas_Position>>>;
+  getMasPositon?: Maybe<Array<Maybe<Mas_Positionlevel1>>>;
   getProvince?: Maybe<Array<Maybe<Province>>>;
   getcompanyRole?: Maybe<Array<Maybe<Role_Company>>>;
   getownCompany?: Maybe<GetOwncompanytype>;
@@ -633,12 +653,6 @@ export type CreateRoleCompanyGroup = {
   status: Scalars['Int'];
 };
 
-export type Createdandupdate = {
-  level?: InputMaybe<Scalars['Int']>;
-  masPosition1?: InputMaybe<Array<InputMaybe<MasPosition1>>>;
-  name?: InputMaybe<Scalars['String']>;
-};
-
 export type Holiday_Year = {
   __typename?: 'holiday_year';
   date?: Maybe<Scalars['Date']>;
@@ -646,29 +660,11 @@ export type Holiday_Year = {
   id: Scalars['ID'];
 };
 
-export type MasPosition1 = {
-  level?: InputMaybe<Scalars['Int']>;
-  masPosition2?: InputMaybe<Array<InputMaybe<MasPosition2>>>;
-  name?: InputMaybe<Scalars['String']>;
-};
-
-export type MasPosition2 = {
-  level?: InputMaybe<Scalars['Int']>;
-  masPosition3?: InputMaybe<Array<InputMaybe<MasPosition3>>>;
-  name?: InputMaybe<Scalars['String']>;
-};
-
-export type MasPosition3 = {
-  level?: InputMaybe<Scalars['Int']>;
-  name?: InputMaybe<Scalars['String']>;
-};
-
 export type Mas_Position = {
   __typename?: 'mas_position';
   CompanyId?: Maybe<Scalars['String']>;
   id?: Maybe<Scalars['String']>;
   level?: Maybe<Scalars['Int']>;
-  mas_positionlevel1?: Maybe<Array<Maybe<Mas_Positionlevel1>>>;
   name?: Maybe<Scalars['String']>;
 };
 
@@ -676,27 +672,33 @@ export type Mas_Positionlevel1 = {
   __typename?: 'mas_positionlevel1';
   CompanyId?: Maybe<Scalars['String']>;
   Position_user?: Maybe<Array<Maybe<Position_User>>>;
+  code?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
   level?: Maybe<Scalars['Int']>;
   mas_positionlevel2?: Maybe<Array<Maybe<Mas_Positionlevel2>>>;
   name?: Maybe<Scalars['String']>;
+  type?: Maybe<Scalars['String']>;
 };
 
 export type Mas_Positionlevel2 = {
   __typename?: 'mas_positionlevel2';
   Position_user?: Maybe<Array<Maybe<Position_User>>>;
+  code?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
   level?: Maybe<Scalars['Int']>;
   mas_positionlevel3?: Maybe<Array<Maybe<Mas_Positionlevel3>>>;
   name?: Maybe<Scalars['String']>;
+  type?: Maybe<Scalars['String']>;
 };
 
 export type Mas_Positionlevel3 = {
   __typename?: 'mas_positionlevel3';
   Position_user?: Maybe<Array<Maybe<Position_User>>>;
+  code?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
   level?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
+  type?: Maybe<Scalars['String']>;
 };
 
 export type RefreshTokenMutationVariables = Exact<{ [key: string]: never; }>;

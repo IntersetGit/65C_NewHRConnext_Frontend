@@ -400,21 +400,6 @@ const Rights: React.FC = () => {
   return (
     <>
       <div className="px-2 py-2">
-        {/* <div>
-                    <Tabs
-                        className='right-tab'
-                        items={[
-                            {
-                                label: `จัดการสิทธิ์การใช้งาน`,
-                                key: '/:companycode/userprofile',
-                            },
-                            {
-                                label: `จัดการกลุ่มผู้ใช้งาน`,
-                                key: '/:companycode/userprofile/work',
-                            },
-                        ]}
-                    />
-                </div> */}
         <div className="flex text-2xl ml-2 pt-4">
           <RiCommunityLine size={30} />
           <div className="ml-2 text-lg">จัดการสิทธิ์การใช้งาน</div>
