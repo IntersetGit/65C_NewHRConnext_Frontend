@@ -287,7 +287,12 @@ const Manageuser: React.FC = () => {
             onClose={onClose}
             open={open}
           >
-            <Form layout="vertical" form={form} onFinish={onFinish}>
+            <Form
+              layout="vertical"
+              form={form}
+              size="large"
+              onFinish={onFinish}
+            >
               {/* <div className="relative flex flex-row items-center py-2">
                 <span className="ml-4 text-lg tracking-wide truncate">
                   เพิ่มสิทธิ์ผู้ใช้งาน

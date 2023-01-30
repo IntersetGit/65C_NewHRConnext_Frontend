@@ -13,7 +13,7 @@ import {
   Table,
   Dropdown,
 } from 'antd';
-import { RiCalendar2Line } from 'react-icons/ri';
+import { RiSuitcaseLine } from 'react-icons/ri';
 import edit from '../../../assets/Edit.png';
 import Del from '../../../assets/DEL.png';
 import View from '../../../assets/View.png';
@@ -140,8 +140,8 @@ const Leave: React.FC = () => {
   ];
   return (
     <>
-      <div className="flex text-2xl ml-2 pt-4">
-        <RiCalendar2Line />
+      <div className="flex text-3xl ml-2 pt-4">
+        <RiSuitcaseLine />
         <div className="ml-2 text-lg">การลา</div>
       </div>
 

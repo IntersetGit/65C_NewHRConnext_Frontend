@@ -209,7 +209,7 @@ const Approve: React.FC = () => {
             </Card>
           </Col>
           <Col xs={24} sm={24} md={12} lg={12} xl={6}>
-            <Card className="shadow-lg border-4 border-[#f4e285] bg-[#f4e285]">
+            <Card className="shadow-lg border-4 border-[#fddd5c] bg-[#fddd5c]">
               <div className="flex text-lg font-bold justify-center items-center">
                 <RiBriefcase5Line className="text-[#b48a4d]" size={'38'} />{' '}
                 ลากิจ {propsstate?.leave_bussiness}
@@ -228,9 +228,9 @@ const Approve: React.FC = () => {
             </Card>
           </Col>
           <Col xs={24} sm={24} md={12} lg={12} xl={6}>
-            <Card className="shadow-lg border-4 border-[#5b8e7d] bg-[#5b8e7d]">
+            <Card className="shadow-lg border-4 border-[#b491c8] bg-[#b491c8]">
               <div className="flex text-lg font-bold justify-center items-center">
-                <MdDragIndicator className="text-emerald-900" size={'38'} />{' '}
+                <MdDragIndicator className="text-[#7c5295]" size={'38'} />{' '}
                 ลาอื่น ๆ {propsstate?.leave_other}
               </div>
             </Card>
