@@ -15,7 +15,7 @@ const VacationHome: React.FC = () => {
 
     return (
         <>
-            <Tabs
+            {/* <Tabs
                 defaultActiveKey="/:companycode/vacation"
                 className="right-tab"
                 onChange={onChange}
@@ -29,7 +29,7 @@ const VacationHome: React.FC = () => {
                         key: '/:companycode/vacation/Leave',
                     },
                 ]}
-            />
+            /> */}
             <Outlet />
         </>
     )

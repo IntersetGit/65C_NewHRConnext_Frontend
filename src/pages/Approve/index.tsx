@@ -246,7 +246,6 @@ const Approveleave: React.FC = () => {
                 width="40%"
             >
                 <Form form={form} layout="vertical">
-
                     <Row>
                         <Col span={12}>
                             <Form.Item className='mb-3' label={'การอนุมัติใบลา'}>
@@ -280,10 +279,15 @@ const Approveleave: React.FC = () => {
                         </Col>
                     </Row>
 
-                    <Row>
+                    <Row gutter={16}>
                         <Col span={12}>
                             <Form.Item name={'numberofdays'} label={'จำนวนวัน'}>
                                 <Input />
+                            </Form.Item>
+                        </Col>
+                        <Col span={12}>
+                            <Form.Item name={'leavestatus'} label={'สถานะการลา'}>
+                                <Input disabled style={{ color: token.token.colorPrimary }} />
                             </Form.Item>
                         </Col>
                     </Row>
@@ -291,7 +295,7 @@ const Approveleave: React.FC = () => {
                     <Row>
                         <Col span={24}>
                             <Form.Item label={'เหตุผลการลา'}>
-                                <TextArea rows={6} />
+                                <TextArea rows={4} />
                             </Form.Item>
                         </Col>
                     </Row>
