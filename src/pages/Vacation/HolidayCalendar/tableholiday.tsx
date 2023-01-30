@@ -59,6 +59,7 @@ const TableHoliday: React.FC = () => {
         <>
             <div>
                 <Table
+                    rowKey={'id'}
                     rowSelection={{
                         type: selectionType,
                         ...rowSelection,

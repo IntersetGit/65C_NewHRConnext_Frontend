@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { RiCommunityLine } from 'react-icons/ri';
+import { RiHotelLine } from 'react-icons/ri';
 import { IoSwapVerticalOutline } from 'react-icons/io5';
 
 import {
@@ -506,7 +506,7 @@ const CompanyStructure: React.FC = () => {
             <div>
                 <div className="relative flex flex-row items-center">
                     <div className="flex flex-row items-center text-4xl">
-                        <RiCommunityLine />
+                        <RiHotelLine />
                     </div>
                     <span className="ml-4 text-lg tracking-wide truncate">
                         ข้อมูลบริษัท / โครงสร้างบริษัท
@@ -558,7 +558,7 @@ const CompanyStructure: React.FC = () => {
                         // defaultExpandAll
                         // defaultExpandedKeys={expandedKeys}
                         draggable={{
-                            icon: <IoSwapVerticalOutline  style={{
+                            icon: <IoSwapVerticalOutline style={{
                                 fontSize: '18px',
                                 stroke: "#000",
                             }} />

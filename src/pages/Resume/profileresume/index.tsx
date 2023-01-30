@@ -12,9 +12,10 @@ import {
   Menu,
   theme,
 } from 'antd';
-import { RxBackpack } from 'react-icons/rx';
+
 import type { ColumnsType } from 'antd/es/table';
 import { MoreOutlined } from '@ant-design/icons';
+import { RiFileCopy2Line } from 'react-icons/ri';
 
 const { useToken } = theme;
 interface DataType {
@@ -198,7 +199,7 @@ const ProfileResume: React.FC = () => {
   return (
     <>
       <div className="flex text-3xl ml-2 pt-4">
-        <RxBackpack />
+        <RiFileCopy2Line />
         <div className="ml-2 text-xl">ประวัติการทำงาน</div>
       </div>
       <Divider style={{ backgroundColor: token.token.colorPrimary }} />

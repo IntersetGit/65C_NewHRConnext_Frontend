@@ -12,7 +12,7 @@ import {
   theme,
 } from 'antd';
 import { useEffect, useState } from 'react';
-import { RiCloseFill, RiCommunityLine } from 'react-icons/ri';
+import { RiCloseFill, RiHotelLine } from 'react-icons/ri';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import facebook from '../../../assets/Facebook-logo.png';
@@ -155,7 +155,7 @@ const Newcompany = () => {
     <>
       <div className="relative flex flex-row items-center">
         <div className="flex flex-row items-center text-4xl">
-          <RiCommunityLine />
+          <RiHotelLine />
         </div>
         <span className="ml-4 text-lg tracking-wide truncate">
           ข้อมูลบริษัท / นิติบุคคล

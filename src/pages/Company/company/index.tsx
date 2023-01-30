@@ -14,7 +14,7 @@ import {
 import edit from '../../../assets/Edit.png';
 import Del from '../../../assets/DEL.png';
 import View from '../../../assets/View.png';
-import { RiCommunityLine } from 'react-icons/ri';
+import { RiHotelLine } from 'react-icons/ri';
 import { gql } from '../../../__generated__/gql';
 import { useQuery, useMutation } from '@apollo/client';
 import Spinner from '../../../components/Spinner';
@@ -208,7 +208,7 @@ const Companyniti: React.FC = () => {
   return (
     <>
       <div className="flex text-2xl ml-2 pt-4">
-        <RiCommunityLine size={30} />
+        <RiHotelLine size={30} />
         <div className="ml-2 text-lg">จัดการบริษัท</div>
       </div>
 

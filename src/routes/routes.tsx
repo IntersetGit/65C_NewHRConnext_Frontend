@@ -78,6 +78,7 @@ import {
   RiSuitcaseLine,
 } from 'react-icons/ri';
 import { HiOutlineClipboardDocumentCheck } from 'react-icons/hi2';
+import { TbCalendarTime } from 'react-icons/tb';
 
 export type RoutingType = {
   path: string;
@@ -194,7 +195,7 @@ export const routing: RoutingType[] = [
         path: '/:companycode/vacation',
         label: 'วันหยุด',
         forcerendermenu: true,
-        icon: <RiHistoryLine size={'18'} />,
+        icon: <TbCalendarTime size={'18'} />,
         element: <Holidays />,
         children: [
           {
