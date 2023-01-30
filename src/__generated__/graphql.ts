@@ -164,6 +164,20 @@ export type CreateCompanyResponseType = {
   status?: Maybe<Scalars['Boolean']>;
 };
 
+export type CreateHolidayYearResponseType = {
+  __typename?: 'CreateHolidayYearResponseType';
+  message?: Maybe<Scalars['String']>;
+  status?: Maybe<Scalars['Boolean']>;
+};
+
+export type CreateHolidayYears = {
+  day?: InputMaybe<Scalars['Int']>;
+  holiday_name?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['ID']>;
+  month?: InputMaybe<Scalars['Int']>;
+  year?: InputMaybe<Scalars['Int']>;
+};
+
 export type CreateRoleCompanyResponseType = {
   __typename?: 'CreateRoleCompanyResponseType';
   message?: Maybe<Scalars['String']>;
@@ -178,6 +192,7 @@ export type CreateUserResponseType = {
 
 export type CreatedAndUpdatePosition = {
   code_position1?: InputMaybe<Scalars['String']>;
+  id_Position1: Scalars['ID'];
   level_Position1?: InputMaybe<Scalars['Int']>;
   masPosition2?: InputMaybe<Array<InputMaybe<CreatedmasPosition2>>>;
   name_Position1?: InputMaybe<Scalars['String']>;
@@ -185,15 +200,19 @@ export type CreatedAndUpdatePosition = {
 
 export type CreatedmasPosition2 = {
   code_position2?: InputMaybe<Scalars['String']>;
+  id_Position2: Scalars['ID'];
   level_Position2?: InputMaybe<Scalars['Int']>;
   masPosition3?: InputMaybe<Array<InputMaybe<CreatedmasPosition3>>>;
   name_Position2?: InputMaybe<Scalars['String']>;
+  positionlevel1_id?: InputMaybe<Scalars['ID']>;
 };
 
 export type CreatedmasPosition3 = {
   code_position3?: InputMaybe<Scalars['String']>;
+  id_Position3: Scalars['ID'];
   level_Position3?: InputMaybe<Scalars['Int']>;
   name_Position3?: InputMaybe<Scalars['String']>;
+  positionlevel2_id?: InputMaybe<Scalars['ID']>;
 };
 
 export type CreatepositionResponseType = {
@@ -210,6 +229,12 @@ export type DeleteAccountUserResponseType = {
 
 export type DeleteComapnyBranchResponseType = {
   __typename?: 'DeleteComapnyBranchResponseType';
+  message?: Maybe<Scalars['String']>;
+  status?: Maybe<Scalars['Boolean']>;
+};
+
+export type DeleteHolidayYearResponseType = {
+  __typename?: 'DeleteHolidayYearResponseType';
   message?: Maybe<Scalars['String']>;
   status?: Maybe<Scalars['Boolean']>;
 };
@@ -311,13 +336,16 @@ export type MeprofileType = {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  CreatedAndEditPosition?: Maybe<CreatepositionResponseType>;
+  CreatedPosition?: Maybe<CreatepositionResponseType>;
+  EditPosition?: Maybe<CreatepositionResponseType>;
   createAccount?: Maybe<CreateCompanyResponseType>;
   createAccountUser?: Maybe<CreateUserResponseType>;
   createAndUpdateComBarance?: Maybe<CreateComapnyBranchResponseType>;
+  createHolidayYear?: Maybe<CreateHolidayYearResponseType>;
   createRoleCompany?: Maybe<CreateRoleCompanyResponseType>;
   deleteAccountUser?: Maybe<DeleteAccountUserResponseType>;
   deleteComBarance?: Maybe<DeleteComapnyBranchResponseType>;
+  deleteHolidayYear?: Maybe<DeleteHolidayYearResponseType>;
   deleteRoleCompany?: Maybe<DeleteRoleCompanyRespnsetType>;
   login?: Maybe<LoginResponse>;
   refreshToken?: Maybe<RefreshtokenResponseType>;
@@ -326,7 +354,12 @@ export type Mutation = {
 };
 
 
-export type MutationCreatedAndEditPositionArgs = {
+export type MutationCreatedPositionArgs = {
+  data?: InputMaybe<Array<CreatedAndUpdatePosition>>;
+};
+
+
+export type MutationEditPositionArgs = {
   data?: InputMaybe<Array<CreatedAndUpdatePosition>>;
 };
 
@@ -346,6 +379,11 @@ export type MutationCreateAndUpdateComBaranceArgs = {
 };
 
 
+export type MutationCreateHolidayYearArgs = {
+  data?: InputMaybe<Array<CreateHolidayYears>>;
+};
+
+
 export type MutationCreateRoleCompanyArgs = {
   data: CreateRoleCompanyGroup;
 };
@@ -357,6 +395,11 @@ export type MutationDeleteAccountUserArgs = {
 
 
 export type MutationDeleteComBaranceArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type MutationDeleteHolidayYearArgs = {
   id: Scalars['ID'];
 };
 
@@ -458,9 +501,9 @@ export type Province = {
 
 export type Query = {
   __typename?: 'Query';
+  GetHoliDayYear?: Maybe<Array<Maybe<Holiday_Years>>>;
   company?: Maybe<ResponseCompany>;
   getAllcompany?: Maybe<Array<Maybe<CompanyBranch>>>;
-  getHoliday?: Maybe<Array<Maybe<Holiday_Year>>>;
   getMasPositon?: Maybe<Array<Maybe<Mas_Positionlevel1>>>;
   getProvince?: Maybe<Array<Maybe<Province>>>;
   getcompanyRole?: Maybe<Array<Maybe<Role_Company>>>;
@@ -653,11 +696,13 @@ export type CreateRoleCompanyGroup = {
   status: Scalars['Int'];
 };
 
-export type Holiday_Year = {
-  __typename?: 'holiday_year';
-  date?: Maybe<Scalars['Date']>;
+export type Holiday_Years = {
+  __typename?: 'holiday_years';
+  day?: Maybe<Scalars['Int']>;
   holiday_name?: Maybe<Scalars['String']>;
-  id: Scalars['ID'];
+  id?: Maybe<Scalars['ID']>;
+  month?: Maybe<Scalars['Int']>;
+  year?: Maybe<Scalars['Int']>;
 };
 
 export type Mas_Position = {
@@ -688,6 +733,7 @@ export type Mas_Positionlevel2 = {
   level?: Maybe<Scalars['Int']>;
   mas_positionlevel3?: Maybe<Array<Maybe<Mas_Positionlevel3>>>;
   name?: Maybe<Scalars['String']>;
+  positionlevel1_id?: Maybe<Scalars['String']>;
   type?: Maybe<Scalars['String']>;
 };
 
@@ -698,6 +744,7 @@ export type Mas_Positionlevel3 = {
   id: Scalars['ID'];
   level?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
+  positionlevel2_id?: Maybe<Scalars['String']>;
   type?: Maybe<Scalars['String']>;
 };
 
@@ -797,6 +844,11 @@ export type DeleteComBaranceMutationVariables = Exact<{
 
 export type DeleteComBaranceMutation = { __typename?: 'Mutation', deleteComBarance?: { __typename?: 'DeleteComapnyBranchResponseType', message?: string | null, status?: boolean | null } | null };
 
+export type GetHoliDayYearQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetHoliDayYearQuery = { __typename?: 'Query', GetHoliDayYear?: Array<{ __typename?: 'holiday_years', id?: string | null, day?: number | null, month?: number | null, year?: number | null, holiday_name?: string | null } | null> | null };
+
 export type GetProvinceQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -840,6 +892,7 @@ export const FetchcompanySelectDocument = {"kind":"Document","definitions":[{"ki
 export const GetownCompanyDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetownCompany"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getownCompany"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"redirect"}},{"kind":"Field","name":{"kind":"Name","value":"isOwner"}},{"kind":"Field","name":{"kind":"Name","value":"company"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"companyCode"}},{"kind":"Field","name":{"kind":"Name","value":"icon"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"companies"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"companyCode"}},{"kind":"Field","name":{"kind":"Name","value":"icon"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]}}]} as unknown as DocumentNode<GetownCompanyQuery, GetownCompanyQueryVariables>;
 export const CreateAndUpdateComBaranceDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateAndUpdateComBarance"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"data"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"createCompanyBranch"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createAndUpdateComBarance"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"data"},"value":{"kind":"Variable","name":{"kind":"Name","value":"data"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"message"}},{"kind":"Field","name":{"kind":"Name","value":"status"}}]}}]}}]} as unknown as DocumentNode<CreateAndUpdateComBaranceMutation, CreateAndUpdateComBaranceMutationVariables>;
 export const DeleteComBaranceDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"DeleteComBarance"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"deleteComBaranceId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"deleteComBarance"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"deleteComBaranceId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"message"}},{"kind":"Field","name":{"kind":"Name","value":"status"}}]}}]}}]} as unknown as DocumentNode<DeleteComBaranceMutation, DeleteComBaranceMutationVariables>;
+export const GetHoliDayYearDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetHoliDayYear"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"GetHoliDayYear"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"day"}},{"kind":"Field","name":{"kind":"Name","value":"month"}},{"kind":"Field","name":{"kind":"Name","value":"year"}},{"kind":"Field","name":{"kind":"Name","value":"holiday_name"}}]}}]}}]} as unknown as DocumentNode<GetHoliDayYearQuery, GetHoliDayYearQueryVariables>;
 export const GetProvinceDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getProvince"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getProvince"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"district"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"amphoe"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"zipcode"}}]}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]}}]} as unknown as DocumentNode<GetProvinceQuery, GetProvinceQueryVariables>;
 export const GetcompanyRoleDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetcompanyRole"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getcompanyRole"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"access"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"status"}}]}}]}}]} as unknown as DocumentNode<GetcompanyRoleQuery, GetcompanyRoleQueryVariables>;
 export const GetcompanyRoleManagementDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetcompanyRoleManagement"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getcompanyRole"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"access"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]} as unknown as DocumentNode<GetcompanyRoleManagementQuery, GetcompanyRoleManagementQueryVariables>;
