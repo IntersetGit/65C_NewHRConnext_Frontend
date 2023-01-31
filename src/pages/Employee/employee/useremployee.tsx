@@ -136,6 +136,12 @@ const UserEmployee: React.FC = (props) => {
   }, []);
 
   const getUserData = () => {
+    onProvinceChangeCitizen(propsstate?.citizen_province);
+    onDistrictChangeCitizen(propsstate?.citizen_district);
+    onAmphoeChangeCitizen(propsstate?.citizen_state);
+    onProvinceChangeContract(propsstate?.contract_province);
+    onDistrictChangeContract(propsstate?.contract_district);
+    onAmphoeChangeContract(propsstate?.contract_state);
     form.setFieldsValue({
       ...propsstate,
       ...propsstate?.user,
