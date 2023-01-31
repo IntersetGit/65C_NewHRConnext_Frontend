@@ -20,14 +20,16 @@ const Home = React.lazy(() => import('../pages/Home'));
 const Companyroot = React.lazy(() => import('../pages/Company'));
 const CompanyStructure = React.lazy(() => import('../pages/Company/structure'));
 const CompanyPosition = React.lazy(() => import('../pages/Company/position'));
-const ApproveLeave = React.lazy(() => import('../pages/Approve'))
+const ProfileUser = React.lazy(() => import('../pages/Profile'));
+const ProfileEmployee = React.lazy(
+  () => import('../pages/Employee/employee/component'),
+);
+const ApproveLeave = React.lazy(() => import('../pages/Approve'));
 const Employeeroot = React.lazy(() => import('../pages/Employee'));
 const Employee = React.lazy(() => import('../pages/Employee/employee'));
 const PositionEmployee = React.lazy(
   () => import('../pages/Employee/employeeposition'),
 );
-const Resumeroot = React.lazy(() => import('../pages/Resume'));
-const ProfileResume = React.lazy(() => import('../pages/Resume/profileresume'));
 const Summaryroot = React.lazy(() => import('../pages/Summary'));
 const Compensation = React.lazy(() => import('../pages/Summary/compensation'));
 const Remuneration = React.lazy(() => import('../pages/Summary/remuneration'));
@@ -76,6 +78,7 @@ import {
   RiFileCopy2Line,
   RiCalendarCheckLine,
   RiSuitcaseLine,
+  RiProfileLine,
 } from 'react-icons/ri';
 import { HiOutlineClipboardDocumentCheck } from 'react-icons/hi2';
 import { TbCalendarTime } from 'react-icons/tb';
@@ -103,6 +106,20 @@ export const routing: RoutingType[] = [
         label: 'Home',
         icon: <RiHome2Line size={'18'} />,
         element: <Home />,
+      },
+      {
+        path: '/:companycode/profile',
+        label: 'ข้อมูลของฉัน',
+        icon: <RiProfileLine size={'18'} />,
+        element: <ProfileUser />,
+        forcerendermenu: true,
+        children: [
+          {
+            path: '/:companycode/profile',
+            element: <ProfileEmployee />,
+            hideInmenu: true,
+          },
+        ],
       },
       {
         path: '/:companycode/company',
@@ -154,20 +171,6 @@ export const routing: RoutingType[] = [
           {
             path: '/:companycode/employee/positionemployee',
             element: <PositionEmployee />,
-            hideInmenu: true,
-          },
-        ],
-      },
-      {
-        path: '/:companycode/resume',
-        label: 'ประวัติการทำงาน',
-        icon: <RiFileCopy2Line size={'18'} />,
-        forcerendermenu: true,
-        element: <Resumeroot />,
-        children: [
-          {
-            path: '/:companycode/resume',
-            element: <ProfileResume />,
             hideInmenu: true,
           },
         ],
