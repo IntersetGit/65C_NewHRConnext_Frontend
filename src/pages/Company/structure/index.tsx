@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { RiHotelLine } from 'react-icons/ri';
 import { IoSwapVerticalOutline } from 'react-icons/io5';
-
+import { useNavigate, useLocation } from 'react-router-dom';
 import {
     Button,
     Card,
@@ -22,6 +22,8 @@ import styled from 'styled-components';
 import NodeStructure from './component/NodeStructure';
 import { faker } from '@faker-js/faker';
 import Swal from 'sweetalert2';
+import { useMutation, useQuery } from '@apollo/client';
+import { gql } from '../../../__generated__/gql';
 
 const { TreeNode } = Tree
 
@@ -119,10 +121,12 @@ const generateData = (_level: number, _preKey?: React.Key, _tns?: DataNode[]) =>
         return generateData(level, key, tns[index].children);
     });
 };
-generateData(z);
+// generateData(z);
+
 
 const CompanyStructure: React.FC = () => {
     const { useToken } = theme;
+    const navigate = useNavigate();
     const [form] = Form.useForm();
     const [formEdit] = Form.useForm();
     const token = useToken();
@@ -132,18 +136,27 @@ const CompanyStructure: React.FC = () => {
     const [treestructure, setTreestructure] = useState(defaultData);
     const [treecompany, setTreecompany] = useState([
         {
-            title: 'ฝ่าย', key: "1456", data: { title: 'ฝ่าย', number: "1" }
+            title: 'ฝ่าย', key: "1456", data: { title: 'ฝ่าย', id: "1", color: '#FFE1BA' }
         },
         {
-            title: 'แผนก', key: "245", data: { title: 'แผนก', number: "2" }
+            title: 'แผนก', key: "245", data: { title: 'แผนก', id: "2", color: '#FFC9B7' }
         },
         {
-            title: 'สาขา', key: "3213", data: { title: 'สาขา', number: "3" }
+            title: 'ตำแหน่ง', key: "3213", data: { title: 'ตำแหน่ง', id: "3", color: '#FAAAAE' }
         }
     ]);
-    const [expandedKeys] = useState(['0-0-1']);
+    const CREATEANDUPDATEPOSITION = gql(`
+    mutation CreatedPosition($data: [CreatedAndUpdatePosition!]) {
+        CreatedPosition(data: $data) {
+          message
+          status
+        }
+      }`);
+    const [CreatedAndUpdatePosition] = useMutation(CREATEANDUPDATEPOSITION);
+
+    // const [expandedKeys] = useState(['0-0-1']);
     useEffect(() => {
-        console.log("treestructure", treestructure)
+        // console.log("treestructure", treestructure)
 
     }, [treestructure])
     const onDragEnter: TreeProps['onDragEnter'] = (info) => {
@@ -170,11 +183,17 @@ const CompanyStructure: React.FC = () => {
                 return;
             }
         }
-        if (dropPos.length !== dragNodePos.length) {
-            if (!info.dropToGap) {
-                return;
-            }
+        let dropPosNew = dropPosition == 0 ? [...dropPos, dropPosition] : dropPos;
+        console.log('dropPosNew', dropPosNew)
+
+        if (dropPosNew.length !== dragNodePos.length) {
+            // if (!info.dropToGap) {
+            //     return;
+            // }
+            return;
         }
+
+
         // ------------------------------
         const loop = (
             data: DataNode[],
@@ -320,7 +339,7 @@ const CompanyStructure: React.FC = () => {
             if (item?.children) {
                 return (
                     <TreeNode title={
-                        <div style={{ border: '1px solid', borderRadius: 10, height: 50, width: '100%', backgroundColor: 'aquamarine', padding: 10, display: 'flex', alignItems: 'center' }}>
+                        <div style={{ border: '1px solid', borderRadius: 10, height: 50, width: '100%', backgroundColor: item.data?.color, padding: 10, display: 'flex', alignItems: 'center' }}>
                             <span>ระดับ {index + 1} : </span> <span>{item.title}</span>
                         </div>
                     } key={item.key} data={item} >
@@ -341,7 +360,7 @@ const CompanyStructure: React.FC = () => {
                 )
             }
             return (<TreeNode key={item.key} title={
-                <div style={{ border: '1px solid', borderRadius: 10, height: 50, width: '100%', backgroundColor: 'aquamarine', padding: 10, display: 'flex', alignItems: 'center' }}>
+                <div style={{ border: '1px solid', borderRadius: 10, height: 50, width: '100%', backgroundColor: item.data?.color, padding: 10, display: 'flex', alignItems: 'center' }}>
                     <span>ระดับ {index + 1}: </span> <span>{item.title}</span>
                 </div>
             } data={item}></TreeNode>)
@@ -355,16 +374,17 @@ const CompanyStructure: React.FC = () => {
             let titlenode = treecompany[keysindexadd['length'] - 2]?.title;
             let titlebuttonadd = treecompany[keysindexadd['length'] - 1]?.title;
             let isNotChildeAndLast = treecompany['length'] == keysindexadd['length'] - 1 ? true : false;
+            let colorBy = treecompany[keysindexadd['length'] - 2]?.data?.color;
             // console.log('isNotChildeAndLast', keysindexadd['length']-1, isNotChildeAndLast);
             let text: any = '';
             keysindexadd.forEach((number: string) => {
                 text += (text && '-') + number;
             });
             // console.log('text', text);
-            if (item?.children) {
+            if (item?.children?.length > 0) {
                 return (
                     <TreeNode title={
-                        <NodeStructure titleNodes={titlenode} title={item.title} onDelhild={() => delChildStructure(text)} onEditChild={() => EditChildStructure(text)} />
+                        <NodeStructure color={colorBy} titleNodes={titlenode} title={item.title} onDelhild={() => delChildStructure(text)} onEditChild={() => EditChildStructure(text)} />
                     } key={item.key} data={item} >
                         {renderTreeNodesStructure(item.children, keysindex)}
                         <TreeNode disabled key={`add ${keysindex}`} title={
@@ -383,7 +403,7 @@ const CompanyStructure: React.FC = () => {
                 )
             }
             return (<TreeNode key={item.key} title={
-                <NodeStructure titleNodes={titlenode} title={item?.title} onDelhild={() => delChildStructure(text)} onEditChild={() => EditChildStructure(text)} onAddChild={!isNotChildeAndLast ? () => addChildStructure(text, true) : false} />
+                <NodeStructure color={colorBy} titleNodes={titlenode} title={item?.title} onDelhild={() => delChildStructure(text)} onEditChild={() => EditChildStructure(text)} onAddChild={!isNotChildeAndLast ? () => addChildStructure(text, true) : false} />
             } data={item}></TreeNode>)
         })
     }
@@ -459,7 +479,7 @@ const CompanyStructure: React.FC = () => {
             }
         }
         // console.log('current', current)
-        current.push({ title: value?.name_th, key: randomUid })
+        current.push({ title: value?.name_th, key: randomUid, id: value?.number });
         setTreestructure([...a]);
         setOpen(false);
     }
@@ -501,6 +521,27 @@ const CompanyStructure: React.FC = () => {
         setTreecompany([...a]);
     }
 
+    const convertData = (data: any, level = 1) => {
+        return data?.map((data: any, index: number) => {
+            return {
+                ['name_Position' + (level)]: data?.title,
+                ['level_Position' + (level)]: (index + 1),
+                ['code_position' + (level)]: data.id,
+                ['masPosition' + (level + 1)]: data.children ? convertData(data.children, (level + 1)) : []
+            }
+        })
+    }
+
+    const onSaveStructure = async () => {
+        const convertedData = convertData(treestructure);
+        console.log("Savetreestructure", convertedData);
+        let data = await CreatedAndUpdatePosition({
+            variables: {
+                data: convertedData
+            },
+        })
+        console.log('datasent', data);
+    }
     return (
         <React.Fragment>
             <div>
@@ -524,7 +565,7 @@ const CompanyStructure: React.FC = () => {
 
                             <StyledTreeCompany
                                 className="draggable-tree"
-                                draggable
+                                // draggable
                                 blockNode
                                 multiple
                                 onDrop={onDropCompany}
@@ -582,11 +623,38 @@ const CompanyStructure: React.FC = () => {
                                     backgroundColor: token.token.colorPrimary,
                                 }}
                             >
-                                เพิ่มตำแหน่งใหม่
+                                เพิ่ม ฝ่าย ใหม่
                             </Button>
                         } />
 
                     </StyledTree>
+                    <div style={{ margin: 'auto auto', display: 'flex', justifyContent: 'space-between' }}>
+                        <Button
+                            type="primary"
+                            size='large'
+                            style={{
+                                width: '49%',
+                                marginBottom: '10px',
+                                backgroundColor: '#FF8713',
+                            }}
+                            onClick={() => navigate(-1)}
+                        >
+                            ยกเลิก
+                        </Button>
+                        <Button
+                            type="primary"
+                            size='large'
+                            style={{
+                                width: '49%',
+                                marginBottom: '10px',
+                                backgroundColor: token.token.colorPrimary,
+                            }}
+                            onClick={onSaveStructure}
+                        >
+                            บันทึก
+                        </Button>
+                    </div>
+
                 </Col>
             </Row>
             <Drawer title="เพิ่ม" placement="right" onClose={() => setOpen(false)} open={open}>

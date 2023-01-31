@@ -22,44 +22,45 @@ type Props = {
     onAddChild?: any,
     onDelhild?: any,
     onEditChild?: any,
+    color?: any,
 
 }
 
-export default function NodeStructure({ titleNodes, title, onAddChild, onDelhild, onEditChild }: Props) {
+export default function NodeStructure({ titleNodes, title, onAddChild, onDelhild, onEditChild, color = 'orange' }: Props) {
     return (
-        <div className='card-tree'>
+        <div className='card-tree' style={{ backgroundColor: color }}>
             <span>{titleNodes}: </span> <span>{title}</span>
-                <div className='toolbox' >
-                    {onDelhild &&
-                        <Tooltip title="ลบ">
-                            <ItemTool color='red'>
-                                <IoTrashBin onClick={onDelhild} style={{
-                                    fontSize: '18px',
-                                    color: 'white',
-                                }} />
-                            </ItemTool>
-                        </Tooltip>
-                    }
-                    {onEditChild &&
-                        <Tooltip title="แก้ไข"><ItemTool color='#F95'>
-                            <IoPencil onClick={onEditChild} style={{
-                                fontSize: '18px',
-                                color: 'white',
-                            }} />
-                        </ItemTool></Tooltip>
-                    }
-                    {onAddChild &&
-                        <Tooltip title="เพิ่ม"><ItemTool>
-                            <IoDuplicate onClick={onAddChild} style={{
+            <div className='toolbox' >
+                {onDelhild &&
+                    <Tooltip title="ลบ">
+                        <ItemTool color='red'>
+                            <IoTrashBin onClick={onDelhild} style={{
                                 fontSize: '18px',
                                 color: 'white',
                             }} />
                         </ItemTool>
-                        </Tooltip>
-                    }
+                    </Tooltip>
+                }
+                {onEditChild &&
+                    <Tooltip title="แก้ไข"><ItemTool color='#F95'>
+                        <IoPencil onClick={onEditChild} style={{
+                            fontSize: '18px',
+                            color: 'white',
+                        }} />
+                    </ItemTool></Tooltip>
+                }
+                {onAddChild &&
+                    <Tooltip title="เพิ่ม"><ItemTool>
+                        <IoDuplicate onClick={onAddChild} style={{
+                            fontSize: '18px',
+                            color: 'white',
+                        }} />
+                    </ItemTool>
+                    </Tooltip>
+                }
 
 
-                </div>
+            </div>
         </div>
     )
 }

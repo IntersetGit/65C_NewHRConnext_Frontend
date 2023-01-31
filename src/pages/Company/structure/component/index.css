@@ -10,6 +10,10 @@
     overflow: hidden;
 }
 
+.card-tree span {
+    margin: 0px 2px;
+}
+
 .card-tree:hover .toolbox {
     opacity: 1;
     transform: translateX(0);
