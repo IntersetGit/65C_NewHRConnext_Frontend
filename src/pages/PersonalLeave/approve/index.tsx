@@ -261,7 +261,7 @@ const Approve: React.FC = () => {
         onClose={onClose}
         open={open}
       >
-        <Form form={form} layout="vertical" size="large">
+        <Form form={form} layout="vertical">
           <Row>
             <Col span={12}>
               <Form.Item name={'leave_type'} label={'ประเภทการลา'}>
@@ -280,6 +280,20 @@ const Approve: React.FC = () => {
             <Col span={12}>
               <Form.Item label={'ถึงวันที่'}>
                 <DatePicker style={{ width: '100%' }} format={'YYYY-MM-DD'} />
+              </Form.Item>
+            </Col>
+          </Row>
+
+          <Row gutter={16}>
+            <Col span={12}>
+              <Form.Item label={'จำนวนวัน'}>
+                <Input />
+              </Form.Item>
+            </Col>
+
+            <Col span={12}>
+              <Form.Item label={'จำนวนชั่วโมง'}>
+                <Input />
               </Form.Item>
             </Col>
           </Row>

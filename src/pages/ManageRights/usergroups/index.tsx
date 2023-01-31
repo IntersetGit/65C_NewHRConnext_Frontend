@@ -290,7 +290,7 @@ const Manageuser: React.FC = () => {
             <Form
               layout="vertical"
               form={form}
-              size="large"
+              // size="large"
               onFinish={onFinish}
             >
               {/* <div className="relative flex flex-row items-center py-2">
