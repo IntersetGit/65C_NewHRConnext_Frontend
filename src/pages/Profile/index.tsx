@@ -27,18 +27,18 @@ const Profile: React.FC = () => {
             label: `ข้อมูลของฉัน`,
             key: `/:companycode/profile`,
           },
-          //   {
-          //     label: `ข้อมูลบริษัท`,
-          //     key: `/:companycode/profile?${user?.me?.id}`,
-          //   },
-          //   {
-          //     label: `เงินเดือน`,
-          //     key: '/:companycode/summary',
-          //   },
-          //   {
-          //     label: `การลา`,
-          //     key: '/:companycode/company/CompanyStructure',
-          //   },
+          {
+            label: `ตำแหน่งงานของฉัน`,
+            key: `/:companycode/profile/position`,
+          },
+          {
+            label: `ข้อมูลบริษัทของฉัน`,
+            key: '/:companycode/profile/company',
+          },
+          {
+            label: `การลา`,
+            key: '/:companycode/profile/approve',
+          },
         ]}
       />
       <Outlet />
