@@ -32,6 +32,7 @@ const PositionEmployee = React.lazy(
 );
 const Summaryroot = React.lazy(() => import('../pages/Summary'));
 const Compensation = React.lazy(() => import('../pages/Summary/compensation'));
+const ProfileCompensation = React.lazy(() => import('../pages/Summary/profilecompensation'));
 const Remuneration = React.lazy(() => import('../pages/Summary/remuneration'));
 const UserEmployee = React.lazy(
   () => import('../pages/Employee/employee/useremployee'),
@@ -185,6 +186,11 @@ export const routing: RoutingType[] = [
           {
             path: '/:companycode/summary',
             element: <Compensation />,
+            hideInmenu: true,
+          },
+          {
+            path: '/:companycode/summary/profileCompensation',
+            element: <ProfileCompensation />,
             hideInmenu: true,
           },
           {
