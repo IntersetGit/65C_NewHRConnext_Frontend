@@ -11,7 +11,8 @@ import {
   Table,
   theme,
   Dropdown,
-  Menu,
+  Drawer,
+  Checkbox,
 } from 'antd';
 import { GiReceiveMoney } from 'react-icons/gi';
 import type { ColumnsType } from 'antd/es/table';
@@ -20,6 +21,8 @@ import { useNavigate } from 'react-router-dom';
 import edit from '../../../assets/Edit.png';
 import Del from '../../../assets/DEL.png';
 import View from '../../../assets/View.png';
+import type { CheckboxValueType } from 'antd/es/checkbox/Group';
+import { useState } from 'react';
 
 const { useToken } = theme;
 
@@ -35,6 +38,19 @@ interface DataType {
 
 const Compensation: React.FC = () => {
   const token = useToken();
+  const [open, setOpen] = useState(false);
+
+  const showDrawer = () => {
+    setOpen(true);
+  };
+
+  const onClose = () => {
+    setOpen(false);
+  };
+
+  const onChange = (checkedValues: CheckboxValueType[]) => {
+    console.log('checked = ', checkedValues);
+  };
 
   const genarateMenu = (record: any) => {
     return [
@@ -183,13 +199,13 @@ const Compensation: React.FC = () => {
         <Form size="middle">
           <Row gutter={16}>
             <Col xs={24} sm={12} md={12} lg={6} xl={6}>
-              <Form.Item name="search" colon={false} label={'ชื่อพนักงาน'}>
+              <Form.Item name="search" colon={false} label={'ชื่อ'}>
                 <Input allowClear></Input>
               </Form.Item>
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={6} xl={6}>
-              <Form.Item name="search" colon={false} label={'แผนก/ฝ่าย'}>
+              <Form.Item name="search" colon={false} label={'แผนก'}>
                 <Select allowClear></Select>
               </Form.Item>
             </Col>
@@ -207,9 +223,35 @@ const Compensation: React.FC = () => {
                 </Form.Item>
 
                 <Form.Item>
-                  <Button htmlType="submit">Search</Button>
+                  <Button
+                    type="primary"
+                    style={{ backgroundColor: token.token.colorPrimary }}
+                    htmlType="submit"
+                  >
+                    Search
+                  </Button>
                 </Form.Item>
               </Space>
+            </Col>
+          </Row>
+
+          <Row gutter={16}>
+            <Col xs={24} sm={24} md={24} lg={6} xl={6}>
+              <Form.Item name="search" colon={false} label={'สถานะ'}>
+                <Select allowClear></Select>
+              </Form.Item>
+            </Col>
+
+            <Col xs={24} sm={24} md={24} lg={6} xl={6}>
+              <Form.Item name="search" colon={false} label={'เดือน'}>
+                <Select allowClear></Select>
+              </Form.Item>
+            </Col>
+
+            <Col xs={24} sm={24} md={24} lg={6} xl={6}>
+              <Form.Item name="search" colon={false} label={'ปี'}>
+                <Select allowClear></Select>
+              </Form.Item>
             </Col>
           </Row>
         </Form>
@@ -217,22 +259,98 @@ const Compensation: React.FC = () => {
 
       <Card className="shadow-xl mt-4">
         <Col>
-          <Space>
-            <Button
-              type="primary"
-              size="middle"
-              style={{
-                marginBottom: '10px',
-                backgroundColor: token.token.colorPrimary,
-              }}
-              onClick={() => { }}
-            >
-              + จัดการข้อมูล
-            </Button>
-          </Space>
+          <Row style={{ float: 'right' }}>
+            <Space>
+              <Button
+                type="primary"
+                size="middle"
+                style={{
+                  marginBottom: '10px',
+                  backgroundColor: token.token.colorPrimary,
+                }}
+                onClick={showDrawer}
+              >
+                ตั้งค่าการคำนวณเงินเดือน
+              </Button>
+            </Space>
+          </Row>
         </Col>
         <Table columns={columns} dataSource={data}></Table>
       </Card>
+
+      <Drawer
+        title={'ตั้งค่าการคำนวณเงินเดือน'}
+        onClose={onClose}
+        open={open}
+        size="large"
+      >
+        <Form layout="horizontal" labelCol={{ span: 8 }}>
+          <Row>
+            <Col span={16}>
+              <Form.Item label={'ธนาคาร (บริษัท)'}>
+                <Select allowClear></Select>
+              </Form.Item>
+            </Col>
+          </Row>
+
+          <Row>
+            <Col span={16}>
+              <Form.Item label={'หักภาษี (%)'}>
+                <Input />
+              </Form.Item>
+            </Col>
+          </Row>
+
+          <Row>
+            <Col span={16}>
+              <Form.Item label={'หักประกันงสังคม (%)'}>
+                <Input />
+              </Form.Item>
+            </Col>
+          </Row>
+
+          <Row>
+            <Col span={16}>
+              <Form.Item label={'หักภาษีจากรายรับประเภท'}>
+                <Checkbox.Group style={{ width: '100%' }} onChange={onChange}>
+                  <Row>
+                    <Col span={8}>
+                      <Checkbox value={'เงินเดือน'}>เงินเดือน</Checkbox>
+                    </Col>
+                    <Col span={8}>
+                      <Checkbox value={'ค่าคอม'}>ค่าคอม</Checkbox>
+                    </Col>
+                    <Col span={8}>
+                      <Checkbox value={'ค่าล่วงเวลา'}>ค่าล่วงเวลา</Checkbox>
+                    </Col>
+                    <Col span={8}>
+                      <Checkbox value={'โบนัส'}>โบนัส</Checkbox>
+                    </Col>
+                    <Col span={8}>
+                      <Checkbox value={'เงินพิเศษ'}>เงินพิเศษ</Checkbox>
+                    </Col>
+                    <Col span={8}>
+                      <Checkbox value={'รายได้อื่น'}>รายได้อื่น</Checkbox>
+                    </Col>
+                  </Row>
+                </Checkbox.Group>
+              </Form.Item>
+
+              <Form.Item>
+                <Space>
+                  <Button
+                    type="primary"
+                    style={{ backgroundColor: token.token.colorPrimary }}
+                  >
+                    บันทึก
+                  </Button>
+                  <Button onClick={onClose}>ยกเลิก</Button>
+                </Space>
+              </Form.Item>
+            </Col>
+          </Row>
+        </Form>
+      </Drawer>
     </>
   );
 };

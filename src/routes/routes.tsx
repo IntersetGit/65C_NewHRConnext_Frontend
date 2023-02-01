@@ -24,6 +24,15 @@ const ProfileUser = React.lazy(() => import('../pages/Profile'));
 const ProfileEmployee = React.lazy(
   () => import('../pages/Employee/employee/component'),
 );
+const ProfilePosition = React.lazy(
+  () => import('../pages/Employee/employeeposition/component'),
+);
+const ProfileCompany = React.lazy(
+  () => import('../pages/Company/company/component'),
+);
+const ProfileApprove = React.lazy(
+  () => import('../pages/PersonalLeave/approve/component'),
+);
 const ApproveLeave = React.lazy(() => import('../pages/Approve'));
 const Employeeroot = React.lazy(() => import('../pages/Employee'));
 const Employee = React.lazy(() => import('../pages/Employee/employee'));
@@ -32,6 +41,7 @@ const PositionEmployee = React.lazy(
 );
 const Summaryroot = React.lazy(() => import('../pages/Summary'));
 const Compensation = React.lazy(() => import('../pages/Summary/compensation'));
+const ProfileCompensation = React.lazy(() => import('../pages/Summary/profilecompensation'));
 const Remuneration = React.lazy(() => import('../pages/Summary/remuneration'));
 const UserEmployee = React.lazy(
   () => import('../pages/Employee/employee/useremployee'),
@@ -119,6 +129,21 @@ export const routing: RoutingType[] = [
             element: <ProfileEmployee />,
             hideInmenu: true,
           },
+          {
+            path: '/:companycode/profile/position',
+            element: <ProfilePosition />,
+            hideInmenu: true,
+          },
+          {
+            path: '/:companycode/profile/company',
+            element: <ProfileCompany />,
+            hideInmenu: true,
+          },
+          {
+            path: '/:companycode/profile/approve',
+            element: <ProfileApprove />,
+            hideInmenu: true,
+          },
         ],
       },
       {
@@ -185,6 +210,11 @@ export const routing: RoutingType[] = [
           {
             path: '/:companycode/summary',
             element: <Compensation />,
+            hideInmenu: true,
+          },
+          {
+            path: '/:companycode/summary/profileCompensation',
+            element: <ProfileCompensation />,
             hideInmenu: true,
           },
           {

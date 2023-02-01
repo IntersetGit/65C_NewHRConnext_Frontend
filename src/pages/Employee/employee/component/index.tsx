@@ -19,14 +19,7 @@ import {
   Card,
   Upload,
   Avatar,
-  Tabs,
 } from 'antd';
-import {
-  useNavigate,
-  useLocation,
-  generatePath,
-  useParams,
-} from 'react-router-dom';
 import type { UploadProps } from 'antd';
 import { gql } from '../../../../__generated__/gql';
 import { useQuery, useMutation } from '@apollo/client';
@@ -35,8 +28,6 @@ import Swal from 'sweetalert2';
 import moment from 'moment';
 import { GET_PROVINCE } from '../../../../service/graphql/Province';
 import type { CheckboxChangeEvent } from 'antd/es/checkbox';
-import { useAuth } from '../../../../hooks/useAuth';
-import { User } from '../../../../__generated__/graphql';
 import facebook from '../../../../assets/Facebook-logo.png';
 import inittial from '../../../../assets/initials-logo.png';
 import line from '../../../../assets/Line-logo.png';
@@ -44,52 +35,85 @@ import telegram from '../../../../assets/Telegram-logo.png';
 
 const { useToken } = theme;
 
-type RegisterEmployeeType = {
-  email: string;
-  password: string;
-  tel: string;
-  dob: string;
-  address: string;
-  age: string;
-  citizen_address: string;
-  citizen_addressnumber: string;
-  citizen_country: string;
-  citizen_district: string;
-  citizen_id: string;
-  citizen_province: string;
-  citizen_state: string;
-  citizen_tel: string;
-  citizen_zipcode: string;
-  contract_address: string;
-  contract_addressnumber: string;
-  contract_companyemail: string;
-  contract_country: string;
-  contract_district: string;
-  contract_email: string;
-  contract_province: string;
-  contract_sameCitizen: boolean;
-  contract_state: string;
-  contract_zipcode: string;
-  firstname_en: string;
-  firstname_th: string;
-  gender: string;
-  id: string;
-  lastname_en: string;
-  lastname_th: string;
-  prefix_en: string;
-  prefix_th: string;
-  relationship: string;
-  religion: string;
-  shirt_size: string;
-  social_facebook: string;
-  social_id: string;
-  social_likedin: string;
-  social_line: string;
-  socail_telegram: string;
-  staff_code: string;
-  staff_status: string;
-  start_date_work: string;
-};
+const GET_ME = gql(`
+query Me {
+  me {
+    Role_Company {
+      access
+      id
+      name
+      __typename
+    }
+    companyBranch {
+      companyId
+      company {
+        companyCode
+        icon
+        id
+        name
+        __typename
+      }
+      createdAt
+      id
+      name
+      __typename
+    }
+    email
+    id
+    isOwner
+    profile {
+      id
+      bio
+      firstname_th
+      lastname_th
+      firstname_en
+      lastname_en
+      avatar
+      dob
+      age
+      relationship
+      shirt_size
+      prefix_th
+      prefix_en
+      citizen_id
+      social_id
+      staff_status
+      tel
+      address
+      gender
+      staff_code
+      religion
+      userId
+      citizen_addressnumber
+      citizen_address
+      citizen_country
+      citizen_province
+      citizen_district
+      citizen_state
+      citizen_zipcode
+      citizen_tel
+      contract_sameCitizen
+      contract_addressnumber
+      contract_address
+      contract_country
+      contract_province
+      contract_district
+      contract_state
+      contract_zipcode
+      contract_email
+      contract_companyemail
+      social_facebook
+      social_likedin
+      social_line
+      social_telegram
+      nickname
+      blood_type
+      employee_status
+      start_date_work
+      __typename
+    }
+  }
+}`);
 
 const CREATE_EMPLOYEE_ACCOUNT = gql(`
 mutation CreateAccountUser($data: CreateAccountUserInput!) {
@@ -101,10 +125,10 @@ mutation CreateAccountUser($data: CreateAccountUserInput!) {
 
 const ProfileEmployee: React.FC = () => {
   const token = useToken();
-  const { user, loading } = useAuth();
   const [form] = Form.useForm<any>();
   const [picture, setPicture] = useState<string>();
   const [country, setCounrty] = useState([]);
+  const { data: user } = useQuery<any>(GET_ME);
   const [district, setDistrict] = useState<
     { value?: string | null; label?: string | null }[] | undefined
   >(undefined);
