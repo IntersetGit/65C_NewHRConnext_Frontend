@@ -26,9 +26,11 @@ import {
 } from 'react-router-dom';
 import moment from 'moment';
 import type { ColumnsType } from 'antd/es/table';
-import edit from '../../../assets/Edit.png';
-import Del from '../../../assets/DEL.png';
-import View from '../../../assets/View.png';
+import edit from '../../../../assets/Edit.png';
+import Del from '../../../../assets/DEL.png';
+import View from '../../../../assets/View.png';
+import { gql } from '../../../../__generated__';
+import { useQuery } from '@apollo/client';
 import { useState } from 'react';
 
 const { useToken } = theme;
@@ -41,22 +43,92 @@ interface DataType {
   boss: string;
 }
 
-const PositionEmployee: React.FC = (props) => {
+const GET_ME = gql(`
+query Me {
+  me {
+    Role_Company {
+      access
+      id
+      name
+      __typename
+    }
+    companyBranch {
+      companyId
+      company {
+        companyCode
+        icon
+        id
+        name
+        __typename
+      }
+      createdAt
+      id
+      name
+      __typename
+    }
+    email
+    id
+    isOwner
+    profile {
+      id
+      bio
+      firstname_th
+      lastname_th
+      firstname_en
+      lastname_en
+      avatar
+      dob
+      age
+      relationship
+      shirt_size
+      prefix_th
+      prefix_en
+      citizen_id
+      social_id
+      staff_status
+      tel
+      address
+      gender
+      staff_code
+      religion
+      userId
+      citizen_addressnumber
+      citizen_address
+      citizen_country
+      citizen_province
+      citizen_district
+      citizen_state
+      citizen_zipcode
+      citizen_tel
+      contract_sameCitizen
+      contract_addressnumber
+      contract_address
+      contract_country
+      contract_province
+      contract_district
+      contract_state
+      contract_zipcode
+      contract_email
+      contract_companyemail
+      social_facebook
+      social_likedin
+      social_line
+      social_telegram
+      nickname
+      blood_type
+      employee_status
+      start_date_work
+      __typename
+    }
+  }
+}`);
+
+const ProfilePosition: React.FC = (props) => {
   const [form] = Form.useForm();
-  const navigate = useNavigate();
-  let { companycode } = useParams();
-  const location = useLocation();
-  let propsstate = location.state as any;
   const token = useToken();
   const [drawerType, setDrawerType] = useState(1);
-
-  console.log(propsstate);
-
-  const onChange = (key: string) => {
-    navigate(generatePath(key, { companycode }), { state: propsstate });
-  };
-
   const [open, setOpen] = useState(false);
+  const { data: user, refetch } = useQuery<any>(GET_ME);
 
   const showDrawer = (type: any) => {
     setOpen(true);
@@ -148,22 +220,6 @@ const PositionEmployee: React.FC = (props) => {
 
   return (
     <>
-      <Tabs
-        defaultActiveKey={`/:companycode/employee/positionemployee`}
-        className="right-tab"
-        onChange={onChange}
-        items={[
-          {
-            label: `ข้อมูลพนักงาน`,
-            key: `/:companycode/employee/useremployee?id=${propsstate?.id}`,
-          },
-          {
-            label: `ตำแหน่งงาน`,
-            key: '/:companycode/employee/positionemployee',
-          },
-        ]}
-      />
-
       <div className="flex text-3xl ml-2 pt-4">
         <ImProfile />
         <div className="ml-2 text-lg">ตำแหน่งงาน</div>
@@ -184,10 +240,10 @@ const PositionEmployee: React.FC = (props) => {
           <Col xs={24} sm={24} md={4} lg={4} xl={4}>
             <div className="text-lg font-bold">
               <u className="text-blue-800">
-                {propsstate?.prefix_th} {propsstate?.firstname_th}{' '}
-                {propsstate?.lastname_th}
+                {user?.me?.profile?.prefix_th} {user?.me?.profile?.firstname_th}{' '}
+                {user?.me?.profile?.lastname_th}
               </u>
-              <div className="mt-4">{propsstate?.firstname_en}</div>
+              <div className="mt-4">{user?.me?.profile?.firstname_en}</div>
             </div>
           </Col>
         </Row>
@@ -198,12 +254,17 @@ const PositionEmployee: React.FC = (props) => {
             <DatePicker
               style={{ width: '100%' }}
               size="large"
-              defaultValue={moment(propsstate?.dob) as any}
+              defaultValue={moment(user?.me?.profile?.dob) as any}
+              disabled
             />
           </Col>
           <Col xs={24} sm={12} md={12} lg={8} xl={8}>
             <div className="py-3">หมายเลขประจำตัวผู้เสียภาษี</div>
-            <Input defaultValue={propsstate?.citizen_id} size="large" />
+            <Input
+              defaultValue={user?.me?.profile?.citizen_id}
+              size="large"
+              disabled
+            />
           </Col>
         </Row>
 
@@ -236,7 +297,7 @@ const PositionEmployee: React.FC = (props) => {
         open={open}
         onClose={onClose}
       >
-        <Form form={form} layout={'vertical'} size="large" onFinish={onFinish}>
+        <Form form={form} layout={'vertical'} size="middle" onFinish={onFinish}>
           <Row>
             <Col span={12}>
               <Form.Item label={'วันที่มีผล'}>
@@ -307,4 +368,4 @@ const PositionEmployee: React.FC = (props) => {
   );
 };
 
-export default PositionEmployee;
+export default ProfilePosition;
