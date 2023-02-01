@@ -15,6 +15,8 @@ import { CompanyBranchType } from '../../context/types';
 import { logout } from '../../App';
 import { generatePath, useNavigate, useParams } from 'react-router-dom';
 import CompanySelect from './CompantSelect';
+import { AbilityTuple, MongoAbility, MongoQuery, Subject } from '@casl/ability';
+import { AnyObject } from '@casl/ability/dist/types/types';
 
 const { useToken } = theme;
 
@@ -22,6 +24,7 @@ type RightNavContentType = {
   user: MeQuery | undefined;
   company: CompanyBranchType | undefined;
   isUserloading: boolean;
+  ability: MongoAbility<AbilityTuple<string, Subject>, MongoQuery<AnyObject>>;
 };
 
 const profileDetailstyle: React.CSSProperties = {
@@ -73,6 +76,7 @@ const RightNavbarContent: React.FC<RightNavContentType> = ({
   user,
   company,
   isUserloading,
+  ability,
 }) => {
   const token = useToken();
   const navigate = useNavigate();
@@ -173,8 +177,13 @@ const RightNavbarContent: React.FC<RightNavContentType> = ({
                 </div>
               </div>
             </div>
-            <Divider style={{ margin: 0 }} />
-            <CompanySelect />
+            {ability.can('select', 'company') && (
+              <>
+                <Divider style={{ margin: 0 }} />
+                <CompanySelect />
+              </>
+            )}
+
             <Divider style={{ margin: 0 }} />
             {menu}
           </div>
