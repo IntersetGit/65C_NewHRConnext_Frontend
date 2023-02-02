@@ -130,6 +130,28 @@ const generateData = (_level: number, _preKey?: React.Key, _tns?: DataNode[]) =>
 };
 // generateData(z);
 
+const convertDataToComponent = (data: any, level = 1) => {
+    return data?.map((data: any, index: number) => {
+        return {
+            ['title']: data?.name,
+            ['key']: data?.id,
+            ['id']: data?.code,
+            ['data']: data,
+            ['children']: data['mas_positionlevel' + (level + 1)] ? convertDataToComponent(data['mas_positionlevel' + (level + 1)], (level + 1)) : []
+        }
+    })
+}
+const convertData = (data: any, level = 1) => {
+    return data?.map((data: any, index: number) => {
+        return {
+            ['id_Position' + (level)]: data?.data?.id,
+            ['name_Position' + (level)]: data?.title,
+            ['level_Position' + (level)]: (index + 1),
+            ['code_position' + (level)]: data.id,
+            ['masPosition' + (level + 1)]: data.children ? convertData(data.children, (level + 1)) : []
+        }
+    })
+}
 
 const CompanyStructure: React.FC = () => {
     const { useToken } = theme;
@@ -140,7 +162,28 @@ const CompanyStructure: React.FC = () => {
     const [open, setOpen] = useState(false);
     const [open2, setOpen2] = useState(false);
     const [dataStructure, setDataStructure] = useState<any>(undefined);
-    const [treestructure, setTreestructure] = useState(defaultData);
+    const { data, loading, refetch } = useQuery(POSITION);
+    const [treestructure, setTreestructure] = useState([
+        {
+            title: "เทคโนโลยี",
+            key: "35b0913b-27a2-44ad-9153-bef2bfdae75d",
+            id: "s1",
+            children: []
+        },
+        {
+            title: "ไอที",
+            key: "f440e39b-1b3a-4d52-ae82-bf9e0e02163f",
+            id: "s2",
+            children: [
+                {
+                    title: "บริหาร",
+                    key: "560605ff-3797-4217-86bd-737d63444ed2",
+                    id: "b1",
+                    children: []
+                }
+            ]
+        }
+    ]);
     const [treecompany, setTreecompany] = useState([
         {
             title: 'ฝ่าย', key: "1456", data: { title: 'ฝ่าย', id: "1", color: '#FFE1BA' }
@@ -152,22 +195,32 @@ const CompanyStructure: React.FC = () => {
             title: 'ตำแหน่ง', key: "3213", data: { title: 'ตำแหน่ง', id: "3", color: '#FAAAAE' }
         }
     ]);
-    const { data: positiondata, loading, refetch } = useQuery(POSITION);
 
-    const CREATEANDUPDATEPOSITION = gql(`
+    const CREATEPOSITION = gql(`
     mutation CreatedPosition($data: [CreatedAndUpdatePosition!]) {
         CreatedPosition(data: $data) {
           message
           status
         }
       }`);
-    const [CreatedAndUpdatePosition] = useMutation(CREATEANDUPDATEPOSITION);
+    const EDITPOSITION = gql(`
+    mutation EditPosition($data: [CreatedAndUpdatePosition!]) {
+        EditPosition(data: $data) {
+          message
+          status
+        }
+      }`);
+    const [CreatedPosition] = useMutation(CREATEPOSITION);
+    const [EditPosition] = useMutation(EDITPOSITION);
 
     // const [expandedKeys] = useState(['0-0-1']);
-    useEffect(() => {
-        // console.log("treestructure", treestructure)
 
-    }, [treestructure])
+    useEffect(() => {
+        // console.log('getMasPositon', data?.getMasPositon)
+        // console.log('convertDataToComponent(getMasPositon) :>> ', convertDataToComponent(data?.getMasPositon));
+        setTreestructure(convertDataToComponent(data?.getMasPositon))
+
+    }, [loading])
     const onDragEnter: TreeProps['onDragEnter'] = (info) => {
         // console.log("onDrageEnter");
         // expandedKeys
@@ -466,7 +519,7 @@ const CompanyStructure: React.FC = () => {
                 current = current[index].children || current[index];
             }
         }
-        formEdit.setFieldsValue({ name_th: current.title })
+        formEdit.setFieldsValue({ name_th: current.title, number: current.id })
     }
     const onAddChildStructure = (value: any) => {
         form.resetFields();
@@ -488,7 +541,7 @@ const CompanyStructure: React.FC = () => {
             }
         }
         // console.log('current', current)
-        current.push({ title: value?.name_th, key: randomUid, id: value?.number });
+        current?.push({ title: value?.name_th, key: randomUid, id: value?.number });
         setTreestructure([...a]);
         setOpen(false);
     }
@@ -505,6 +558,7 @@ const CompanyStructure: React.FC = () => {
             if (i == kut.length - 1) {
                 current[index].title = value.name_th;
                 current[index].key = randomUid;
+                current[index].id = value?.number;
             } else {
                 current = current[index].children || current[index];
             }
@@ -530,26 +584,49 @@ const CompanyStructure: React.FC = () => {
         setTreecompany([...a]);
     }
 
-    const convertData = (data: any, level = 1) => {
-        return data?.map((data: any, index: number) => {
-            return {
-                ['name_Position' + (level)]: data?.title,
-                ['level_Position' + (level)]: (index + 1),
-                ['code_position' + (level)]: data.id,
-                ['masPosition' + (level + 1)]: data.children ? convertData(data.children, (level + 1)) : []
-            }
-        })
-    }
 
     const onSaveStructure = async () => {
-        const convertedData = convertData(treestructure);
-        console.log("Savetreestructure", convertedData);
-        let data = await CreatedAndUpdatePosition({
-            variables: {
-                data: convertedData
-            },
-        })
-        console.log('datasent', data);
+        const ConvertData = convertData(treestructure);
+        console.log('treestructure :>> ', treestructure);
+        console.log('ConvertData :>> ', ConvertData);
+
+        const filtertAdd = (item: any, level = 1) => {
+            return item?.filter((data: any, index: number) => {
+                if (data['id_Position' + (level)] == undefined) {
+                    console.log(['id_Position' + (level)],"yes");
+                    return data
+                } else {
+                    console.log(['id_Position' + (level)],"no");
+                    if (data['masPosition' + (level + 1)]) {
+                      filtertAdd(data['masPosition' + (level + 1)], (level + 1))
+                    }
+                }
+            })
+        }
+        const filtertEdit = (data: any, level = 1) => {
+            return data?.filter((data: any, index: number) => {
+                if (data['id_Position' + (level)] !== undefined) {
+                    if (data['masPosition' + (level + 1)]) {
+                        filtertEdit(data.children, (level + 1))
+                    }
+                    return data
+                }
+            })
+        }
+        let Adddata = filtertAdd(ConvertData);
+        let Editdata = filtertEdit(ConvertData);
+        console.log('Adddata Editdata :>> ', Adddata, Editdata);
+        // let dataAdd = await CreatedPosition({
+        //     variables: {
+        //         data: Adddata
+        //     },
+        // })
+        // let dataEdit = await EditPosition({
+        //     variables: {
+        //         data: Editdata
+        //     },
+        // })
+        // console.log('dataAdd', dataAdd);
     }
     return (
         <React.Fragment>
@@ -578,6 +655,7 @@ const CompanyStructure: React.FC = () => {
                                 blockNode
                                 multiple
                                 onDrop={onDropCompany}
+                                key={'tree-company'}
                             // treeData={gData}
                             >
                                 {renderTreeNodes(treecompany, '0')}
@@ -619,6 +697,7 @@ const CompanyStructure: React.FC = () => {
                         showLine
                         onDragEnter={onDragEnter}
                         onDrop={onDrop}
+                        key={'tree-structure'}
                     >
                         {renderTreeNodesStructure(treestructure, '0')}
                         <TreeNode disabled key={"add"} title={

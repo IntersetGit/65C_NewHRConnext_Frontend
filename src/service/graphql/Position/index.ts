@@ -9,9 +9,18 @@ query getMasPositon {
       code
       type
       mas_positionlevel2 {
-        positionlevel1_id
         type
         code
+        name
+        level
+        mas_positionlevel3 {
+          id
+          name
+          level
+          code
+          type
+        }
+        id
       }
       CompanyId
       Position_user {
