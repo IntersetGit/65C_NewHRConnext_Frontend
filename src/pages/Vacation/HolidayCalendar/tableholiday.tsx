@@ -24,6 +24,37 @@ const columns: ColumnsType<DataType> = [
         title: 'เดือน',
         dataIndex: 'month',
         align: 'center',
+        render: (record) => {
+            return (
+                <div>
+                    {
+                        record === 1
+                            ? 'มกราคม'
+                            : record === 2
+                                ? 'กุมภาพันธ์'
+                                : record === 3
+                                    ? 'มีนาคม'
+                                    : record === 4
+                                        ? 'เมษายน'
+                                        : record === 5
+                                            ? 'พฤษภาคม'
+                                            : record === 6
+                                                ? 'มิถุนายน'
+                                                : record === 7
+                                                    ? 'กรกฎาคม'
+                                                    : record === 8
+                                                        ? 'สิงหาคม'
+                                                        : record === 9
+                                                            ? 'กันยายน'
+                                                            : record === 10
+                                                                ? 'ตุลาคม'
+                                                                : record === 11
+                                                                    ? 'พฤศจิกายน'
+                                                                    : 'ธันวาคม'
+                    }
+                </div>
+            );
+        },
     },
     {
         title: 'ปี',

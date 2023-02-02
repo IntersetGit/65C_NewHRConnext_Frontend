@@ -11,12 +11,13 @@ import layoutConfig from '../../config/layoutConfig';
 import RightNavbarContent from './RightNavberContent';
 import { useAuth } from '../../hooks/useAuth';
 import { BaseLayoutProps } from '.';
+import { HiBars3BottomLeft, HiBars3BottomRight } from 'react-icons/hi2';
 
 import icon from '../../assets/HR logo.png';
 
 const Layouts: React.FC<BaseLayoutProps> = (props) => {
   const [collapsed, setCollapsed] = useState(false);
-  const { loading, user, company } = useAuth();
+  const { loading, user, company, ability } = useAuth();
   const location = useLocation();
   useEffect(() => {
     nprogress.start();
@@ -57,8 +58,10 @@ const Layouts: React.FC<BaseLayoutProps> = (props) => {
             <div style={{ paddingLeft: 10 }}>
               {!props.noSidebar ? (
                 <Typography.Text
+                  className="text-md"
                   style={{
                     userSelect: 'none',
+                    fontWeight: 'bold',
                   }}
                 >
                   {company?.companyName} | {company?.branchName}
@@ -73,6 +76,7 @@ const Layouts: React.FC<BaseLayoutProps> = (props) => {
             company={company}
             isUserloading={loading}
             user={user}
+            ability={ability}
           />
         </Layout.Header>
         <Layout.Content

@@ -23,26 +23,25 @@ import {
   MdAirplanemodeActive,
   MdDragIndicator,
 } from 'react-icons/md';
-import edit from '../../../assets/Edit.png';
-import Del from '../../../assets/DEL.png';
-import View from '../../../assets/View.png';
+import edit from '../../../../assets/Edit.png';
+import Del from '../../../../assets/DEL.png';
+import View from '../../../../assets/View.png';
 import type { ColumnsType } from 'antd/es/table';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useState } from 'react';
-import { useAuth } from '../../../hooks/useAuth';
+import { useAuth } from '../../../../hooks/useAuth';
 import moment from 'moment';
 const { useToken } = theme;
 const { TextArea } = Input;
 
-const Approve: React.FC = () => {
+const ProfileApprove: React.FC = () => {
   const [open, setOpen] = useState(false);
   const [form] = Form.useForm();
   const token = useToken();
-  const location = useLocation();
-  const { ability } = useAuth();
-  let propsstate = location.state as any;
+  const [drawertype, setDrawertype] = useState(1);
 
-  const showDrawer = () => {
+  const showDrawer = (type: any) => {
+    setDrawertype(type);
     setOpen(true);
   };
 
@@ -52,37 +51,33 @@ const Approve: React.FC = () => {
 
   const genarateMenu = (record: any) => {
     return [
-      // {
-      //   key: 'edit',
-      //   label: 'แก้ไข',
-      //   icon: <img style={{ width: '17px', height: '17px' }} src={edit} />,
-      //   onClick: (e: any) => onMenuClick(e, record),
-      // },
+      {
+        key: 'edit',
+        label: 'แก้ไข',
+        icon: <img style={{ width: '17px', height: '17px' }} src={edit} />,
+        onClick: (e: any) => onMenuClick(e, record),
+      },
       {
         key: 'view',
         label: 'ดูข้อมูล',
         icon: <img style={{ width: '17px', height: '17px' }} src={View} />,
         onClick: (e: any) => onMenuClick(e, record),
       },
-      // {
-      //   key: 'delete',
-      //   label: 'ลบข้อมูล',
-      //   icon: <img style={{ width: '20px', height: '20px' }} src={Del} />,
-      //   onClick: (e: any) => onMenuClick(e, record),
-      // },
+      {
+        key: 'delete',
+        label: 'ลบข้อมูล',
+        icon: <img style={{ width: '20px', height: '20px' }} src={Del} />,
+        onClick: (e: any) => onMenuClick(e, record),
+      },
     ];
   };
 
   const onMenuClick = (event: any, record: any) => {
     const { key } = event;
     if (key === 'edit') {
+      showDrawer(2);
     } else if (key === 'view') {
-      showDrawer();
-      form.setFieldsValue({
-        ...record,
-        from_date: moment(record.from_date) as any,
-        to_date: moment(record.to_date) as any,
-      });
+      showDrawer(3);
     } else if (key === 'delete') {
     }
   };
@@ -192,9 +187,9 @@ const Approve: React.FC = () => {
           >
             <div className="text-lg font-bold">
               <u style={{ color: token.token.colorPrimary }}>
-                {propsstate?.firstname_th} {propsstate?.lastname_th}
+                {/* {propsstate?.firstname_th} {propsstate?.lastname_th} */}
               </u>
-              <div className="my-4">{propsstate?.position}</div>
+              <div className="my-4"></div>
             </div>
           </Col>
         </Row>
@@ -204,7 +199,7 @@ const Approve: React.FC = () => {
             <Card className="shadow-lg border-4 border-[#8cb369] bg-[#8cb369]">
               <div className="flex text-lg font-bold justify-center items-center mx-12">
                 <MdAirplanemodeActive className="text-green-900" size={'38'} />{' '}
-                ลาพักร้อน {propsstate?.leave_vacation}
+                ลาพักร้อน 4
               </div>
             </Card>
           </Col>
@@ -212,7 +207,7 @@ const Approve: React.FC = () => {
             <Card className="shadow-lg border-4 border-[#fddd5c] bg-[#fddd5c]">
               <div className="flex text-lg font-bold justify-center items-center">
                 <RiBriefcase5Line className="text-[#b48a4d]" size={'38'} />{' '}
-                ลากิจ {propsstate?.leave_bussiness}
+                ลากิจ 6
               </div>
             </Card>
           </Col>
@@ -223,7 +218,7 @@ const Approve: React.FC = () => {
                   className="text-[#e2711d]"
                   size={'38'}
                 />{' '}
-                ลาป่วย {propsstate?.leave_sick}
+                ลาป่วย 8
               </div>
             </Card>
           </Col>
@@ -231,7 +226,7 @@ const Approve: React.FC = () => {
             <Card className="shadow-lg border-4 border-[#b491c8] bg-[#b491c8]">
               <div className="flex text-lg font-bold justify-center items-center">
                 <MdDragIndicator className="text-[#7c5295]" size={'38'} />{' '}
-                ลาอื่น ๆ {propsstate?.leave_other}
+                ลาอื่น ๆ 2
               </div>
             </Card>
           </Col>
@@ -251,16 +246,37 @@ const Approve: React.FC = () => {
             </Button>
           </Col>
         </Row> */}
+        <Row
+          gutter={16}
+          style={{ display: 'flex', justifyContent: 'space-between' }}
+        >
+          <Col span={3}>
+            <Select
+              style={{ width: '100%' }}
+              options={[
+                { value: '2023', label: '2023' },
+                { value: '2022', label: '2022' },
+                { value: '2021', label: '2021' },
+              ]}
+            ></Select>
+          </Col>
+          <Col>
+            <Button
+              type="primary"
+              style={{ backgroundColor: token.token.colorPrimary }}
+              onClick={() => {
+                showDrawer(1);
+              }}
+            >
+              + สร้างใบลา
+            </Button>
+          </Col>
+        </Row>
 
         <Table columns={columns} dataSource={data}></Table>
       </Card>
 
-      <Drawer
-        title="รายละเอียดการลา"
-        size="large"
-        onClose={onClose}
-        open={open}
-      >
+      <Drawer title="สร้างใบลา" size="large" onClose={onClose} open={open}>
         <Form form={form} layout="vertical">
           <Row>
             <Col span={12}>
@@ -318,7 +334,7 @@ const Approve: React.FC = () => {
             </Col>
           </Row>
 
-          <Row>
+          {/* <Row>
             <Col span={12}>
               <Form.Item name={'leave_approve'} label={'สถานะการลา'}>
                 <Select
@@ -330,7 +346,7 @@ const Approve: React.FC = () => {
                 />
               </Form.Item>
             </Col>
-          </Row>
+          </Row> */}
 
           <Row gutter={16} style={{ float: 'right' }}>
             <Form.Item>
@@ -362,4 +378,4 @@ const Approve: React.FC = () => {
   );
 };
 
-export default Approve;
+export default ProfileApprove;

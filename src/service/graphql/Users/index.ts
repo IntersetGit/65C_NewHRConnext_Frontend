@@ -50,6 +50,10 @@ query Users {
         social_likedin
         social_line
         social_telegram
+        nickname
+        blood_type
+        employee_status
+        start_date_work
         user {
           email
           password

@@ -19,14 +19,7 @@ import {
   Card,
   Upload,
   Avatar,
-  Tabs,
 } from 'antd';
-import {
-  useNavigate,
-  useLocation,
-  generatePath,
-  useParams,
-} from 'react-router-dom';
 import type { UploadProps } from 'antd';
 import { gql } from '../../../../__generated__/gql';
 import { useQuery, useMutation } from '@apollo/client';
@@ -35,14 +28,92 @@ import Swal from 'sweetalert2';
 import moment from 'moment';
 import { GET_PROVINCE } from '../../../../service/graphql/Province';
 import type { CheckboxChangeEvent } from 'antd/es/checkbox';
-import { useAuth } from '../../../../hooks/useAuth';
-import { User } from '../../../../__generated__/graphql';
 import facebook from '../../../../assets/Facebook-logo.png';
 import inittial from '../../../../assets/initials-logo.png';
 import line from '../../../../assets/Line-logo.png';
 import telegram from '../../../../assets/Telegram-logo.png';
 
 const { useToken } = theme;
+
+const GET_ME = gql(`
+query Me {
+  me {
+    Role_Company {
+      access
+      id
+      name
+      __typename
+    }
+    companyBranch {
+      companyId
+      company {
+        companyCode
+        icon
+        id
+        name
+        __typename
+      }
+      createdAt
+      id
+      name
+      __typename
+    }
+    email
+    id
+    isOwner
+    profile {
+      id
+      bio
+      firstname_th
+      lastname_th
+      firstname_en
+      lastname_en
+      avatar
+      dob
+      age
+      relationship
+      shirt_size
+      prefix_th
+      prefix_en
+      citizen_id
+      social_id
+      staff_status
+      tel
+      address
+      gender
+      staff_code
+      religion
+      userId
+      citizen_addressnumber
+      citizen_address
+      citizen_country
+      citizen_province
+      citizen_district
+      citizen_state
+      citizen_zipcode
+      citizen_tel
+      contract_sameCitizen
+      contract_addressnumber
+      contract_address
+      contract_country
+      contract_province
+      contract_district
+      contract_state
+      contract_zipcode
+      contract_email
+      contract_companyemail
+      social_facebook
+      social_likedin
+      social_line
+      social_telegram
+      nickname
+      blood_type
+      employee_status
+      start_date_work
+      __typename
+    }
+  }
+}`);
 
 const CREATE_EMPLOYEE_ACCOUNT = gql(`
 mutation CreateAccountUser($data: CreateAccountUserInput!) {
@@ -53,12 +124,11 @@ mutation CreateAccountUser($data: CreateAccountUserInput!) {
 }`);
 
 const ProfileEmployee: React.FC = () => {
-  const location = useLocation();
   const token = useToken();
-  const { user } = useAuth();
   const [form] = Form.useForm<any>();
   const [picture, setPicture] = useState<string>();
   const [country, setCounrty] = useState([]);
+  const { data: user } = useQuery<any>(GET_ME);
   const [district, setDistrict] = useState<
     { value?: string | null; label?: string | null }[] | undefined
   >(undefined);
@@ -73,24 +143,40 @@ const ProfileEmployee: React.FC = () => {
     { value?: string | null; label?: string | null }[] | undefined
   >(undefined);
 
-  const { data: province_data, refetch } = useQuery(GET_PROVINCE);
+  const {
+    data: province_data,
+    loading: isProvinceload,
+    refetch,
+  } = useQuery(GET_PROVINCE);
   const [createEmployeeAccount] = useMutation(CREATE_EMPLOYEE_ACCOUNT);
-  let propsstate = location.state as any;
-  console.log(propsstate);
 
   useEffect(() => {
     AllCounrty();
-    // getUserData();
-  }, []);
+    getUserData();
+  }, [isProvinceload]);
 
-  //   const getUserData = () => {
-  //     form.setFieldsValue({
-  //       ...user,
-  //       ...user?.me?.profile,
-  //       email: user?.me?.profile?.contract_email,
-  //       dob: moment(user?.me?.profile?.dob),
-  //     });
-  //   };
+  const getUserData = async () => {
+    await onProvinceChangeCitizen(
+      user?.me?.profile?.citizen_province as string,
+    );
+    await onDistrictChangeCitizen(
+      user?.me?.profile?.citizen_district as string,
+    );
+    await onAmphoeChangeCitizen(user?.me?.profile?.citizen_state as string);
+    await onProvinceChangeContract(
+      user?.me?.profile?.contract_province as string,
+    );
+    await onDistrictChangeContract(
+      user?.me?.profile?.contract_district as string,
+    );
+    await onAmphoeChangeContract(user?.me?.profile?.contract_state as string);
+    form.setFieldsValue({
+      ...user?.me?.profile,
+      email: user?.me?.profile?.contract_email,
+      dob: moment(user?.me?.profile?.dob),
+      start_date_work: moment(user?.me?.profile?.start_date_work),
+    });
+  };
 
   const AllCounrty = () => {
     axios.get('https://restcountries.com/v2/all').then((data) => {
@@ -253,49 +339,56 @@ const ProfileEmployee: React.FC = () => {
     },
   };
 
-  //   const onSubmitForm = (value: User) => {
-  //     Swal.fire({
-  //       title: `ยืนยันการ${propsstate?.id ? 'แก้ไข' : 'สร้าง'}ข้อมูลพนักงาน`,
-  //       icon: 'warning',
-  //       showDenyButton: true,
-  //       showCancelButton: false,
-  //       confirmButtonColor: token.token.colorPrimary,
-  //       denyButtonColor: '#ea4e4e',
-  //       confirmButtonText: 'ตกลง',
-  //       denyButtonText: `ยกเลิก`,
-  //     }).then(async (result) => {
-  //       if (result.isConfirmed) {
-  //         createEmployeeAccount({
-  //           variables: {
-  //             data: {
-  //               ...value,
-  //               id: propsstate?.userId ? propsstate?.userId : undefined,
-  //               contract_sameCitizen: true,
-  //             },
-  //           },
-  //         })
-  //           .then((val) => {
-  //             console.log(val);
-  //             if (val.data?.createAccountUser?.status) {
-  //               Swal.fire(
-  //                 `${propsstate?.id ? 'แก้ไข' : 'สร้าง'}ข้อมูลพนักงานสำเร็จ!`,
-  //                 '',
-  //                 'success',
-  //               );
-  //               refetch();
-  //             }
-  //           })
-  //           .catch((err) => {
-  //             Swal.fire(
-  //               `${propsstate?.id ? 'แก้ไข' : 'สร้าง'}ข้อมูลพนักงานไม่สำเร็จ!`,
-  //               '',
-  //               'error',
-  //             );
-  //             console.error(err);
-  //           });
-  //       }
-  //     });
-  //   };
+  const onSubmitForm = (value: any) => {
+    Swal.fire({
+      title: `ยืนยันการ${
+        user?.me?.profile?.id ? 'แก้ไข' : 'สร้าง'
+      }ข้อมูลพนักงาน`,
+      icon: 'warning',
+      showDenyButton: true,
+      showCancelButton: false,
+      confirmButtonColor: token.token.colorPrimary,
+      denyButtonColor: '#ea4e4e',
+      confirmButtonText: 'ตกลง',
+      denyButtonText: `ยกเลิก`,
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        createEmployeeAccount({
+          variables: {
+            data: {
+              ...value,
+              id: user?.me?.profile?.userId
+                ? user?.me?.profile?.userId
+                : undefined,
+            },
+          },
+        })
+          .then((val) => {
+            console.log(val);
+            if (val.data?.createAccountUser?.status) {
+              Swal.fire(
+                `${
+                  user?.me?.profile?.id ? 'แก้ไข' : 'สร้าง'
+                }ข้อมูลพนักงานสำเร็จ!`,
+                '',
+                'success',
+              );
+              refetch();
+            }
+          })
+          .catch((err) => {
+            Swal.fire(
+              `${
+                user?.me?.profile?.id ? 'แก้ไข' : 'สร้าง'
+              }ข้อมูลพนักงานไม่สำเร็จ!`,
+              '',
+              'error',
+            );
+            console.error(err);
+          });
+      }
+    });
+  };
 
   return (
     <>
@@ -311,7 +404,7 @@ const ProfileEmployee: React.FC = () => {
         <Form
           layout={'vertical'}
           form={form}
-          //   onFinish={onSubmitForm}
+          onFinish={onSubmitForm}
           size={'large'}
         >
           <Row>
@@ -335,52 +428,36 @@ const ProfileEmployee: React.FC = () => {
           <Row gutter={16}>
             <Col xs={24} sm={12} md={12} lg={4} xl={4}>
               <Form.Item name={'staff_code'} label={'รหัสพนักงาน'}>
-                {propsstate?.mode == 'view' ? <Input disabled /> : <Input />}
+                <Input />
               </Form.Item>
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={4} xl={4}>
               <Form.Item name={'staff_status'} label={'Status'}>
-                {propsstate?.mode == 'view' ? (
-                  <Select
-                    disabled
-                    options={[
-                      {
-                        value: 'ใช้งาน',
-                        label: 'ใช้งาน',
-                      },
-                      {
-                        value: 'ไม่ใช้งาน',
-                        label: 'ไม่ใช้งาน',
-                      },
-                    ]}
-                  ></Select>
-                ) : (
-                  <Select
-                    options={[
-                      {
-                        value: 'ใช้งาน',
-                        label: 'ใช้งาน',
-                      },
-                      {
-                        value: 'ไม่ใช้งาน',
-                        label: 'ไม่ใช้งาน',
-                      },
-                    ]}
-                  ></Select>
-                )}
+                <Select
+                  options={[
+                    {
+                      value: 'ใช้งาน',
+                      label: 'ใช้งาน',
+                    },
+                    {
+                      value: 'ไม่ใช้งาน',
+                      label: 'ไม่ใช้งาน',
+                    },
+                  ]}
+                ></Select>
               </Form.Item>
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={8} xl={8}>
               <Form.Item name={'citizen_id'} label={'เลขประจำตัวประชาชน'}>
-                {propsstate?.mode == 'view' ? <Input disabled /> : <Input />}
+                <Input />
               </Form.Item>
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={8} xl={8}>
               <Form.Item name={'social_id'} label={'หมายเลขประกันสังคม'}>
-                {propsstate?.mode == 'view' ? <Input disabled /> : <Input />}
+                <Input />
               </Form.Item>
             </Col>
           </Row>
@@ -388,148 +465,85 @@ const ProfileEmployee: React.FC = () => {
           <Row gutter={16}>
             <Col xs={24} sm={12} md={12} lg={4} xl={4}>
               <Form.Item name={'prefix_th'} label={'คำนำหน้า'}>
-                {propsstate?.mode == 'view' ? (
-                  <Select
-                    disabled
-                    options={[
-                      {
-                        value: 'นาย',
-                        label: 'นาย',
-                      },
-                      {
-                        value: 'นาง',
-                        label: 'นาง',
-                      },
-                      {
-                        value: 'นางสาว',
-                        label: 'นางสาว',
-                      },
-                    ]}
-                    allowClear
-                  />
-                ) : (
-                  <Select
-                    options={[
-                      {
-                        value: 'นาย',
-                        label: 'นาย',
-                      },
-                      {
-                        value: 'นาง',
-                        label: 'นาง',
-                      },
-                      {
-                        value: 'นางสาว',
-                        label: 'นางสาว',
-                      },
-                    ]}
-                    allowClear
-                  />
-                )}
+                <Select
+                  options={[
+                    {
+                      value: 'นาย',
+                      label: 'นาย',
+                    },
+                    {
+                      value: 'นาง',
+                      label: 'นาง',
+                    },
+                    {
+                      value: 'นางสาว',
+                      label: 'นางสาว',
+                    },
+                  ]}
+                  allowClear
+                />
               </Form.Item>
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={5} xl={5}>
               <Form.Item name={'firstname_th'} label={'ชื่อ'}>
-                {propsstate?.mode == 'view' ? <Input disabled /> : <Input />}
+                <Input />
               </Form.Item>
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={5} xl={5}>
               <Form.Item name={'lastname_th'} label={'นามสกุล'}>
-                {propsstate?.mode == 'view' ? <Input disabled /> : <Input />}
+                <Input />
               </Form.Item>
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={4} xl={4}>
-              <Form.Item label={'ชื่อเล่น'}>
-                {propsstate?.mode == 'view' ? <Input disabled /> : <Input />}
+              <Form.Item name={'nickname'} label={'ชื่อเล่น'}>
+                <Input />
               </Form.Item>
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={3} xl={3}>
               <Form.Item name={'gender'} label={'เพศ'}>
-                {propsstate?.mode == 'view' ? (
-                  <Select
-                    disabled
-                    options={[
-                      {
-                        value: 'ชาย',
-                        label: 'ชาย',
-                      },
-                      {
-                        value: 'หญิง',
-                        label: 'หญิง',
-                      },
-                    ]}
-                    allowClear
-                  />
-                ) : (
-                  <Select
-                    options={[
-                      {
-                        value: 'ชาย',
-                        label: 'ชาย',
-                      },
-                      {
-                        value: 'หญิง',
-                        label: 'หญิง',
-                      },
-                    ]}
-                    allowClear
-                  />
-                )}
+                <Select
+                  options={[
+                    {
+                      value: 'ชาย',
+                      label: 'ชาย',
+                    },
+                    {
+                      value: 'หญิง',
+                      label: 'หญิง',
+                    },
+                  ]}
+                  allowClear
+                />
               </Form.Item>
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={3} xl={3}>
-              <Form.Item label={'กรุ๊ปเลือด'}>
-                {propsstate?.mode == 'view' ? (
-                  <Select
-                    disabled
-                    options={[
-                      {
-                        value: 'A',
-                        label: 'A',
-                      },
-                      {
-                        value: 'B',
-                        label: 'B',
-                      },
-                      {
-                        value: 'O',
-                        label: 'O',
-                      },
-                      {
-                        value: 'AB',
-                        label: 'AB',
-                      },
-                    ]}
-                    allowClear
-                  />
-                ) : (
-                  <Select
-                    options={[
-                      {
-                        value: 'A',
-                        label: 'A',
-                      },
-                      {
-                        value: 'B',
-                        label: 'B',
-                      },
-                      {
-                        value: 'O',
-                        label: 'O',
-                      },
-                      {
-                        value: 'AB',
-                        label: 'AB',
-                      },
-                    ]}
-                    allowClear
-                  />
-                )}
+              <Form.Item name={'blood_type'} label={'กรุ๊ปเลือด'}>
+                <Select
+                  options={[
+                    {
+                      value: 'A',
+                      label: 'A',
+                    },
+                    {
+                      value: 'B',
+                      label: 'B',
+                    },
+                    {
+                      value: 'O',
+                      label: 'O',
+                    },
+                    {
+                      value: 'AB',
+                      label: 'AB',
+                    },
+                  ]}
+                  allowClear
+                />
               </Form.Item>
             </Col>
           </Row>
@@ -537,56 +551,35 @@ const ProfileEmployee: React.FC = () => {
           <Row gutter={16}>
             <Col xs={24} sm={12} md={12} lg={4} xl={4}>
               <Form.Item name={'prefix_en'} label={'Prename'}>
-                {propsstate?.mode == 'view' ? (
-                  <Select
-                    disabled
-                    options={[
-                      {
-                        value: 'Mr.',
-                        label: 'Mr.',
-                      },
-                      {
-                        value: 'Mrs.',
-                        label: 'Mrs.',
-                      },
-                      {
-                        value: 'Ms.',
-                        label: 'Ms.',
-                      },
-                    ]}
-                    allowClear
-                  />
-                ) : (
-                  <Select
-                    options={[
-                      {
-                        value: 'Mr.',
-                        label: 'Mr.',
-                      },
-                      {
-                        value: 'Mrs.',
-                        label: 'Mrs.',
-                      },
-                      {
-                        value: 'Ms.',
-                        label: 'Ms.',
-                      },
-                    ]}
-                    allowClear
-                  />
-                )}
+                <Select
+                  options={[
+                    {
+                      value: 'Mr.',
+                      label: 'Mr.',
+                    },
+                    {
+                      value: 'Mrs.',
+                      label: 'Mrs.',
+                    },
+                    {
+                      value: 'Ms.',
+                      label: 'Ms.',
+                    },
+                  ]}
+                  allowClear
+                />
               </Form.Item>
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={10} xl={10}>
               <Form.Item name={'firstname_en'} label={'Name'}>
-                {propsstate?.mode == 'view' ? <Input disabled /> : <Input />}
+                <Input />
               </Form.Item>
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={10} xl={10}>
               <Form.Item name={'lastname_en'} label={'Surname'}>
-                {propsstate?.mode == 'view' ? <Input disabled /> : <Input />}
+                <Input />
               </Form.Item>
             </Col>
           </Row>
@@ -594,184 +587,107 @@ const ProfileEmployee: React.FC = () => {
           <Row gutter={16}>
             <Col xs={24} sm={12} md={8} lg={4} xl={4}>
               <Form.Item name={'dob'} label={'วัน/เดือน/ปี'}>
-                {propsstate?.mode == 'view' ? (
-                  <DatePicker
-                    format={'YYYY/MM/DD'}
-                    style={{ width: '100%' }}
-                    disabled
-                  />
-                ) : (
-                  <DatePicker format={'YYYY/MM/DD'} style={{ width: '100%' }} />
-                )}
+                <DatePicker format={'YYYY/MM/DD'} style={{ width: '100%' }} />
               </Form.Item>
             </Col>
 
             <Col xs={24} sm={12} md={8} lg={4} xl={4}>
               <Form.Item name={'age'} label={'อายุ'}>
-                {propsstate?.mode == 'view' ? <Input disabled /> : <Input />}
+                <Input />
               </Form.Item>
             </Col>
 
             <Col xs={24} sm={8} md={8} lg={6} xl={6}>
               <Form.Item name={'relationship'} label={'สถานภาพสมรส'}>
-                {propsstate?.mode == 'view' ? (
-                  <Select
-                    disabled
-                    options={[
-                      {
-                        value: 'โสด',
-                        label: 'โสด',
-                      },
-                      {
-                        value: 'สมรส',
-                        label: 'สมรส',
-                      },
-                      {
-                        value: 'หย่าร้าง',
-                        label: 'หย่าร้าง',
-                      },
-                      {
-                        value: 'แยกกันอยู่',
-                        label: 'แยกกันอยู่',
-                      },
-                    ]}
-                    allowClear
-                  />
-                ) : (
-                  <Select
-                    options={[
-                      {
-                        value: 'โสด',
-                        label: 'โสด',
-                      },
-                      {
-                        value: 'สมรส',
-                        label: 'สมรส',
-                      },
-                      {
-                        value: 'หย่าร้าง',
-                        label: 'หย่าร้าง',
-                      },
-                      {
-                        value: 'แยกกันอยู่',
-                        label: 'แยกกันอยู่',
-                      },
-                    ]}
-                    allowClear
-                  />
-                )}
+                <Select
+                  options={[
+                    {
+                      value: 'โสด',
+                      label: 'โสด',
+                    },
+                    {
+                      value: 'สมรส',
+                      label: 'สมรส',
+                    },
+                    {
+                      value: 'หย่าร้าง',
+                      label: 'หย่าร้าง',
+                    },
+                    {
+                      value: 'แยกกันอยู่',
+                      label: 'แยกกันอยู่',
+                    },
+                  ]}
+                  allowClear
+                />
               </Form.Item>
             </Col>
 
             <Col xs={24} sm={8} md={12} lg={4} xl={4}>
               <Form.Item name={'shirt_size'} label={'T-Shirt Size'}>
-                {propsstate?.mode == 'view' ? (
-                  <Select
-                    disabled
-                    options={[
-                      {
-                        value: 'S',
-                        label: 'S',
-                      },
-                      {
-                        value: 'M',
-                        label: 'M',
-                      },
-                      {
-                        value: 'L',
-                        label: 'L',
-                      },
-                      {
-                        value: 'XL',
-                        label: 'XL',
-                      },
-                      {
-                        value: 'XXL',
-                        label: 'XXL',
-                      },
-                    ]}
-                    allowClear
-                  />
-                ) : (
-                  <Select
-                    options={[
-                      {
-                        value: 'S',
-                        label: 'S',
-                      },
-                      {
-                        value: 'M',
-                        label: 'M',
-                      },
-                      {
-                        value: 'L',
-                        label: 'L',
-                      },
-                      {
-                        value: 'XL',
-                        label: 'XL',
-                      },
-                      {
-                        value: 'XXL',
-                        label: 'XXL',
-                      },
-                    ]}
-                    allowClear
-                  />
-                )}
+                <Select
+                  options={[
+                    {
+                      value: 'S',
+                      label: 'S',
+                    },
+                    {
+                      value: 'M',
+                      label: 'M',
+                    },
+                    {
+                      value: 'L',
+                      label: 'L',
+                    },
+                    {
+                      value: 'XL',
+                      label: 'XL',
+                    },
+                    {
+                      value: 'XXL',
+                      label: 'XXL',
+                    },
+                  ]}
+                  allowClear
+                />
               </Form.Item>
             </Col>
 
             <Col xs={24} sm={8} md={12} lg={6} xl={6}>
-              <Form.Item label={'สถานภาพพนักงาน'}>
-                {propsstate?.mode == 'view' ? (
-                  <Select
-                    disabled
-                    options={[
-                      {
-                        value: 'Full Time',
-                        label: 'Full Time',
-                      },
-                      {
-                        value: 'Full Time',
-                        label: 'Part Time',
-                      },
-                    ]}
-                    allowClear
-                  />
-                ) : (
-                  <Select
-                    options={[
-                      {
-                        value: 'Full Time',
-                        label: 'Full Time',
-                      },
-                      {
-                        value: 'Full Time',
-                        label: 'Part Time',
-                      },
-                    ]}
-                    allowClear
-                  />
-                )}
+              <Form.Item name={'employee_status'} label={'สถานภาพพนักงาน'}>
+                <Select
+                  options={[
+                    {
+                      value: 'Full Time',
+                      label: 'Full Time',
+                    },
+                    {
+                      value: 'Full Time',
+                      label: 'Part Time',
+                    },
+                  ]}
+                  allowClear
+                />
               </Form.Item>
             </Col>
           </Row>
 
           <Row gutter={16}>
+            <Col xs={24} sm={12} md={12} lg={4} xl={4}>
+              <Form.Item name={'start_date_work'} label={'วันที่เริ่มงาน'}>
+                <DatePicker format={'YYYY/MM/DD'} style={{ width: '100%' }} />
+              </Form.Item>
+            </Col>
+
             <Col xs={24} sm={12} md={12} lg={6} xl={6}>
               <Form.Item name={'email'} label={'E-Mail'}>
-                {propsstate?.mode == 'view' ? <Input disabled /> : <Input />}
+                <Input />
               </Form.Item>
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={6} xl={6}>
               <Form.Item name={'password'} label={'Password'}>
-                {propsstate?.mode == 'view' ? (
-                  <Input.Password disabled />
-                ) : (
-                  <Input.Password />
-                )}
+                <Input.Password />
               </Form.Item>
             </Col>
 
@@ -794,7 +710,7 @@ const ProfileEmployee: React.FC = () => {
           <Row gutter={16}>
             <Col xs={24} sm={12} md={12} lg={6} xl={6}>
               <Form.Item name={'citizen_addressnumber'} label={'เลขที่บ้าน'}>
-                {propsstate?.mode == 'view' ? <Input disabled /> : <Input />}
+                <Input />
               </Form.Item>
             </Col>
 
@@ -803,7 +719,7 @@ const ProfileEmployee: React.FC = () => {
                 name={'citizen_address'}
                 label={'หมู่บ้าน/คอนโด ซอย ถนน'}
               >
-                {propsstate?.mode == 'view' ? <Input disabled /> : <Input />}
+                <Input />
               </Form.Item>
             </Col>
           </Row>
@@ -811,74 +727,40 @@ const ProfileEmployee: React.FC = () => {
           <Row gutter={16}>
             <Col xs={24} sm={12} md={12} lg={6} xl={6}>
               <Form.Item name={'citizen_country'} label={'ประเทศ'}>
-                {propsstate?.mode == 'view' ? (
-                  <Select options={country} showSearch allowClear disabled />
-                ) : (
-                  <Select options={country} showSearch allowClear />
-                )}
+                <Select options={country} showSearch allowClear />
               </Form.Item>
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={6} xl={6}>
               <Form.Item name={'citizen_province'} label={'จังหวัด'}>
-                {propsstate?.mode == 'view' ? (
-                  <Select
-                    showSearch
-                    options={province ? province : []}
-                    onChange={onProvinceChangeCitizen}
-                    allowClear
-                    disabled
-                  />
-                ) : (
-                  <Select
-                    showSearch
-                    options={province ? province : []}
-                    onChange={onProvinceChangeCitizen}
-                    allowClear
-                  />
-                )}
+                <Select
+                  showSearch
+                  options={province ? province : []}
+                  onChange={onProvinceChangeCitizen}
+                  allowClear
+                />
               </Form.Item>
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={6} xl={6}>
               <Form.Item name={'citizen_district'} label={'เขต/อำเภอ'}>
-                {propsstate?.mode == 'view' ? (
-                  <Select
-                    onChange={onDistrictChangeCitizen}
-                    showSearch
-                    options={district ? district : []}
-                    allowClear
-                    disabled
-                  />
-                ) : (
-                  <Select
-                    onChange={onDistrictChangeCitizen}
-                    showSearch
-                    options={district ? district : []}
-                    allowClear
-                  />
-                )}
+                <Select
+                  onChange={onDistrictChangeCitizen}
+                  showSearch
+                  options={district ? district : []}
+                  allowClear
+                />
               </Form.Item>
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={6} xl={6}>
               <Form.Item name={'citizen_state'} label={'แขวง/ตำบล'}>
-                {propsstate?.mode == 'view' ? (
-                  <Select
-                    showSearch
-                    onChange={onAmphoeChangeCitizen}
-                    options={amphoe ? amphoe : []}
-                    allowClear
-                    disabled
-                  />
-                ) : (
-                  <Select
-                    showSearch
-                    onChange={onAmphoeChangeCitizen}
-                    options={amphoe ? amphoe : []}
-                    allowClear
-                  />
-                )}
+                <Select
+                  showSearch
+                  onChange={onAmphoeChangeCitizen}
+                  options={amphoe ? amphoe : []}
+                  allowClear
+                />
               </Form.Item>
             </Col>
           </Row>
@@ -892,7 +774,7 @@ const ProfileEmployee: React.FC = () => {
 
             <Col xs={24} sm={12} md={12} lg={6} xl={6}>
               <Form.Item name={'citizen_tel'} label={'โทรศัพท์บ้าน'}>
-                {propsstate?.mode == 'view' ? <Input disabled /> : <Input />}
+                <Input />
               </Form.Item>
             </Col>
           </Row>
@@ -900,25 +782,28 @@ const ProfileEmployee: React.FC = () => {
           <Divider style={{ backgroundColor: token.token.colorPrimary }} />
 
           <span
-            className="text-base"
+            className="flex text-base items-baseline"
             style={{ color: token.token.colorPrimary }}
           >
-            ที่อยู่ ที่สามารถติดต่อได้
-            <Checkbox onChange={checkBoxOnChange} className="ml-2">
-              ที่อยู่ที่เดียวกับ ที่อยู่ตามบัตรประจำตัวประชาชน
-            </Checkbox>
+            <div>ที่อยู่ ที่สามารถติดต่อได้</div>
+
+            <Form.Item name={'contract_sameCitizen'} valuePropName="checked">
+              <Checkbox onChange={checkBoxOnChange} className="ml-2">
+                ที่อยู่ที่เดียวกับ ที่อยู่ตามบัตรประจำตัวประชาชน
+              </Checkbox>
+            </Form.Item>
           </span>
 
           <Row gutter={16}>
             <Col xs={24} sm={12} md={12} lg={6} xl={6}>
               <Form.Item name={'contract_addressnumber'} label={'เลขที่บ้าน'}>
-                {propsstate?.mode == 'view' ? <Input disabled /> : <Input />}
+                <Input />
               </Form.Item>
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={18} xl={18}>
               <Form.Item name={'contract_address'} label={'หมู่บ้าน/คอนโด ซอย'}>
-                {propsstate?.mode == 'view' ? <Input disabled /> : <Input />}
+                <Input />
               </Form.Item>
             </Col>
           </Row>
@@ -926,64 +811,34 @@ const ProfileEmployee: React.FC = () => {
           <Row gutter={16}>
             <Col xs={24} sm={12} md={12} lg={6} xl={6}>
               <Form.Item name={'contract_province'} label={'จังหวัด'}>
-                {propsstate?.mode == 'view' ? (
-                  <Select
-                    showSearch
-                    options={province ? province : []}
-                    onChange={onProvinceChangeContract}
-                    allowClear
-                    disabled
-                  />
-                ) : (
-                  <Select
-                    showSearch
-                    options={province ? province : []}
-                    onChange={onProvinceChangeContract}
-                    allowClear
-                  />
-                )}
+                <Select
+                  showSearch
+                  options={province ? province : []}
+                  onChange={onProvinceChangeContract}
+                  allowClear
+                />
               </Form.Item>
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={6} xl={6}>
               <Form.Item name={'contract_district'} label={'เขต/อำเภอ'}>
-                {propsstate?.mode == 'view' ? (
-                  <Select
-                    onChange={onDistrictChangeContract}
-                    showSearch
-                    options={districtcontract ? districtcontract : []}
-                    allowClear
-                    disabled
-                  />
-                ) : (
-                  <Select
-                    onChange={onDistrictChangeContract}
-                    showSearch
-                    options={districtcontract ? districtcontract : []}
-                    allowClear
-                  />
-                )}
+                <Select
+                  onChange={onDistrictChangeContract}
+                  showSearch
+                  options={districtcontract ? districtcontract : []}
+                  allowClear
+                />
               </Form.Item>
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={6} xl={6}>
               <Form.Item name={'contract_state'} label={'แขวง/ตำบล'}>
-                {propsstate?.mode == 'view' ? (
-                  <Select
-                    showSearch
-                    onChange={onAmphoeChangeContract}
-                    options={amphoecontract ? amphoecontract : []}
-                    allowClear
-                    disabled
-                  />
-                ) : (
-                  <Select
-                    showSearch
-                    onChange={onAmphoeChangeContract}
-                    options={amphoecontract ? amphoecontract : []}
-                    allowClear
-                  />
-                )}
+                <Select
+                  showSearch
+                  onChange={onAmphoeChangeContract}
+                  options={amphoecontract ? amphoecontract : []}
+                  allowClear
+                />
               </Form.Item>
             </Col>
 
@@ -997,13 +852,13 @@ const ProfileEmployee: React.FC = () => {
           <Row gutter={16}>
             <Col xs={24} sm={12} md={12} lg={6} xl={6}>
               <Form.Item name={'tel'} label={'Mobile Phone'}>
-                {propsstate?.mode == 'view' ? <Input disabled /> : <Input />}
+                <Input />
               </Form.Item>
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={6} xl={6}>
               <Form.Item label={'E-Mail Company'}>
-                {propsstate?.mode == 'view' ? <Input disabled /> : <Input />}
+                <Input />
               </Form.Item>
             </Col>
           </Row>
@@ -1031,11 +886,7 @@ const ProfileEmployee: React.FC = () => {
               <div className="flex items-center ml-8 mt-6">
                 <Col span={24}>
                   <Form.Item name={'social_facebook'}>
-                    {propsstate?.mode == 'view' ? (
-                      <Input disabled />
-                    ) : (
-                      <Input />
-                    )}
+                    <Input />
                   </Form.Item>
                 </Col>
               </div>
@@ -1052,11 +903,7 @@ const ProfileEmployee: React.FC = () => {
               <div className="flex items-center ml-8 mt-6">
                 <Col span={24}>
                   <Form.Item name={'social_likedin'}>
-                    {propsstate?.mode == 'view' ? (
-                      <Input disabled />
-                    ) : (
-                      <Input />
-                    )}
+                    <Input />
                   </Form.Item>
                 </Col>
               </div>
@@ -1073,11 +920,7 @@ const ProfileEmployee: React.FC = () => {
               <div className="flex items-center ml-8 mt-6">
                 <Col span={24}>
                   <Form.Item name={'social_line'}>
-                    {propsstate?.mode == 'view' ? (
-                      <Input disabled />
-                    ) : (
-                      <Input />
-                    )}
+                    <Input />
                   </Form.Item>
                 </Col>
               </div>
@@ -1094,32 +937,27 @@ const ProfileEmployee: React.FC = () => {
               <div className="flex items-center ml-8 mt-6">
                 <Col span={24}>
                   <Form.Item name={'social_telegram'}>
-                    {propsstate?.mode == 'view' ? (
-                      <Input disabled />
-                    ) : (
-                      <Input />
-                    )}
+                    <Input />
                   </Form.Item>
                 </Col>
               </div>
             </div>
           </Row>
 
-          {propsstate?.mode !== 'view' && (
-            <Row gutter={16}>
-              <Form.Item>
-                <Space>
-                  <Button
-                    htmlType="submit"
-                    type="primary"
-                    style={{
-                      marginBottom: '10px',
-                      backgroundColor: token.token.colorPrimary,
-                    }}
-                  >
-                    บันทึก
-                  </Button>
-                  {/* <Button
+          <Row gutter={16}>
+            <Form.Item>
+              <Space>
+                <Button
+                  htmlType="submit"
+                  type="primary"
+                  style={{
+                    marginBottom: '10px',
+                    backgroundColor: token.token.colorPrimary,
+                  }}
+                >
+                  บันทึก
+                </Button>
+                {/* <Button
                     style={{
                       marginBottom: '10px',
                     }}
@@ -1129,10 +967,9 @@ const ProfileEmployee: React.FC = () => {
                   >
                     ยกเลิก
                   </Button> */}
-                </Space>
-              </Form.Item>
-            </Row>
-          )}
+              </Space>
+            </Form.Item>
+          </Row>
         </Form>
       </Card>
     </>

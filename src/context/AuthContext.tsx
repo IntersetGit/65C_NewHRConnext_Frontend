@@ -42,13 +42,54 @@ query Me {
     id
     isOwner
     profile {
+      id
+      bio
       firstname_th
-      lastname_en
-      firstname_en
       lastname_th
-      prefix_en
+      firstname_en
+      lastname_en
+      avatar
+      dob
+      age
+      relationship
+      shirt_size
       prefix_th
+      prefix_en
+      citizen_id
+      social_id
+      staff_status
+      tel
+      address
+      gender
       staff_code
+      religion
+      userId
+      citizen_addressnumber
+      citizen_address
+      citizen_country
+      citizen_province
+      citizen_district
+      citizen_state
+      citizen_zipcode
+      citizen_tel
+      contract_sameCitizen
+      contract_addressnumber
+      contract_address
+      contract_country
+      contract_province
+      contract_district
+      contract_state
+      contract_zipcode
+      contract_email
+      contract_companyemail
+      social_facebook
+      social_likedin
+      social_line
+      social_telegram
+      nickname
+      blood_type
+      employee_status
+      start_date_work
       __typename
     }
   }

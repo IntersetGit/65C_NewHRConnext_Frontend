@@ -136,11 +136,18 @@ const UserEmployee: React.FC = (props) => {
   }, []);
 
   const getUserData = () => {
+    onProvinceChangeCitizen(propsstate?.citizen_province);
+    onDistrictChangeCitizen(propsstate?.citizen_district);
+    onAmphoeChangeCitizen(propsstate?.citizen_state);
+    onProvinceChangeContract(propsstate?.contract_province);
+    onDistrictChangeContract(propsstate?.contract_district);
+    onAmphoeChangeContract(propsstate?.contract_state);
     form.setFieldsValue({
       ...propsstate,
       ...propsstate?.user,
       email: propsstate.contract_email,
       dob: moment(propsstate?.dob),
+      start_date_work: moment(propsstate?.start_date_work),
     });
   };
 
@@ -343,7 +350,6 @@ const UserEmployee: React.FC = (props) => {
             data: {
               ...value,
               id: propsstate?.userId ? propsstate?.userId : undefined,
-              contract_sameCitizen: true,
             },
           },
         })
@@ -355,8 +361,8 @@ const UserEmployee: React.FC = (props) => {
                 '',
                 'success',
               );
-              refetch();
               companyNavigate('/:companycode/employee');
+              refetch();
             }
           })
           .catch((err) => {
@@ -535,7 +541,7 @@ const UserEmployee: React.FC = (props) => {
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={4} xl={4}>
-              <Form.Item label={'ชื่อเล่น'}>
+              <Form.Item name={'nickname'} label={'ชื่อเล่น'}>
                 {propsstate?.mode == 'view' ? <Input disabled /> : <Input />}
               </Form.Item>
             </Col>
@@ -576,7 +582,7 @@ const UserEmployee: React.FC = (props) => {
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={3} xl={3}>
-              <Form.Item label={'กรุ๊ปเลือด'}>
+              <Form.Item name={'blood_type'} label={'กรุ๊ปเลือด'}>
                 {propsstate?.mode == 'view' ? (
                   <Select
                     disabled
@@ -816,18 +822,18 @@ const UserEmployee: React.FC = (props) => {
             </Col>
 
             <Col xs={24} sm={8} md={12} lg={6} xl={6}>
-              <Form.Item label={'สถานภาพพนักงาน'}>
+              <Form.Item name={'employee_status'} label={'สถานภาพพนักงาน'}>
                 {propsstate?.mode == 'view' ? (
                   <Select
                     disabled
                     options={[
                       {
-                        value: 'Full Time',
-                        label: 'Full Time',
+                        value: 'พนักงานประจำ',
+                        label: 'พนักงานประจำ',
                       },
                       {
-                        value: 'Full Time',
-                        label: 'Part Time',
+                        value: 'พนักงานชั่วคราว',
+                        label: 'พนักงานชั่วคราว',
                       },
                     ]}
                     allowClear
@@ -836,12 +842,12 @@ const UserEmployee: React.FC = (props) => {
                   <Select
                     options={[
                       {
-                        value: 'Full Time',
-                        label: 'Full Time',
+                        value: 'พนักงานประจำ',
+                        label: 'พนักงานประจำ',
                       },
                       {
-                        value: 'Full Time',
-                        label: 'Part Time',
+                        value: 'พนักงานชั่วคราว',
+                        label: 'พนักงานชั่วคราว',
                       },
                     ]}
                     allowClear
@@ -852,6 +858,20 @@ const UserEmployee: React.FC = (props) => {
           </Row>
 
           <Row gutter={16}>
+            <Col xs={24} sm={12} md={12} lg={4} xl={4}>
+              <Form.Item name={'start_date_work'} label={'วันที่เริ่มงาน'}>
+                {propsstate?.mode == 'view' ? (
+                  <DatePicker
+                    format={'YYYY/MM/DD'}
+                    style={{ width: '100%' }}
+                    disabled
+                  />
+                ) : (
+                  <DatePicker format={'YYYY/MM/DD'} style={{ width: '100%' }} />
+                )}
+              </Form.Item>
+            </Col>
+
             <Col xs={24} sm={12} md={12} lg={6} xl={6}>
               <Form.Item name={'email'} label={'E-Mail'}>
                 {propsstate?.mode == 'view' ? <Input disabled /> : <Input />}
@@ -993,13 +1013,16 @@ const UserEmployee: React.FC = (props) => {
           <Divider style={{ backgroundColor: token.token.colorPrimary }} />
 
           <span
-            className="text-base"
+            className="flex text-base items-baseline"
             style={{ color: token.token.colorPrimary }}
           >
-            ที่อยู่ ที่สามารถติดต่อได้
-            <Checkbox onChange={checkBoxOnChange} className="ml-2">
-              ที่อยู่ที่เดียวกับ ที่อยู่ตามบัตรประจำตัวประชาชน
-            </Checkbox>
+            <div>ที่อยู่ ที่สามารถติดต่อได้</div>
+
+            <Form.Item name={'contract_sameCitizen'} valuePropName="checked">
+              <Checkbox onChange={checkBoxOnChange} className="ml-2">
+                ที่อยู่ที่เดียวกับ ที่อยู่ตามบัตรประจำตัวประชาชน
+              </Checkbox>
+            </Form.Item>
           </span>
 
           <Row gutter={16}>

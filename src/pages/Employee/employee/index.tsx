@@ -58,10 +58,9 @@ const Employee: React.FC = () => {
   const [isDisplayfield, setDisplayfield] = useState(1);
   const [pagecurrent, setPageCurrent] = useState<number>(2);
 
-  // useEffect(() => {
-  //   refetch();
-  // }, [loading]);
-  // if (loading) return null;
+  useEffect(() => {
+    refetch();
+  }, []);
 
   const genarateMenu = (record: any) => {
     return [
