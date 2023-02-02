@@ -79,6 +79,12 @@ const StyledTree = styled(Tree)`
     border-bottom: 1px solid gray;
     content: "";
  }
+ .drag-over-gap-top{
+    border-top: 5px solid red;
+ }
+ .drag-over-gap-bottom{
+    border-bottom: 5px solid red;
+ }
 `
 const StyledTreeCompany = styled(StyledTree)`
     .ant-tree-switcher-noop {
