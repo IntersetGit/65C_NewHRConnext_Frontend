@@ -22,6 +22,7 @@ import styled from 'styled-components';
 import NodeStructure from './component/NodeStructure';
 import { faker } from '@faker-js/faker';
 import Swal from 'sweetalert2';
+import { POSITION } from '../../../service/graphql/Position';
 import { useMutation, useQuery } from '@apollo/client';
 import { gql } from '../../../__generated__/gql';
 
@@ -151,6 +152,8 @@ const CompanyStructure: React.FC = () => {
             title: 'ตำแหน่ง', key: "3213", data: { title: 'ตำแหน่ง', id: "3", color: '#FAAAAE' }
         }
     ]);
+    const { data: positiondata, loading, refetch } = useQuery(POSITION);
+
     const CREATEANDUPDATEPOSITION = gql(`
     mutation CreatedPosition($data: [CreatedAndUpdatePosition!]) {
         CreatedPosition(data: $data) {
