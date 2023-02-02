@@ -36,3 +36,56 @@ query getMasPositon {
     }
   }
 `);
+
+export const FETCH_GETALL_POSITION = gql(`
+query Getposition_user {
+    getposition_user {
+      id
+      user {
+        id
+        email
+        password
+        profile {
+          firstname_th
+          lastname_th
+          id
+          firstname_en
+          lastname_en
+          prefix_th
+          prefix_en
+        }
+      }
+      position1_id
+      mas_positionlevel1 {
+        id
+        name
+        level
+      }
+      position2_id
+      mas_positionlevel2 {
+        id
+        name
+        level
+      }
+      position3_id
+      mas_positionlevel3 {
+        id
+        name
+        level
+      }
+      role
+      date
+      header {
+        email
+        profile {
+          firstname_th
+          lastname_th
+          firstname_en
+          lastname_en
+          prefix_th
+          prefix_en
+        }
+      }
+    }
+  }
+`);

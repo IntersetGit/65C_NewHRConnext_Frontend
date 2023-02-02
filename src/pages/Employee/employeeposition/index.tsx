@@ -30,6 +30,11 @@ import edit from '../../../assets/Edit.png';
 import Del from '../../../assets/DEL.png';
 import View from '../../../assets/View.png';
 import { useState } from 'react';
+import {
+  FETCH_GETALL_POSITION,
+  POSITION,
+} from '../../../service/graphql/Position';
+import { useQuery } from '@apollo/client';
 
 const { useToken } = theme;
 
@@ -49,8 +54,53 @@ const PositionEmployee: React.FC = (props) => {
   let propsstate = location.state as any;
   const token = useToken();
   const [drawerType, setDrawerType] = useState(1);
+  const { data: position_data } = useQuery(FETCH_GETALL_POSITION);
+  const { data: positionlevel1 } = useQuery(POSITION);
+  const [maspositionlevel1, setMasPostionLevel1] = useState<
+    { value?: string | null; label?: string | null }[] | undefined
+  >(undefined);
+  const [maspositionlevel2, setMasPostionLevel2] = useState<
+    { value?: string | null; label?: string | null }[] | undefined
+  >(undefined);
+  const [maspositionlevel3, setMasPostionLevel3] = useState<
+    { value?: string | null; label?: string | null }[] | undefined
+  >(undefined);
 
-  console.log(propsstate);
+  const selectposition = positionlevel1?.getMasPositon?.map((e) => {
+    return {
+      label: e?.name,
+      value: e?.id,
+    };
+  });
+
+  const onChangeMasLevel1 = (value: any) => {
+    form.setFieldValue('position2_id', null);
+    form.setFieldValue('position3_id', null);
+    const maspositionlevel1 = positionlevel1?.getMasPositon
+      ?.find((e) => e?.id === value)
+      ?.mas_positionlevel2?.map((e) => {
+        return {
+          label: e?.name,
+          value: e?.id,
+        };
+      });
+    console.log(maspositionlevel1);
+    setMasPostionLevel1(maspositionlevel1 ? maspositionlevel1 : []);
+  };
+
+  const onChangeMasLevel2 = (value: any) => {
+    form.setFieldValue('position3_id', null);
+    const maspositionlevel2 = positionlevel1?.getMasPositon
+      ?.find((e) => e?.mas_positionlevel2?.find((_e) => _e?.id === value))
+      ?.mas_positionlevel2?.find((e) => e?.id === value)
+      ?.mas_positionlevel3?.map((e) => {
+        return {
+          label: e?.name,
+          value: e?.id,
+        };
+      });
+    setMasPostionLevel2(maspositionlevel2 ? maspositionlevel2 : []);
+  };
 
   const onChange = (key: string) => {
     navigate(generatePath(key, { companycode }), { state: propsstate });
@@ -64,6 +114,7 @@ const PositionEmployee: React.FC = (props) => {
   };
 
   const onClose = () => {
+    form.resetFields();
     setOpen(false);
   };
 
@@ -99,6 +150,8 @@ const PositionEmployee: React.FC = (props) => {
     const { key } = event;
     if (key === 'edit') {
       showDrawer(2);
+      console.log(record);
+      // form.setFieldsValue(record);
     } else if (key === 'view') {
     } else if (key === 'delete') {
     }
@@ -110,6 +163,7 @@ const PositionEmployee: React.FC = (props) => {
       key: 'date',
       dataIndex: 'date',
       align: 'center',
+      render: (record: any) => moment(record).format('YYYY/MM/DD') as any,
     },
     {
       title: 'ตำแหน่ง',
@@ -125,9 +179,11 @@ const PositionEmployee: React.FC = (props) => {
     },
     {
       title: 'หัวหน้างาน',
-      key: 'boss',
-      dataIndex: 'boss',
+      key: 'header',
+      dataIndex: 'header',
       align: 'center',
+      render: (txt: any) =>
+        txt.profile.firstname_th + ' ' + txt.profile.lastname_th,
     },
     {
       title: 'Action',
@@ -227,7 +283,12 @@ const PositionEmployee: React.FC = (props) => {
           </Button>
         </div>
 
-        <Table className="py-4" columns={columns}></Table>
+        <Table
+          className="py-4"
+          columns={columns}
+          rowKey={'id'}
+          dataSource={position_data?.getposition_user as any}
+        ></Table>
       </Card>
 
       <Drawer
@@ -247,23 +308,31 @@ const PositionEmployee: React.FC = (props) => {
 
           <Row>
             <Col span={24}>
-              <Form.Item label={'ฝ่าย'}>
-                <Select />
+              <Form.Item name={'position1_id'} label={'ฝ่าย'}>
+                <Select
+                  options={selectposition ? selectposition : []}
+                  onChange={onChangeMasLevel1}
+                  allowClear
+                />
               </Form.Item>
             </Col>
           </Row>
 
           <Row>
             <Col span={24}>
-              <Form.Item label={'แผนก'}>
-                <Select />
+              <Form.Item name={'position2_id'} label={'แผนก'}>
+                <Select
+                  options={maspositionlevel2 ? maspositionlevel2 : []}
+                  onChange={onChangeMasLevel2}
+                  allowClear
+                />
               </Form.Item>
             </Col>
           </Row>
 
           <Row>
             <Col span={24}>
-              <Form.Item label={'ตำแหน่ง'}>
+              <Form.Item name={'position3_id'} label={'ตำแหน่ง'}>
                 <Select />
               </Form.Item>
             </Col>

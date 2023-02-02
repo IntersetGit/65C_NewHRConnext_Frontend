@@ -43,6 +43,7 @@ import { GET_PROVINCE } from '../../../service/graphql/Province';
 import type { CheckboxChangeEvent } from 'antd/es/checkbox';
 import { useAuth } from '../../../hooks/useAuth';
 import { User, UsersQuery } from '../../../__generated__/graphql';
+import { FETCH_GETALLROLE } from '../../../service/graphql/Role';
 
 const { useToken } = theme;
 
@@ -120,8 +121,12 @@ const UserEmployee: React.FC = (props) => {
   const [amphoecontract, setAmphoeContract] = useState<
     { value?: string | null; label?: string | null }[] | undefined
   >(undefined);
+  const [role, setRole] = useState<
+    { value?: string | null; label?: string | null }[] | undefined
+  >(undefined);
 
   const { data: province_data, refetch } = useQuery(GET_PROVINCE);
+  const { data: role_data } = useQuery(FETCH_GETALLROLE);
   const { data: role_company } = useQuery(FETCH_GETALLUSER);
   const [createEmployeeAccount] = useMutation(CREATE_EMPLOYEE_ACCOUNT);
   let propsstate = location.state as any;
@@ -183,6 +188,13 @@ const UserEmployee: React.FC = (props) => {
   //   });
   // });
   // console.log(arrcompay);
+
+  const selectrole = role_data?.getcompanyRole?.map((e) => {
+    return {
+      label: e?.name,
+      value: e?.id,
+    };
+  });
 
   const province = province_data?.getProvince?.map((e) => {
     return {
@@ -884,6 +896,16 @@ const UserEmployee: React.FC = (props) => {
                   <Input.Password disabled />
                 ) : (
                   <Input.Password />
+                )}
+              </Form.Item>
+            </Col>
+
+            <Col xs={24} sm={12} md={12} lg={8} xl={8}>
+              <Form.Item name={'role_company'} label={'Role'}>
+                {propsstate?.mode == 'view' ? (
+                  <Select options={selectrole} allowClear disabled />
+                ) : (
+                  <Select options={selectrole} allowClear />
                 )}
               </Form.Item>
             </Col>
