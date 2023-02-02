@@ -34,11 +34,13 @@ interface DataType {
   department: string;
   tel: string;
   email: string;
+  base_income: number;
 }
 
 const Compensation: React.FC = () => {
   const token = useToken();
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
 
   const showDrawer = () => {
     setOpen(true);
@@ -55,21 +57,9 @@ const Compensation: React.FC = () => {
   const genarateMenu = (record: any) => {
     return [
       {
-        key: 'edit',
-        label: 'แก้ไข',
-        icon: <img style={{ width: '17px', height: '17px' }} src={edit} />,
-        onClick: (e: any) => onMenuClick(e, record),
-      },
-      {
         key: 'view',
         label: 'ดูข้อมูล',
         icon: <img style={{ width: '17px', height: '17px' }} src={View} />,
-        onClick: (e: any) => onMenuClick(e, record),
-      },
-      {
-        key: 'delete',
-        label: 'ลบข้อมูล',
-        icon: <img style={{ width: '20px', height: '20px' }} src={Del} />,
         onClick: (e: any) => onMenuClick(e, record),
       },
     ];
@@ -77,9 +67,11 @@ const Compensation: React.FC = () => {
 
   const onMenuClick = (event: any, record: any) => {
     const { key } = event;
-    if (key === 'edit') {
-    } else if (key === 'view') {
-    } else if (key === 'delete') {
+    if (key === 'view') {
+      navigate(`profileCompensation`);
+      // navigate(`profileCompensation?id=${record.profile.id}`, {
+      //   state: { ...record?.profile, mode: 'view' },
+      // });
     }
   };
 
@@ -121,6 +113,12 @@ const Compensation: React.FC = () => {
       align: 'center',
     },
     {
+      title: 'ฐานเงินเดือน',
+      key: 'base_income',
+      dataIndex: 'base_income',
+      align: 'center',
+    },
+    {
       title: 'Action',
       key: 'Action',
       align: 'center',
@@ -146,6 +144,7 @@ const Compensation: React.FC = () => {
       department: 'พัฒนาซอฟต์แวร์',
       tel: '086 555 4444',
       email: 'utai.p@gmail.com',
+      base_income: 25000,
     },
     {
       key: 2,
@@ -155,6 +154,7 @@ const Compensation: React.FC = () => {
       department: 'บัญชี',
       tel: '084 222 1456',
       email: 'umaporn.b@gmail.com',
+      base_income: 25000,
     },
     {
       key: 3,
@@ -164,6 +164,7 @@ const Compensation: React.FC = () => {
       department: 'พัฒนาซอฟต์แวร์',
       tel: '065 555 4444',
       email: 'utai.p@gmail.com',
+      base_income: 25000,
     },
     {
       key: 4,
@@ -173,6 +174,7 @@ const Compensation: React.FC = () => {
       department: 'พัฒนาซอฟต์แวร์',
       tel: '065 555 4444',
       email: 'utai.p@gmail.com',
+      base_income: 25000,
     },
     {
       key: 5,
@@ -182,6 +184,7 @@ const Compensation: React.FC = () => {
       department: 'พัฒนาซอฟต์แวร์',
       tel: '065 555 4444',
       email: 'utai.p@gmail.com',
+      base_income: 25000,
     },
   ];
 
@@ -235,7 +238,7 @@ const Compensation: React.FC = () => {
             </Col>
           </Row>
 
-          <Row gutter={16}>
+          {/* <Row gutter={16}>
             <Col xs={24} sm={24} md={24} lg={6} xl={6}>
               <Form.Item name="search" colon={false} label={'สถานะ'}>
                 <Select allowClear></Select>
@@ -248,12 +251,7 @@ const Compensation: React.FC = () => {
               </Form.Item>
             </Col>
 
-            <Col xs={24} sm={24} md={24} lg={6} xl={6}>
-              <Form.Item name="search" colon={false} label={'ปี'}>
-                <Select allowClear></Select>
-              </Form.Item>
-            </Col>
-          </Row>
+          </Row> */}
         </Form>
       </Card>
 

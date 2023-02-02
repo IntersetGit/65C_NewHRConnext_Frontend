@@ -133,11 +133,11 @@ const Employee: React.FC = () => {
 
   const columns: ColumnsType<User> = [
     {
-      title: 'ลำดับ',
+      title: 'รหัสพนักงาน',
+      key: 'profile',
+      dataIndex: 'profile',
       align: 'center',
-      render: (_, record, index) => {
-        return index + 1;
-      },
+      render: (record) => record.staff_code,
     },
     {
       title: 'ชื่อ-สกุล',
