@@ -163,6 +163,23 @@ const Rights: React.FC = () => {
     });
     setData(arr);
   }, [loading]);
+  const moduleRowRender = (record: any, index: string | number) => {
+    console.log(record);
+    const columns: TableColumnsType<any> = [
+      Table.EXPAND_COLUMN,
+      {
+        title: 'ชื่อโมดูล',
+        //align: 'center',
+        key: 'module_name',
+      },
+    ];
+    return (
+      <div className="m-0 w-full h-full">
+        {' '}
+        <Table size="middle" columns={columns} />
+      </div>
+    );
+  };
   const expandedRowRender = (record: DataType, index: number | string) => {
     //console.log(record, index);
     const columns: TableColumnsType<ExpandedDataType> = [
@@ -301,22 +318,24 @@ const Rights: React.FC = () => {
   };
 
   const columns: TableColumnsType<DataType> = [
+    Table.EXPAND_COLUMN,
     {
       title: 'เมนู',
       dataIndex: 'menu',
       key: 'menu',
       align: 'center',
-      render: (record: any) => <p style={{ textAlign: 'left' }}>{record}</p>,
+      render: (record: any) => (
+        <p style={{ textAlign: 'left', fontWeight: 'bold' }}>{record}</p>
+      ),
     },
-    Table.EXPAND_COLUMN,
 
     // Table.SELECTION_COLUMN,
-    {
-      title: 'สิทธิ์การเข้าถึงระบบ',
-      dataIndex: 'permissions',
-      key: 'permissions',
-      align: 'center',
-    },
+    // {
+    //   title: 'สิทธิ์การเข้าถึงระบบ',
+    //   dataIndex: 'permissions',
+    //   key: 'permissions',
+    //   align: 'center',
+    // },
   ];
 
   const data: DataType[] = [];
@@ -444,7 +463,10 @@ const Rights: React.FC = () => {
           </Col>
           <Table
             columns={columns}
-            expandable={{ expandedRowRender, defaultExpandedRowKeys: ['0'] }}
+            expandable={{
+              expandedRowRender: moduleRowRender,
+              defaultExpandedRowKeys: ['0'],
+            }}
             dataSource={data}
             pagination={false}
           />
