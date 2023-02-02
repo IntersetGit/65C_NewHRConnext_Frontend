@@ -143,12 +143,21 @@ const convertDataToComponent = (data: any, level = 1) => {
 }
 const convertData = (data: any, level = 1) => {
     return data?.map((data: any, index: number) => {
-        return {
-            ['id_Position' + (level)]: data?.data?.id,
-            ['name_Position' + (level)]: data?.title,
-            ['level_Position' + (level)]: (index + 1),
-            ['code_position' + (level)]: data.id,
-            ['masPosition' + (level + 1)]: data.children ? convertData(data.children, (level + 1)) : []
+        if ((level + 1) == 4) {
+            return {
+                ['id_Position' + (level)]: data?.data?.id,
+                ['name_Position' + (level)]: data?.title,
+                ['level_Position' + (level)]: (index + 1),
+                ['code_position' + (level)]: data.id,
+            }
+        } else {
+            return {
+                ['id_Position' + (level)]: data?.data?.id,
+                ['name_Position' + (level)]: data?.title,
+                ['level_Position' + (level)]: (index + 1),
+                ['code_position' + (level)]: data.id,
+                ['masPosition' + (level + 1)]: data.children ? convertData(data.children, (level + 1)) : []
+            }
         }
     })
 }
@@ -590,18 +599,35 @@ const CompanyStructure: React.FC = () => {
         console.log('treestructure :>> ', treestructure);
         console.log('ConvertData :>> ', ConvertData);
 
-        const filtertAdd = (item: any, level = 1) => {
-            return item?.filter((data: any, index: number) => {
-                if (data['id_Position' + (level)] == undefined) {
-                    console.log(['id_Position' + (level)],"yes");
-                    return data
-                } else {
-                    console.log(['id_Position' + (level)],"no");
-                    if (data['masPosition' + (level + 1)]) {
-                      filtertAdd(data['masPosition' + (level + 1)], (level + 1))
+        const filtertAdd = (data: any, level = 1) => {
+            let value = []
+            for (const item of data as any) {
+                if (item.id_Position1 === undefined) {
+                    console.log(`id_Position1 is undefined for item ${item.name_Position1}`);
+                    value.push(item);
+                    return value;
+                }
+                if (item.masPosition2) {
+                    for (const subItem2 of item.masPosition2) {
+                        if (subItem2.id_Position2 === undefined) {
+                            console.log(`id_Position2 is undefined for item ${subItem2.name_Position2}`);
+                            value.push({ ...subItem2, positionlevel1_id: item.id_Position1 });
+                            return value;
+                        }
+                        if (item.masPosition3) {
+                            for (const subItem3 of item.masPosition3) {
+                                if (subItem3.id_Position3 === undefined) {
+                                    console.log(`id_Position3 is undefined for item ${subItem3.name_Position3}`);
+                                    value.push({ ...subItem3, positionlevel2_id: subItem2.id_Position2 });
+                                    return value;
+                                }
+                            }
+                        }
                     }
                 }
-            })
+            }
+            return value;
+
         }
         const filtertEdit = (data: any, level = 1) => {
             return data?.filter((data: any, index: number) => {
@@ -613,20 +639,21 @@ const CompanyStructure: React.FC = () => {
                 }
             })
         }
+
         let Adddata = filtertAdd(ConvertData);
         let Editdata = filtertEdit(ConvertData);
         console.log('Adddata Editdata :>> ', Adddata, Editdata);
-        // let dataAdd = await CreatedPosition({
-        //     variables: {
-        //         data: Adddata
-        //     },
-        // })
-        // let dataEdit = await EditPosition({
-        //     variables: {
-        //         data: Editdata
-        //     },
-        // })
-        // console.log('dataAdd', dataAdd);
+        let dataAdd = await CreatedPosition({
+            variables: {
+                data: Adddata
+            },
+        })
+        let dataEdit = await EditPosition({
+            variables: {
+                data: Editdata
+            },
+        })
+        console.log('dataAdd', dataAdd);
     }
     return (
         <React.Fragment>
