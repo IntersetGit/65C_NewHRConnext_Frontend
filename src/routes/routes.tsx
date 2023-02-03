@@ -43,6 +43,7 @@ const Summaryroot = React.lazy(() => import('../pages/Summary'));
 const Compensation = React.lazy(() => import('../pages/Summary/compensation'));
 const ProfileCompensation = React.lazy(() => import('../pages/Summary/profilecompensation'));
 const Remuneration = React.lazy(() => import('../pages/Summary/remuneration'));
+const Payslip = React.lazy(() => import('../pages/Summary/payslip'));
 const UserEmployee = React.lazy(
   () => import('../pages/Employee/employee/useremployee'),
 );
@@ -220,6 +221,11 @@ export const routing: RoutingType[] = [
           {
             path: '/:companycode/summary/remuneration',
             element: <Remuneration />,
+            hideInmenu: true,
+          },
+          {
+            path: '/:companycode/summary/payslip',
+            element: <Payslip />,
             hideInmenu: true,
           },
         ],

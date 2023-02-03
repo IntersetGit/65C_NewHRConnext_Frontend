@@ -22,7 +22,7 @@ const Summaryroot: React.FC = () => {
             key: '/:companycode/summary',
           },
           {
-            label: `ข้อมูลค่าตอบแทน`,
+            label: `ข้อมูลฐานเงินเดือน`,
             key: '/:companycode/summary/remuneration',
           },
         ]}

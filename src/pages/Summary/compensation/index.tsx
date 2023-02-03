@@ -335,7 +335,7 @@ const Compensation: React.FC = () => {
               </Form.Item>
 
               <Form.Item>
-                <Space>
+                <Space style={{ display: 'flex', justifyContent: 'center' }}>
                   <Button
                     type="primary"
                     style={{ backgroundColor: token.token.colorPrimary }}

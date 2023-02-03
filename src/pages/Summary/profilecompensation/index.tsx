@@ -66,6 +66,7 @@ const Compensation: React.FC = () => {
     };
 
     const onClose = () => {
+        form.resetFields();
         setOpen(false);
     };
 
@@ -236,36 +237,36 @@ const Compensation: React.FC = () => {
 
                 <Form size="middle">
                     <Row gutter={16}>
-                        <Col xs={24} sm={12} md={12} lg={6} xl={6}>
-                            <Form.Item name="search" colon={false} label={'ฐานเงินเดือน'}>
-                                <Input allowClear></Input>
+                        <Col xs={24} sm={24} md={24} lg={9} xl={6}>
+                            <Form.Item name="base_salary" colon={false} label={'ฐานเงินเดือน'}>
+                                <Input allowClear disabled></Input>
                             </Form.Item>
                         </Col>
                     </Row>
 
                     <Row gutter={16}>
-                        <Col xs={24} sm={24} md={24} lg={6} xl={6}>
-                            <Form.Item name="search" colon={false} label={'เลชบัญชี'}>
-                                <Input allowClear></Input>
+                        <Col xs={24} sm={24} md={24} lg={9} xl={6}>
+                            <Form.Item name="bank_number" colon={false} label={'เลชบัญชี'} style={{ marginLeft: "24px", }}>
+                                <Input allowClear disabled></Input>
                             </Form.Item>
                         </Col>
 
-                        <Col xs={24} sm={24} md={24} lg={6} xl={6}>
-                            <Form.Item name="search" colon={false} label={'ธนาคาร'}>
-                                <Input allowClear></Input>
+                        <Col xs={24} sm={24} md={24} lg={9} xl={6}>
+                            <Form.Item name="bank" colon={false} label={'ธนาคาร'} style={{ marginLeft: "32px", }}>
+                                <Input allowClear disabled></Input>
                             </Form.Item>
                         </Col>
                     </Row>
 
                     <Row gutter={16} style={{ display: 'flex', justifyContent: 'space-between' }}>
-                        <Col xs={24} sm={24} md={24} lg={6} xl={6}>
-                            <Form.Item name="search" colon={false} label={'ปี'}>
+                        <Col xs={24} sm={24} md={24} lg={9} xl={6}>
+                            <Form.Item name="year" colon={false} label={'ปี'} style={{ marginLeft: "66px", }}>
                                 <Select allowClear></Select>
                             </Form.Item>
                         </Col>
 
 
-                        <Col>
+                        <Col xs={24} sm={24} md={24} lg={5} xl={3}>
 
                             <Space>
                                 <Form.Item>
@@ -292,7 +293,7 @@ const Compensation: React.FC = () => {
                 title={'คำนวณเงินเดือน'}
                 onClose={onClose}
                 open={open}
-                width={700}
+                width={500}
             >
                 <div className="text-lg font-bold">
                     <u style={{ color: token.token.colorPrimary }}>
@@ -308,15 +309,15 @@ const Compensation: React.FC = () => {
                         </div> */}
                 <Form layout="horizontal" form={form} onFinish={onSubmitForm} >
                     <Row>
-                        <Col span={16}>
-                            <Form.Item name="date" label={'เดือน/ปี'} className='ml-[88px]'>
+                        <Col xs={24} sm={24} md={24} lg={24} xl={24}>
+                            <Form.Item name="date" label={'เดือน/ปี'} className='ml-[82px]'>
                                 <DatePicker onChange={onChangeDate} picker="month" format={'MM/YYYY'} />
                             </Form.Item>
                         </Col>
                     </Row>
 
                     <Row>
-                        <Col span={16}>
+                        <Col xs={24} sm={24} md={24} lg={24} xl={24}>
                             <div className="text-[18px] ">
                                 <u>รายรับ</u>
                             </div>
@@ -324,7 +325,7 @@ const Compensation: React.FC = () => {
                     </Row>
 
                     <Row>
-                        <Col span={16}>
+                        <Col xs={24} sm={24} md={24} lg={24} xl={24}>
                             <Form.Item name="base_salary" label={'ฐานเงินเดือน'} className='ml-[52px]'>
                                 <Input />
                             </Form.Item>
@@ -332,7 +333,7 @@ const Compensation: React.FC = () => {
                     </Row>
 
                     <Row>
-                        <Col span={16}>
+                        <Col xs={24} sm={24} md={24} lg={24} xl={24}>
                             <Form.Item name="commission" label={'ค่าคอมมิชชั่น'} className='ml-[52px]'>
                                 <Input />
                             </Form.Item>
@@ -340,7 +341,7 @@ const Compensation: React.FC = () => {
                     </Row>
 
                     <Row>
-                        <Col span={16}>
+                        <Col xs={24} sm={24} md={24} lg={24} xl={24}>
                             <Form.Item name="position_income" label={'ค่าตำแหน่ง'} className='ml-[63px]'>
                                 <Input />
                             </Form.Item>
@@ -348,7 +349,7 @@ const Compensation: React.FC = () => {
                     </Row>
 
                     <Row>
-                        <Col span={16}>
+                        <Col xs={24} sm={24} md={24} lg={24} xl={24}>
                             <Form.Item name="special_income" label={'เงินพิเศษ'} className='ml-[72px]'>
                                 <Input />
                             </Form.Item>
@@ -356,7 +357,7 @@ const Compensation: React.FC = () => {
                     </Row>
 
                     <Row>
-                        <Col span={16}>
+                        <Col xs={24} sm={24} md={24} lg={24} xl={24}>
                             <Form.Item name="ot" label={'ค่าล่วงเวลา'} className='ml-[59px]'>
                                 <Input />
                             </Form.Item>
@@ -364,7 +365,7 @@ const Compensation: React.FC = () => {
                     </Row>
 
                     <Row>
-                        <Col span={16}>
+                        <Col xs={24} sm={24} md={24} lg={24} xl={24}>
                             <Form.Item name="other_income" label={'รายได้อื่น'} className='ml-[72px]'>
                                 <Input />
                             </Form.Item>
@@ -372,7 +373,7 @@ const Compensation: React.FC = () => {
                     </Row>
 
                     <Row>
-                        <Col span={16}>
+                        <Col xs={24} sm={24} md={24} lg={24} xl={24}>
                             <Form.Item name="travel_income" label={'ค่าเดินทาง'} className='ml-[64px]'>
                                 <Input />
                             </Form.Item>
@@ -380,7 +381,7 @@ const Compensation: React.FC = () => {
                     </Row>
 
                     <Row>
-                        <Col span={16}>
+                        <Col xs={24} sm={24} md={24} lg={24} xl={24}>
                             <Form.Item name="bursary" label={'เงินอุดหนุน'} className='ml-[60px]'>
                                 <Input />
                             </Form.Item>
@@ -388,7 +389,7 @@ const Compensation: React.FC = () => {
                     </Row>
 
                     <Row>
-                        <Col span={16}>
+                        <Col xs={24} sm={24} md={24} lg={24} xl={24}>
                             <Form.Item name="welfare_money" label={'เงินสวัสดิการ'} className='ml-[47px]'>
                                 <Input />
                             </Form.Item>
@@ -396,7 +397,7 @@ const Compensation: React.FC = () => {
                     </Row>
 
                     <Row>
-                        <Col span={16}>
+                        <Col xs={24} sm={24} md={24} lg={24} xl={24}>
                             <Form.Item name="bonus" label={'เงินโบนัส'} className='ml-[73px]'>
                                 <Input />
                             </Form.Item>
@@ -404,7 +405,7 @@ const Compensation: React.FC = () => {
                     </Row>
 
                     <Row>
-                        <Col span={16}>
+                        <Col xs={24} sm={24} md={24} lg={24} xl={24}>
                             <div className="text-[18px] ">
                                 <u>รายหัก</u>
                             </div>
@@ -412,7 +413,7 @@ const Compensation: React.FC = () => {
                     </Row>
 
                     <Row>
-                        <Col span={8} className='ml-12'>
+                        <Col xs={24} sm={24} md={24} lg={24} xl={24} className='ml-12'>
 
                             <Space>
                                 <Form.Item name="vat_per" label={'ภาษี'} className='ml-[54px]'>
@@ -420,8 +421,8 @@ const Compensation: React.FC = () => {
                                 </Form.Item>
 
 
-                                <Form.Item name="vat" className='ml-10'>
-                                    <Input className='w-[208px]' />
+                                <Form.Item name="vat" className='ml-[1px]'>
+                                    <Input className='w-[222px]' />
                                 </Form.Item>
                             </Space>
                         </Col>
@@ -429,21 +430,21 @@ const Compensation: React.FC = () => {
                     </Row>
 
                     <Row>
-                        <Col span={16} className='ml-[53px]'>
+                        <Col xs={24} sm={24} md={24} lg={24} xl={24} className='ml-[53px]'>
                             <Space>
                                 <Form.Item name="ss_per" label={'ประกันสังคม'}>
                                     <Input className='w-16' disabled />
                                 </Form.Item>
 
                                 <Form.Item name="social_security" className='ml-[0.5px]'>
-                                    <Input className='w-[208px]' />
+                                    <Input className='w-[222px]' />
                                 </Form.Item>
                             </Space>
                         </Col>
                     </Row>
 
                     <Row>
-                        <Col span={16}>
+                        <Col xs={24} sm={24} md={24} lg={24} xl={24}>
                             <Form.Item name="miss" label={'ขาด'} className='ml-[102px]'>
                                 <Input />
                             </Form.Item>
@@ -451,7 +452,7 @@ const Compensation: React.FC = () => {
                     </Row>
 
                     <Row>
-                        <Col span={16}>
+                        <Col xs={24} sm={24} md={24} lg={24} xl={24}>
                             <Form.Item name="ra" label={'ลา'} className='ml-[111px]'>
                                 <Input />
                             </Form.Item>
@@ -459,7 +460,7 @@ const Compensation: React.FC = () => {
                     </Row>
 
                     <Row>
-                        <Col span={16}>
+                        <Col xs={24} sm={24} md={24} lg={24} xl={24}>
                             <Form.Item name="late" label={'มาสาย'} className='ml-[86px]'>
                                 <Input />
                             </Form.Item>
@@ -467,26 +468,35 @@ const Compensation: React.FC = () => {
                     </Row>
 
                     <Row>
-                        <Col span={16}>
+                        <Col xs={24} sm={24} md={24} lg={24} xl={24}>
                             <Form.Item name="other" label={'อื่น ๆ'} className='ml-[95px]'>
                                 <Input />
                             </Form.Item>
                         </Col>
                     </Row>
 
+                    <Row>
+                        <Col xs={24} sm={24} md={24} lg={24} xl={24}>
+                            <Form.Item name="other" label={'รวมรายรับสุทธิ'} className='font-bold ml-[37px]'>
+                                <Input disabled style={{ background: "#CCFFFF", }} />
+                            </Form.Item>
+                        </Col>
+                    </Row>
+
                     <Row >
-                        <Col span={24}>
+                        <Col xs={24} sm={24} md={24} lg={24} xl={24}>
 
                             <Form.Item>
-                                <Space style={{ display: 'flex', justifyContent: 'center' }}>
+                                <Space style={{ display: 'flex', justifyContent: 'right', marginTop: '10px', }}>
                                     <Button
                                         type="primary"
-                                        style={{ backgroundColor: token.token.colorPrimary }}
+                                        style={{ backgroundColor: token.token.colorPrimary, width: '100px', }}
                                         htmlType="submit"
+                                        size='large'
                                     >
                                         คำนวณ
                                     </Button>
-                                    <Button onClick={onClose}>กลับ</Button>
+                                    <Button size='large' style={{ width: '100px', }} onClick={onClose}>กลับ</Button>
                                 </Space>
                             </Form.Item>
                         </Col>
