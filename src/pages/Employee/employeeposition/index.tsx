@@ -29,22 +29,26 @@ import type { ColumnsType } from 'antd/es/table';
 import edit from '../../../assets/Edit.png';
 import Del from '../../../assets/DEL.png';
 import View from '../../../assets/View.png';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   FETCH_GETALL_POSITION,
+  CRETE_POSITION_USER,
   POSITION,
 } from '../../../service/graphql/Position';
-import { useQuery } from '@apollo/client';
+import { FETCH_GETALLUSER } from '../../../service/graphql/Users';
+import { useMutation, useQuery } from '@apollo/client';
+import { Getposition_UserQuery } from '../../../__generated__/graphql';
+import Swal from 'sweetalert2';
 
 const { useToken } = theme;
 
-interface DataType {
-  key: string;
-  date: Date;
-  position: string;
-  role: string;
-  boss: string;
-}
+// interface DataType {
+//   key: string;
+//   date: Date;
+//   position: string;
+//   role: string;
+//   boss: string;
+// }
 
 const PositionEmployee: React.FC = (props) => {
   const [form] = Form.useForm();
@@ -52,19 +56,32 @@ const PositionEmployee: React.FC = (props) => {
   let { companycode } = useParams();
   const location = useLocation();
   let propsstate = location.state as any;
+  console.log(propsstate);
   const token = useToken();
   const [drawerType, setDrawerType] = useState(1);
-  const { data: position_data } = useQuery(FETCH_GETALL_POSITION);
+  const [selectedrow, setselectedrow] = useState<any>();
+  const { data: position_data, refetch } = useQuery(FETCH_GETALL_POSITION);
+  console.log('position_data', position_data);
   const { data: positionlevel1 } = useQuery(POSITION);
+  const { data: header } = useQuery(FETCH_GETALLUSER);
+  const [cretePositonUser] = useMutation(CRETE_POSITION_USER);
   const [maspositionlevel1, setMasPostionLevel1] = useState<
     { value?: string | null; label?: string | null }[] | undefined
   >(undefined);
   const [maspositionlevel2, setMasPostionLevel2] = useState<
     { value?: string | null; label?: string | null }[] | undefined
   >(undefined);
-  const [maspositionlevel3, setMasPostionLevel3] = useState<
-    { value?: string | null; label?: string | null }[] | undefined
-  >(undefined);
+
+  const header_data = header?.users?.map((e) => {
+    return {
+      label: (
+        <div>
+          {e?.profile?.firstname_th} {e?.profile?.lastname_th}
+        </div>
+      ),
+      value: e?.profile?.userId,
+    };
+  });
 
   const selectposition = positionlevel1?.getMasPositon?.map((e) => {
     return {
@@ -84,7 +101,6 @@ const PositionEmployee: React.FC = (props) => {
           value: e?.id,
         };
       });
-    console.log(maspositionlevel1);
     setMasPostionLevel1(maspositionlevel1 ? maspositionlevel1 : []);
   };
 
@@ -119,7 +135,74 @@ const PositionEmployee: React.FC = (props) => {
   };
 
   const onFinish = (value: any) => {
-    console.log(value);
+    drawerType === 1
+      ? Swal.fire({
+          title: `ยืนยันการเพิ่มข้อมูลตำแหน่งงาน`,
+          icon: 'warning',
+          showDenyButton: true,
+          showCancelButton: false,
+          confirmButtonColor: token.token.colorPrimary,
+          denyButtonColor: '#ea4e4e',
+          confirmButtonText: 'ตกลง',
+          denyButtonText: `ยกเลิก`,
+        }).then(async (result) => {
+          if (result.isConfirmed) {
+            cretePositonUser({
+              variables: {
+                data: {
+                  ...value,
+                  user_id: propsstate?.userId,
+                },
+              },
+            })
+              .then((val) => {
+                console.log(val);
+                if (val.data?.createdposition_user?.status) {
+                  Swal.fire(`เพิ่มข้อมูลตำแหน่งงานสำเร็จ!`, '', 'success');
+                  refetch();
+                }
+              })
+              .catch((err) => {
+                Swal.fire(`เพิ่มข้อมูลตำแหน่งงานไม่สำเร็จ!`, '', 'error');
+                console.error(err);
+              });
+          }
+        })
+      : Swal.fire({
+          title: `ยืนยันการแก้ไขข้อมูลตำแหน่งงาน`,
+          icon: 'warning',
+          showDenyButton: true,
+          showCancelButton: false,
+          confirmButtonColor: token.token.colorPrimary,
+          denyButtonColor: '#ea4e4e',
+          confirmButtonText: 'ตกลง',
+          denyButtonText: `ยกเลิก`,
+        }).then(async (result) => {
+          if (result.isConfirmed) {
+            cretePositonUser({
+              variables: {
+                data: {
+                  ...value,
+                  user_id: propsstate?.userId,
+                  id: selectedrow?.id,
+                },
+              },
+            })
+              .then((val) => {
+                console.log(val);
+                if (val.data?.createdposition_user?.status) {
+                  Swal.fire(`แก้ไขข้อมูลตำแหน่งงานสำเร็จ!`, '', 'success');
+                  refetch();
+                  form.resetFields();
+                }
+              })
+              .catch((err) => {
+                Swal.fire(`แก้ไขข้อมูลตำแหน่งงานไม่สำเร็จ!`, '', 'error');
+                console.error(err);
+                form.resetFields();
+              });
+          }
+        });
     setOpen(false);
   };
 
@@ -150,14 +233,30 @@ const PositionEmployee: React.FC = (props) => {
     const { key } = event;
     if (key === 'edit') {
       showDrawer(2);
-      console.log(record);
-      // form.setFieldsValue(record);
+      setselectedrow(record);
+      onChangeMasLevel1(record?.mas_positionlevel1.id);
+      onChangeMasLevel2(record?.mas_positionlevel2.id);
+      form.setFieldsValue({
+        ...record,
+        date: moment(record.date),
+        headderId:
+          record.header.profile.firstname_th +
+          ' ' +
+          record.header.profile.lastname_th,
+      });
     } else if (key === 'view') {
+      showDrawer(3);
+      onChangeMasLevel1(record?.mas_positionlevel1.id);
+      onChangeMasLevel2(record?.mas_positionlevel2.id);
+      form.setFieldsValue({
+        ...record,
+        date: moment(record.date),
+      });
     } else if (key === 'delete') {
     }
   };
 
-  const columns: ColumnsType<DataType> = [
+  const columns: ColumnsType<any> = [
     {
       title: 'วันที่มีผล',
       key: 'date',
@@ -167,9 +266,12 @@ const PositionEmployee: React.FC = (props) => {
     },
     {
       title: 'ตำแหน่ง',
-      key: 'position',
-      dataIndex: 'positon',
+      key: 'mas_positionlevel2',
+      dataIndex: 'mas_positionlevel2',
       align: 'center',
+      render: (record: any) => {
+        return <div>{record?.name}</div>;
+      },
     },
     {
       title: 'หน้าที่',
@@ -183,7 +285,7 @@ const PositionEmployee: React.FC = (props) => {
       dataIndex: 'header',
       align: 'center',
       render: (txt: any) =>
-        txt.profile.firstname_th + ' ' + txt.profile.lastname_th,
+        txt.profile?.firstname_th + ' ' + txt.profile?.lastname_th,
     },
     {
       title: 'Action',
@@ -233,6 +335,7 @@ const PositionEmployee: React.FC = (props) => {
               <Avatar
                 size={{ xs: 24, sm: 32, md: 40, lg: 64, xl: 80, xxl: 100 }}
                 icon={<AntDesignOutlined />}
+                src={propsstate.avatar}
               ></Avatar>
             </div>
           </Col>
@@ -243,7 +346,11 @@ const PositionEmployee: React.FC = (props) => {
                 {propsstate?.prefix_th} {propsstate?.firstname_th}{' '}
                 {propsstate?.lastname_th}
               </u>
-              <div className="mt-4">{propsstate?.firstname_en}</div>
+              <div className="mt-4">
+                {position_data?.getposition_user?.[
+                  position_data?.getposition_user?.length - 1
+                ]?.mas_positionlevel2?.name ?? 'no'}
+              </div>
             </div>
           </Col>
         </Row>
@@ -292,7 +399,13 @@ const PositionEmployee: React.FC = (props) => {
       </Card>
 
       <Drawer
-        title={'เพิ่มตำแหน่งงาน'}
+        title={`${
+          drawerType === 1
+            ? 'เพิ่มตำแหน่งงาน'
+            : drawerType === 2
+            ? 'แก้ไขตำแหน่งงาน'
+            : 'ดูตำแหน่งงาน'
+        }`}
         size="large"
         open={open}
         onClose={onClose}
@@ -300,8 +413,12 @@ const PositionEmployee: React.FC = (props) => {
         <Form form={form} layout={'vertical'} size="large" onFinish={onFinish}>
           <Row>
             <Col span={12}>
-              <Form.Item label={'วันที่มีผล'}>
-                <DatePicker style={{ width: '100%' }}></DatePicker>
+              <Form.Item name={'date'} label={'วันที่มีผล'}>
+                {drawerType === 3 ? (
+                  <DatePicker style={{ width: '100%' }} disabled></DatePicker>
+                ) : (
+                  <DatePicker style={{ width: '100%' }}></DatePicker>
+                )}
               </Form.Item>
             </Col>
           </Row>
@@ -309,11 +426,20 @@ const PositionEmployee: React.FC = (props) => {
           <Row>
             <Col span={24}>
               <Form.Item name={'position1_id'} label={'ฝ่าย'}>
-                <Select
-                  options={selectposition ? selectposition : []}
-                  onChange={onChangeMasLevel1}
-                  allowClear
-                />
+                {drawerType === 3 ? (
+                  <Select
+                    options={selectposition ? selectposition : []}
+                    onChange={onChangeMasLevel1}
+                    allowClear
+                    disabled
+                  />
+                ) : (
+                  <Select
+                    options={selectposition ? selectposition : []}
+                    onChange={onChangeMasLevel1}
+                    allowClear
+                  />
+                )}
               </Form.Item>
             </Col>
           </Row>
@@ -321,11 +447,20 @@ const PositionEmployee: React.FC = (props) => {
           <Row>
             <Col span={24}>
               <Form.Item name={'position2_id'} label={'แผนก'}>
-                <Select
-                  options={maspositionlevel2 ? maspositionlevel2 : []}
-                  onChange={onChangeMasLevel2}
-                  allowClear
-                />
+                {drawerType === 3 ? (
+                  <Select
+                    options={maspositionlevel1 ? maspositionlevel1 : []}
+                    onChange={onChangeMasLevel2}
+                    allowClear
+                    disabled
+                  />
+                ) : (
+                  <Select
+                    options={maspositionlevel1 ? maspositionlevel1 : []}
+                    onChange={onChangeMasLevel2}
+                    allowClear
+                  />
+                )}
               </Form.Item>
             </Col>
           </Row>
@@ -333,23 +468,36 @@ const PositionEmployee: React.FC = (props) => {
           <Row>
             <Col span={24}>
               <Form.Item name={'position3_id'} label={'ตำแหน่ง'}>
-                <Select />
+                {drawerType === 3 ? (
+                  <Select
+                    options={maspositionlevel2 ? maspositionlevel2 : []}
+                    disabled
+                  />
+                ) : (
+                  <Select
+                    options={maspositionlevel2 ? maspositionlevel2 : []}
+                  />
+                )}
               </Form.Item>
             </Col>
           </Row>
 
           <Row>
             <Col span={24}>
-              <Form.Item label={'หน้าที่'}>
-                <Input />
+              <Form.Item name={'role'} label={'หน้าที่'}>
+                {drawerType === 3 ? <Input disabled /> : <Input />}
               </Form.Item>
             </Col>
           </Row>
 
           <Row>
             <Col span={24}>
-              <Form.Item label={'หัวหน้างาน'}>
-                <Select />
+              <Form.Item name={'headderId'} label={'หัวหน้างาน'}>
+                {drawerType === 3 ? (
+                  <Select options={header_data} allowClear disabled />
+                ) : (
+                  <Select options={header_data} allowClear />
+                )}
               </Form.Item>
             </Col>
           </Row>

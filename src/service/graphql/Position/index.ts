@@ -89,3 +89,11 @@ query Getposition_user {
     }
   }
 `);
+
+export const CRETE_POSITION_USER = gql(`
+mutation Createdposition_user($data: position!) {
+  createdposition_user(data: $data) {
+    message
+    status
+  }
+}`);

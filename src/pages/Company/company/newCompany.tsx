@@ -42,14 +42,18 @@ const Newcompany = () => {
   >(undefined);
 
   let Editdata = location.state as any;
+  console.log(Editdata);
 
   useEffect(() => {
     if (Editdata?.mode) {
       getUserData();
     }
-  }, []);
+  }, [province_data]);
 
   const getUserData = () => {
+    onProvinceChange(Editdata?.country);
+    onDistrictChangeCitizen(Editdata?.state);
+    onAmphoeChangeCitizen(Editdata?.city);
     form.setFieldsValue(Editdata);
   };
 
@@ -97,9 +101,7 @@ const Newcompany = () => {
   const onAmphoeChangeCitizen = (value: string) => {
     const zipCode = province_data?.getProvince
       ?.find((e) =>
-        e?.district?.find((_e) =>
-          _e?.amphoe?.find((__e) => __e?.id === value),
-        ),
+        e?.district?.find((_e) => _e?.amphoe?.find((__e) => __e?.id === value)),
       )
       ?.district?.find((e) => e?.amphoe?.find((_e) => _e?.id === value))
       ?.amphoe?.find((e) => e?.id === value)?.zipcode;

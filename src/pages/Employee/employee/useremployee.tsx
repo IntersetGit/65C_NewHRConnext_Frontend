@@ -21,6 +21,8 @@ import {
   Upload,
   Avatar,
   Tabs,
+  UploadFile,
+  message,
 } from 'antd';
 import {
   useNavigate,
@@ -44,6 +46,8 @@ import type { CheckboxChangeEvent } from 'antd/es/checkbox';
 import { useAuth } from '../../../hooks/useAuth';
 import { User, UsersQuery } from '../../../__generated__/graphql';
 import { FETCH_GETALLROLE } from '../../../service/graphql/Role';
+import { getFilePath, getUploadUrl } from '../../../util';
+import { RcFile } from 'antd/es/upload';
 
 const { useToken } = theme;
 
@@ -124,6 +128,8 @@ const UserEmployee: React.FC = (props) => {
   const [role, setRole] = useState<
     { value?: string | null; label?: string | null }[] | undefined
   >(undefined);
+  const [fileAvatar, setFileavatar] = useState<UploadFile[]>([]);
+  const [uploading, setUploading] = useState(false);
 
   const { data: province_data, refetch } = useQuery(GET_PROVINCE);
   const { data: role_data } = useQuery(FETCH_GETALLROLE);
@@ -138,7 +144,7 @@ const UserEmployee: React.FC = (props) => {
     if (propsstate?.mode) {
       getUserData();
     }
-  }, []);
+  }, [province_data]);
 
   const getUserData = () => {
     onProvinceChangeCitizen(propsstate?.citizen_province);
@@ -319,8 +325,42 @@ const UserEmployee: React.FC = (props) => {
     }
   };
 
+  const handleUpload = () => {
+    const formData = new FormData();
+    fileAvatar.forEach((e) => {
+      formData.append('avatar', e as RcFile);
+    });
+    setUploading(true);
+    // You can use any AJAX library you like
+    fetch(getUploadUrl() + 'avatar', {
+      method: 'POST',
+      body: formData,
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        setFileavatar([]);
+        form.setFieldValue('avatar', res.destination + '/' + res.filename);
+        message.success('upload successfully.');
+      })
+      .catch(() => {
+        message.error('upload failed.');
+      })
+      .finally(() => {
+        setUploading(false);
+      });
+  };
+  ``;
   const propsupload: UploadProps = {
+    fileList: fileAvatar,
+    onRemove: (file) => {
+      const index = fileAvatar.indexOf(file);
+      const newFileList = fileAvatar.slice();
+      newFileList.splice(index, 1);
+      setFileavatar(newFileList);
+    },
+    customRequest: handleUpload,
     beforeUpload(file) {
+      setFileavatar([...fileAvatar, file]);
       return new Promise((resolve) => {
         const reader = new FileReader();
         reader.readAsDataURL(file);
@@ -430,16 +470,24 @@ const UserEmployee: React.FC = (props) => {
               <Avatar
                 size={{ xs: 24, sm: 32, md: 40, lg: 64, xl: 80, xxl: 100 }}
                 icon={<AntDesignOutlined />}
-                src={picture}
+                src={getFilePath() + propsstate?.avatar}
               />
             </div>
           </Row>
 
           <Row>
             <div className="flex w-screen mt-4 mb-4 justify-center">
-              <Upload maxCount={1} {...propsupload}>
-                <Button icon={<UploadOutlined />}>อัพโหลดรูปภาพ</Button>
-              </Upload>
+              <Form.Item name={'avatar'}>
+                <Upload
+                  maxCount={1}
+                  {...propsupload}
+                  action={getUploadUrl() + 'avatar'}
+                >
+                  <Button loading={uploading} icon={<UploadOutlined />}>
+                    อัพโหลดรูปภาพ
+                  </Button>
+                </Upload>
+              </Form.Item>
             </div>
           </Row>
 

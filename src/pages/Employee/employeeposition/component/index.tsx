@@ -129,6 +129,7 @@ const ProfilePosition: React.FC = (props) => {
   const [drawerType, setDrawerType] = useState(1);
   const [open, setOpen] = useState(false);
   const { data: user, refetch } = useQuery<any>(GET_ME);
+  console.log(user);
 
   const showDrawer = (type: any) => {
     setOpen(true);
@@ -233,6 +234,7 @@ const ProfilePosition: React.FC = (props) => {
               <Avatar
                 size={{ xs: 24, sm: 32, md: 40, lg: 64, xl: 80, xxl: 100 }}
                 icon={<AntDesignOutlined />}
+                src={user?.me?.profile?.avatar}
               ></Avatar>
             </div>
           </Col>

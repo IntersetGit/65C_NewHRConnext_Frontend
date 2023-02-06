@@ -232,20 +232,6 @@ const ProfileApprove: React.FC = () => {
           </Col>
         </Row>
 
-        {/* <Row style={{ float: 'right' }}>
-          <Col className="my-2" span={24}>
-            <Button
-              type="primary"
-              size="middle"
-              style={{
-                marginBottom: '10px',
-                backgroundColor: token.token.colorPrimary,
-              }}
-            >
-              + สร้างใบลาใหม่
-            </Button>
-          </Col>
-        </Row> */}
         <Row
           gutter={16}
           style={{ display: 'flex', justifyContent: 'space-between' }}
@@ -258,6 +244,7 @@ const ProfileApprove: React.FC = () => {
                 { value: '2022', label: '2022' },
                 { value: '2021', label: '2021' },
               ]}
+              allowClear
             ></Select>
           </Col>
           <Col>

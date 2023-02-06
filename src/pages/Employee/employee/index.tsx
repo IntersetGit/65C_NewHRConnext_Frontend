@@ -38,6 +38,7 @@ import View from '../../../assets/View.png';
 import { User } from '../../../__generated__/graphql';
 import { gql } from '../../../__generated__';
 import Swal from 'sweetalert2';
+import { getFilePath, getUploadUrl } from '../../../util';
 
 const { useToken } = theme;
 
@@ -285,10 +286,8 @@ const Employee: React.FC = () => {
               onChange={(e) => {
                 if (e === 'Table') {
                   setDisplayfield(1);
-                } else if (e === 'List') {
-                  setDisplayfield(2);
                 } else {
-                  setDisplayfield(3);
+                  setDisplayfield(2);
                 }
               }}
               options={[
@@ -299,10 +298,6 @@ const Employee: React.FC = () => {
                 {
                   value: 'List',
                   icon: <AppstoreOutlined />,
-                },
-                {
-                  value: 'Tree',
-                  icon: <ApartmentOutlined />,
                 },
               ]}
             />
@@ -322,7 +317,7 @@ const Employee: React.FC = () => {
               pageSize: 10,
             }}
           ></Table>
-        ) : isDisplayfield === 2 ? (
+        ) : (
           <List
             itemLayout="vertical"
             size="large"
@@ -340,8 +335,6 @@ const Employee: React.FC = () => {
               </List.Item>
             )}
           ></List>
-        ) : (
-          <></>
         )}
       </Card>
     </>
@@ -357,7 +350,7 @@ const CardItem = ({ item, genarateMenu }: Props) => {
       <Col span={4}>
         <Avatar
           style={{ width: 100, height: 100 }}
-          src={item.profile?.avatar}
+          src={getFilePath() + item.profile?.avatar}
         />
       </Col>
       <Col span={9}>

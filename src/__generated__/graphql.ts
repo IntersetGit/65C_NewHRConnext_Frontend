@@ -25,6 +25,17 @@ export type Amphoe = {
   zipcode?: Maybe<Scalars['String']>;
 };
 
+export type BankInput = {
+  id?: InputMaybe<Scalars['ID']>;
+  name?: InputMaybe<Scalars['String']>;
+};
+
+export type BankResponseType = {
+  __typename?: 'BankResponseType';
+  message?: Maybe<Scalars['String']>;
+  status?: Maybe<Scalars['Boolean']>;
+};
+
 export type Company = {
   __typename?: 'Company';
   branch?: Maybe<Array<Maybe<CompanyBranch>>>;
@@ -369,10 +380,12 @@ export type Mutation = {
   Createsalary?: Maybe<CreatesalaryResponseType>;
   Createyears?: Maybe<YearsResponseType>;
   EditPosition?: Maybe<CreatepositionResponseType>;
+  Salaryfilter?: Maybe<SalaryResponseType>;
   createAccount?: Maybe<CreateCompanyResponseType>;
   createAccountUser?: Maybe<CreateUserResponseType>;
   createAndUpdateComBarance?: Maybe<CreateComapnyBranchResponseType>;
   createAndUpdateHolidayDate?: Maybe<CreateHolidayDateResponseType>;
+  createBank?: Maybe<BankResponseType>;
   createHolidayYear?: Maybe<CreateHolidayYearResponseType>;
   createRoleCompany?: Maybe<CreateRoleCompanyResponseType>;
   createdposition_user?: Maybe<CreatepositionResponseType>;
@@ -404,7 +417,7 @@ export type MutationCreatemonthArgs = {
 
 
 export type MutationCreatesalaryArgs = {
-  data: SalaryInput;
+  data?: InputMaybe<SalaryInput>;
 };
 
 
@@ -415,6 +428,11 @@ export type MutationCreateyearsArgs = {
 
 export type MutationEditPositionArgs = {
   data?: InputMaybe<Array<CreatedAndUpdatePosition>>;
+};
+
+
+export type MutationSalaryfilterArgs = {
+  userId?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -435,6 +453,11 @@ export type MutationCreateAndUpdateComBaranceArgs = {
 
 export type MutationCreateAndUpdateHolidayDateArgs = {
   data: CreateHolidayDate;
+};
+
+
+export type MutationCreateBankArgs = {
+  data?: InputMaybe<BankInput>;
 };
 
 
@@ -587,6 +610,7 @@ export type Query = {
   getpositionMe?: Maybe<Array<Maybe<GetPositionUser>>>;
   getposition_user?: Maybe<Array<Maybe<GetPositionUser>>>;
   me?: Maybe<Me>;
+  provident_log?: Maybe<Array<Maybe<Provident_Log>>>;
   salary?: Maybe<Array<Maybe<Salary>>>;
   users?: Maybe<Array<Maybe<User>>>;
   verifyCompanycode?: Maybe<Scalars['Boolean']>;
@@ -615,6 +639,11 @@ export type QueryGetcompanyRoleArgs = {
 
 export type QueryGetposition_UserArgs = {
   id?: InputMaybe<Scalars['ID']>;
+};
+
+
+export type QueryProvident_LogArgs = {
+  userId?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -722,6 +751,11 @@ export type Role_Company = {
   users?: Maybe<Array<Maybe<User>>>;
 };
 
+export type SalaryResponseType = {
+  __typename?: 'SalaryResponseType';
+  userId?: Maybe<Scalars['String']>;
+};
+
 export type UpdateRoleCompanyMangementType = {
   access: Array<Scalars['JSON']>;
   id: Scalars['ID'];
@@ -758,14 +792,23 @@ export type ValidateRoute = {
   reFresh?: Maybe<Scalars['String']>;
 };
 
+export type Book_Bank_LogResponseType = {
+  __typename?: 'book_bank_logResponseType';
+  message?: Maybe<Scalars['String']>;
+  status?: Maybe<Scalars['Boolean']>;
+};
+
 export type Bookbank_Log = {
   __typename?: 'bookbank_log';
+  Salary?: Maybe<Salary>;
   all_collectId?: Maybe<Scalars['String']>;
   bank_number?: Maybe<Scalars['String']>;
   base_salary?: Maybe<Scalars['Float']>;
   date?: Maybe<Scalars['Date']>;
   id: Scalars['ID'];
   mas_bankId?: Maybe<Scalars['String']>;
+  provident_com?: Maybe<Scalars['Float']>;
+  provident_emp?: Maybe<Scalars['Float']>;
   userId?: Maybe<User>;
 };
 
@@ -774,8 +817,15 @@ export type Bookbank_LogInput = {
   bank_number?: InputMaybe<Scalars['String']>;
   base_salary?: InputMaybe<Scalars['Float']>;
   date?: InputMaybe<Scalars['Date']>;
-  id: Scalars['ID'];
+  id?: InputMaybe<Scalars['ID']>;
+  mas_all_collectId?: InputMaybe<Scalars['String']>;
   mas_bankId?: InputMaybe<Scalars['String']>;
+  pro_company?: InputMaybe<Scalars['Float']>;
+  pro_employee?: InputMaybe<Scalars['Float']>;
+  provident_com?: InputMaybe<Scalars['Float']>;
+  provident_date?: InputMaybe<Scalars['Date']>;
+  provident_emp?: InputMaybe<Scalars['Float']>;
+  userId?: InputMaybe<Scalars['String']>;
 };
 
 export type CreateCompanyBranch = {
@@ -914,6 +964,7 @@ export type Mas_Positionlevel3 = {
 
 export type MonthInput = {
   id?: InputMaybe<Scalars['ID']>;
+  month_number?: InputMaybe<Scalars['Int']>;
   name?: InputMaybe<Scalars['String']>;
 };
 
@@ -934,15 +985,37 @@ export type Position = {
   user_id?: InputMaybe<Scalars['String']>;
 };
 
+export type Provident_Log = {
+  __typename?: 'provident_log';
+  id?: Maybe<Scalars['ID']>;
+  mas_all_collectId?: Maybe<Scalars['String']>;
+  pro_company?: Maybe<Scalars['Float']>;
+  pro_employee?: Maybe<Scalars['Float']>;
+  provident_date?: Maybe<Scalars['Date']>;
+  userId?: Maybe<Scalars['String']>;
+};
+
+export type Provident_LogInput = {
+  id?: InputMaybe<Scalars['ID']>;
+  mas_all_collectId?: InputMaybe<Scalars['String']>;
+  pro_company?: InputMaybe<Scalars['Float']>;
+  pro_employee?: InputMaybe<Scalars['Float']>;
+  provident_date?: InputMaybe<Scalars['Date']>;
+  userId?: InputMaybe<Scalars['String']>;
+};
+
 export type Salary = {
   __typename?: 'salary';
   bonus?: Maybe<Scalars['Float']>;
   bookbank_logId?: Maybe<Bookbank_Log>;
   bursary?: Maybe<Scalars['Float']>;
   commission?: Maybe<Scalars['Float']>;
+  date?: Maybe<Scalars['Date']>;
   id: Scalars['ID'];
   late?: Maybe<Scalars['Float']>;
+  mas_income_typeId?: Maybe<Scalars['String']>;
   mas_monthId?: Maybe<Scalars['String']>;
+  mas_salary_statusId?: Maybe<Scalars['String']>;
   mas_yearsId?: Maybe<Scalars['String']>;
   miss?: Maybe<Scalars['Float']>;
   net?: Maybe<Scalars['Float']>;
@@ -955,11 +1028,13 @@ export type Salary = {
   ra?: Maybe<Scalars['Float']>;
   social_security?: Maybe<Scalars['Float']>;
   special_income?: Maybe<Scalars['Float']>;
+  ss_per?: Maybe<Scalars['Float']>;
   total_expense?: Maybe<Scalars['Float']>;
   total_income?: Maybe<Scalars['Float']>;
   travel_income?: Maybe<Scalars['Float']>;
   userId?: Maybe<Scalars['String']>;
   vat?: Maybe<Scalars['Float']>;
+  vatper?: Maybe<Scalars['Float']>;
   welfare_money?: Maybe<Scalars['Float']>;
 };
 
@@ -968,9 +1043,12 @@ export type SalaryInput = {
   bookbank_logId?: InputMaybe<Scalars['String']>;
   bursary?: InputMaybe<Scalars['Float']>;
   commission?: InputMaybe<Scalars['Float']>;
-  id: Scalars['ID'];
+  date?: InputMaybe<Scalars['Date']>;
+  id?: InputMaybe<Scalars['ID']>;
   late?: InputMaybe<Scalars['Float']>;
+  mas_income_typeId?: InputMaybe<Scalars['String']>;
   mas_monthId?: InputMaybe<Scalars['String']>;
+  mas_salary_statusId?: InputMaybe<Scalars['String']>;
   mas_yearsId?: InputMaybe<Scalars['String']>;
   miss?: InputMaybe<Scalars['Float']>;
   net?: InputMaybe<Scalars['Float']>;
@@ -989,6 +1067,14 @@ export type SalaryInput = {
   userId?: InputMaybe<Scalars['String']>;
   vat?: InputMaybe<Scalars['Float']>;
   welfare_money?: InputMaybe<Scalars['Float']>;
+};
+
+export type Selfsalary = {
+  __typename?: 'selfsalary';
+  base_salary?: Maybe<Scalars['Float']>;
+  firstname_th?: Maybe<Scalars['String']>;
+  id: Scalars['ID'];
+  lastname_th?: Maybe<Scalars['String']>;
 };
 
 export type YearsInput = {
@@ -1127,6 +1213,13 @@ export type Getposition_UserQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type Getposition_UserQuery = { __typename?: 'Query', getposition_user?: Array<{ __typename?: 'getPositionUser', id?: string | null, position1_id?: string | null, position2_id?: string | null, position3_id?: string | null, role?: string | null, date?: any | null, user?: { __typename?: 'User', id: string, email: string, password: string, profile?: { __typename?: 'Profile', firstname_th?: string | null, lastname_th?: string | null, id: string, firstname_en?: string | null, lastname_en?: string | null, prefix_th?: string | null, prefix_en?: string | null } | null } | null, mas_positionlevel1?: { __typename?: 'mas_positionlevel1', id: string, name?: string | null, level?: number | null } | null, mas_positionlevel2?: { __typename?: 'mas_positionlevel2', id: string, name?: string | null, level?: number | null } | null, mas_positionlevel3?: { __typename?: 'mas_positionlevel3', id: string, name?: string | null, level?: number | null } | null, header?: { __typename?: 'User', email: string, profile?: { __typename?: 'Profile', firstname_th?: string | null, lastname_th?: string | null, firstname_en?: string | null, lastname_en?: string | null, prefix_th?: string | null, prefix_en?: string | null } | null } | null } | null> | null };
 
+export type Createdposition_UserMutationVariables = Exact<{
+  data: Position;
+}>;
+
+
+export type Createdposition_UserMutation = { __typename?: 'Mutation', createdposition_user?: { __typename?: 'CreatepositionResponseType', message?: string | null, status?: boolean | null } | null };
+
 export type GetProvinceQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -1175,6 +1268,7 @@ export const DeleteComBaranceDocument = {"kind":"Document","definitions":[{"kind
 export const GetHoliDayYearDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetHoliDayYear"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"GetHoliDayYear"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"day"}},{"kind":"Field","name":{"kind":"Name","value":"month"}},{"kind":"Field","name":{"kind":"Name","value":"year"}},{"kind":"Field","name":{"kind":"Name","value":"holiday_name"}}]}}]}}]} as unknown as DocumentNode<GetHoliDayYearQuery, GetHoliDayYearQueryVariables>;
 export const GetMasPositonDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getMasPositon"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getMasPositon"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"level"}},{"kind":"Field","name":{"kind":"Name","value":"code"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"mas_positionlevel2"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"code"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"level"}},{"kind":"Field","name":{"kind":"Name","value":"mas_positionlevel3"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"level"}},{"kind":"Field","name":{"kind":"Name","value":"code"}},{"kind":"Field","name":{"kind":"Name","value":"type"}}]}},{"kind":"Field","name":{"kind":"Name","value":"id"}}]}},{"kind":"Field","name":{"kind":"Name","value":"CompanyId"}},{"kind":"Field","name":{"kind":"Name","value":"Position_user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"user_id"}},{"kind":"Field","name":{"kind":"Name","value":"position1_id"}},{"kind":"Field","name":{"kind":"Name","value":"position2_id"}},{"kind":"Field","name":{"kind":"Name","value":"position3_id"}},{"kind":"Field","name":{"kind":"Name","value":"role"}},{"kind":"Field","name":{"kind":"Name","value":"headderId"}},{"kind":"Field","name":{"kind":"Name","value":"date"}}]}}]}}]}}]} as unknown as DocumentNode<GetMasPositonQuery, GetMasPositonQueryVariables>;
 export const Getposition_UserDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Getposition_user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getposition_user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"password"}},{"kind":"Field","name":{"kind":"Name","value":"profile"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"firstname_th"}},{"kind":"Field","name":{"kind":"Name","value":"lastname_th"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"firstname_en"}},{"kind":"Field","name":{"kind":"Name","value":"lastname_en"}},{"kind":"Field","name":{"kind":"Name","value":"prefix_th"}},{"kind":"Field","name":{"kind":"Name","value":"prefix_en"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"position1_id"}},{"kind":"Field","name":{"kind":"Name","value":"mas_positionlevel1"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"level"}}]}},{"kind":"Field","name":{"kind":"Name","value":"position2_id"}},{"kind":"Field","name":{"kind":"Name","value":"mas_positionlevel2"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"level"}}]}},{"kind":"Field","name":{"kind":"Name","value":"position3_id"}},{"kind":"Field","name":{"kind":"Name","value":"mas_positionlevel3"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"level"}}]}},{"kind":"Field","name":{"kind":"Name","value":"role"}},{"kind":"Field","name":{"kind":"Name","value":"date"}},{"kind":"Field","name":{"kind":"Name","value":"header"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"profile"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"firstname_th"}},{"kind":"Field","name":{"kind":"Name","value":"lastname_th"}},{"kind":"Field","name":{"kind":"Name","value":"firstname_en"}},{"kind":"Field","name":{"kind":"Name","value":"lastname_en"}},{"kind":"Field","name":{"kind":"Name","value":"prefix_th"}},{"kind":"Field","name":{"kind":"Name","value":"prefix_en"}}]}}]}}]}}]}}]} as unknown as DocumentNode<Getposition_UserQuery, Getposition_UserQueryVariables>;
+export const Createdposition_UserDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"Createdposition_user"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"data"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"position"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createdposition_user"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"data"},"value":{"kind":"Variable","name":{"kind":"Name","value":"data"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"message"}},{"kind":"Field","name":{"kind":"Name","value":"status"}}]}}]}}]} as unknown as DocumentNode<Createdposition_UserMutation, Createdposition_UserMutationVariables>;
 export const GetProvinceDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getProvince"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getProvince"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"district"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"amphoe"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"zipcode"}}]}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]}}]} as unknown as DocumentNode<GetProvinceQuery, GetProvinceQueryVariables>;
 export const GetcompanyRoleDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetcompanyRole"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getcompanyRole"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"access"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"status"}}]}}]}}]} as unknown as DocumentNode<GetcompanyRoleQuery, GetcompanyRoleQueryVariables>;
 export const GetcompanyRoleManagementDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetcompanyRoleManagement"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getcompanyRole"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"access"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]} as unknown as DocumentNode<GetcompanyRoleManagementQuery, GetcompanyRoleManagementQueryVariables>;

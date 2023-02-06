@@ -37,6 +37,7 @@ import telegram from '../../../../assets/Telegram-logo.png';
 import { getFilePath, getUploadUrl } from '../../../../util';
 import { RcFile } from 'antd/es/upload';
 
+import { FETCH_GETALLROLE } from '../../../../service/graphql/Role';
 const { useToken } = theme;
 
 const GET_ME = gql(`
@@ -154,6 +155,7 @@ const ProfileEmployee: React.FC = () => {
     loading: isProvinceload,
     refetch,
   } = useQuery(GET_PROVINCE);
+  const { data: role_data } = useQuery(FETCH_GETALLROLE);
   const [createEmployeeAccount] = useMutation(CREATE_EMPLOYEE_ACCOUNT);
 
   useEffect(() => {
@@ -195,6 +197,13 @@ const ProfileEmployee: React.FC = () => {
       setCounrty(items);
     });
   };
+
+  const selectrole = role_data?.getcompanyRole?.map((e) => {
+    return {
+      label: e?.name,
+      value: e?.id,
+    };
+  });
 
   const province = province_data?.getProvince?.map((e) => {
     return {
@@ -739,11 +748,11 @@ const ProfileEmployee: React.FC = () => {
               </Form.Item>
             </Col>
 
-            {/* <Col xs={24} sm={12} md={12} lg={6} xl={6}>
-              <Form.Item name={'rolecompany'} label={'ROLE'}>
-                <Select options={arrcompay} allowClear />
+            <Col xs={24} sm={12} md={12} lg={8} xl={8}>
+              <Form.Item name={'role_company'} label={'Role'}>
+                <Select options={selectrole} allowClear />
               </Form.Item>
-            </Col> */}
+            </Col>
           </Row>
 
           <Divider style={{ backgroundColor: token.token.colorPrimary }} />
