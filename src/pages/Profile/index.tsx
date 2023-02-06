@@ -18,7 +18,7 @@ const Profile: React.FC = () => {
 
   return (
     <>
-      <Tabs
+      {/* <Tabs
         defaultActiveKey="/:companycode/profile"
         className="right-tab"
         onChange={onChange}
@@ -40,7 +40,7 @@ const Profile: React.FC = () => {
             key: '/:companycode/profile/approve',
           },
         ]}
-      />
+      /> */}
       <Outlet />
     </>
   );

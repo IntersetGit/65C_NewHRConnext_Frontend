@@ -41,7 +41,9 @@ const PositionEmployee = React.lazy(
 );
 const Summaryroot = React.lazy(() => import('../pages/Summary'));
 const Compensation = React.lazy(() => import('../pages/Summary/compensation'));
-const ProfileCompensation = React.lazy(() => import('../pages/Summary/profilecompensation'));
+const ProfileCompensation = React.lazy(
+  () => import('../pages/Summary/profilecompensation'),
+);
 const Remuneration = React.lazy(() => import('../pages/Summary/remuneration'));
 const Payslip = React.lazy(() => import('../pages/Summary/payslip'));
 const UserEmployee = React.lazy(
@@ -123,27 +125,26 @@ export const routing: RoutingType[] = [
         label: 'ข้อมูลของฉัน',
         icon: <RiProfileLine size={'18'} />,
         element: <ProfileUser />,
-        forcerendermenu: true,
         children: [
           {
+            label: 'ข้อมูลของฉัน',
             path: '/:companycode/profile',
             element: <ProfileEmployee />,
-            hideInmenu: true,
           },
           {
+            label: 'ตำแหน่งงานของฉัน',
             path: '/:companycode/profile/position',
             element: <ProfilePosition />,
-            hideInmenu: true,
           },
           {
+            label: 'ช้อมูลบริษัทของฉัน',
             path: '/:companycode/profile/company',
             element: <ProfileCompany />,
-            hideInmenu: true,
           },
           {
+            label: 'การลา',
             path: '/:companycode/profile/approve',
             element: <ProfileApprove />,
-            hideInmenu: true,
           },
         ],
       },
