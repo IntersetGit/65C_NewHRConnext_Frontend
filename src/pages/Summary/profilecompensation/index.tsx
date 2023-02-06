@@ -25,6 +25,7 @@ import { MoreOutlined } from '@ant-design/icons';
 import edit from '../../../assets/Edit.png';
 import Slip from '../../../assets/Slip.png';
 import View from '../../../assets/View.png';
+import Cal1 from '../../../assets/Cal1.png';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useState } from 'react';
 
@@ -60,9 +61,13 @@ const Compensation: React.FC = () => {
     const token = useToken();
     const [open, setOpen] = useState(false);
     const [form] = Form.useForm<SummaryType>();
+    const navigate = useNavigate();
+    const [drawerType, setDrawerType] = useState(1);
+    const [selectedRow, setSelectedRow] = useState(null);
 
-    const showDrawer = () => {
+    const showDrawer = (type: any) => {
         setOpen(true);
+        setDrawerType(type);
     };
 
     const onClose = () => {
@@ -73,15 +78,15 @@ const Compensation: React.FC = () => {
     const genarateMenu = (record: any) => {
         return [
             {
-                key: 'edit',
-                label: 'แก้ไข',
-                icon: <img style={{ width: '17px', height: '17px' }} src={edit} />,
-                onClick: (e: any) => onMenuClick(e, record),
-            },
-            {
                 key: 'view',
                 label: 'ดูข้อมูล',
                 icon: <img style={{ width: '17px', height: '17px' }} src={View} />,
+                onClick: (e: any) => onMenuClick(e, record),
+            },
+            {
+                key: 'edit',
+                label: 'แก้ไข',
+                icon: <img style={{ width: '17px', height: '17px' }} src={edit} />,
                 onClick: (e: any) => onMenuClick(e, record),
             },
             {
@@ -90,14 +95,27 @@ const Compensation: React.FC = () => {
                 icon: <img style={{ width: '18px', height: '18px' }} src={Slip} />,
                 onClick: (e: any) => onMenuClick(e, record),
             },
+            {
+                key: 'calculate',
+                label: 'คำนวณเงินเดือน',
+                icon: <img style={{ width: '17px', height: '17px' }} src={Cal1} />,
+                onClick: (e: any) => onMenuClick(e, record),
+            },
         ];
     };
 
     const onMenuClick = (event: any, record: any) => {
         const { key } = event;
         if (key === 'edit') {
+            showDrawer(2);
         } else if (key === 'view') {
+            showDrawer(3);
         } else if (key === 'view_slip') {
+            navigate(`payslip`);
+        } else if (key === 'calculate') {
+            showDrawer(1);
+            setSelectedRow(record)
+            form.setFieldsValue({ date: record?.date?.format('MM/YYYY') })
         }
     };
 
@@ -196,7 +214,7 @@ const Compensation: React.FC = () => {
             <div className="flex text-3xl ml-2 pt-4">
                 <GiReceiveMoney />
                 <div className="ml-2 text-xl">
-                    ค่าตอบแทน ( เงินเดือน ค่าล่วงเวลา ค่าบริหาร เบี้ยขยัน และ อื่น ๆ )
+                    ข้อมูลเงินเดือน ( ค่าล่วงเวลา ค่าบริหาร เบี้ยขยัน และ อื่น ๆ )
                 </div>
             </div>
 
@@ -273,7 +291,7 @@ const Compensation: React.FC = () => {
                                     <Button
                                         type="primary"
                                         style={{ backgroundColor: token.token.colorPrimary }}
-                                        onClick={showDrawer}
+                                        onClick={() => showDrawer(1)}
                                     >
                                         คำนวณเงินเดือน
                                     </Button>
@@ -290,7 +308,9 @@ const Compensation: React.FC = () => {
             <Card className="shadow-xl mt-4"><Table columns={columns} dataSource={data} /></Card>
 
             <Drawer
-                title={'คำนวณเงินเดือน'}
+                title={`${drawerType === 1 ? "คำนวณเงินเดือน"
+                    : drawerType === 2 ? "แก้ไขคำนวณเงินเดือน"
+                        : "เงินเดือน"}`}
                 onClose={onClose}
                 open={open}
                 width={500}
@@ -311,7 +331,8 @@ const Compensation: React.FC = () => {
                     <Row>
                         <Col xs={24} sm={24} md={24} lg={24} xl={24}>
                             <Form.Item name="date" label={'เดือน/ปี'} className='ml-[82px]'>
-                                <DatePicker onChange={onChangeDate} picker="month" format={'MM/YYYY'} />
+                                <DatePicker onChange={onChangeDate} picker="month" format={'MM/YYYY'}
+                                    disabled={drawerType === 3 ? true : false} />
                             </Form.Item>
                         </Col>
                     </Row>
@@ -327,7 +348,7 @@ const Compensation: React.FC = () => {
                     <Row>
                         <Col xs={24} sm={24} md={24} lg={24} xl={24}>
                             <Form.Item name="base_salary" label={'ฐานเงินเดือน'} className='ml-[52px]'>
-                                <Input />
+                                <Input disabled={drawerType === 3 ? true : false} />
                             </Form.Item>
                         </Col>
                     </Row>
@@ -335,7 +356,7 @@ const Compensation: React.FC = () => {
                     <Row>
                         <Col xs={24} sm={24} md={24} lg={24} xl={24}>
                             <Form.Item name="commission" label={'ค่าคอมมิชชั่น'} className='ml-[52px]'>
-                                <Input />
+                                <Input disabled={drawerType === 3 ? true : false} />
                             </Form.Item>
                         </Col>
                     </Row>
@@ -343,7 +364,7 @@ const Compensation: React.FC = () => {
                     <Row>
                         <Col xs={24} sm={24} md={24} lg={24} xl={24}>
                             <Form.Item name="position_income" label={'ค่าตำแหน่ง'} className='ml-[63px]'>
-                                <Input />
+                                <Input disabled={drawerType === 3 ? true : false} />
                             </Form.Item>
                         </Col>
                     </Row>
@@ -351,7 +372,7 @@ const Compensation: React.FC = () => {
                     <Row>
                         <Col xs={24} sm={24} md={24} lg={24} xl={24}>
                             <Form.Item name="special_income" label={'เงินพิเศษ'} className='ml-[72px]'>
-                                <Input />
+                                <Input disabled={drawerType === 3 ? true : false} />
                             </Form.Item>
                         </Col>
                     </Row>
@@ -359,7 +380,7 @@ const Compensation: React.FC = () => {
                     <Row>
                         <Col xs={24} sm={24} md={24} lg={24} xl={24}>
                             <Form.Item name="ot" label={'ค่าล่วงเวลา'} className='ml-[59px]'>
-                                <Input />
+                                <Input disabled={drawerType === 3 ? true : false} />
                             </Form.Item>
                         </Col>
                     </Row>
@@ -367,7 +388,7 @@ const Compensation: React.FC = () => {
                     <Row>
                         <Col xs={24} sm={24} md={24} lg={24} xl={24}>
                             <Form.Item name="other_income" label={'รายได้อื่น'} className='ml-[72px]'>
-                                <Input />
+                                <Input disabled={drawerType === 3 ? true : false} />
                             </Form.Item>
                         </Col>
                     </Row>
@@ -375,7 +396,7 @@ const Compensation: React.FC = () => {
                     <Row>
                         <Col xs={24} sm={24} md={24} lg={24} xl={24}>
                             <Form.Item name="travel_income" label={'ค่าเดินทาง'} className='ml-[64px]'>
-                                <Input />
+                                <Input disabled={drawerType === 3 ? true : false} />
                             </Form.Item>
                         </Col>
                     </Row>
@@ -383,7 +404,7 @@ const Compensation: React.FC = () => {
                     <Row>
                         <Col xs={24} sm={24} md={24} lg={24} xl={24}>
                             <Form.Item name="bursary" label={'เงินอุดหนุน'} className='ml-[60px]'>
-                                <Input />
+                                <Input disabled={drawerType === 3 ? true : false} />
                             </Form.Item>
                         </Col>
                     </Row>
@@ -391,7 +412,7 @@ const Compensation: React.FC = () => {
                     <Row>
                         <Col xs={24} sm={24} md={24} lg={24} xl={24}>
                             <Form.Item name="welfare_money" label={'เงินสวัสดิการ'} className='ml-[47px]'>
-                                <Input />
+                                <Input disabled={drawerType === 3 ? true : false} />
                             </Form.Item>
                         </Col>
                     </Row>
@@ -399,7 +420,7 @@ const Compensation: React.FC = () => {
                     <Row>
                         <Col xs={24} sm={24} md={24} lg={24} xl={24}>
                             <Form.Item name="bonus" label={'เงินโบนัส'} className='ml-[73px]'>
-                                <Input />
+                                <Input disabled={drawerType === 3 ? true : false} />
                             </Form.Item>
                         </Col>
                     </Row>
@@ -422,7 +443,7 @@ const Compensation: React.FC = () => {
 
 
                                 <Form.Item name="vat" className='ml-[1px]'>
-                                    <Input className='w-[222px]' />
+                                    <Input disabled={drawerType === 3 ? true : false} className='w-[222px]' />
                                 </Form.Item>
                             </Space>
                         </Col>
@@ -437,7 +458,7 @@ const Compensation: React.FC = () => {
                                 </Form.Item>
 
                                 <Form.Item name="social_security" className='ml-[0.5px]'>
-                                    <Input className='w-[222px]' />
+                                    <Input disabled={drawerType === 3 ? true : false} className='w-[222px]' />
                                 </Form.Item>
                             </Space>
                         </Col>
@@ -446,7 +467,7 @@ const Compensation: React.FC = () => {
                     <Row>
                         <Col xs={24} sm={24} md={24} lg={24} xl={24}>
                             <Form.Item name="miss" label={'ขาด'} className='ml-[102px]'>
-                                <Input />
+                                <Input disabled={drawerType === 3 ? true : false} />
                             </Form.Item>
                         </Col>
                     </Row>
@@ -454,7 +475,7 @@ const Compensation: React.FC = () => {
                     <Row>
                         <Col xs={24} sm={24} md={24} lg={24} xl={24}>
                             <Form.Item name="ra" label={'ลา'} className='ml-[111px]'>
-                                <Input />
+                                <Input disabled={drawerType === 3 ? true : false} />
                             </Form.Item>
                         </Col>
                     </Row>
@@ -462,7 +483,7 @@ const Compensation: React.FC = () => {
                     <Row>
                         <Col xs={24} sm={24} md={24} lg={24} xl={24}>
                             <Form.Item name="late" label={'มาสาย'} className='ml-[86px]'>
-                                <Input />
+                                <Input disabled={drawerType === 3 ? true : false} />
                             </Form.Item>
                         </Col>
                     </Row>
@@ -470,7 +491,7 @@ const Compensation: React.FC = () => {
                     <Row>
                         <Col xs={24} sm={24} md={24} lg={24} xl={24}>
                             <Form.Item name="other" label={'อื่น ๆ'} className='ml-[95px]'>
-                                <Input />
+                                <Input disabled={drawerType === 3 ? true : false} />
                             </Form.Item>
                         </Col>
                     </Row>
@@ -483,9 +504,9 @@ const Compensation: React.FC = () => {
                         </Col>
                     </Row>
 
-                    <Row >
-                        <Col xs={24} sm={24} md={24} lg={24} xl={24}>
 
+                    {drawerType === 1 && (<Row >
+                        <Col xs={24} sm={24} md={24} lg={24} xl={24}>
                             <Form.Item>
                                 <Space style={{ display: 'flex', justifyContent: 'right', marginTop: '10px', }}>
                                     <Button
@@ -501,6 +522,26 @@ const Compensation: React.FC = () => {
                             </Form.Item>
                         </Col>
                     </Row>
+                    )}
+
+                    {drawerType === 2 && (<Row >
+                        <Col xs={24} sm={24} md={24} lg={24} xl={24}>
+                            <Form.Item>
+                                <Space style={{ display: 'flex', justifyContent: 'right', marginTop: '10px', }}>
+                                    <Button
+                                        type="primary"
+                                        style={{ backgroundColor: token.token.colorPrimary, width: '100px', }}
+                                        htmlType="submit"
+                                        size='large'
+                                    >
+                                        คำนวณ
+                                    </Button>
+                                    <Button size='large' style={{ width: '100px', }} onClick={onClose}>กลับ</Button>
+                                </Space>
+                            </Form.Item>
+                        </Col>
+                    </Row>
+                    )}
                 </Form>
             </Drawer>
 

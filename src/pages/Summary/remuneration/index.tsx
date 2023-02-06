@@ -18,6 +18,10 @@ import {
 } from 'antd';
 import type { DatePickerProps } from 'antd';
 
+import { gql } from '../../../__generated__/gql';
+import { useQuery, useMutation, from } from '@apollo/client';
+import { FETCH_SELECT_BOOK_BANK } from '../../../service/graphql/Summary';
+
 import { GiReceiveMoney } from 'react-icons/gi';
 import type { ColumnsType } from 'antd/es/table';
 import { MoreOutlined } from '@ant-design/icons';
@@ -30,15 +34,38 @@ import { useState } from 'react';
 
 const { useToken } = theme;
 
+type BookBankType = {
+  id: string;
+  date: any;
+  base_salary: any;
+  mas_bankId: any;
+  bank_number: any;
+  provident_com: any;
+  provident_emp: any;
+
+};
+
+
 
 const Remuneration: React.FC = () => {
   const token = useToken();
   const [open, setOpen] = useState(false);
-  const [form] = Form.useForm<any>();
-  // const [form] = Form.useForm<SummaryType>();
+  // const [form] = Form.useForm<any>();
+  const [form] = Form.useForm<BookBankType>();
+  const [drawerType, setDrawerType] = useState(1);
 
-  const showDrawer = () => {
+  // const { data: BookBank } = useQuery(FETCH_SELECT_BOOK_BANK);
+
+  // const selectBookBank = BookBank?.GetBookBank?.map((e: any) => {
+  //   return {
+  //     label: e?.name,
+  //     value: e?.id,
+  //   };
+  // });
+
+  const showDrawer = (type: any) => {
     setOpen(true);
+    setDrawerType(type)
   };
 
   const onClose = () => {
@@ -63,23 +90,23 @@ const Remuneration: React.FC = () => {
   const genarateMenu = (record: any) => {
     return [
       {
+        key: 'view',
+        label: 'ดูข้อมูล',
+        icon: <img style={{ width: '17px', height: '17px' }} src={View} />,
+        onClick: (e: any) => onMenuClick(e, record),
+      },
+      {
         key: 'edit',
         label: 'แก้ไข',
         icon: <img style={{ width: '17px', height: '17px' }} src={edit} />,
         onClick: (e: any) => onMenuClick(e, record),
       },
       {
-        key: 'view',
-        label: 'ดูข้อมูล',
-        icon: <img style={{ width: '17px', height: '17px' }} src={View} />,
+        key: 'delete',
+        label: 'ลบข้อมูล',
+        icon: <img style={{ width: '20px', height: '20px' }} src={Del} />,
         onClick: (e: any) => onMenuClick(e, record),
       },
-      // {
-      //   key: 'delete',
-      //   label: 'ลบข้อมูล',
-      //   icon: <img style={{ width: '20px', height: '20px' }} src={Del} />,
-      //   onClick: (e: any) => onMenuClick(e, record),
-      // },
     ];
   };
 
@@ -90,8 +117,11 @@ const Remuneration: React.FC = () => {
   const onMenuClick = (event: any, record: any) => {
     const { key } = event;
     if (key === 'edit') {
+      showDrawer(2)
     } else if (key === 'view') {
-    } else if (key === 'view_slip') {
+      showDrawer(3)
+    } else if (key === 'delete') {
+
     }
   };
 
@@ -263,7 +293,9 @@ const Remuneration: React.FC = () => {
       <Card className="shadow-xl mt-4"><Table columns={columns} dataSource={data} /></Card>
 
       <Drawer
-        title={'Update ข้อมูลฐานเงินเดือน'}
+        title={`${drawerType === 1 ? "Update ข้อมูลฐานเงินเดือน"
+          : drawerType === 2 ? "แก้ไขข้อมูลฐานเงินเดือน"
+            : "ข้อมูลฐานเงินเดือน"}`}
         onClose={onClose}
         open={open}
         width={400}
@@ -272,7 +304,7 @@ const Remuneration: React.FC = () => {
           <Row>
             <Col span={24}>
               <Form.Item name="date" label={'วันที่มีผล'} >
-                <DatePicker onChange={onChangeDate} format={'DD/MM/YYYY'} />
+                <DatePicker onChange={onChangeDate} format={'DD/MM/YYYY'} disabled={drawerType === 3 ? true : false} />
               </Form.Item>
             </Col>
           </Row>
@@ -280,7 +312,7 @@ const Remuneration: React.FC = () => {
           <Row>
             <Col span={24}>
               <Form.Item name="base_salary" label={"ฐานเงินเดือน"} >
-                <Input />
+                <Input disabled={drawerType === 3 ? true : false} />
               </Form.Item>
             </Col>
           </Row>
@@ -288,7 +320,8 @@ const Remuneration: React.FC = () => {
           <Row>
             <Col span={24}>
               <Form.Item name="bank" label={"ธนาคาร"} >
-                <Select></Select>
+                <Select allowClear disabled={drawerType === 3 ? true : false} ></Select>
+                {/* <Select allowClear options={selectBookBank} disabled={drawerType === 3 ? true : false} ></Select> */}
               </Form.Item>
             </Col>
           </Row>
@@ -296,7 +329,7 @@ const Remuneration: React.FC = () => {
           <Row>
             <Col span={24}>
               <Form.Item name="bank_number" label={"เลขบัญชี"} >
-                <Input />
+                <Input disabled={drawerType === 3 ? true : false} />
               </Form.Item>
             </Col>
           </Row>
@@ -304,7 +337,7 @@ const Remuneration: React.FC = () => {
           <Row>
             <Col span={24}>
               <Form.Item name="provident_collect_employee" label={"กองทุนสำรองเลี้ยงชีพสะสม ( พนักงาน (%))"} >
-                <Input />
+                <Input disabled={drawerType === 3 ? true : false} />
               </Form.Item>
             </Col>
           </Row>
@@ -312,36 +345,57 @@ const Remuneration: React.FC = () => {
           <Row>
             <Col span={24}>
               <Form.Item name="provident_collect_company" label={"กองทุนสำรองเลี้ยงชีพสะสม ( บริษัท (%))"} >
-                <Input />
+                <Input disabled={drawerType === 3 ? true : false} />
               </Form.Item>
             </Col>
           </Row>
 
-          <Row >
-            <Col span={24}>
+          {drawerType === 1 && (
+            <Row >
+              <Col span={24}>
+                <Form.Item>
+                  <Space style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
+                    <Button
+                      type="primary"
+                      style={{ backgroundColor: token.token.colorPrimary, marginRight: "20px", width: "100px", }}
+                      htmlType="submit"
+                      size='large'
+                    >
+                      ยืนยัน
+                    </Button>
+                    <Button onClick={onClose}
+                      style={{ width: "100px", }}
+                      size='large'
+                    >ยกเลิก</Button>
+                  </Space>
+                </Form.Item>
+              </Col>
+            </Row>
+          )}
 
-              <Form.Item>
-                <Space style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
-                  <Button
-                    type="primary"
-                    style={{ backgroundColor: token.token.colorPrimary, marginRight: "20px", width: "100px", }}
-                    htmlType="submit"
-                    size='large'
-                  >
-                    ยืนยัน
-                  </Button>
-                  <Button onClick={onClose}
-                    style={{ width: "100px", }}
-                    size='large'
-                  >ยกเลิก</Button>
-                </Space>
-              </Form.Item>
-            </Col>
-          </Row>
-
+          {drawerType === 2 && (
+            <Row >
+              <Col span={24}>
+                <Form.Item>
+                  <Space style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
+                    <Button
+                      type="primary"
+                      style={{ backgroundColor: token.token.colorPrimary, marginRight: "20px", width: "100px", }}
+                      htmlType="submit"
+                      size='large'
+                    >
+                      ยืนยัน
+                    </Button>
+                    <Button onClick={onClose}
+                      style={{ width: "100px", }}
+                      size='large'
+                    >ยกเลิก</Button>
+                  </Space>
+                </Form.Item>
+              </Col>
+            </Row>
+          )}
         </Form>
-
-
       </Drawer>
     </>
   );

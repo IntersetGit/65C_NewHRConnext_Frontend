@@ -193,7 +193,7 @@ const Compensation: React.FC = () => {
       <div className="flex text-3xl ml-2 pt-4">
         <GiReceiveMoney />
         <div className="ml-2 text-xl">
-          ค่าตอบแทน ( เงินเดือน ค่าล่วงเวลา ค่าบริหาร เบี้ยขยัน และ อื่น ๆ )
+          ข้อมูลเงินเดือน ( ค่าล่วงเวลา ค่าบริหาร เบี้ยขยัน และ อื่น ๆ )
         </div>
       </div>
 

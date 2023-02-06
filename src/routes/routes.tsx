@@ -224,7 +224,7 @@ export const routing: RoutingType[] = [
             hideInmenu: true,
           },
           {
-            path: '/:companycode/summary/payslip',
+            path: '/:companycode/summary/profileCompensation/payslip',
             element: <Payslip />,
             hideInmenu: true,
           },
