@@ -26,8 +26,8 @@ import Swal from 'sweetalert2';
 interface DataType {
   key: React.Key;
   menu: string;
-  subject: string;
-  permissions: string;
+  subject?: string;
+  child?: DataType[];
 }
 
 interface ExpandedDataType {
@@ -45,62 +45,75 @@ interface ExpandedDataType {
 
 const { useToken } = theme;
 
-const Simpledata = [
-  {
-    id: '1',
-    name: 'CompanyAdmin',
-    access: [
-      { action: ['add', 'edit', 'delete'], subject: 'company' },
-      { action: ['add', 'edit', 'delete', 'read'], subject: 'myprofile' },
-      { action: ['add', 'edit', 'delete', 'read'], subject: 'employee' },
-      { action: ['add', 'edit', 'delete', 'read'], subject: 'salary' },
-      { action: ['add', 'edit', 'delete', 'read'], subject: 'vacation' },
-      { action: ['add', 'edit', 'delete', 'read'], subject: 'training' },
-      { action: ['add', 'edit', 'delete', 'read'], subject: 'assessment' },
-      { action: ['add', 'edit', 'delete', 'read'], subject: 'project' },
-      { action: ['add', 'edit', 'delete', 'read'], subject: 'dashboard' },
-      { action: ['add', 'edit', 'delete', 'read'], subject: 'file' },
-      { action: ['add', 'edit', 'delete', 'read'], subject: 'activity' },
-      { action: ['add', 'edit', 'delete', 'read'], subject: 'campaign' },
-    ],
-  },
-  {
-    id: '2',
-    name: 'Finance',
-    access: [
-      { action: ['add', 'edit', 'delete', 'read'], subject: 'company' },
-      { action: ['read'], subject: 'myprofile' },
-      { action: ['add'], subject: 'employee' },
-      { action: ['read'], subject: 'salary' },
-      { action: ['read'], subject: 'vacation' },
-      { action: ['add', 'edit', 'delete', 'read'], subject: 'training' },
-      { action: ['add', 'edit', 'delete', 'read'], subject: 'assessment' },
-      { action: ['add', 'edit', 'delete', 'read'], subject: 'project' },
-      { action: ['add', 'edit', 'delete', 'read'], subject: 'dashboard' },
-      { action: ['add', 'edit', 'delete', 'read'], subject: 'file' },
-      { action: ['add', 'edit', 'delete', 'read'], subject: 'activity' },
-      { action: ['add', 'edit', 'delete', 'read'], subject: 'campaign' },
-    ],
-  },
-  {
-    id: '3',
-    name: 'Employee',
-    acess: [],
-  },
-];
+// const Simpledata = [
+//   {
+//     id: '1',
+//     name: 'CompanyAdmin',
+//     access: [
+//       { action: ['add', 'edit', 'delete'], subject: 'company' },
+//       { action: ['add', 'edit', 'delete', 'read'], subject: 'myprofile' },
+//       { action: ['add', 'edit', 'delete', 'read'], subject: 'employee' },
+//       { action: ['add', 'edit', 'delete', 'read'], subject: 'salary' },
+//       { action: ['add', 'edit', 'delete', 'read'], subject: 'vacation' },
+//       { action: ['add', 'edit', 'delete', 'read'], subject: 'training' },
+//       { action: ['add', 'edit', 'delete', 'read'], subject: 'assessment' },
+//       { action: ['add', 'edit', 'delete', 'read'], subject: 'project' },
+//       { action: ['add', 'edit', 'delete', 'read'], subject: 'dashboard' },
+//       { action: ['add', 'edit', 'delete', 'read'], subject: 'file' },
+//       { action: ['add', 'edit', 'delete', 'read'], subject: 'activity' },
+//       { action: ['add', 'edit', 'delete', 'read'], subject: 'campaign' },
+//     ],
+//   },
+//   {
+//     id: '2',
+//     name: 'Finance',
+//     access: [
+//       { action: ['add', 'edit', 'delete', 'read'], subject: 'company' },
+//       { action: ['read'], subject: 'myprofile' },
+//       { action: ['add'], subject: 'employee' },
+//       { action: ['read'], subject: 'salary' },
+//       { action: ['read'], subject: 'vacation' },
+//       { action: ['add', 'edit', 'delete', 'read'], subject: 'training' },
+//       { action: ['add', 'edit', 'delete', 'read'], subject: 'assessment' },
+//       { action: ['add', 'edit', 'delete', 'read'], subject: 'project' },
+//       { action: ['add', 'edit', 'delete', 'read'], subject: 'dashboard' },
+//       { action: ['add', 'edit', 'delete', 'read'], subject: 'file' },
+//       { action: ['add', 'edit', 'delete', 'read'], subject: 'activity' },
+//       { action: ['add', 'edit', 'delete', 'read'], subject: 'campaign' },
+//     ],
+//   },
+//   {
+//     id: '3',
+//     name: 'Employee',
+//     acess: [],
+//   },
+// ];
 const module = [
-  'company',
-  'myprofile',
-  'employee',
-  'salary',
-  'vacation',
-  'training',
-  'assessment',
-  'project',
-  'dashboard',
-  'file',
-  'activity',
-  'campaign',
+  'selectCompany',
+  'selectCompanyBranch',
+  'permissionManage',
+  'manageCompany',
+  'manageCompanydetail',
+  'manageCompanystructure',
+  'manageEmployee',
+  'manageEmployeedetail',
+  'manageEmployeePosition',
+  'manageHoliday',
+  'manageHolidayYear',
+  'manageHolidayDay',
+  'manageLeave',
+  'manageLeaveDetail',
+  'manageSalarySumary',
+  'manageSalaryDetail',
+  'manageSalaryCal',
+  'manageSalaryBase',
+  'manageSelfDetail',
+  'manageSelfPosition',
+  'manageSelfLeave',
+  'manageSelfCreateLeave',
+  'manageSelfSalary',
+  'manageSelfSalaryBase',
+  'manageSalary',
 ];
 
 const method = ['read', 'add', 'edit', 'delete'];
@@ -163,25 +176,35 @@ const Rights: React.FC = () => {
     });
     setData(arr);
   }, [loading]);
-  const moduleRowRender = (record: any, index: string | number) => {
+
+  const moduleRowRender = (record: DataType, index: string | number) => {
     console.log(record);
     const columns: TableColumnsType<any> = [
       Table.EXPAND_COLUMN,
       {
         title: 'ชื่อโมดูล',
         //align: 'center',
-        key: 'module_name',
+        key: 'menu',
+        dataIndex: 'menu',
       },
     ];
     return (
       <div className="m-0 w-full h-full">
         {' '}
-        <Table size="middle" columns={columns} />
+        <Table
+          columns={columns}
+          dataSource={record.child}
+          pagination={false}
+          expandable={{
+            expandedRowRender,
+            defaultExpandedRowKeys: ['0'],
+          }}
+        />
       </div>
     );
   };
   const expandedRowRender = (record: DataType, index: number | string) => {
-    //console.log(record, index);
+    console.log(record, index);
     const columns: TableColumnsType<ExpandedDataType> = [
       {
         title: 'Roles',
@@ -329,7 +352,7 @@ const Rights: React.FC = () => {
       ),
     },
 
-    // Table.SELECTION_COLUMN,
+    //Table.SELECTION_COLUMN,
     // {
     //   title: 'สิทธิ์การเข้าถึงระบบ',
     //   dataIndex: 'permissions',
@@ -338,83 +361,251 @@ const Rights: React.FC = () => {
     // },
   ];
 
-  const data: DataType[] = [];
-  for (let i = 0; i < 1; ++i) {
-    data.push(
-      {
-        key: '1',
-        menu: 'บริษัท',
-        subject: 'company',
-        permissions: '',
-      },
-      {
-        key: '2',
-        menu: 'ข้อมูลของฉัน',
-        subject: 'myprofile',
-        permissions: '',
-      },
-      {
-        key: '3',
-        menu: 'พนักงาน',
-        subject: 'employee',
-        permissions: '',
-      },
-      {
-        key: '4',
-        menu: 'เงินเดือน',
-        subject: 'salary',
-        permissions: '',
-      },
-      {
-        key: '5',
-        menu: 'การลา',
-        subject: 'vacation',
-        permissions: '',
-      },
-      {
-        key: '6',
-        menu: 'การฝึกอบรม',
-        subject: 'training',
-        permissions: '',
-      },
-      {
-        key: '7',
-        menu: 'การประเมิน',
-        subject: 'assessment',
-        permissions: '',
-      },
-      {
-        key: '8',
-        menu: 'โครงการ',
-        subject: 'project',
-        permissions: '',
-      },
-      {
-        key: '9',
-        menu: 'Dash Board',
-        subject: 'dashboard',
-        permissions: '',
-      },
-      {
-        key: '10',
-        menu: 'ไฟล์',
-        subject: 'file',
-        permissions: '',
-      },
-      {
-        key: '11',
-        menu: 'กิจกรรม',
-        subject: 'activity',
-        permissions: '',
-      },
-      {
-        key: '12',
-        menu: 'แคมเปญการเงิน',
-        subject: 'campaign',
-        permissions: '',
-      },
-    );
-  }
+  const data: DataType[] = [
+    {
+      key: '1',
+      menu: 'เมนูจัดการสิทธิ์ขั้นสูง',
+      child: [
+        {
+          key: '1',
+          menu: 'เลือกบริษัท',
+          subject: 'selectCompany',
+        },
+        {
+          key: '2',
+          menu: 'ย้ายสาขา',
+          subject: 'selectCompanyBranch',
+        },
+        {
+          key: '3',
+          menu: 'จัดการสิทธิ์',
+          subject: 'permissionManage',
+        },
+      ],
+    },
+    {
+      key: '2',
+      menu: 'เมนูจัดการบริษัท',
+      child: [
+        {
+          key: '1',
+          menu: 'จัดการบริษัท',
+          subject: 'manageCompany',
+        },
+        {
+          key: '2',
+          menu: 'ข้อมูลบริษัท',
+          subject: 'manageCompanydetail',
+        },
+        {
+          key: '3',
+          menu: 'โครงสร้างบริษัท',
+          subject: 'manageCompanystructure',
+        },
+      ],
+    },
+    {
+      key: '3',
+      menu: 'เมนูจัดการพนักงาน',
+      child: [
+        {
+          key: '1',
+          menu: 'จัดการพนักงาน',
+          subject: 'manageEmployee',
+        },
+        {
+          key: '2',
+          menu: 'ข้อมูลพนักงาน',
+          subject: 'manageEmployeedetail',
+        },
+        {
+          key: '3',
+          menu: 'ตำแหน่งงาน',
+          subject: 'manageEmployeePosition',
+        },
+      ],
+    },
+    {
+      key: '4',
+      menu: 'เมนูวันหยุด',
+      child: [
+        {
+          key: '1',
+          menu: 'จัดการวันหยุด',
+          subject: 'manageHoliday',
+        },
+        {
+          key: '2',
+          menu: 'เพิ่มวันหยุดรายปี',
+          subject: 'manageHolidayYear',
+        },
+        {
+          key: '3',
+          menu: 'เพิ่มวันหยุดรายวัน',
+          subject: 'manageHolidayDay',
+        },
+      ],
+    },
+    {
+      key: '5',
+      menu: 'การลา',
+      child: [
+        {
+          key: '1',
+          menu: 'จัดการการลา',
+          subject: 'manageLeave',
+        },
+        {
+          key: '2',
+          menu: 'ข้อมูลการลา',
+          subject: 'manageLeaveDetail',
+        },
+      ],
+    },
+    {
+      key: '6',
+      menu: 'เงินเดือน',
+      child: [
+        {
+          key: '1',
+          menu: 'จัดการเงินเดือน',
+          subject: 'manageSalary',
+        },
+        {
+          key: '2',
+          menu: 'ตั้งค่าการคำนวณเงินเดือน',
+          subject: 'manageSalarySumary',
+        },
+        {
+          key: '3',
+          menu: 'ข้อมูลเงินเดือน',
+          subject: 'manageSalaryDetail',
+        },
+        {
+          key: '4',
+          menu: 'คำนวณเงินเดือน',
+          subject: 'manageSalaryCal',
+        },
+        {
+          key: '5',
+          menu: 'ข้อมูลฐานเงินเดือน',
+          subject: 'manageSalaryBase',
+        },
+      ],
+    },
+    {
+      key: '7',
+      menu: 'ข้อมูลของฉัน',
+      child: [
+        {
+          key: '1',
+          menu: 'ข้อมูลของฉัน',
+          subject: 'manageSelfDetail',
+        },
+        {
+          key: '2',
+          menu: 'ตำแหน่งงาน',
+          subject: 'manageSelfPosition',
+        },
+        {
+          key: '3',
+          menu: 'การลา',
+          subject: 'manageSelfLeave',
+        },
+        {
+          key: '4',
+          menu: 'สร้างใบลา',
+          subject: 'manageSelfCreateLeave',
+        },
+        {
+          key: '5',
+          menu: 'เงินเดือน',
+          subject: 'manageSelfSalary',
+        },
+        {
+          key: '6',
+          menu: 'ข้อมูลฐานเงินเดือน',
+          subject: 'manageSelfSalaryBase',
+        },
+      ],
+    },
+  ];
+  // for (let i = 0; i < 1; ++i) {
+  //   data.push(
+  //     {
+  //       key: '1',
+  //       menu: 'บริษัท',
+  //       subject: 'company',
+  //       permissions: '',
+  //     },
+  //     {
+  //       key: '2',
+  //       menu: 'ข้อมูลของฉัน',
+  //       subject: 'myprofile',
+  //       permissions: '',
+  //     },
+  //     {
+  //       key: '3',
+  //       menu: 'พนักงาน',
+  //       subject: 'employee',
+  //       permissions: '',
+  //     },
+  //     {
+  //       key: '4',
+  //       menu: 'เงินเดือน',
+  //       subject: 'salary',
+  //       permissions: '',
+  //     },
+  //     {
+  //       key: '5',
+  //       menu: 'การลา',
+  //       subject: 'vacation',
+  //       permissions: '',
+  //     },
+  //     {
+  //       key: '6',
+  //       menu: 'การฝึกอบรม',
+  //       subject: 'training',
+  //       permissions: '',
+  //     },
+  //     {
+  //       key: '7',
+  //       menu: 'การประเมิน',
+  //       subject: 'assessment',
+  //       permissions: '',
+  //     },
+  //     {
+  //       key: '8',
+  //       menu: 'โครงการ',
+  //       subject: 'project',
+  //       permissions: '',
+  //     },
+  //     {
+  //       key: '9',
+  //       menu: 'Dash Board',
+  //       subject: 'dashboard',
+  //       permissions: '',
+  //     },
+  //     {
+  //       key: '10',
+  //       menu: 'ไฟล์',
+  //       subject: 'file',
+  //       permissions: '',
+  //     },
+  //     {
+  //       key: '11',
+  //       menu: 'กิจกรรม',
+  //       subject: 'activity',
+  //       permissions: '',
+  //     },
+  //     {
+  //       key: '12',
+  //       menu: 'แคมเปญการเงิน',
+  //       subject: 'campaign',
+  //       permissions: '',
+  //     },
+  //   );
+  // }
 
   return (
     <>

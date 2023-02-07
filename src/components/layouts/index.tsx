@@ -84,6 +84,8 @@ const BaseLayout: React.FC<BaseLayoutProps> = (props) => {
         .catch(() => {
           navaigate('/overview');
         });
+    } else {
+      navaigate('/overview');
     }
   }, [companycode, searchparams.get('branch')]);
 
