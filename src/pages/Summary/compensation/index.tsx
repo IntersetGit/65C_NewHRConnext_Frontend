@@ -17,14 +17,25 @@ import {
 import { GiReceiveMoney } from 'react-icons/gi';
 import type { ColumnsType } from 'antd/es/table';
 import { MoreOutlined } from '@ant-design/icons';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import edit from '../../../assets/Edit.png';
 import Del from '../../../assets/DEL.png';
 import View from '../../../assets/View.png';
 import type { CheckboxValueType } from 'antd/es/checkbox/Group';
 import { useState } from 'react';
 
+
+
+import { gql } from '../../../__generated__';
+import { useQuery, useMutation, from } from '@apollo/client';
+import { FETCH_SELECT_BOOK_BANK } from '../../../service/graphql/Summary';
+
 const { useToken } = theme;
+
+type SettingSummaryType = {
+  id: string;
+  name: string;
+};
 
 interface DataType {
   key: number;
@@ -40,19 +51,32 @@ interface DataType {
 const Compensation: React.FC = () => {
   const token = useToken();
   const [open, setOpen] = useState(false);
+  const [form] = Form.useForm<SettingSummaryType>();
   const navigate = useNavigate();
+  const location = useLocation();
+  let propsstate = location.state as any;
+
+  const { data: BookBank } = useQuery(FETCH_SELECT_BOOK_BANK);
 
   const showDrawer = () => {
     setOpen(true);
   };
 
   const onClose = () => {
+    form.resetFields();
     setOpen(false);
   };
 
   const onChange = (checkedValues: CheckboxValueType[]) => {
     console.log('checked = ', checkedValues);
   };
+
+  const selectBookBank = BookBank?.mas_bank?.map((e: any) => {
+    return {
+      label: e?.name,
+      value: e?.id,
+    };
+  });
 
   const genarateMenu = (record: any) => {
     return [
@@ -282,18 +306,18 @@ const Compensation: React.FC = () => {
         open={open}
         size="large"
       >
-        <Form layout="horizontal" labelCol={{ span: 8 }}>
+        <Form layout="horizontal" form={form} labelCol={{ span: 8 }}>
           <Row>
             <Col span={16}>
-              <Form.Item label={'ธนาคาร (บริษัท)'}>
-                <Select allowClear></Select>
+              <Form.Item name="name" label={'ธนาคาร (บริษัท)'}>
+                <Select allowClear options={selectBookBank} ></Select>
               </Form.Item>
             </Col>
           </Row>
 
           <Row>
             <Col span={16}>
-              <Form.Item label={'หักภาษี (%)'}>
+              <Form.Item name="vat" label={'หักภาษี (%)'}>
                 <Input />
               </Form.Item>
             </Col>
@@ -301,7 +325,7 @@ const Compensation: React.FC = () => {
 
           <Row>
             <Col span={16}>
-              <Form.Item label={'หักประกันงสังคม (%)'}>
+              <Form.Item name="social_security" label={'หักประกันงสังคม (%)'}>
                 <Input />
               </Form.Item>
             </Col>

@@ -16,6 +16,7 @@ import {
   Drawer,
   DatePicker,
 } from 'antd';
+import { AntDesignOutlined, MoreOutlined } from '@ant-design/icons';
 import type { DatePickerProps } from 'antd';
 
 import { gql } from '../../../__generated__/gql';
@@ -24,7 +25,6 @@ import { FETCH_SELECT_BOOK_BANK } from '../../../service/graphql/Summary';
 
 import { GiReceiveMoney } from 'react-icons/gi';
 import type { ColumnsType } from 'antd/es/table';
-import { MoreOutlined } from '@ant-design/icons';
 
 import edit from '../../../assets/Edit.png';
 import Del from '../../../assets/Del.png';
@@ -34,8 +34,9 @@ import { useState } from 'react';
 
 const { useToken } = theme;
 
-type BookBankType = {
+type UpdateSummaryType = {
   id: string;
+  name: string;
   date: any;
   base_salary: any;
   mas_bankId: any;
@@ -45,23 +46,31 @@ type BookBankType = {
 
 };
 
+interface DataType {
+  date: any;
+  base_salary: any;
+  bank: any;
+  bank_number: string;
+  provident_collect_employee: number;
+  provident_collect_company: number;
+
+}
 
 
 const Remuneration: React.FC = () => {
   const token = useToken();
   const [open, setOpen] = useState(false);
-  // const [form] = Form.useForm<any>();
-  const [form] = Form.useForm<BookBankType>();
+  const [form] = Form.useForm<UpdateSummaryType>();
   const [drawerType, setDrawerType] = useState(1);
 
-  // const { data: BookBank } = useQuery(FETCH_SELECT_BOOK_BANK);
+  const { data: BookBank } = useQuery(FETCH_SELECT_BOOK_BANK);
 
-  // const selectBookBank = BookBank?.GetBookBank?.map((e: any) => {
-  //   return {
-  //     label: e?.name,
-  //     value: e?.id,
-  //   };
-  // });
+  const selectBookBank = BookBank?.mas_bank?.map((e: any) => {
+    return {
+      label: e?.name,
+      value: e?.id,
+    };
+  });
 
   const showDrawer = (type: any) => {
     setOpen(true);
@@ -76,16 +85,6 @@ const Remuneration: React.FC = () => {
   const onChangeDate: DatePickerProps['onChange'] = (date, dateString) => {
     console.log(date, dateString);
   };
-
-  interface DataType {
-    date: any;
-    base_salary: any;
-    bank: any;
-    bank_number: string;
-    provident_collect_employee: number;
-    provident_collect_company: number;
-
-  }
 
   const genarateMenu = (record: any) => {
     return [
@@ -111,7 +110,7 @@ const Remuneration: React.FC = () => {
   };
 
   const onSubmitForm = (value: any) => {
-    console.log('คำนวณ', value)
+    console.log('Update', value)
   }
 
   const onMenuClick = (event: any, record: any) => {
@@ -220,9 +219,11 @@ const Remuneration: React.FC = () => {
         <Row className="py-6" gutter={16}>
           <Col xs={24} sm={24} md={4} lg={4} xl={4}>
             <div>
+
               <Avatar
                 size={{ xs: 24, sm: 32, md: 40, lg: 64, xl: 80, xxl: 100 }}
-                style={{ width: 150, height: 150 }}
+                icon={<AntDesignOutlined />}
+              // src={propsstate.avatar}
               ></Avatar>
             </div>
           </Col>
@@ -232,7 +233,7 @@ const Remuneration: React.FC = () => {
             sm={24}
             md={4}
             lg={4}
-            xl={4}
+            xl={6}
           >
             <div className="text-lg font-bold">
               <u style={{ color: token.token.colorPrimary }}>
@@ -278,7 +279,7 @@ const Remuneration: React.FC = () => {
                     type="primary"
                     style={{ backgroundColor: token.token.colorPrimary }}
                     htmlType="submit"
-                    onClick={showDrawer}
+                    onClick={() => showDrawer(1)}
                   >
                     + Update ข้อมูลฐานเงินเดือน
                   </Button>
@@ -320,8 +321,8 @@ const Remuneration: React.FC = () => {
           <Row>
             <Col span={24}>
               <Form.Item name="bank" label={"ธนาคาร"} >
-                <Select allowClear disabled={drawerType === 3 ? true : false} ></Select>
-                {/* <Select allowClear options={selectBookBank} disabled={drawerType === 3 ? true : false} ></Select> */}
+                {/* <Select allowClear disabled={drawerType === 3 ? true : false} ></Select> */}
+                <Select allowClear options={selectBookBank} disabled={drawerType === 3 ? true : false} ></Select>
               </Form.Item>
             </Col>
           </Row>

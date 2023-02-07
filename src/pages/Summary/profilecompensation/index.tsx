@@ -17,53 +17,52 @@ import {
     DatePicker,
 } from 'antd';
 import type { DatePickerProps } from 'antd';
+import { AntDesignOutlined, MoreOutlined } from '@ant-design/icons';
 
 import { GiReceiveMoney } from 'react-icons/gi';
 import type { ColumnsType } from 'antd/es/table';
-import { MoreOutlined } from '@ant-design/icons';
 
 import edit from '../../../assets/Edit.png';
 import Slip from '../../../assets/Slip.png';
 import View from '../../../assets/View.png';
 import Cal1 from '../../../assets/Cal1.png';
+
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useState } from 'react';
+import { useMutation, useQuery } from '@apollo/client';
+
+import { FETCH_DATA_SUMMARY } from '../../../service/graphql/Summary';
+import { FETCH_GETALLUSER } from '../../../service/graphql/Users';
+import {
+    FETCH_GETALL_POSITION,
+    CRETE_POSITION_USER,
+    POSITION,
+} from '../../../service/graphql/Position';
 
 const { useToken } = theme;
 
-type SummaryType = {
+interface DataType {
     date: any;
-    base_salary: any;
-    commission: any;
-    position_income: any;
-    ot: any;
-    bonus: any;
-    special_income: any;
-    other_income: any;
-    travel_income: any;
-    bursary: any;
-    welfare_money: any;
-    vat: any;
-    vat_per: any;
-    social_security: any;
-    ss_per: any;
-    miss: any;
-    ra: any;
-    late: any;
-    other: any;
-    total_income: any;
-    total_expense: any;
-
-
-};
+    total_income: number;
+    total_expense: number;
+    net: number;
+    status: string;
+}
 
 const Compensation: React.FC = () => {
     const token = useToken();
     const [open, setOpen] = useState(false);
-    const [form] = Form.useForm<SummaryType>();
+    const [form] = Form.useForm();
     const navigate = useNavigate();
     const [drawerType, setDrawerType] = useState(1);
     const [selectedRow, setSelectedRow] = useState(null);
+
+    const location = useLocation();
+    let propsstate = location.state as any;
+    console.log(propsstate);
+
+    const { data: header } = useQuery(FETCH_GETALLUSER);
+    const { data: position_data, refetch } = useQuery(FETCH_GETALL_POSITION);
 
     const showDrawer = (type: any) => {
         setOpen(true);
@@ -119,24 +118,16 @@ const Compensation: React.FC = () => {
         }
     };
 
-    const onSubmitForm = (value: SummaryType) => {
+    const onSubmitForm = (value: any) => {
         console.log('คำนวณ', value)
 
-    }
-
-    interface DataType {
-        date: any;
-        total_income: number;
-        total_expense: number;
-        net: number;
-        status: string;
     }
 
     const onChangeDate: DatePickerProps['onChange'] = (date, dateString) => {
         console.log(date, dateString);
     };
 
-    const columns: ColumnsType<DataType> = [
+    const columns: ColumnsType<any> = [
         {
             title: 'เดือน/ปี',
             key: 'date',
@@ -226,30 +217,26 @@ const Compensation: React.FC = () => {
                         <div>
                             <Avatar
                                 size={{ xs: 24, sm: 32, md: 40, lg: 64, xl: 80, xxl: 100 }}
-                                style={{ width: 150, height: 150 }}
+                                icon={<AntDesignOutlined />}
+                            // src={propsstate.avatar}
                             ></Avatar>
                         </div>
                     </Col>
-                    <Col
-                        className="flex justify-center items-center"
-                        xs={24}
-                        sm={24}
-                        md={4}
-                        lg={4}
-                        xl={4}
-                    >
+
+                    <Col xs={24} sm={24} md={4} lg={4} xl={4}>
                         <div className="text-lg font-bold">
-                            <u style={{ color: token.token.colorPrimary }}>
-                                Firstname  Lastname
+                            <u className="text-blue-800">
+                                name:
+                                {/* {propsstate?.prefix_th} {propsstate?.firstname_th}{' '}
+                                {propsstate?.lastname_th} */}
                             </u>
-                            <div className="my-4">position</div>
+                            <div className="mt-4">
+                                position:
+                                {/* {position_data?.getposition_user?.[
+                                    position_data?.getposition_user?.length - 1
+                                ]?.mas_positionlevel2?.name ?? 'no'} */}
+                            </div>
                         </div>
-                        {/* <div className="text-lg font-bold">
-                            <u style={{ color: token.token.colorPrimary }}>
-                                {propsstate?.firstname_th} {propsstate?.lastname_th}
-                            </u>
-                            <div className="my-4">{propsstate?.position}</div>
-                        </div> */}
                     </Col>
                 </Row>
 
@@ -317,16 +304,16 @@ const Compensation: React.FC = () => {
             >
                 <div className="text-lg font-bold">
                     <u style={{ color: token.token.colorPrimary }}>
-                        Firstname  Lastname
+                        {propsstate?.prefix_th} {propsstate?.firstname_th}{' '}
+                        {propsstate?.lastname_th}
                     </u>
-                    <div className="my-4">position</div>
+                    <div className="mt-4">
+                        {position_data?.getposition_user?.[
+                            position_data?.getposition_user?.length - 1
+                        ]?.mas_positionlevel2?.name ?? 'no'}
+                    </div>
                 </div>
-                {/* <div className="text-lg font-bold">
-                            <u style={{ color: token.token.colorPrimary }}>
-                                {propsstate?.firstname_th} {propsstate?.lastname_th}
-                            </u>
-                            <div className="my-4">{propsstate?.position}</div>
-                        </div> */}
+
                 <Form layout="horizontal" form={form} onFinish={onSubmitForm} >
                     <Row>
                         <Col xs={24} sm={24} md={24} lg={24} xl={24}>
