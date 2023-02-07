@@ -24,7 +24,7 @@ import {
 } from 'antd';
 import type { UploadProps } from 'antd';
 import { gql } from '../../../../__generated__/gql';
-import { useQuery, useMutation } from '@apollo/client';
+import { useQuery, useMutation, NetworkStatus } from '@apollo/client';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import moment from 'moment';
@@ -133,7 +133,13 @@ const ProfileEmployee: React.FC = () => {
   const [form] = Form.useForm<any>();
   const [picture, setPicture] = useState<string>();
   const [country, setCounrty] = useState([]);
-  const { data: user } = useQuery<any>(GET_ME);
+  const {
+    data: user,
+    loading: isUserload,
+    networkStatus,
+  } = useQuery<any>(GET_ME, {
+    notifyOnNetworkStatusChange: true,
+  });
   const [district, setDistrict] = useState<
     { value?: string | null; label?: string | null }[] | undefined
   >(undefined);
@@ -149,6 +155,7 @@ const ProfileEmployee: React.FC = () => {
   >(undefined);
   const [fileAvatar, setFileavatar] = useState<UploadFile[]>([]);
   const [uploading, setUploading] = useState(false);
+  const [imagePath, setImagepath] = useState('');
 
   const {
     data: province_data,
@@ -178,6 +185,7 @@ const ProfileEmployee: React.FC = () => {
       user?.me?.profile?.contract_district as string,
     );
     await onAmphoeChangeContract(user?.me?.profile?.contract_state as string);
+    setImagepath(user?.me?.profile?.avatar);
     form.setFieldsValue({
       ...user?.me?.profile,
       email: user?.me?.profile?.contract_email,
@@ -343,6 +351,7 @@ const ProfileEmployee: React.FC = () => {
       .then((res) => {
         setFileavatar([]);
         form.setFieldValue('avatar', res.destination + '/' + res.filename);
+        setImagepath(res.destination + '/' + res.filename);
         message.success('upload successfully.');
       })
       .catch(() => {
@@ -422,6 +431,7 @@ const ProfileEmployee: React.FC = () => {
                 '',
                 'success',
               );
+
               refetch();
             }
           })
@@ -438,6 +448,12 @@ const ProfileEmployee: React.FC = () => {
       }
     });
   };
+
+  if (networkStatus === NetworkStatus.refetch) return null;
+
+  if (isUserload) {
+    return null;
+  }
 
   return (
     <>
@@ -461,7 +477,7 @@ const ProfileEmployee: React.FC = () => {
               <Avatar
                 size={{ xs: 24, sm: 32, md: 40, lg: 64, xl: 80, xxl: 100 }}
                 icon={<AntDesignOutlined />}
-                src={getFilePath() + user?.me?.profile?.avatar}
+                src={getFilePath() + imagePath}
               />
             </div>
           </Row>

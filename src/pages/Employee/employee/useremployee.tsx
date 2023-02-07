@@ -112,6 +112,7 @@ const UserEmployee: React.FC = (props) => {
   const [form] = Form.useForm<RegisterEmployeeType>();
   const [picture, setPicture] = useState<string>();
   const [country, setCounrty] = useState([]);
+  const [imagePath, setImagepath] = useState('');
   const [district, setDistrict] = useState<
     { value?: string | null; label?: string | null }[] | undefined
   >(undefined);
@@ -153,6 +154,7 @@ const UserEmployee: React.FC = (props) => {
     onProvinceChangeContract(propsstate?.contract_province);
     onDistrictChangeContract(propsstate?.contract_district);
     onAmphoeChangeContract(propsstate?.contract_state);
+    setImagepath(propsstate?.avatar);
     form.setFieldsValue({
       ...propsstate,
       ...propsstate?.user,
@@ -179,21 +181,6 @@ const UserEmployee: React.FC = (props) => {
       state: propsstate,
     });
   };
-
-  // const arrcompay: any[] = [];
-  // role_company?.users?.forEach((e) => {
-  //   if (
-  //     arrcompay.includes(
-  //       (_e: User) => _e.Role_Company?.id === e?.Role_Company?.id,
-  //     )
-  //   )
-  //     return;
-  //   arrcompay.push({
-  //     label: e?.Role_Company?.name,
-  //     value: e?.Role_Company?.id,
-  //   });
-  // });
-  // console.log(arrcompay);
 
   const selectrole = role_data?.getcompanyRole?.map((e) => {
     return {
@@ -340,6 +327,7 @@ const UserEmployee: React.FC = (props) => {
       .then((res) => {
         setFileavatar([]);
         form.setFieldValue('avatar', res.destination + '/' + res.filename);
+        setImagepath(res.destination + '/' + res.filename);
         message.success('upload successfully.');
       })
       .catch(() => {
@@ -470,7 +458,7 @@ const UserEmployee: React.FC = (props) => {
               <Avatar
                 size={{ xs: 24, sm: 32, md: 40, lg: 64, xl: 80, xxl: 100 }}
                 icon={<AntDesignOutlined />}
-                src={getFilePath() + propsstate?.avatar}
+                src={getFilePath() + imagePath}
               />
             </div>
           </Row>

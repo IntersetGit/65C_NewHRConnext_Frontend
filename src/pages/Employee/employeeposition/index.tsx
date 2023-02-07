@@ -38,6 +38,7 @@ import {
 import { FETCH_GETALLUSER } from '../../../service/graphql/Users';
 import { useMutation, useQuery } from '@apollo/client';
 import { Getposition_UserQuery } from '../../../__generated__/graphql';
+import { getFilePath } from '../../../util';
 import Swal from 'sweetalert2';
 
 const { useToken } = theme;
@@ -60,7 +61,9 @@ const PositionEmployee: React.FC = (props) => {
   const token = useToken();
   const [drawerType, setDrawerType] = useState(1);
   const [selectedrow, setselectedrow] = useState<any>();
-  const { data: position_data, refetch } = useQuery(FETCH_GETALL_POSITION);
+  const { data: position_data, refetch } = useQuery(FETCH_GETALL_POSITION, {
+    variables: { getpositionUserId: propsstate.userId },
+  });
   console.log('position_data', position_data);
   const { data: positionlevel1 } = useQuery(POSITION);
   const { data: header } = useQuery(FETCH_GETALLUSER);
@@ -234,15 +237,13 @@ const PositionEmployee: React.FC = (props) => {
     if (key === 'edit') {
       showDrawer(2);
       setselectedrow(record);
+      console.log(record);
       onChangeMasLevel1(record?.mas_positionlevel1.id);
       onChangeMasLevel2(record?.mas_positionlevel2.id);
       form.setFieldsValue({
         ...record,
         date: moment(record.date),
-        headderId:
-          record.header.profile.firstname_th +
-          ' ' +
-          record.header.profile.lastname_th,
+        headderId: record?.header?.id,
       });
     } else if (key === 'view') {
       showDrawer(3);
@@ -335,7 +336,7 @@ const PositionEmployee: React.FC = (props) => {
               <Avatar
                 size={{ xs: 24, sm: 32, md: 40, lg: 64, xl: 80, xxl: 100 }}
                 icon={<AntDesignOutlined />}
-                src={propsstate.avatar}
+                src={getFilePath() + propsstate?.avatar}
               ></Avatar>
             </div>
           </Col>
@@ -349,7 +350,7 @@ const PositionEmployee: React.FC = (props) => {
               <div className="mt-4">
                 {position_data?.getposition_user?.[
                   position_data?.getposition_user?.length - 1
-                ]?.mas_positionlevel2?.name ?? 'no'}
+                ]?.mas_positionlevel2?.name ?? 'ไม่มีตำแหน่งงาน'}
               </div>
             </div>
           </Col>
@@ -361,7 +362,7 @@ const PositionEmployee: React.FC = (props) => {
             <DatePicker
               style={{ width: '100%' }}
               size="large"
-              defaultValue={moment(propsstate?.dob) as any}
+              defaultValue={moment(propsstate?.start_date_work) as any}
             />
           </Col>
           <Col xs={24} sm={12} md={12} lg={8} xl={8}>

@@ -18,20 +18,22 @@ import {
   Space,
 } from 'antd';
 import { ImProfile } from 'react-icons/im';
-import {
-  generatePath,
-  useNavigate,
-  useParams,
-  useLocation,
-} from 'react-router-dom';
 import moment from 'moment';
 import type { ColumnsType } from 'antd/es/table';
 import edit from '../../../../assets/Edit.png';
 import Del from '../../../../assets/DEL.png';
 import View from '../../../../assets/View.png';
 import { gql } from '../../../../__generated__';
-import { useQuery } from '@apollo/client';
+import { useQuery, useMutation } from '@apollo/client';
 import { useState } from 'react';
+import { getFilePath } from '../../../../util';
+import {
+  FETCH_BYID_POSITION,
+  POSITION,
+  CRETE_POSITION_USER,
+} from '../../../../service/graphql/Position';
+import { FETCH_GETALLUSER } from '../../../../service/graphql/Users';
+import Swal from 'sweetalert2';
 
 const { useToken } = theme;
 
@@ -128,8 +130,64 @@ const ProfilePosition: React.FC = (props) => {
   const token = useToken();
   const [drawerType, setDrawerType] = useState(1);
   const [open, setOpen] = useState(false);
-  const { data: user, refetch } = useQuery<any>(GET_ME);
-  console.log(user);
+  const [selectedrow, setselectedrow] = useState<any>();
+  const { data: user } = useQuery(GET_ME);
+  const { data: position_data, refetch } = useQuery<any>(FETCH_BYID_POSITION);
+  const { data: positionlevel1 } = useQuery(POSITION);
+  const { data: header } = useQuery(FETCH_GETALLUSER);
+  const [cretePositonUser] = useMutation(CRETE_POSITION_USER);
+  const [maspositionlevel1, setMasPostionLevel1] = useState<
+    { value?: string | null; label?: string | null }[] | undefined
+  >(undefined);
+  const [maspositionlevel2, setMasPostionLevel2] = useState<
+    { value?: string | null; label?: string | null }[] | undefined
+  >(undefined);
+
+  const header_data = header?.users?.map((e) => {
+    return {
+      label: (
+        <div>
+          {e?.profile?.firstname_th} {e?.profile?.lastname_th}
+        </div>
+      ),
+      value: e?.profile?.userId,
+    };
+  });
+
+  const selectposition = positionlevel1?.getMasPositon?.map((e) => {
+    return {
+      label: e?.name,
+      value: e?.id,
+    };
+  });
+
+  const onChangeMasLevel1 = (value: any) => {
+    form.setFieldValue('position2_id', null);
+    form.setFieldValue('position3_id', null);
+    const maspositionlevel1 = positionlevel1?.getMasPositon
+      ?.find((e) => e?.id === value)
+      ?.mas_positionlevel2?.map((e) => {
+        return {
+          label: e?.name,
+          value: e?.id,
+        };
+      });
+    setMasPostionLevel1(maspositionlevel1 ? maspositionlevel1 : []);
+  };
+
+  const onChangeMasLevel2 = (value: any) => {
+    form.setFieldValue('position3_id', null);
+    const maspositionlevel2 = positionlevel1?.getMasPositon
+      ?.find((e) => e?.mas_positionlevel2?.find((_e) => _e?.id === value))
+      ?.mas_positionlevel2?.find((e) => e?.id === value)
+      ?.mas_positionlevel3?.map((e) => {
+        return {
+          label: e?.name,
+          value: e?.id,
+        };
+      });
+    setMasPostionLevel2(maspositionlevel2 ? maspositionlevel2 : []);
+  };
 
   const showDrawer = (type: any) => {
     setOpen(true);
@@ -137,11 +195,79 @@ const ProfilePosition: React.FC = (props) => {
   };
 
   const onClose = () => {
+    form.resetFields();
     setOpen(false);
   };
 
   const onFinish = (value: any) => {
-    console.log(value);
+    drawerType === 1
+      ? Swal.fire({
+          title: `ยืนยันการเพิ่มข้อมูลตำแหน่งงาน`,
+          icon: 'warning',
+          showDenyButton: true,
+          showCancelButton: false,
+          confirmButtonColor: token.token.colorPrimary,
+          denyButtonColor: '#ea4e4e',
+          confirmButtonText: 'ตกลง',
+          denyButtonText: `ยกเลิก`,
+        }).then(async (result) => {
+          if (result.isConfirmed) {
+            cretePositonUser({
+              variables: {
+                data: {
+                  ...value,
+                  user_id: user?.me?.profile?.userId,
+                },
+              },
+            })
+              .then((val) => {
+                console.log(val);
+                if (val.data?.createdposition_user?.status) {
+                  Swal.fire(`เพิ่มข้อมูลตำแหน่งงานสำเร็จ!`, '', 'success');
+                  refetch();
+                }
+              })
+              .catch((err) => {
+                Swal.fire(`เพิ่มข้อมูลตำแหน่งงานไม่สำเร็จ!`, '', 'error');
+                console.error(err);
+              });
+          }
+        })
+      : Swal.fire({
+          title: `ยืนยันการแก้ไขข้อมูลตำแหน่งงาน`,
+          icon: 'warning',
+          showDenyButton: true,
+          showCancelButton: false,
+          confirmButtonColor: token.token.colorPrimary,
+          denyButtonColor: '#ea4e4e',
+          confirmButtonText: 'ตกลง',
+          denyButtonText: `ยกเลิก`,
+        }).then(async (result) => {
+          if (result.isConfirmed) {
+            cretePositonUser({
+              variables: {
+                data: {
+                  ...value,
+                  // user_id: user?.me?.profile?.userId,
+                  id: selectedrow?.id,
+                },
+              },
+            })
+              .then((val) => {
+                console.log(val);
+                if (val.data?.createdposition_user?.status) {
+                  Swal.fire(`แก้ไขข้อมูลตำแหน่งงานสำเร็จ!`, '', 'success');
+                  refetch();
+                  form.resetFields();
+                }
+              })
+              .catch((err) => {
+                Swal.fire(`แก้ไขข้อมูลตำแหน่งงานไม่สำเร็จ!`, '', 'error');
+                console.error(err);
+                form.resetFields();
+              });
+          }
+        });
     setOpen(false);
   };
 
@@ -172,6 +298,15 @@ const ProfilePosition: React.FC = (props) => {
     const { key } = event;
     if (key === 'edit') {
       showDrawer(2);
+      console.log('sss', record);
+      setselectedrow(record);
+      onChangeMasLevel1(record?.mas_positionlevel1.id);
+      onChangeMasLevel2(record?.mas_positionlevel2.id);
+      form.setFieldsValue({
+        ...record,
+        date: moment(record.date),
+        headderId: record?.header?.id,
+      });
     } else if (key === 'view') {
     } else if (key === 'delete') {
     }
@@ -183,12 +318,16 @@ const ProfilePosition: React.FC = (props) => {
       key: 'date',
       dataIndex: 'date',
       align: 'center',
+      render: (record: any) => moment(record).format('YYYY/MM/DD') as any,
     },
     {
       title: 'ตำแหน่ง',
-      key: 'position',
-      dataIndex: 'positon',
+      key: 'mas_positionlevel2',
+      dataIndex: 'mas_positionlevel2',
       align: 'center',
+      render: (record: any) => {
+        return <div>{record?.name}</div>;
+      },
     },
     {
       title: 'หน้าที่',
@@ -198,9 +337,12 @@ const ProfilePosition: React.FC = (props) => {
     },
     {
       title: 'หัวหน้างาน',
-      key: 'boss',
-      dataIndex: 'boss',
+      key: 'header',
+      dataIndex: 'header',
       align: 'center',
+      render: (txt: any) => {
+        return txt?.profile?.firstname_th + ' ' + txt?.profile?.lastname_th;
+      },
     },
     {
       title: 'Action',
@@ -234,7 +376,7 @@ const ProfilePosition: React.FC = (props) => {
               <Avatar
                 size={{ xs: 24, sm: 32, md: 40, lg: 64, xl: 80, xxl: 100 }}
                 icon={<AntDesignOutlined />}
-                src={user?.me?.profile?.avatar}
+                src={getFilePath() + user?.me?.profile?.avatar}
               ></Avatar>
             </div>
           </Col>
@@ -245,7 +387,11 @@ const ProfilePosition: React.FC = (props) => {
                 {user?.me?.profile?.prefix_th} {user?.me?.profile?.firstname_th}{' '}
                 {user?.me?.profile?.lastname_th}
               </u>
-              <div className="mt-4">{user?.me?.profile?.firstname_en}</div>
+              <div className="mt-4">
+                {position_data?.getpositionMe?.[
+                  position_data?.getpositionMe?.length - 1
+                ]?.mas_positionlevel2?.name ?? 'ไม่มีตำแหน่งงาน'}
+              </div>
             </div>
           </Col>
         </Row>
@@ -256,14 +402,14 @@ const ProfilePosition: React.FC = (props) => {
             <DatePicker
               style={{ width: '100%' }}
               size="large"
-              defaultValue={moment(user?.me?.profile?.dob) as any}
+              defaultValue={moment(user?.me?.profile?.start_date_work) as any}
               disabled
             />
           </Col>
           <Col xs={24} sm={12} md={12} lg={8} xl={8}>
             <div className="py-3">หมายเลขประจำตัวผู้เสียภาษี</div>
             <Input
-              defaultValue={user?.me?.profile?.citizen_id}
+              defaultValue={user?.me?.profile?.citizen_id as any}
               size="large"
               disabled
             />
@@ -290,7 +436,12 @@ const ProfilePosition: React.FC = (props) => {
           </Button>
         </div>
 
-        <Table className="py-4" columns={columns}></Table>
+        <Table
+          className="py-4"
+          columns={columns}
+          rowKey={'id'}
+          dataSource={position_data?.getpositionMe as any}
+        ></Table>
       </Card>
 
       <Drawer
@@ -302,7 +453,7 @@ const ProfilePosition: React.FC = (props) => {
         <Form form={form} layout={'vertical'} size="middle" onFinish={onFinish}>
           <Row>
             <Col span={12}>
-              <Form.Item label={'วันที่มีผล'}>
+              <Form.Item name={'date'} label={'วันที่มีผล'}>
                 <DatePicker style={{ width: '100%' }}></DatePicker>
               </Form.Item>
             </Col>
@@ -310,31 +461,39 @@ const ProfilePosition: React.FC = (props) => {
 
           <Row>
             <Col span={24}>
-              <Form.Item label={'ฝ่าย'}>
-                <Select />
+              <Form.Item name={'position1_id'} label={'ฝ่าย'}>
+                <Select
+                  options={selectposition ? selectposition : []}
+                  onChange={onChangeMasLevel1}
+                  allowClear
+                />
               </Form.Item>
             </Col>
           </Row>
 
           <Row>
             <Col span={24}>
-              <Form.Item label={'แผนก'}>
-                <Select />
+              <Form.Item name={'position2_id'} label={'แผนก'}>
+                <Select
+                  options={maspositionlevel1 ? maspositionlevel1 : []}
+                  onChange={onChangeMasLevel2}
+                  allowClear
+                />
               </Form.Item>
             </Col>
           </Row>
 
           <Row>
             <Col span={24}>
-              <Form.Item label={'ตำแหน่ง'}>
-                <Select />
+              <Form.Item name={'position3_id'} label={'ตำแหน่ง'}>
+                <Select options={maspositionlevel2 ? maspositionlevel2 : []} />
               </Form.Item>
             </Col>
           </Row>
 
           <Row>
             <Col span={24}>
-              <Form.Item label={'หน้าที่'}>
+              <Form.Item name={'role'} label={'หน้าที่'}>
                 <Input />
               </Form.Item>
             </Col>
@@ -342,8 +501,8 @@ const ProfilePosition: React.FC = (props) => {
 
           <Row>
             <Col span={24}>
-              <Form.Item label={'หัวหน้างาน'}>
-                <Select />
+              <Form.Item name={'headderId'} label={'หัวหน้างาน'}>
+                <Select options={header_data} allowClear />
               </Form.Item>
             </Col>
           </Row>

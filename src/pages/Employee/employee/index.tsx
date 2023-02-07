@@ -94,7 +94,12 @@ const Employee: React.FC = () => {
     if (key === 'edit') {
       console.log(record);
       navigate(`useremployee?id=${record.profile.id}`, {
-        state: { ...record?.profile, mode: 'edit', userId: record?.id },
+        state: {
+          ...record?.profile,
+          mode: 'edit',
+          userId: record?.id,
+          loading: loading,
+        },
       });
     } else if (key === 'view') {
       navigate(`useremployee?id=${record.profile.id}`, {
@@ -316,6 +321,7 @@ const Employee: React.FC = () => {
               current: pagecurrent,
               pageSize: 10,
             }}
+            loading={loading}
           ></Table>
         ) : (
           <List
@@ -329,6 +335,7 @@ const Employee: React.FC = () => {
               pageSize: 10,
             }}
             dataSource={userData?.users as any}
+            loading={loading}
             renderItem={(item: User, index: any) => (
               <List.Item key={index}>
                 <CardItem item={item} genarateMenu={genarateMenu} />
