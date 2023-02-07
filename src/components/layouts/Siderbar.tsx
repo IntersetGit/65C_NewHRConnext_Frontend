@@ -10,6 +10,7 @@ import {
 } from 'react-router-dom';
 import { routing, RoutingType } from '../../routes/routes';
 import { useState } from 'react';
+import { useAuth } from '../../hooks/useAuth';
 
 export type SiderbarType = {
   collapsed: boolean;
@@ -21,24 +22,9 @@ export type Menurendertype = {
   children: Menurendertype[];
 };
 
-export const Menurender = (el?: RoutingType[]): RoutingType[] => {
-  let menu: any[] = [];
-  el?.forEach((e) => {
-    if (!e.hideInmenu) {
-      menu.push({
-        icon: e.icon,
-        label: e.label,
-        key: e.path,
-        children:
-          e.children && !e.forcerendermenu ? Menurender(e.children) : undefined,
-      });
-    }
-  });
-  return menu;
-};
-
 const Siderbar: React.FC<SiderbarType> = (props) => {
   const { collapsed } = props;
+  const { ability } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const { companycode } = useParams();
@@ -50,6 +36,24 @@ const Siderbar: React.FC<SiderbarType> = (props) => {
   const onMenuclick = (e: { key: string }) => {
     setActivekey(e.key);
     navigate(generatePath(e.key, { companycode }));
+  };
+
+  const Menurender = (el?: RoutingType[]): RoutingType[] => {
+    let menu: any[] = [];
+    el?.forEach((e) => {
+      if (!e.hideInmenu) {
+        menu.push({
+          icon: e.icon,
+          label: e.label,
+          key: e.path,
+          children:
+            e.children && !e.forcerendermenu
+              ? Menurender(e.children)
+              : undefined,
+        });
+      }
+    });
+    return menu;
   };
 
   return (

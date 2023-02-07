@@ -105,6 +105,7 @@ export type RoutingType = {
   hideInmenu?: boolean;
   forcerendermenu?: boolean;
   shouldrevalidate?: any;
+  requireRole?: { action: string; subject: string };
   children?: RoutingType[];
   loader?: (v: LoaderFunctionArgs) => any;
 };
@@ -130,21 +131,25 @@ export const routing: RoutingType[] = [
             label: 'ข้อมูลของฉัน',
             path: '/:companycode/profile',
             element: <ProfileEmployee />,
+            requireRole: { action: 'read', subject: 'manageSelfDetail' },
           },
           {
             label: 'ตำแหน่งงานของฉัน',
             path: '/:companycode/profile/position',
             element: <ProfilePosition />,
+            requireRole: { action: 'read', subject: 'manageSelfPosition' },
           },
-          {
-            label: 'ช้อมูลบริษัทของฉัน',
-            path: '/:companycode/profile/company',
-            element: <ProfileCompany />,
-          },
+          // {
+          //   label: 'ช้อมูลบริษัทของฉัน',
+          //   path: '/:companycode/profile/company',
+          //   element: <ProfileCompany />,
+          //   requireRole: { action: 'read', subject: 'manageSelfPosition' },
+          // },
           {
             label: 'การลา',
             path: '/:companycode/profile/approve',
             element: <ProfileApprove />,
+            requireRole: { action: 'read', subject: 'manageSelfLeave' },
           },
         ],
       },

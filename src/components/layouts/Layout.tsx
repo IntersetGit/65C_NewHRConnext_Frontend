@@ -11,7 +11,6 @@ import layoutConfig from '../../config/layoutConfig';
 import RightNavbarContent from './RightNavberContent';
 import { useAuth } from '../../hooks/useAuth';
 import { BaseLayoutProps } from '.';
-import { HiBars3BottomLeft, HiBars3BottomRight } from 'react-icons/hi2';
 
 import icon from '../../assets/HR logo.png';
 
