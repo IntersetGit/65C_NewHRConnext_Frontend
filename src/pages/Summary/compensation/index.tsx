@@ -99,11 +99,11 @@ const Compensation: React.FC = () => {
     }
   };
 
-  const columns: ColumnsType<DataType> = [
+  const columns: ColumnsType<any> = [
     {
-      title: 'ลำดับ',
-      key: 'number',
-      dataIndex: 'number',
+      title: 'รหัสพนักงาน',
+      key: 'staff_code',
+      dataIndex: 'staff_code',
       align: 'center',
     },
     {
@@ -111,30 +111,23 @@ const Compensation: React.FC = () => {
       key: 'name',
       dataIndex: 'name',
       align: 'center',
+      render: (txt: any) =>
+        txt.profile?.firstname_th + ' ' + txt.profile?.lastname_th,
     },
     {
-      title: 'ตำแหน่ง',
-      key: 'position',
-      dataIndex: 'position',
-      align: 'center',
-    },
-    {
-      title: 'แผนก/ฝ่าย',
+      title: 'แผนก',
       key: 'department',
       dataIndex: 'department',
       align: 'center',
     },
     {
-      title: 'เบอร์โทร',
-      key: 'tel',
-      dataIndex: 'tel',
+      title: 'ตำแหน่ง',
+      key: 'mas_positionlevel2',
+      dataIndex: 'mas_positionlevel2',
       align: 'center',
-    },
-    {
-      title: 'e-mail',
-      key: 'email',
-      dataIndex: 'email',
-      align: 'center',
+      render: (record: any) => {
+        return <div>{record?.name}</div>;
+      },
     },
     {
       title: 'ฐานเงินเดือน',
@@ -156,59 +149,6 @@ const Compensation: React.FC = () => {
           <MoreOutlined />
         </Dropdown>
       ),
-    },
-  ];
-
-  const data: DataType[] = [
-    {
-      key: 1,
-      number: 1,
-      name: 'นาย สมใจ พิมพ์สวย',
-      position: 'โปรแกรมเมอร์',
-      department: 'พัฒนาซอฟต์แวร์',
-      tel: '086 555 4444',
-      email: 'utai.p@gmail.com',
-      base_income: 25000,
-    },
-    {
-      key: 2,
-      number: 2,
-      name: 'นางสาว สมพร บัวชมพู',
-      position: 'เจ้าหน้าที่การเงิน',
-      department: 'บัญชี',
-      tel: '084 222 1456',
-      email: 'umaporn.b@gmail.com',
-      base_income: 25000,
-    },
-    {
-      key: 3,
-      number: 3,
-      name: 'นาย สุรพงษ์ พิมพ์สวย',
-      position: 'โปรแกรมเมอร์',
-      department: 'พัฒนาซอฟต์แวร์',
-      tel: '065 555 4444',
-      email: 'utai.p@gmail.com',
-      base_income: 25000,
-    },
-    {
-      key: 4,
-      number: 4,
-      name: 'นาย สมศักดิ์ พิมพ์สวย',
-      position: 'นักวิเคราห์และออกแบบระบบ',
-      department: 'พัฒนาซอฟต์แวร์',
-      tel: '065 555 4444',
-      email: 'utai.p@gmail.com',
-      base_income: 25000,
-    },
-    {
-      key: 5,
-      number: 5,
-      name: 'นาย สมบูรณ์ พิมพ์สวย',
-      position: 'โปรแกรมเมอร์',
-      department: 'พัฒนาซอฟต์แวร์',
-      tel: '065 555 4444',
-      email: 'utai.p@gmail.com',
-      base_income: 25000,
     },
   ];
 
@@ -297,7 +237,7 @@ const Compensation: React.FC = () => {
             </Space>
           </Row>
         </Col>
-        <Table columns={columns} dataSource={data}></Table>
+        <Table rowKey={'id'} columns={columns}></Table>
       </Card>
 
       <Drawer

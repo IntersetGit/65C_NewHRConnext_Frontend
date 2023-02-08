@@ -27,7 +27,8 @@ import Slip from '../../../assets/Slip.png';
 import View from '../../../assets/View.png';
 import Cal1 from '../../../assets/Cal1.png';
 
-import { useNavigate, useLocation } from 'react-router-dom';
+import moment from 'moment';
+import { generatePath, useNavigate, useLocation } from 'react-router-dom';
 import { useState } from 'react';
 import { useMutation, useQuery } from '@apollo/client';
 
@@ -38,6 +39,7 @@ import {
     CRETE_POSITION_USER,
     POSITION,
 } from '../../../service/graphql/Position';
+import { getFilePath } from '../../../util';
 
 const { useToken } = theme;
 
@@ -212,13 +214,13 @@ const Compensation: React.FC = () => {
             <Divider />
 
             <Card className="shadow-xl">
-                <Row className="py-6" gutter={16}>
+                <Row gutter={16}>
                     <Col xs={24} sm={24} md={4} lg={4} xl={4}>
                         <div>
                             <Avatar
                                 size={{ xs: 24, sm: 32, md: 40, lg: 64, xl: 80, xxl: 100 }}
                                 icon={<AntDesignOutlined />}
-                            // src={propsstate.avatar}
+                                src={getFilePath() + propsstate?.avatar}
                             ></Avatar>
                         </div>
                     </Col>
@@ -226,15 +228,13 @@ const Compensation: React.FC = () => {
                     <Col xs={24} sm={24} md={4} lg={4} xl={4}>
                         <div className="text-lg font-bold">
                             <u className="text-blue-800">
-                                name:
-                                {/* {propsstate?.prefix_th} {propsstate?.firstname_th}{' '}
-                                {propsstate?.lastname_th} */}
+                                {propsstate?.prefix_th} {propsstate?.firstname_th}{' '}
+                                {propsstate?.lastname_th}
                             </u>
                             <div className="mt-4">
-                                position:
-                                {/* {position_data?.getposition_user?.[
+                                {position_data?.getposition_user?.[
                                     position_data?.getposition_user?.length - 1
-                                ]?.mas_positionlevel2?.name ?? 'no'} */}
+                                ]?.mas_positionlevel2?.name ?? 'ไม่มีตำแหน่งงาน'}
                             </div>
                         </div>
                     </Col>
@@ -271,7 +271,7 @@ const Compensation: React.FC = () => {
                         </Col>
 
 
-                        <Col xs={24} sm={24} md={24} lg={5} xl={3}>
+                        <Col xs={24} sm={24} md={24} lg={4} xl={4}>
 
                             <Space>
                                 <Form.Item>
