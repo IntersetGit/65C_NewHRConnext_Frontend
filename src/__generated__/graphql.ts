@@ -652,9 +652,11 @@ export type Province = {
 export type Query = {
   __typename?: 'Query';
   GetHoliDayYear?: Maybe<Array<Maybe<Holiday_Years>>>;
-  GetHolidayDate?: Maybe<Array<Maybe<Holiday_Date>>>;
+  GetHolidayDate?: Maybe<Holiday_Date>;
+  SalartSlip?: Maybe<Salaryslip>;
   bookbank_log?: Maybe<Array<Maybe<Bookbank_Log>>>;
   company?: Maybe<ResponseCompany>;
+  data_salary?: Maybe<Array<Maybe<Data_Salary>>>;
   datasalary_mee?: Maybe<Array<Maybe<Data_Salary_Me>>>;
   getAllcompany?: Maybe<Array<Maybe<CompanyBranch>>>;
   getMasPositon?: Maybe<Array<Maybe<Mas_Positionlevel1>>>;
@@ -680,6 +682,13 @@ export type QueryBookbank_LogArgs = {
 
 export type QueryCompanyArgs = {
   name?: InputMaybe<Scalars['String']>;
+};
+
+
+export type QueryData_SalaryArgs = {
+  Position2?: InputMaybe<Scalars['String']>;
+  Position3?: InputMaybe<Scalars['String']>;
+  f_name?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -934,6 +943,14 @@ export type CreatesalaryResponseType = {
   status?: Maybe<Scalars['Boolean']>;
 };
 
+export type Data_Salary = {
+  __typename?: 'data_salary';
+  id: Scalars['ID'];
+  position_user?: Maybe<Position_User>;
+  profile?: Maybe<Profile>;
+  salary?: Maybe<Array<Maybe<Salary>>>;
+};
+
 export type Data_Salary_Me = {
   __typename?: 'data_salary_me';
   RoleCompanyID?: Maybe<Scalars['String']>;
@@ -996,16 +1013,14 @@ export type Headderdata = {
 
 export type Holiday_Date = {
   __typename?: 'holiday_date';
-  Company?: Maybe<Array<Maybe<Company>>>;
+  Company?: Maybe<Company>;
   CompanyId?: Maybe<Scalars['String']>;
   day?: Maybe<Scalars['Int']>;
   holiday_name?: Maybe<Scalars['String']>;
-  holiday_year?: Maybe<Array<Maybe<Holiday_Years>>>;
-  holiday_yearID?: Maybe<Scalars['String']>;
-  id: Scalars['ID'];
+  id?: Maybe<Scalars['ID']>;
   month?: Maybe<Scalars['Int']>;
   status?: Maybe<Scalars['Int']>;
-  yaer?: Maybe<Scalars['Int']>;
+  year?: Maybe<Scalars['Int']>;
 };
 
 export type Holiday_Years = {
@@ -1126,6 +1141,17 @@ export type Position = {
   user_id?: InputMaybe<Scalars['String']>;
 };
 
+export type Position_User = {
+  __typename?: 'position_user';
+  id: Scalars['ID'];
+  name?: Maybe<Scalars['String']>;
+  position1_id?: Maybe<Scalars['String']>;
+  position2_id?: Maybe<Scalars['String']>;
+  position3_id?: Maybe<Scalars['String']>;
+  role?: Maybe<Scalars['String']>;
+  user_id?: Maybe<Scalars['String']>;
+};
+
 export type Provident_Log = {
   __typename?: 'provident_log';
   User?: Maybe<User>;
@@ -1232,6 +1258,12 @@ export type SalaryInput = {
   vatYears?: InputMaybe<Scalars['Float']>;
   welfare_money?: InputMaybe<Scalars['Float']>;
   year?: InputMaybe<Scalars['String']>;
+};
+
+export type Salaryslip = {
+  __typename?: 'salaryslip';
+  id?: Maybe<Scalars['ID']>;
+  link?: Maybe<Scalars['String']>;
 };
 
 export type YearsInput = {
@@ -1419,7 +1451,7 @@ export type Datasalary_MeeQuery = { __typename?: 'Query', datasalary_mee?: Array
 export type UsersQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type UsersQuery = { __typename?: 'Query', users?: Array<{ __typename?: 'User', id: string, email: string, profile?: { __typename?: 'Profile', address?: string | null, age?: string | null, avatar?: string | null, bio?: string | null, citizen_address?: string | null, citizen_addressnumber?: string | null, citizen_country?: string | null, citizen_district?: string | null, citizen_id?: string | null, citizen_province?: string | null, citizen_state?: string | null, citizen_tel?: string | null, citizen_zipcode?: string | null, contract_address?: string | null, contract_addressnumber?: string | null, contract_companyemail?: string | null, contract_country?: string | null, contract_district?: string | null, id: string, firstname_th?: string | null, lastname_th?: string | null, firstname_en?: string | null, lastname_en?: string | null, dob?: any | null, relationship?: string | null, shirt_size?: string | null, prefix_th?: string | null, prefix_en?: string | null, social_id?: string | null, staff_status?: string | null, tel?: string | null, gender?: string | null, staff_code?: string | null, religion?: string | null, userId?: string | null, contract_sameCitizen?: boolean | null, contract_province?: string | null, contract_state?: string | null, contract_zipcode?: string | null, contract_email?: string | null, social_facebook?: string | null, social_likedin?: string | null, social_line?: string | null, social_telegram?: string | null, nickname?: string | null, blood_type?: string | null, employee_status?: string | null, start_date_work?: any | null, user?: { __typename?: 'User', email: string, password: string } | null } | null, Role_Company?: { __typename?: 'Role_Company', id: string, name?: string | null } | null } | null> | null };
+export type UsersQuery = { __typename?: 'Query', users?: Array<{ __typename?: 'User', id: string, email: string, profile?: { __typename?: 'Profile', address?: string | null, age?: string | null, avatar?: string | null, bio?: string | null, citizen_address?: string | null, citizen_addressnumber?: string | null, citizen_country?: string | null, citizen_district?: string | null, citizen_id?: string | null, citizen_province?: string | null, citizen_state?: string | null, citizen_tel?: string | null, citizen_zipcode?: string | null, contract_address?: string | null, contract_addressnumber?: string | null, contract_companyemail?: string | null, contract_country?: string | null, contract_district?: string | null, id: string, firstname_th?: string | null, lastname_th?: string | null, firstname_en?: string | null, lastname_en?: string | null, dob?: any | null, relationship?: string | null, shirt_size?: string | null, prefix_th?: string | null, prefix_en?: string | null, social_id?: string | null, staff_status?: string | null, tel?: string | null, gender?: string | null, staff_code?: string | null, religion?: string | null, userId?: string | null, contract_sameCitizen?: boolean | null, contract_province?: string | null, contract_state?: string | null, contract_zipcode?: string | null, contract_email?: string | null, social_facebook?: string | null, social_likedin?: string | null, social_line?: string | null, social_telegram?: string | null, nickname?: string | null, blood_type?: string | null, employee_status?: string | null, start_date_work?: any | null, user?: { __typename?: 'User', email: string, password: string } | null } | null, Role_Company?: { __typename?: 'Role_Company', id: string, name?: string | null } | null, Position_user?: Array<{ __typename?: 'Position_user', date?: any | null, mas_positionlevel1?: { __typename?: 'mas_positionlevel1', id: string, name?: string | null, level?: number | null, code?: string | null, type?: string | null, CompanyId?: string | null } | null, mas_positionlevel2?: { __typename?: 'mas_positionlevel2', id: string, name?: string | null, level?: number | null, code?: string | null, type?: string | null, positionlevel1_id?: string | null } | null, mas_positionlevel3?: { __typename?: 'mas_positionlevel3', id: string, name?: string | null, level?: number | null, code?: string | null, type?: string | null, positionlevel2_id?: string | null } | null } | null> | null } | null> | null };
 
 
 export const RefreshTokenDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"refreshToken"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"refreshToken"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"access_token"}}]}}]}}]} as unknown as DocumentNode<RefreshTokenMutation, RefreshTokenMutationVariables>;
@@ -1450,4 +1482,4 @@ export const GetcompanyRoleManagementDocument = {"kind":"Document","definitions"
 export const UpdateRoleCompanyManagementDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"updateRoleCompanyManagement"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"data"}},"type":{"kind":"NonNullType","type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UpdateRoleCompanyMangementType"}}}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateRoleCompanyMangement"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"data"},"value":{"kind":"Variable","name":{"kind":"Name","value":"data"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"message"}},{"kind":"Field","name":{"kind":"Name","value":"status"}}]}}]}}]} as unknown as DocumentNode<UpdateRoleCompanyManagementMutation, UpdateRoleCompanyManagementMutationVariables>;
 export const Mas_BankDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Mas_bank"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"mas_bank"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]} as unknown as DocumentNode<Mas_BankQuery, Mas_BankQueryVariables>;
 export const Datasalary_MeeDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Datasalary_mee"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"datasalary_mee"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"profile"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"firstname_th"}},{"kind":"Field","name":{"kind":"Name","value":"lastname_th"}},{"kind":"Field","name":{"kind":"Name","value":"avatar"}}]}},{"kind":"Field","name":{"kind":"Name","value":"salary"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"month"}},{"kind":"Field","name":{"kind":"Name","value":"years"}},{"kind":"Field","name":{"kind":"Name","value":"net"}},{"kind":"Field","name":{"kind":"Name","value":"total_expense"}},{"kind":"Field","name":{"kind":"Name","value":"total_income"}},{"kind":"Field","name":{"kind":"Name","value":"provident_company"}},{"kind":"Field","name":{"kind":"Name","value":"provident_employee"}},{"kind":"Field","name":{"kind":"Name","value":"mas_bank"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"bookbank_log"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"bank_number"}}]}}]}}]}}]}}]} as unknown as DocumentNode<Datasalary_MeeQuery, Datasalary_MeeQueryVariables>;
-export const UsersDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Users"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"users"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"profile"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"address"}},{"kind":"Field","name":{"kind":"Name","value":"age"}},{"kind":"Field","name":{"kind":"Name","value":"avatar"}},{"kind":"Field","name":{"kind":"Name","value":"bio"}},{"kind":"Field","name":{"kind":"Name","value":"citizen_address"}},{"kind":"Field","name":{"kind":"Name","value":"citizen_addressnumber"}},{"kind":"Field","name":{"kind":"Name","value":"citizen_country"}},{"kind":"Field","name":{"kind":"Name","value":"citizen_district"}},{"kind":"Field","name":{"kind":"Name","value":"citizen_id"}},{"kind":"Field","name":{"kind":"Name","value":"citizen_province"}},{"kind":"Field","name":{"kind":"Name","value":"citizen_state"}},{"kind":"Field","name":{"kind":"Name","value":"citizen_tel"}},{"kind":"Field","name":{"kind":"Name","value":"citizen_zipcode"}},{"kind":"Field","name":{"kind":"Name","value":"contract_address"}},{"kind":"Field","name":{"kind":"Name","value":"contract_addressnumber"}},{"kind":"Field","name":{"kind":"Name","value":"contract_companyemail"}},{"kind":"Field","name":{"kind":"Name","value":"contract_country"}},{"kind":"Field","name":{"kind":"Name","value":"contract_district"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"firstname_th"}},{"kind":"Field","name":{"kind":"Name","value":"lastname_th"}},{"kind":"Field","name":{"kind":"Name","value":"firstname_en"}},{"kind":"Field","name":{"kind":"Name","value":"lastname_en"}},{"kind":"Field","name":{"kind":"Name","value":"dob"}},{"kind":"Field","name":{"kind":"Name","value":"relationship"}},{"kind":"Field","name":{"kind":"Name","value":"shirt_size"}},{"kind":"Field","name":{"kind":"Name","value":"prefix_th"}},{"kind":"Field","name":{"kind":"Name","value":"prefix_en"}},{"kind":"Field","name":{"kind":"Name","value":"social_id"}},{"kind":"Field","name":{"kind":"Name","value":"staff_status"}},{"kind":"Field","name":{"kind":"Name","value":"tel"}},{"kind":"Field","name":{"kind":"Name","value":"gender"}},{"kind":"Field","name":{"kind":"Name","value":"staff_code"}},{"kind":"Field","name":{"kind":"Name","value":"religion"}},{"kind":"Field","name":{"kind":"Name","value":"userId"}},{"kind":"Field","name":{"kind":"Name","value":"contract_sameCitizen"}},{"kind":"Field","name":{"kind":"Name","value":"contract_province"}},{"kind":"Field","name":{"kind":"Name","value":"contract_state"}},{"kind":"Field","name":{"kind":"Name","value":"contract_zipcode"}},{"kind":"Field","name":{"kind":"Name","value":"contract_email"}},{"kind":"Field","name":{"kind":"Name","value":"social_facebook"}},{"kind":"Field","name":{"kind":"Name","value":"social_likedin"}},{"kind":"Field","name":{"kind":"Name","value":"social_line"}},{"kind":"Field","name":{"kind":"Name","value":"social_telegram"}},{"kind":"Field","name":{"kind":"Name","value":"nickname"}},{"kind":"Field","name":{"kind":"Name","value":"blood_type"}},{"kind":"Field","name":{"kind":"Name","value":"employee_status"}},{"kind":"Field","name":{"kind":"Name","value":"start_date_work"}},{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"password"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"Role_Company"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]}}]} as unknown as DocumentNode<UsersQuery, UsersQueryVariables>;
+export const UsersDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Users"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"users"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"profile"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"address"}},{"kind":"Field","name":{"kind":"Name","value":"age"}},{"kind":"Field","name":{"kind":"Name","value":"avatar"}},{"kind":"Field","name":{"kind":"Name","value":"bio"}},{"kind":"Field","name":{"kind":"Name","value":"citizen_address"}},{"kind":"Field","name":{"kind":"Name","value":"citizen_addressnumber"}},{"kind":"Field","name":{"kind":"Name","value":"citizen_country"}},{"kind":"Field","name":{"kind":"Name","value":"citizen_district"}},{"kind":"Field","name":{"kind":"Name","value":"citizen_id"}},{"kind":"Field","name":{"kind":"Name","value":"citizen_province"}},{"kind":"Field","name":{"kind":"Name","value":"citizen_state"}},{"kind":"Field","name":{"kind":"Name","value":"citizen_tel"}},{"kind":"Field","name":{"kind":"Name","value":"citizen_zipcode"}},{"kind":"Field","name":{"kind":"Name","value":"contract_address"}},{"kind":"Field","name":{"kind":"Name","value":"contract_addressnumber"}},{"kind":"Field","name":{"kind":"Name","value":"contract_companyemail"}},{"kind":"Field","name":{"kind":"Name","value":"contract_country"}},{"kind":"Field","name":{"kind":"Name","value":"contract_district"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"firstname_th"}},{"kind":"Field","name":{"kind":"Name","value":"lastname_th"}},{"kind":"Field","name":{"kind":"Name","value":"firstname_en"}},{"kind":"Field","name":{"kind":"Name","value":"lastname_en"}},{"kind":"Field","name":{"kind":"Name","value":"dob"}},{"kind":"Field","name":{"kind":"Name","value":"relationship"}},{"kind":"Field","name":{"kind":"Name","value":"shirt_size"}},{"kind":"Field","name":{"kind":"Name","value":"prefix_th"}},{"kind":"Field","name":{"kind":"Name","value":"prefix_en"}},{"kind":"Field","name":{"kind":"Name","value":"social_id"}},{"kind":"Field","name":{"kind":"Name","value":"staff_status"}},{"kind":"Field","name":{"kind":"Name","value":"tel"}},{"kind":"Field","name":{"kind":"Name","value":"gender"}},{"kind":"Field","name":{"kind":"Name","value":"staff_code"}},{"kind":"Field","name":{"kind":"Name","value":"religion"}},{"kind":"Field","name":{"kind":"Name","value":"userId"}},{"kind":"Field","name":{"kind":"Name","value":"contract_sameCitizen"}},{"kind":"Field","name":{"kind":"Name","value":"contract_province"}},{"kind":"Field","name":{"kind":"Name","value":"contract_state"}},{"kind":"Field","name":{"kind":"Name","value":"contract_zipcode"}},{"kind":"Field","name":{"kind":"Name","value":"contract_email"}},{"kind":"Field","name":{"kind":"Name","value":"social_facebook"}},{"kind":"Field","name":{"kind":"Name","value":"social_likedin"}},{"kind":"Field","name":{"kind":"Name","value":"social_line"}},{"kind":"Field","name":{"kind":"Name","value":"social_telegram"}},{"kind":"Field","name":{"kind":"Name","value":"nickname"}},{"kind":"Field","name":{"kind":"Name","value":"blood_type"}},{"kind":"Field","name":{"kind":"Name","value":"employee_status"}},{"kind":"Field","name":{"kind":"Name","value":"start_date_work"}},{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"password"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"Role_Company"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"Position_user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"date"}},{"kind":"Field","name":{"kind":"Name","value":"mas_positionlevel1"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"level"}},{"kind":"Field","name":{"kind":"Name","value":"code"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"CompanyId"}}]}},{"kind":"Field","name":{"kind":"Name","value":"mas_positionlevel2"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"level"}},{"kind":"Field","name":{"kind":"Name","value":"code"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"positionlevel1_id"}}]}},{"kind":"Field","name":{"kind":"Name","value":"mas_positionlevel3"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"level"}},{"kind":"Field","name":{"kind":"Name","value":"code"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"positionlevel2_id"}}]}}]}}]}}]}}]} as unknown as DocumentNode<UsersQuery, UsersQueryVariables>;

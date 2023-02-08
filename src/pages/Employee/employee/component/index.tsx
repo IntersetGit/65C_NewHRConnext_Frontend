@@ -194,8 +194,10 @@ const ProfileEmployee: React.FC = () => {
     form.setFieldsValue({
       ...user?.me?.profile,
       email: user?.me?.profile?.contract_email,
-      dob: moment(user?.me?.profile?.dob),
-      start_date_work: moment(user?.me?.profile?.start_date_work),
+      dob: user?.me?.profile?.dob ? moment(user?.me?.profile?.dob) : undefined,
+      start_date_work: user?.me?.profile?.start_date_work
+        ? moment(user?.me?.profile?.start_date_work)
+        : undefined,
     });
   };
 

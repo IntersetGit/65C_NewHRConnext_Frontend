@@ -64,6 +64,33 @@ query Users {
         name
 
       }
+      Position_user {
+        date
+        mas_positionlevel1 {
+          id
+          name
+          level
+          code
+          type
+          CompanyId
+        }
+        mas_positionlevel2 {
+          id
+          name
+          level
+          code
+          type
+          positionlevel1_id
+        }
+        mas_positionlevel3 {
+          id
+          name
+          level
+          code
+          type
+          positionlevel2_id
+        }
+      }
     }
 
   }

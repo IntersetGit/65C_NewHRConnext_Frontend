@@ -159,8 +159,10 @@ const UserEmployee: React.FC = (props) => {
       ...propsstate,
       ...propsstate?.user,
       email: propsstate.contract_email,
-      dob: moment(propsstate?.dob),
-      start_date_work: moment(propsstate?.start_date_work),
+      dob: propsstate?.dob ? moment(propsstate?.dob) : undefined,
+      start_date_work: propsstate?.start_date_work
+        ? moment(propsstate?.start_date_work)
+        : undefined,
     });
   };
 
