@@ -41,7 +41,24 @@ const Siderbar: React.FC<SiderbarType> = (props) => {
   const Menurender = (el?: RoutingType[]): RoutingType[] => {
     let menu: any[] = [];
     el?.forEach((e) => {
-      if (!e.hideInmenu) {
+      /** Check if how many can access */
+      if (e.children) {
+        let f = e.children?.filter((__e) =>
+          __e.requireRole
+            ? ability.can(
+                __e.requireRole?.action as string,
+                __e.requireRole?.subject as string,
+              )
+            : true,
+        );
+        if (f.length <= 0) return;
+      }
+      /** Can render menu */
+      const canRender = e.requireRole
+        ? ability.can(e.requireRole?.action, e.requireRole?.subject)
+        : true;
+
+      if (!e.hideInmenu && canRender) {
         menu.push({
           icon: e.icon,
           label: e.label,
