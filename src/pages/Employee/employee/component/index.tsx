@@ -38,6 +38,8 @@ import { getFilePath, getUploadUrl } from '../../../../util';
 import { RcFile } from 'antd/es/upload';
 
 import { FETCH_GETALLROLE } from '../../../../service/graphql/Role';
+import { useAuth } from '../../../../hooks/useAuth';
+import { json } from 'react-router-dom';
 const { useToken } = theme;
 
 const GET_ME = gql(`
@@ -129,6 +131,9 @@ mutation CreateAccountUser($data: CreateAccountUserInput!) {
 }`);
 
 const ProfileEmployee: React.FC = () => {
+  /** Declare ability */
+  const { ability, loading } = useAuth();
+  /** End Declare */
   const token = useToken();
   const [form] = Form.useForm<any>();
   const [picture, setPicture] = useState<string>();
@@ -189,10 +194,25 @@ const ProfileEmployee: React.FC = () => {
     form.setFieldsValue({
       ...user?.me?.profile,
       email: user?.me?.profile?.contract_email,
-      dob: moment(user?.me?.profile?.dob),
-      start_date_work: moment(user?.me?.profile?.start_date_work),
+      dob: user?.me?.profile?.dob ? moment(user?.me?.profile?.dob) : undefined,
+      start_date_work: user?.me?.profile?.start_date_work
+        ? moment(user?.me?.profile?.start_date_work)
+        : undefined,
     });
   };
+
+  useEffect(() => {
+    // if (!ability.can('read', 'manageSelfDetail')) {
+    //   // throw Error('Hello');
+    //   throw json(
+    //     {
+    //       sorry: 'You have been fired.',
+    //       hrEmail: 'hr@bigco.com',
+    //     },
+    //     { status: 401 },
+    //   );
+    // }
+  }, [loading]);
 
   const AllCounrty = () => {
     axios.get('https://restcountries.com/v2/all').then((data) => {

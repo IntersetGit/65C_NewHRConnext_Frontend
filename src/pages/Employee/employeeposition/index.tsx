@@ -94,6 +94,10 @@ const PositionEmployee: React.FC = (props) => {
   });
 
   const onChangeMasLevel1 = (value: any) => {
+    if (!value) {
+      setMasPostionLevel1([]);
+      setMasPostionLevel2([]);
+    }
     form.setFieldValue('position2_id', null);
     form.setFieldValue('position3_id', null);
     const maspositionlevel1 = positionlevel1?.getMasPositon
@@ -104,6 +108,7 @@ const PositionEmployee: React.FC = (props) => {
           value: e?.id,
         };
       });
+    console.log(value);
     setMasPostionLevel1(maspositionlevel1 ? maspositionlevel1 : []);
   };
 
@@ -118,6 +123,7 @@ const PositionEmployee: React.FC = (props) => {
           value: e?.id,
         };
       });
+    console.log(value);
     setMasPostionLevel2(maspositionlevel2 ? maspositionlevel2 : []);
   };
 
@@ -163,6 +169,7 @@ const PositionEmployee: React.FC = (props) => {
                 if (val.data?.createdposition_user?.status) {
                   Swal.fire(`เพิ่มข้อมูลตำแหน่งงานสำเร็จ!`, '', 'success');
                   refetch();
+                  form.resetFields();
                 }
               })
               .catch((err) => {
@@ -242,7 +249,7 @@ const PositionEmployee: React.FC = (props) => {
       onChangeMasLevel2(record?.mas_positionlevel2.id);
       form.setFieldsValue({
         ...record,
-        date: moment(record.date),
+        date: record.date ? moment(record.date) : undefined,
         headderId: record?.header?.id,
       });
     } else if (key === 'view') {
@@ -251,7 +258,7 @@ const PositionEmployee: React.FC = (props) => {
       onChangeMasLevel2(record?.mas_positionlevel2.id);
       form.setFieldsValue({
         ...record,
-        date: moment(record.date),
+        date: record.date ? moment(record.date) : undefined,
       });
     } else if (key === 'delete') {
     }
@@ -363,11 +370,16 @@ const PositionEmployee: React.FC = (props) => {
               style={{ width: '100%' }}
               size="large"
               defaultValue={moment(propsstate?.start_date_work) as any}
+              disabled
             />
           </Col>
           <Col xs={24} sm={12} md={12} lg={8} xl={8}>
             <div className="py-3">หมายเลขประจำตัวผู้เสียภาษี</div>
-            <Input defaultValue={propsstate?.citizen_id} size="large" />
+            <Input
+              defaultValue={propsstate?.citizen_id}
+              size="large"
+              disabled
+            />
           </Col>
         </Row>
 
@@ -472,11 +484,13 @@ const PositionEmployee: React.FC = (props) => {
                 {drawerType === 3 ? (
                   <Select
                     options={maspositionlevel2 ? maspositionlevel2 : []}
+                    allowClear
                     disabled
                   />
                 ) : (
                   <Select
                     options={maspositionlevel2 ? maspositionlevel2 : []}
+                    allowClear
                   />
                 )}
               </Form.Item>

@@ -9,9 +9,11 @@ import { createMongoAbility } from '@casl/ability';
 import {
   NavigateOptions,
   generatePath,
+  useLocation,
   useNavigate,
   useParams,
 } from 'react-router-dom';
+import ErrorBoundary from '../Error/BaseError';
 
 const cookie = new Cookies();
 
@@ -114,10 +116,24 @@ type Props = {
 
 const AuthProvider = ({ children, company: companydata }: Props) => {
   const { data: user, loading } = useQuery(GET_ME);
-  const defaultAbility: any[] = [];
-  const ability = createMongoAbility(
-    user?.me?.Role_Company?.access || defaultAbility,
-  );
+  const [permission, setPermisstion] = useState<
+    { action: string; subject: string }[]
+  >([]);
+  const ability = createMongoAbility(permission);
+
+  useEffect(() => {
+    let rawData: { action: string; subject: string }[] = [];
+    user?.me?.Role_Company?.access?.forEach((e, i) => {
+      if (typeof e.action === 'string') {
+        rawData.push({ action: e.action, subject: e.subject });
+      } else {
+        e.action?.forEach((_e) => {
+          rawData.push({ action: _e, subject: e.subject });
+        });
+      }
+    });
+    setPermisstion(rawData);
+  }, [loading]);
   const [company, setCompany] = useState<CompanyBranchType | undefined>({
     branchId: companydata?.branchId,
     branchName: companydata?.branchName,

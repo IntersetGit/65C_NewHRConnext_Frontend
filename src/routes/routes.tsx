@@ -74,6 +74,11 @@ const Activity = React.lazy(() => import('../pages/Me/activity'));
 const Usersetting = React.lazy(() => import('../pages/Me/setting'));
 
 /**
+ * ?Error
+ */
+const BaseError = React.lazy(() => import('../Error/BaseError'));
+
+/**
  * ?Import icons
  */
 import {
@@ -107,6 +112,7 @@ export type RoutingType = {
   shouldrevalidate?: any;
   requireRole?: { action: string; subject: string };
   children?: RoutingType[];
+  errorElement?: JSX.Element;
   loader?: (v: LoaderFunctionArgs) => any;
 };
 
@@ -114,6 +120,7 @@ export const routing: RoutingType[] = [
   {
     path: '/',
     element: <BaseLayout />,
+    errorElement: <BaseError />,
     children: [
       {
         path: ':companycode/',
