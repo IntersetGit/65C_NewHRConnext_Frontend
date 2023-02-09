@@ -30,13 +30,16 @@ import type { ColumnsType } from 'antd/es/table';
 import { useState } from 'react';
 const { useToken } = theme;
 const { TextArea } = Input;
-import { FECTH_ALL_LEAVE } from '../../../../service/graphql/Leave';
+import { FETCH_ALL_LEAVE } from '../../../../service/graphql/Leave';
+import { useQuery } from '@apollo/client';
+import moment from 'moment';
 
 const ProfileApprove: React.FC = () => {
   const [open, setOpen] = useState(false);
   const [form] = Form.useForm();
   const token = useToken();
   const [drawertype, setDrawertype] = useState(1);
+  const { data: dataleaveme, loading, refetch } = useQuery(FETCH_ALL_LEAVE);
 
   const showDrawer = (type: any) => {
     setDrawertype(type);
@@ -90,39 +93,50 @@ const ProfileApprove: React.FC = () => {
     },
     {
       title: 'ประเภทการลา',
-      key: 'leave_type',
-      dataIndex: 'leave_type',
+      key: 'mas_leave_type',
       align: 'center',
+      render: (record: any) => {
+        return record.mas_leave_type.name;
+      },
     },
     {
       title: 'จากวันที่',
-      key: 'from_date',
-      dataIndex: 'from_date',
+      key: 'mas_leave_type',
       align: 'center',
+      render: (record) => {
+        return record.start_date
+          ? moment(new Date(record.start_date)).format('DD/MM/YYYY')
+          : undefined;
+      },
     },
     {
       title: 'ถึงวันที่',
       key: 'to_date',
-      dataIndex: 'to_date',
       align: 'center',
+      render: (record) => {
+        return record.end_date
+          ? moment(new Date(record.end_date)).format('DD/MM/YYYY')
+          : undefined;
+      },
     },
     {
       title: 'จำนวนวัน',
       key: 'count_date',
-      dataIndex: 'count_date',
       align: 'center',
+      render: (record) => {
+        return record.quantity_day;
+      },
     },
     {
       title: 'สถานะการลา',
-      key: 'leave_approve',
-      dataIndex: 'leave_approve',
+      key: 'Status',
       align: 'center',
       render: (record) => {
         return (
           <div>
-            {record === '1'
+            {record.Status === 1
               ? 'อนุมัติ'
-              : record === '2'
+              : record.Status === 2
               ? 'รออนุมัติ'
               : 'ไม่อนุมัติ'}
           </div>
@@ -146,15 +160,6 @@ const ProfileApprove: React.FC = () => {
     },
   ];
 
-  const data: any = [
-    {
-      leave_type: 'ลาป่วย',
-      from_date: '20-9-2021',
-      to_date: '20-9-2021',
-      count_date: '1',
-      leave_approve: '1',
-    },
-  ];
   return (
     <>
       <div className="flex text-2xl ml-2 pt-4">
@@ -185,9 +190,21 @@ const ProfileApprove: React.FC = () => {
           >
             <div className="text-lg font-bold">
               <u style={{ color: token.token.colorPrimary }}>
-                {/* {propsstate?.firstname_th} {propsstate?.lastname_th} */}
+                {
+                  dataleaveme?.getleava_datame?.data_all[0]?.profile
+                    ?.firstname_th
+                }{' '}
+                {
+                  dataleaveme?.getleava_datame?.data_all[0]?.profile
+                    ?.lastname_th
+                }
               </u>
-              <div className="my-4"></div>
+              <div className="my-4">
+                {
+                  dataleaveme?.getleava_datame?.data_all[0]?.Position_user[0]
+                    ?.mas_positionlevel3?.name
+                }
+              </div>
             </div>
           </Col>
         </Row>
@@ -197,7 +214,7 @@ const ProfileApprove: React.FC = () => {
             <Card className="shadow-lg border-4 border-[#8cb369] bg-[#8cb369]">
               <div className="flex text-lg font-bold justify-center items-center mx-12">
                 <MdAirplanemodeActive className="text-green-900" size={'38'} />{' '}
-                ลาพักร้อน 4
+                {dataleaveme?.getleava_datame?.data_count?.name_1}
               </div>
             </Card>
           </Col>
@@ -205,7 +222,7 @@ const ProfileApprove: React.FC = () => {
             <Card className="shadow-lg border-4 border-[#fddd5c] bg-[#fddd5c]">
               <div className="flex text-lg font-bold justify-center items-center">
                 <RiBriefcase5Line className="text-[#b48a4d]" size={'38'} />{' '}
-                ลากิจ 6
+                {dataleaveme?.getleava_datame?.data_count?.name_3}
               </div>
             </Card>
           </Col>
@@ -216,7 +233,7 @@ const ProfileApprove: React.FC = () => {
                   className="text-[#e2711d]"
                   size={'38'}
                 />{' '}
-                ลาป่วย 8
+                {dataleaveme?.getleava_datame?.data_count?.name_2}
               </div>
             </Card>
           </Col>
@@ -224,7 +241,7 @@ const ProfileApprove: React.FC = () => {
             <Card className="shadow-lg border-4 border-[#b491c8] bg-[#b491c8]">
               <div className="flex text-lg font-bold justify-center items-center">
                 <MdDragIndicator className="text-[#7c5295]" size={'38'} />{' '}
-                ลาอื่น ๆ 2
+                {dataleaveme?.getleava_datame?.data_count?.name_4}
               </div>
             </Card>
           </Col>
@@ -258,7 +275,14 @@ const ProfileApprove: React.FC = () => {
           </Col>
         </Row>
 
-        <Table columns={columns} dataSource={data}></Table>
+        <Table
+          columns={columns}
+          dataSource={
+            dataleaveme?.getleava_datame?.data_all?.length > 0
+              ? (dataleaveme?.getleava_datame?.data_all[0]?.data_leave as any)
+              : []
+          }
+        ></Table>
       </Card>
 
       <Drawer title="สร้างใบลา" size="large" onClose={onClose} open={open}>

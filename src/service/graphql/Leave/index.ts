@@ -1,6 +1,6 @@
 import { gql } from '../../../__generated__';
 
-export const FECTH_ALL_LEAVE = gql(`
+export const FETCH_ALL_LEAVE = gql(`
 query Getleava_datame {
     getleava_datame {
       data_count {
