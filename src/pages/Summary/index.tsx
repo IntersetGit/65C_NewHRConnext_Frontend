@@ -12,7 +12,7 @@ const Summaryroot: React.FC = () => {
 
   return (
     <>
-      <Tabs
+      {/* <Tabs
         defaultActiveKey="/:companycode/summary"
         className="right-tab"
         onChange={onChange}
@@ -26,7 +26,7 @@ const Summaryroot: React.FC = () => {
             key: '/:companycode/summary/remuneration',
           },
         ]}
-      />
+      /> */}
       <Outlet />
     </>
   );

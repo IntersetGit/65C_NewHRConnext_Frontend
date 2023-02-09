@@ -688,6 +688,13 @@ export type Query = {
 };
 
 
+export type QuerySalartSlipArgs = {
+  month?: InputMaybe<Scalars['String']>;
+  userId?: InputMaybe<Scalars['String']>;
+  years?: InputMaybe<Scalars['String']>;
+};
+
+
 export type QueryBookbank_LogArgs = {
   id?: InputMaybe<Scalars['String']>;
 };
@@ -1245,17 +1252,6 @@ export type Position = {
   position3_id?: InputMaybe<Scalars['String']>;
   role?: InputMaybe<Scalars['String']>;
   user_id?: InputMaybe<Scalars['String']>;
-};
-
-export type Position_User = {
-  __typename?: 'position_user';
-  id: Scalars['ID'];
-  name?: Maybe<Scalars['String']>;
-  position1_id?: Maybe<Scalars['String']>;
-  position2_id?: Maybe<Scalars['String']>;
-  position3_id?: Maybe<Scalars['String']>;
-  role?: Maybe<Scalars['String']>;
-  user_id?: Maybe<Scalars['String']>;
 };
 
 export type Provident_Log = {
