@@ -199,19 +199,6 @@ const ProfileEmployee: React.FC = () => {
     });
   };
 
-  useEffect(() => {
-    // if (!ability.can('read', 'manageSelfDetail')) {
-    //   // throw Error('Hello');
-    //   throw json(
-    //     {
-    //       sorry: 'You have been fired.',
-    //       hrEmail: 'hr@bigco.com',
-    //     },
-    //     { status: 401 },
-    //   );
-    // }
-  }, [loading]);
-
   const AllCounrty = () => {
     axios.get('https://restcountries.com/v2/all').then((data) => {
       const items = data.data.map((e: any) => {
