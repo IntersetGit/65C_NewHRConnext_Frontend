@@ -26,7 +26,6 @@ import {
   FETCH_SELECT_BOOK_BANK,
   UPDATE_SALARY_BASE,
 } from '../../../service/graphql/Summary';
-const [CreateBookBank] = useMutation(UPDATE_SALARY_BASE);
 
 import { GiReceiveMoney } from 'react-icons/gi';
 import type { ColumnsType } from 'antd/es/table';
@@ -308,10 +307,10 @@ const Remuneration: React.FC = () => {
 
       <Drawer
         title={`${drawerType === 1
-            ? 'Update ข้อมูลฐานเงินเดือน'
-            : drawerType === 2
-              ? 'แก้ไขข้อมูลฐานเงินเดือน'
-              : 'ข้อมูลฐานเงินเดือน'
+          ? 'Update ข้อมูลฐานเงินเดือน'
+          : drawerType === 2
+            ? 'แก้ไขข้อมูลฐานเงินเดือน'
+            : 'ข้อมูลฐานเงินเดือน'
           }`}
         onClose={onClose}
         open={open}
