@@ -28,35 +28,21 @@ import { useState } from 'react';
 
 import { gql } from '../../../__generated__';
 import { useQuery, useMutation, from } from '@apollo/client';
-import { FETCH_SELECT_BOOK_BANK } from '../../../service/graphql/Summary';
+import { FETCH_SELECT_BOOK_BANK, FETCH_AllSALARY_BASE } from '../../../service/graphql/Summary';
 
 const { useToken } = theme;
-
-type SettingSummaryType = {
-  id: string;
-  name: string;
-};
-
-interface DataType {
-  key: number;
-  name: string;
-  number: number;
-  position: string;
-  department: string;
-  tel: string;
-  email: string;
-  base_income: number;
-}
 
 const Compensation: React.FC = () => {
   const token = useToken();
   const [open, setOpen] = useState(false);
-  const [form] = Form.useForm<SettingSummaryType>();
+  const [form] = Form.useForm<any>();
   const navigate = useNavigate();
   const location = useLocation();
   let propsstate = location.state as any;
 
   const { data: BookBank } = useQuery(FETCH_SELECT_BOOK_BANK);
+  const { data: TableData, refetch } = useQuery(FETCH_AllSALARY_BASE);
+  console.log("table", TableData)
 
   const showDrawer = () => {
     setOpen(true);
@@ -92,48 +78,51 @@ const Compensation: React.FC = () => {
   const onMenuClick = (event: any, record: any) => {
     const { key } = event;
     if (key === 'view') {
-      navigate(`profileCompensation`);
-      // navigate(`profileCompensation?id=${record.profile.id}`, {
-      //   state: { ...record?.profile, mode: 'view' },
-      // });
+      navigate(`profileCompensation?id=${record.profile.id}`, {
+        state: { ...record?.profile, ...record?.bookbank_log },
+      });
     }
   };
 
   const columns: ColumnsType<any> = [
     {
       title: 'รหัสพนักงาน',
-      key: 'staff_code',
-      dataIndex: 'staff_code',
+      key: 'profile',
+      dataIndex: 'profile',
       align: 'center',
+      render: (record) => record.staff_code,
     },
     {
       title: 'ชื่อ-สกุล',
-      key: 'name',
-      dataIndex: 'name',
+      key: 'profile',
+      dataIndex: 'profile',
       align: 'center',
       render: (txt: any) =>
-        txt.profile?.firstname_th + ' ' + txt.profile?.lastname_th,
+        txt.prefix_th + ' ' + txt.firstname_th + ' ' + txt.lastname_th,
     },
     {
       title: 'แผนก',
-      key: 'department',
-      dataIndex: 'department',
+      key: 'Position_user',
       align: 'center',
+      render: (record) => {
+        return record?.Position_user[0]?.mas_positionlevel2?.name;
+      },
     },
     {
       title: 'ตำแหน่ง',
-      key: 'mas_positionlevel2',
-      dataIndex: 'mas_positionlevel2',
+      key: 'Position_user',
       align: 'center',
-      render: (record: any) => {
-        return <div>{record?.name}</div>;
+      render: (record) => {
+        return record?.Position_user[0]?.mas_positionlevel3?.name;
       },
     },
     {
       title: 'ฐานเงินเดือน',
-      key: 'base_income',
-      dataIndex: 'base_income',
+      key: 'bookbank_log',
       align: 'center',
+      render: (record) => {
+        return record?.bookbank_log[0]?.base_salary;
+      },
     },
     {
       title: 'Action',
@@ -237,9 +226,9 @@ const Compensation: React.FC = () => {
             </Space>
           </Row>
         </Col>
-        <Table rowKey={'id'} columns={columns}></Table>
+        <Table rowKey={'id'} columns={columns} dataSource={TableData?.data_salary as any}></Table>
       </Card>
-
+      {/* position_data?.getposition_user as any */}
       <Drawer
         title={'ตั้งค่าการคำนวณเงินเดือน'}
         onClose={onClose}
