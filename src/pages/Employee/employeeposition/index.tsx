@@ -274,8 +274,8 @@ const PositionEmployee: React.FC = (props) => {
     },
     {
       title: 'ตำแหน่ง',
-      key: 'mas_positionlevel2',
-      dataIndex: 'mas_positionlevel2',
+      key: 'mas_positionlevel3',
+      dataIndex: 'mas_positionlevel3',
       align: 'center',
       render: (record: any) => {
         return <div>{record?.name}</div>;
@@ -357,7 +357,7 @@ const PositionEmployee: React.FC = (props) => {
               <div className="mt-4">
                 {position_data?.getposition_user?.[
                   position_data?.getposition_user?.length - 1
-                ]?.mas_positionlevel2?.name ?? 'ไม่มีตำแหน่งงาน'}
+                ]?.mas_positionlevel3?.name ?? 'ไม่มีตำแหน่งงาน'}
               </div>
             </div>
           </Col>
