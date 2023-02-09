@@ -27,12 +27,10 @@ import edit from '../../../../assets/Edit.png';
 import Del from '../../../../assets/DEL.png';
 import View from '../../../../assets/View.png';
 import type { ColumnsType } from 'antd/es/table';
-import { useNavigate, useLocation } from 'react-router-dom';
 import { useState } from 'react';
-import { useAuth } from '../../../../hooks/useAuth';
-import moment from 'moment';
 const { useToken } = theme;
 const { TextArea } = Input;
+import { FECTH_ALL_LEAVE } from '../../../../service/graphql/Leave';
 
 const ProfileApprove: React.FC = () => {
   const [open, setOpen] = useState(false);

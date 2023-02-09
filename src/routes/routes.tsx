@@ -218,13 +218,12 @@ export const routing: RoutingType[] = [
         path: '/:companycode/summary',
         label: 'เงินเดือน',
         icon: <RiMoneyDollarCircleLine size={'18'} />,
-        forcerendermenu: true,
         element: <Summaryroot />,
         children: [
           {
+            label: 'จัดการค่าตอบแทน',
             path: '/:companycode/summary',
             element: <Compensation />,
-            hideInmenu: true,
           },
           {
             path: '/:companycode/summary/profileCompensation',
@@ -232,9 +231,9 @@ export const routing: RoutingType[] = [
             hideInmenu: true,
           },
           {
+            label: 'ข้อมูลการเงิน',
             path: '/:companycode/summary/remuneration',
             element: <Remuneration />,
-            hideInmenu: true,
           },
           {
             path: '/:companycode/summary/profileCompensation/payslip',
