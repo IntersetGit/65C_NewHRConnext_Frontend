@@ -23,12 +23,12 @@ import Del from '../../../assets/DEL.png';
 import View from '../../../assets/View.png';
 import type { CheckboxValueType } from 'antd/es/checkbox/Group';
 import { useState } from 'react';
-
+import Swal from 'sweetalert2';
 
 
 import { gql } from '../../../__generated__';
 import { useQuery, useMutation, from } from '@apollo/client';
-import { FETCH_SELECT_BOOK_BANK, FETCH_AllSALARY_BASE } from '../../../service/graphql/Summary';
+import { FETCH_SELECT_BOOK_BANK, FETCH_AllSALARY_BASE, CREATE_ExpenseCom } from '../../../service/graphql/Summary';
 
 const { useToken } = theme;
 
@@ -39,9 +39,12 @@ const Compensation: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   let propsstate = location.state as any;
+  const [selectedRow, setSelectedRow] = useState<any>();
 
   const { data: BookBank } = useQuery(FETCH_SELECT_BOOK_BANK);
   const { data: TableData, refetch } = useQuery(FETCH_AllSALARY_BASE);
+  const [creteExpenseCom] = useMutation(CREATE_ExpenseCom);
+
   console.log("table", TableData)
 
   const showDrawer = () => {
@@ -78,11 +81,53 @@ const Compensation: React.FC = () => {
   const onMenuClick = (event: any, record: any) => {
     const { key } = event;
     if (key === 'view') {
-      navigate(`profileCompensation?id=${record.profile.id}`, {
-        state: { ...record?.profile, ...record?.bookbank_log },
+      setSelectedRow(record);
+      navigate(`profileCompensation?id=${record.profile.userId}`, {
+        state: record,
       });
+
+      console.log("State", record)
     }
   };
+
+  const onSubmitForm = (value: any) => {
+    console.log("onSubmit", value)
+    Swal.fire({
+      title: `ยืนยันการตั้งค่าการคำนวณเงินเดือน`,
+      icon: 'warning',
+      showDenyButton: true,
+      showCancelButton: false,
+      confirmButtonColor: token.token.colorPrimary,
+      denyButtonColor: '#ea4e4e',
+      confirmButtonText: 'ตกลง',
+      denyButtonText: `ยกเลิก`,
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        creteExpenseCom({
+          variables: {
+            data: {
+              ...value,
+              user_id: propsstate?.userId,
+            },
+          },
+        })
+          .then((val) => {
+            console.log(val);
+            if (val.data?.CreateAndUpdateExpenseCom?.status) {
+              Swal.fire(`ตั้งค่าการคำนวณเงินเดือนสำเร็จ!`, '', 'success');
+              refetch();
+              form.resetFields();
+            }
+          })
+          .catch((err) => {
+            Swal.fire(`ตั้งค่าการคำนวณเงินเดือนไม่สำเร็จ!`, '', 'error');
+            console.error(err);
+          });
+      }
+    });
+
+    setOpen(false);
+  }
 
   const columns: ColumnsType<any> = [
     {
@@ -235,7 +280,7 @@ const Compensation: React.FC = () => {
         open={open}
         size="large"
       >
-        <Form layout="horizontal" form={form} labelCol={{ span: 8 }}>
+        <Form layout="horizontal" form={form} labelCol={{ span: 8 }} onFinish={onSubmitForm}>
           <Row>
             <Col span={16}>
               <Form.Item name="name" label={'ธนาคาร (บริษัท)'}>
@@ -254,7 +299,7 @@ const Compensation: React.FC = () => {
 
           <Row>
             <Col span={16}>
-              <Form.Item name="social_security" label={'หักประกันงสังคม (%)'}>
+              <Form.Item name="social_security" label={'หักประกันสังคม (%)'}>
                 <Input />
               </Form.Item>
             </Col>
@@ -292,6 +337,7 @@ const Compensation: React.FC = () => {
                   <Button
                     type="primary"
                     style={{ backgroundColor: token.token.colorPrimary }}
+                    htmlType="submit"
                   >
                     บันทึก
                   </Button>

@@ -114,3 +114,61 @@ query Data_salary($fristname: String, $position2: String, $position3: String) {
   }
 }
 `);
+
+export const FETCH_AllSALARY_USER = gql(`
+query Salary($userId: String) {
+  salary(userId: $userId) {
+    id
+    profile {
+      firstname_th
+      lastname_th
+    }
+    salary {
+      net
+      month
+      years
+    }
+    Position_user {
+      role
+      user_id
+      date
+      mas_positionlevel3 {
+        name
+      }
+    }
+    bookbank_log {
+      mas_bank {
+        name
+      }
+      bank_number
+      base_salary
+    }
+    companyBranch {
+      company {
+        name
+      }
+      address
+      address_2
+    }
+  }
+}
+`);
+
+export const CREATE_SALARY_USER = gql(`
+  mutation Createsalary($data: salaryInput) {
+    Createsalary(data: $data) {
+      message
+      status
+    }
+  }
+`);
+
+export const CREATE_ExpenseCom = gql(`
+  mutation CreateAndUpdateExpenseCom($data: ExpenseComInput) {
+    CreateAndUpdateExpenseCom(data: $data) {
+      message
+      status
+    }
+  }
+`);
+

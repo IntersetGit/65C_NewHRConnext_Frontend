@@ -18,6 +18,7 @@ import {
 } from 'antd';
 import type { DatePickerProps } from 'antd';
 import { AntDesignOutlined, MoreOutlined } from '@ant-design/icons';
+import Swal from 'sweetalert2';
 
 import { GiReceiveMoney } from 'react-icons/gi';
 import type { ColumnsType } from 'antd/es/table';
@@ -29,11 +30,11 @@ import Cal1 from '../../../assets/Cal1.png';
 
 import moment from 'moment';
 import { generatePath, useNavigate, useLocation } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useMutation, useQuery } from '@apollo/client';
 
-import { FETCH_DATA_SUMMARY } from '../../../service/graphql/Summary';
-import { FETCH_GETALLUSER } from '../../../service/graphql/Users';
+import { FETCH_AllSALARY_USER, CREATE_SALARY_USER } from '../../../service/graphql/Summary';
+// import { FETCH_GETALLUSER, } from '../../../service/graphql/Users';
 import {
     FETCH_GETALL_POSITION,
     CRETE_POSITION_USER,
@@ -43,28 +44,22 @@ import { getFilePath } from '../../../util';
 
 const { useToken } = theme;
 
-interface DataType {
-    date: any;
-    total_income: number;
-    total_expense: number;
-    net: number;
-    status: string;
-}
-
 const Compensation: React.FC = () => {
     const token = useToken();
     const [open, setOpen] = useState(false);
     const [form] = Form.useForm();
     const navigate = useNavigate();
     const [drawerType, setDrawerType] = useState(1);
-    const [selectedRow, setSelectedRow] = useState(null);
+    const [selectedRow, setselectedRow] = useState<any>();
 
     const location = useLocation();
     let propsstate = location.state as any;
     console.log(propsstate);
 
-    const { data: header } = useQuery(FETCH_GETALLUSER);
-    const { data: position_data, refetch } = useQuery(FETCH_GETALL_POSITION);
+    // const { data: header } = useQuery(FETCH_GETALLUSER);
+    const { data: position_data } = useQuery(FETCH_GETALL_POSITION);
+    const { data: TableDataSalary, refetch } = useQuery(FETCH_AllSALARY_USER);
+    const [creteSalaryUser] = useMutation(CREATE_SALARY_USER);
 
     const showDrawer = (type: any) => {
         setOpen(true);
@@ -75,6 +70,10 @@ const Compensation: React.FC = () => {
         form.resetFields();
         setOpen(false);
     };
+
+    // useEffect(() => {
+    //     form.setFieldsValue({ base_salary: propsstate?.bookbank_log[0]?.base_salary })
+    // }, [])
 
     const genarateMenu = (record: any) => {
         return [
@@ -115,15 +114,88 @@ const Compensation: React.FC = () => {
             navigate(`payslip`);
         } else if (key === 'calculate') {
             showDrawer(1);
-            setSelectedRow(record)
+            setselectedRow(record)
             form.setFieldsValue({ date: record?.date?.format('MM/YYYY') })
         }
     };
 
-    const onSubmitForm = (value: any) => {
-        console.log('คำนวณ', value)
+    // const onSubmitForm = (value: any) => {
+    //     console.log('คำนวณ', value)
+    // }
 
-    }
+    const onSubmitForm = (value: any) => {
+        console.log("คำนวณ", value)
+        // drawerType === 1
+        //     ? Swal.fire({
+        //         title: `ยืนยันการคำนวณเงินเดือน`,
+        //         icon: 'warning',
+        //         showDenyButton: true,
+        //         showCancelButton: false,
+        //         confirmButtonColor: token.token.colorPrimary,
+        //         denyButtonColor: '#ea4e4e',
+        //         confirmButtonText: 'ตกลง',
+        //         denyButtonText: `ยกเลิก`,
+        //     }).then(async (result) => {
+        //         if (result.isConfirmed) {
+        //             creteSalaryUser({
+        //                 variables: {
+        //                     data: {
+        //                         ...value,
+        //                         user_id: propsstate?.userId,
+        //                     },
+        //                 },
+        //             })
+        //                 .then((val) => {
+        //                     console.log(val);
+        //                     if (val.data?.Createsalary?.status) {
+        //                         Swal.fire(`คำนวณเงินเดือนสำเร็จ!`, '', 'success');
+        //                         refetch();
+        //                         form.resetFields();
+        //                     }
+        //                 })
+        //                 .catch((err) => {
+        //                     Swal.fire(`คำนวณเงินเดือนไม่สำเร็จ!`, '', 'error');
+        //                     console.error(err);
+        //                 });
+        //         }
+        //     })
+        //     : Swal.fire({
+        //         title: `ยืนยันการแก้ไขคำนวณเงินเดือน`,
+        //         icon: 'warning',
+        //         showDenyButton: true,
+        //         showCancelButton: false,
+        //         confirmButtonColor: token.token.colorPrimary,
+        //         denyButtonColor: '#ea4e4e',
+        //         confirmButtonText: 'ตกลง',
+        //         denyButtonText: `ยกเลิก`,
+        //     }).then(async (result) => {
+        //         if (result.isConfirmed) {
+        //             creteSalaryUser({
+        //                 variables: {
+        //                     data: {
+        //                         ...value,
+        //                         user_id: propsstate?.userId,
+        //                         id: selectedRow?.id,
+        //                     },
+        //                 },
+        //             })
+        //                 .then((val) => {
+        //                     console.log(val);
+        //                     if (val.data?.Createsalary?.status) {
+        //                         Swal.fire(`แก้ไขข้อมูลคำนวณเงินเดือนสำเร็จ!`, '', 'success');
+        //                         refetch();
+        //                         form.resetFields();
+        //                     }
+        //                 })
+        //                 .catch((err) => {
+        //                     Swal.fire(`แก้ไขข้อมูลคำนวณเงินเดือนไม่สำเร็จ!`, '', 'error');
+        //                     console.error(err);
+        //                     form.resetFields();
+        //                 });
+        //         }
+        //     });
+        // setOpen(false);
+    };
 
     const onChangeDate: DatePickerProps['onChange'] = (date, dateString) => {
         console.log(date, dateString);
@@ -177,31 +249,6 @@ const Compensation: React.FC = () => {
         },
     ];
 
-    const data: DataType[] = [
-        {
-            date: 'มกราคม 2023',
-            total_income: 25000,
-            total_expense: 500,
-            net: 24500,
-            status: 'คำนวณสำเร็จ',
-        },
-        {
-            date: 'กุมภาพันธ์ 2023',
-            total_income: 25000,
-            total_expense: 500,
-            net: 24500,
-            status: 'คำนวณสำเร็จ',
-        },
-        {
-            date: 'มีนาคม 2023',
-            total_income: 25000,
-            total_expense: 500,
-            net: 24500,
-            status: 'คำนวณสำเร็จ',
-        },
-
-    ];
-
     return (
         <>
             <div className="flex text-3xl ml-2 pt-4">
@@ -228,8 +275,8 @@ const Compensation: React.FC = () => {
                     <Col xs={24} sm={24} md={4} lg={4} xl={4}>
                         <div className="text-lg font-bold">
                             <u className="text-blue-800">
-                                {propsstate?.prefix_th} {propsstate?.firstname_th}{' '}
-                                {propsstate?.lastname_th}
+                                {propsstate?.profile?.prefix_th} {propsstate?.profile?.firstname_th}{' '}
+                                {propsstate?.profile?.lastname_th}
                             </u>
                             <div className="mt-4">
                                 {position_data?.getposition_user?.[
@@ -244,7 +291,10 @@ const Compensation: React.FC = () => {
                     <Row gutter={16}>
                         <Col xs={24} sm={24} md={24} lg={9} xl={6}>
                             <Form.Item name="base_salary" colon={false} label={'ฐานเงินเดือน'}>
-                                <Input allowClear disabled></Input>
+                                <Input allowClear
+                                    disabled
+                                    defaultValue={propsstate?.bookbank_log[0]?.base_salary}>
+                                </Input>
                             </Form.Item>
                         </Col>
                     </Row>
@@ -252,13 +302,19 @@ const Compensation: React.FC = () => {
                     <Row gutter={16}>
                         <Col xs={24} sm={24} md={24} lg={9} xl={6}>
                             <Form.Item name="bank_number" colon={false} label={'เลชบัญชี'} style={{ marginLeft: "24px", }}>
-                                <Input allowClear disabled></Input>
+                                <Input allowClear
+                                    disabled
+                                    defaultValue={propsstate?.bookbank_log[0]?.bank_number}>
+                                </Input>
                             </Form.Item>
                         </Col>
 
                         <Col xs={24} sm={24} md={24} lg={9} xl={6}>
                             <Form.Item name="bank" colon={false} label={'ธนาคาร'} style={{ marginLeft: "32px", }}>
-                                <Input allowClear disabled></Input>
+                                <Input allowClear
+                                    disabled
+                                    defaultValue={propsstate?.bookbank_log[0]?.mas_bank?.name}>
+                                </Input>
                             </Form.Item>
                         </Col>
                     </Row>
@@ -278,7 +334,10 @@ const Compensation: React.FC = () => {
                                     <Button
                                         type="primary"
                                         style={{ backgroundColor: token.token.colorPrimary }}
-                                        onClick={() => showDrawer(1)}
+                                        onClick={() => {
+                                            showDrawer(1)
+                                            form.setFieldsValue({ base_salary: propsstate?.bookbank_log[0]?.base_salary })
+                                        }}
                                     >
                                         คำนวณเงินเดือน
                                     </Button>
@@ -292,7 +351,8 @@ const Compensation: React.FC = () => {
                 </Form>
 
             </Card>
-            <Card className="shadow-xl mt-4"><Table columns={columns} dataSource={data} /></Card>
+            <Card className="shadow-xl mt-4">
+                <Table columns={columns} dataSource={TableDataSalary?.salary as any} /></Card>
 
             <Drawer
                 title={`${drawerType === 1 ? "คำนวณเงินเดือน"
@@ -304,13 +364,13 @@ const Compensation: React.FC = () => {
             >
                 <div className="text-lg font-bold">
                     <u style={{ color: token.token.colorPrimary }}>
-                        {propsstate?.prefix_th} {propsstate?.firstname_th}{' '}
-                        {propsstate?.lastname_th}
+                        {propsstate?.profile?.prefix_th} {propsstate?.profile?.firstname_th}{' '}
+                        {propsstate?.profile?.lastname_th}
                     </u>
                     <div className="mt-4">
                         {position_data?.getposition_user?.[
                             position_data?.getposition_user?.length - 1
-                        ]?.mas_positionlevel2?.name ?? 'no'}
+                        ]?.mas_positionlevel3?.name ?? 'no'}
                     </div>
                 </div>
 
@@ -335,7 +395,10 @@ const Compensation: React.FC = () => {
                     <Row>
                         <Col xs={24} sm={24} md={24} lg={24} xl={24}>
                             <Form.Item name="base_salary" label={'ฐานเงินเดือน'} className='ml-[52px]'>
-                                <Input disabled={drawerType === 3 ? true : false} />
+                                <Input
+                                    disabled
+                                // defaultValue={propsstate?.bookbank_log[0]?.base_salary}
+                                />
                             </Form.Item>
                         </Col>
                     </Row>
@@ -414,6 +477,14 @@ const Compensation: React.FC = () => {
 
                     <Row>
                         <Col xs={24} sm={24} md={24} lg={24} xl={24}>
+                            <Form.Item name="total_income" label={'รายได้รวม'} className='ml-[73px]'>
+                                <Input disabled />
+                            </Form.Item>
+                        </Col>
+                    </Row>
+
+                    <Row>
+                        <Col xs={24} sm={24} md={24} lg={24} xl={24}>
                             <div className="text-[18px] ">
                                 <u>รายหัก</u>
                             </div>
@@ -434,7 +505,6 @@ const Compensation: React.FC = () => {
                                 </Form.Item>
                             </Space>
                         </Col>
-
                     </Row>
 
                     <Row>
@@ -479,6 +549,14 @@ const Compensation: React.FC = () => {
                         <Col xs={24} sm={24} md={24} lg={24} xl={24}>
                             <Form.Item name="other" label={'อื่น ๆ'} className='ml-[95px]'>
                                 <Input disabled={drawerType === 3 ? true : false} />
+                            </Form.Item>
+                        </Col>
+                    </Row>
+
+                    <Row>
+                        <Col xs={24} sm={24} md={24} lg={24} xl={24}>
+                            <Form.Item name="total_expense" label={'รายหักรวม'} className='ml-[73px]'>
+                                <Input disabled />
                             </Form.Item>
                         </Col>
                     </Row>
