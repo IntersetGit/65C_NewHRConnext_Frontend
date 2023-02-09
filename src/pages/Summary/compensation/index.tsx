@@ -28,35 +28,21 @@ import { useState } from 'react';
 
 import { gql } from '../../../__generated__';
 import { useQuery, useMutation, from } from '@apollo/client';
-import { FETCH_SELECT_BOOK_BANK } from '../../../service/graphql/Summary';
+import { FETCH_SELECT_BOOK_BANK, FETCH_AllSALARY_BASE } from '../../../service/graphql/Summary';
 
 const { useToken } = theme;
-
-type SettingSummaryType = {
-  id: string;
-  name: string;
-};
-
-interface DataType {
-  key: number;
-  name: string;
-  number: number;
-  position: string;
-  department: string;
-  tel: string;
-  email: string;
-  base_income: number;
-}
 
 const Compensation: React.FC = () => {
   const token = useToken();
   const [open, setOpen] = useState(false);
-  const [form] = Form.useForm<SettingSummaryType>();
+  const [form] = Form.useForm<any>();
   const navigate = useNavigate();
   const location = useLocation();
   let propsstate = location.state as any;
 
   const { data: BookBank } = useQuery(FETCH_SELECT_BOOK_BANK);
+  const { data: TableData, refetch } = useQuery(FETCH_AllSALARY_BASE);
+  console.log("table", TableData)
 
   const showDrawer = () => {
     setOpen(true);
@@ -92,55 +78,51 @@ const Compensation: React.FC = () => {
   const onMenuClick = (event: any, record: any) => {
     const { key } = event;
     if (key === 'view') {
-      navigate(`profileCompensation`);
-      // navigate(`profileCompensation?id=${record.profile.id}`, {
-      //   state: { ...record?.profile, mode: 'view' },
-      // });
+      navigate(`profileCompensation?id=${record.profile.id}`, {
+        state: { ...record?.profile, ...record?.bookbank_log },
+      });
     }
   };
 
-  const columns: ColumnsType<DataType> = [
+  const columns: ColumnsType<any> = [
     {
-      title: 'ลำดับ',
-      key: 'number',
-      dataIndex: 'number',
+      title: 'รหัสพนักงาน',
+      key: 'profile',
+      dataIndex: 'profile',
       align: 'center',
+      render: (record) => record.staff_code,
     },
     {
       title: 'ชื่อ-สกุล',
-      key: 'name',
-      dataIndex: 'name',
+      key: 'profile',
+      dataIndex: 'profile',
       align: 'center',
+      render: (txt: any) =>
+        txt.prefix_th + ' ' + txt.firstname_th + ' ' + txt.lastname_th,
+    },
+    {
+      title: 'แผนก',
+      key: 'Position_user',
+      align: 'center',
+      render: (record) => {
+        return record?.Position_user[0]?.mas_positionlevel2?.name;
+      },
     },
     {
       title: 'ตำแหน่ง',
-      key: 'position',
-      dataIndex: 'position',
+      key: 'Position_user',
       align: 'center',
-    },
-    {
-      title: 'แผนก/ฝ่าย',
-      key: 'department',
-      dataIndex: 'department',
-      align: 'center',
-    },
-    {
-      title: 'เบอร์โทร',
-      key: 'tel',
-      dataIndex: 'tel',
-      align: 'center',
-    },
-    {
-      title: 'e-mail',
-      key: 'email',
-      dataIndex: 'email',
-      align: 'center',
+      render: (record) => {
+        return record?.Position_user[0]?.mas_positionlevel3?.name;
+      },
     },
     {
       title: 'ฐานเงินเดือน',
-      key: 'base_income',
-      dataIndex: 'base_income',
+      key: 'bookbank_log',
       align: 'center',
+      render: (record) => {
+        return record?.bookbank_log[0]?.base_salary;
+      },
     },
     {
       title: 'Action',
@@ -156,59 +138,6 @@ const Compensation: React.FC = () => {
           <MoreOutlined />
         </Dropdown>
       ),
-    },
-  ];
-
-  const data: DataType[] = [
-    {
-      key: 1,
-      number: 1,
-      name: 'นาย สมใจ พิมพ์สวย',
-      position: 'โปรแกรมเมอร์',
-      department: 'พัฒนาซอฟต์แวร์',
-      tel: '086 555 4444',
-      email: 'utai.p@gmail.com',
-      base_income: 25000,
-    },
-    {
-      key: 2,
-      number: 2,
-      name: 'นางสาว สมพร บัวชมพู',
-      position: 'เจ้าหน้าที่การเงิน',
-      department: 'บัญชี',
-      tel: '084 222 1456',
-      email: 'umaporn.b@gmail.com',
-      base_income: 25000,
-    },
-    {
-      key: 3,
-      number: 3,
-      name: 'นาย สุรพงษ์ พิมพ์สวย',
-      position: 'โปรแกรมเมอร์',
-      department: 'พัฒนาซอฟต์แวร์',
-      tel: '065 555 4444',
-      email: 'utai.p@gmail.com',
-      base_income: 25000,
-    },
-    {
-      key: 4,
-      number: 4,
-      name: 'นาย สมศักดิ์ พิมพ์สวย',
-      position: 'นักวิเคราห์และออกแบบระบบ',
-      department: 'พัฒนาซอฟต์แวร์',
-      tel: '065 555 4444',
-      email: 'utai.p@gmail.com',
-      base_income: 25000,
-    },
-    {
-      key: 5,
-      number: 5,
-      name: 'นาย สมบูรณ์ พิมพ์สวย',
-      position: 'โปรแกรมเมอร์',
-      department: 'พัฒนาซอฟต์แวร์',
-      tel: '065 555 4444',
-      email: 'utai.p@gmail.com',
-      base_income: 25000,
     },
   ];
 
@@ -297,9 +226,9 @@ const Compensation: React.FC = () => {
             </Space>
           </Row>
         </Col>
-        <Table columns={columns} dataSource={data}></Table>
+        <Table rowKey={'id'} columns={columns} dataSource={TableData?.data_salary as any}></Table>
       </Card>
-
+      {/* position_data?.getposition_user as any */}
       <Drawer
         title={'ตั้งค่าการคำนวณเงินเดือน'}
         onClose={onClose}

@@ -18,10 +18,15 @@ import {
 } from 'antd';
 import { AntDesignOutlined, MoreOutlined } from '@ant-design/icons';
 import type { DatePickerProps } from 'antd';
+import Swal from 'sweetalert2';
 
 import { gql } from '../../../__generated__/gql';
 import { useQuery, useMutation, from } from '@apollo/client';
-import { FETCH_SELECT_BOOK_BANK } from '../../../service/graphql/Summary';
+import {
+  FETCH_SELECT_BOOK_BANK,
+  UPDATE_SALARY_BASE,
+} from '../../../service/graphql/Summary';
+const [CreateBookBank] = useMutation(UPDATE_SALARY_BASE);
 
 import { GiReceiveMoney } from 'react-icons/gi';
 import type { ColumnsType } from 'antd/es/table';
@@ -62,6 +67,7 @@ const Remuneration: React.FC = () => {
   const [open, setOpen] = useState(false);
   const [form] = Form.useForm<UpdateSummaryType>();
   const [drawerType, setDrawerType] = useState(1);
+  const [selectedRow, setSelectedRow] = useState(null);
 
   const { data: BookBank } = useQuery(FETCH_SELECT_BOOK_BANK);
 
@@ -111,7 +117,76 @@ const Remuneration: React.FC = () => {
 
   const onSubmitForm = (value: any) => {
     console.log('Update', value)
-  }
+    // drawerType === 1
+    //   ? Swal.fire({
+    //     title: `ยืนยันการ Update ฐานเงินเดือน`,
+    //     icon: 'warning',
+    //     showDenyButton: true,
+    //     showCancelButton: false,
+    //     confirmButtonColor: token.token.colorPrimary,
+    //     denyButtonColor: '#ea4e4e',
+    //     confirmButtonText: 'ตกลง',
+    //     denyButtonText: `ยกเลิก`,
+    //   }).then(async (result) => {
+    //     if (result.isConfirmed) {
+    //       CreateBookBank({
+    //         variables: {
+    //           data: {
+    //             ...value,
+    //             user_id: propsstate?.userId,
+    //           },
+    //         },
+    //       })
+    //         .then((val) => {
+    //           console.log(val);
+    //           if (val.data?.createdposition_user?.status) {
+    //             Swal.fire(`Update ฐานเงินเดือนสำเร็จ!`, '', 'success');
+    //             refetch();
+    //           }
+    //         })
+    //         .catch((err) => {
+    //           Swal.fire(`Update ฐานเงินเดือนไม่สำเร็จ!`, '', 'error');
+    //           console.error(err);
+    //         });
+    //     }
+    //   })
+    //   : Swal.fire({
+    //     title: `ยืนยันการแก้ไขฐานเงินเดือน`,
+    //     icon: 'warning',
+    //     showDenyButton: true,
+    //     showCancelButton: false,
+    //     confirmButtonColor: token.token.colorPrimary,
+    //     denyButtonColor: '#ea4e4e',
+    //     confirmButtonText: 'ตกลง',
+    //     denyButtonText: `ยกเลิก`,
+    //   }).then(async (result) => {
+    //     if (result.isConfirmed) {
+    //       CreateBookBank({
+    //         variables: {
+    //           data: {
+    //             ...value,
+    //             user_id: propsstate?.userId,
+    //             id: selectedrow?.id,
+    //           },
+    //         },
+    //       })
+    //         .then((val) => {
+    //           console.log(val);
+    //           if (val.data?.createdposition_user?.status) {
+    //             Swal.fire(`แก้ไขฐานเงินเดือนสำเร็จ!`, '', 'success');
+    //             refetch();
+    //             form.resetFields();
+    //           }
+    //         })
+    //         .catch((err) => {
+    //           Swal.fire(`แก้ไขฐานเงินเดือนไม่สำเร็จ!`, '', 'error');
+    //           console.error(err);
+    //           form.resetFields();
+    //         });
+    //     }
+    //   });
+    // setOpen(false);
+  };
 
   const onMenuClick = (event: any, record: any) => {
     const { key } = event;

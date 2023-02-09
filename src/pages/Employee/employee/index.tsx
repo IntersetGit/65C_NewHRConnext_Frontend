@@ -92,7 +92,7 @@ const Employee: React.FC = () => {
   const onMenuClick = (event: any, record: any) => {
     const { key } = event;
     if (key === 'edit') {
-      console.log(record);
+      console.log(record.Position_user[0]);
       navigate(`useremployee?id=${record.profile.id}`, {
         state: {
           ...record?.profile,
@@ -154,15 +154,19 @@ const Employee: React.FC = () => {
     },
     {
       title: 'ตำแหน่ง',
-      key: 'profile',
-      dataIndex: 'profile',
+      key: 'Positon_user',
       align: 'center',
+      render: (record) => {
+        return record?.Position_user[0]?.mas_positionlevel3?.name;
+      },
     },
     {
       title: 'แผนก',
       key: 'profile',
-      dataIndex: 'profile',
       align: 'center',
+      render: (record) => {
+        return record?.Position_user[0]?.mas_positionlevel2?.name;
+      },
     },
     {
       title: 'เบอร์โทร',

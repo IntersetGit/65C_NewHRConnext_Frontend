@@ -162,6 +162,10 @@ const ProfilePosition: React.FC = (props) => {
   });
 
   const onChangeMasLevel1 = (value: any) => {
+    if (!value) {
+      setMasPostionLevel1([]);
+      setMasPostionLevel2([]);
+    }
     form.setFieldValue('position2_id', null);
     form.setFieldValue('position3_id', null);
     const maspositionlevel1 = positionlevel1?.getMasPositon
@@ -225,6 +229,7 @@ const ProfilePosition: React.FC = (props) => {
                 if (val.data?.createdposition_user?.status) {
                   Swal.fire(`เพิ่มข้อมูลตำแหน่งงานสำเร็จ!`, '', 'success');
                   refetch();
+                  form.resetFields();
                 }
               })
               .catch((err) => {
@@ -298,16 +303,23 @@ const ProfilePosition: React.FC = (props) => {
     const { key } = event;
     if (key === 'edit') {
       showDrawer(2);
-      console.log('sss', record);
       setselectedrow(record);
       onChangeMasLevel1(record?.mas_positionlevel1.id);
       onChangeMasLevel2(record?.mas_positionlevel2.id);
       form.setFieldsValue({
         ...record,
-        date: moment(record.date),
+        date: record.date ? moment(record.date) : undefined,
         headderId: record?.header?.id,
       });
     } else if (key === 'view') {
+      showDrawer(3);
+      onChangeMasLevel1(record?.mas_positionlevel1.id);
+      onChangeMasLevel2(record?.mas_positionlevel2.id);
+      form.setFieldsValue({
+        ...record,
+        date: record.date ? moment(record.date) : undefined,
+        headderId: record?.header?.id,
+      });
     } else if (key === 'delete') {
     }
   };
@@ -322,8 +334,8 @@ const ProfilePosition: React.FC = (props) => {
     },
     {
       title: 'ตำแหน่ง',
-      key: 'mas_positionlevel2',
-      dataIndex: 'mas_positionlevel2',
+      key: 'mas_positionlevel3',
+      dataIndex: 'mas_positionlevel3',
       align: 'center',
       render: (record: any) => {
         return <div>{record?.name}</div>;
@@ -390,7 +402,7 @@ const ProfilePosition: React.FC = (props) => {
               <div className="mt-4">
                 {position_data?.getpositionMe?.[
                   position_data?.getpositionMe?.length - 1
-                ]?.mas_positionlevel2?.name ?? 'ไม่มีตำแหน่งงาน'}
+                ]?.mas_positionlevel3?.name ?? 'ไม่มีตำแหน่งงาน'}
               </div>
             </div>
           </Col>
@@ -402,7 +414,11 @@ const ProfilePosition: React.FC = (props) => {
             <DatePicker
               style={{ width: '100%' }}
               size="large"
-              defaultValue={moment(user?.me?.profile?.start_date_work) as any}
+              defaultValue={
+                user?.me?.profile?.start_date_work
+                  ? moment(user?.me?.profile?.start_date_work)
+                  : (undefined as any)
+              }
               disabled
             />
           </Col>
