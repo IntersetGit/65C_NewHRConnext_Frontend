@@ -146,73 +146,73 @@ const PositionEmployee: React.FC = (props) => {
   const onFinish = (value: any) => {
     drawerType === 1
       ? Swal.fire({
-          title: `ยืนยันการเพิ่มข้อมูลตำแหน่งงาน`,
-          icon: 'warning',
-          showDenyButton: true,
-          showCancelButton: false,
-          confirmButtonColor: token.token.colorPrimary,
-          denyButtonColor: '#ea4e4e',
-          confirmButtonText: 'ตกลง',
-          denyButtonText: `ยกเลิก`,
-        }).then(async (result) => {
-          if (result.isConfirmed) {
-            cretePositonUser({
-              variables: {
-                data: {
-                  ...value,
-                  user_id: propsstate?.userId,
-                },
+        title: `ยืนยันการเพิ่มข้อมูลตำแหน่งงาน`,
+        icon: 'warning',
+        showDenyButton: true,
+        showCancelButton: false,
+        confirmButtonColor: token.token.colorPrimary,
+        denyButtonColor: '#ea4e4e',
+        confirmButtonText: 'ตกลง',
+        denyButtonText: `ยกเลิก`,
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          cretePositonUser({
+            variables: {
+              data: {
+                ...value,
+                user_id: propsstate?.userId,
               },
-            })
-              .then((val) => {
-                console.log(val);
-                if (val.data?.createdposition_user?.status) {
-                  Swal.fire(`เพิ่มข้อมูลตำแหน่งงานสำเร็จ!`, '', 'success');
-                  refetch();
-                  form.resetFields();
-                }
-              })
-              .catch((err) => {
-                Swal.fire(`เพิ่มข้อมูลตำแหน่งงานไม่สำเร็จ!`, '', 'error');
-                console.error(err);
-              });
-          }
-        })
-      : Swal.fire({
-          title: `ยืนยันการแก้ไขข้อมูลตำแหน่งงาน`,
-          icon: 'warning',
-          showDenyButton: true,
-          showCancelButton: false,
-          confirmButtonColor: token.token.colorPrimary,
-          denyButtonColor: '#ea4e4e',
-          confirmButtonText: 'ตกลง',
-          denyButtonText: `ยกเลิก`,
-        }).then(async (result) => {
-          if (result.isConfirmed) {
-            cretePositonUser({
-              variables: {
-                data: {
-                  ...value,
-                  user_id: propsstate?.userId,
-                  id: selectedrow?.id,
-                },
-              },
-            })
-              .then((val) => {
-                console.log(val);
-                if (val.data?.createdposition_user?.status) {
-                  Swal.fire(`แก้ไขข้อมูลตำแหน่งงานสำเร็จ!`, '', 'success');
-                  refetch();
-                  form.resetFields();
-                }
-              })
-              .catch((err) => {
-                Swal.fire(`แก้ไขข้อมูลตำแหน่งงานไม่สำเร็จ!`, '', 'error');
-                console.error(err);
+            },
+          })
+            .then((val) => {
+              console.log(val);
+              if (val.data?.createdposition_user?.status) {
+                Swal.fire(`เพิ่มข้อมูลตำแหน่งงานสำเร็จ!`, '', 'success');
+                refetch();
                 form.resetFields();
-              });
-          }
-        });
+              }
+            })
+            .catch((err) => {
+              Swal.fire(`เพิ่มข้อมูลตำแหน่งงานไม่สำเร็จ!`, '', 'error');
+              console.error(err);
+            });
+        }
+      })
+      : Swal.fire({
+        title: `ยืนยันการแก้ไขข้อมูลตำแหน่งงาน`,
+        icon: 'warning',
+        showDenyButton: true,
+        showCancelButton: false,
+        confirmButtonColor: token.token.colorPrimary,
+        denyButtonColor: '#ea4e4e',
+        confirmButtonText: 'ตกลง',
+        denyButtonText: `ยกเลิก`,
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          cretePositonUser({
+            variables: {
+              data: {
+                ...value,
+                user_id: propsstate?.userId,
+                id: selectedrow?.id,
+              },
+            },
+          })
+            .then((val) => {
+              console.log(val);
+              if (val.data?.createdposition_user?.status) {
+                Swal.fire(`แก้ไขข้อมูลตำแหน่งงานสำเร็จ!`, '', 'success');
+                refetch();
+                form.resetFields();
+              }
+            })
+            .catch((err) => {
+              Swal.fire(`แก้ไขข้อมูลตำแหน่งงานไม่สำเร็จ!`, '', 'error');
+              console.error(err);
+              form.resetFields();
+            });
+        }
+      });
     setOpen(false);
   };
 
@@ -292,8 +292,9 @@ const PositionEmployee: React.FC = (props) => {
       key: 'header',
       dataIndex: 'header',
       align: 'center',
-      render: (txt: any) =>
-        txt.profile?.firstname_th + ' ' + txt.profile?.lastname_th,
+      render: (record) => {
+        return <div>{record?.profile?.firstname_th} {' '} {record?.profile?.lastname_th}</div>
+      }
     },
     {
       title: 'Action',
@@ -355,9 +356,10 @@ const PositionEmployee: React.FC = (props) => {
                 {propsstate?.lastname_th}
               </u>
               <div className="mt-4">
-                {position_data?.getposition_user?.[
+                {position_data?.getposition_user[0]?.mas_positionlevel3?.name ? position_data?.getposition_user[0]?.mas_positionlevel3?.name : 'ไม่มีตำแหน่งงาน'}
+                {/* {position_data?.getposition_user?.[
                   position_data?.getposition_user?.length - 1
-                ]?.mas_positionlevel3?.name ?? 'ไม่มีตำแหน่งงาน'}
+                ]?.mas_positionlevel3?.name ?? 'ไม่มีตำแหน่งงาน'} */}
               </div>
             </div>
           </Col>
@@ -412,13 +414,12 @@ const PositionEmployee: React.FC = (props) => {
       </Card>
 
       <Drawer
-        title={`${
-          drawerType === 1
-            ? 'เพิ่มตำแหน่งงาน'
-            : drawerType === 2
+        title={`${drawerType === 1
+          ? 'เพิ่มตำแหน่งงาน'
+          : drawerType === 2
             ? 'แก้ไขตำแหน่งงาน'
             : 'ดูตำแหน่งงาน'
-        }`}
+          }`}
         size="large"
         open={open}
         onClose={onClose}

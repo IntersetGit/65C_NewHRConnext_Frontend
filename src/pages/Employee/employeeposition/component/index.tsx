@@ -206,73 +206,73 @@ const ProfilePosition: React.FC = (props) => {
   const onFinish = (value: any) => {
     drawerType === 1
       ? Swal.fire({
-          title: `ยืนยันการเพิ่มข้อมูลตำแหน่งงาน`,
-          icon: 'warning',
-          showDenyButton: true,
-          showCancelButton: false,
-          confirmButtonColor: token.token.colorPrimary,
-          denyButtonColor: '#ea4e4e',
-          confirmButtonText: 'ตกลง',
-          denyButtonText: `ยกเลิก`,
-        }).then(async (result) => {
-          if (result.isConfirmed) {
-            cretePositonUser({
-              variables: {
-                data: {
-                  ...value,
-                  user_id: user?.me?.profile?.userId,
-                },
+        title: `ยืนยันการเพิ่มข้อมูลตำแหน่งงาน`,
+        icon: 'warning',
+        showDenyButton: true,
+        showCancelButton: false,
+        confirmButtonColor: token.token.colorPrimary,
+        denyButtonColor: '#ea4e4e',
+        confirmButtonText: 'ตกลง',
+        denyButtonText: `ยกเลิก`,
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          cretePositonUser({
+            variables: {
+              data: {
+                ...value,
+                user_id: user?.me?.profile?.userId,
               },
-            })
-              .then((val) => {
-                console.log(val);
-                if (val.data?.createdposition_user?.status) {
-                  Swal.fire(`เพิ่มข้อมูลตำแหน่งงานสำเร็จ!`, '', 'success');
-                  refetch();
-                  form.resetFields();
-                }
-              })
-              .catch((err) => {
-                Swal.fire(`เพิ่มข้อมูลตำแหน่งงานไม่สำเร็จ!`, '', 'error');
-                console.error(err);
-              });
-          }
-        })
-      : Swal.fire({
-          title: `ยืนยันการแก้ไขข้อมูลตำแหน่งงาน`,
-          icon: 'warning',
-          showDenyButton: true,
-          showCancelButton: false,
-          confirmButtonColor: token.token.colorPrimary,
-          denyButtonColor: '#ea4e4e',
-          confirmButtonText: 'ตกลง',
-          denyButtonText: `ยกเลิก`,
-        }).then(async (result) => {
-          if (result.isConfirmed) {
-            cretePositonUser({
-              variables: {
-                data: {
-                  ...value,
-                  // user_id: user?.me?.profile?.userId,
-                  id: selectedrow?.id,
-                },
-              },
-            })
-              .then((val) => {
-                console.log(val);
-                if (val.data?.createdposition_user?.status) {
-                  Swal.fire(`แก้ไขข้อมูลตำแหน่งงานสำเร็จ!`, '', 'success');
-                  refetch();
-                  form.resetFields();
-                }
-              })
-              .catch((err) => {
-                Swal.fire(`แก้ไขข้อมูลตำแหน่งงานไม่สำเร็จ!`, '', 'error');
-                console.error(err);
+            },
+          })
+            .then((val) => {
+              console.log(val);
+              if (val.data?.createdposition_user?.status) {
+                Swal.fire(`เพิ่มข้อมูลตำแหน่งงานสำเร็จ!`, '', 'success');
+                refetch();
                 form.resetFields();
-              });
-          }
-        });
+              }
+            })
+            .catch((err) => {
+              Swal.fire(`เพิ่มข้อมูลตำแหน่งงานไม่สำเร็จ!`, '', 'error');
+              console.error(err);
+            });
+        }
+      })
+      : Swal.fire({
+        title: `ยืนยันการแก้ไขข้อมูลตำแหน่งงาน`,
+        icon: 'warning',
+        showDenyButton: true,
+        showCancelButton: false,
+        confirmButtonColor: token.token.colorPrimary,
+        denyButtonColor: '#ea4e4e',
+        confirmButtonText: 'ตกลง',
+        denyButtonText: `ยกเลิก`,
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          cretePositonUser({
+            variables: {
+              data: {
+                ...value,
+                // user_id: user?.me?.profile?.userId,
+                id: selectedrow?.id,
+              },
+            },
+          })
+            .then((val) => {
+              console.log(val);
+              if (val.data?.createdposition_user?.status) {
+                Swal.fire(`แก้ไขข้อมูลตำแหน่งงานสำเร็จ!`, '', 'success');
+                refetch();
+                form.resetFields();
+              }
+            })
+            .catch((err) => {
+              Swal.fire(`แก้ไขข้อมูลตำแหน่งงานไม่สำเร็จ!`, '', 'error');
+              console.error(err);
+              form.resetFields();
+            });
+        }
+      });
     setOpen(false);
   };
 
@@ -400,9 +400,10 @@ const ProfilePosition: React.FC = (props) => {
                 {user?.me?.profile?.lastname_th}
               </u>
               <div className="mt-4">
-                {position_data?.getpositionMe?.[
+                {position_data?.getpositionMe[0]?.mas_positionlevel3?.name ? position_data?.getpositionMe[0]?.mas_positionlevel3?.name : 'ไม่มีตำแหน่งงาน'}
+                {/* {position_data?.getpositionMe?.[
                   position_data?.getpositionMe?.length - 1
-                ]?.mas_positionlevel3?.name ?? 'ไม่มีตำแหน่งงาน'}
+                ]?.mas_positionlevel3?.name ?? 'ไม่มีตำแหน่งงาน'} */}
               </div>
             </div>
           </Col>
