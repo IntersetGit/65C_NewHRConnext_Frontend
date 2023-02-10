@@ -329,7 +329,7 @@ export type ExpenseComInput = {
   companyBranchId?: InputMaybe<Scalars['String']>;
   date?: InputMaybe<Scalars['Date']>;
   id?: InputMaybe<Scalars['ID']>;
-  social_security?: InputMaybe<Scalars['Float']>;
+  ss_per?: InputMaybe<Scalars['Float']>;
   vat_per?: InputMaybe<Scalars['Float']>;
 };
 
@@ -1028,6 +1028,7 @@ export type Expense_Company = {
   monthId?: Maybe<Scalars['String']>;
   salary?: Maybe<Array<Maybe<Salary>>>;
   social_security?: Maybe<Scalars['Float']>;
+  ss_per?: Maybe<Scalars['Float']>;
   vat_per?: Maybe<Scalars['Float']>;
 };
 
@@ -1254,8 +1255,8 @@ export type Position = {
   user_id?: InputMaybe<Scalars['String']>;
 };
 
-export type Position_User = {
-  __typename?: 'position_user';
+export type Position_Userr = {
+  __typename?: 'position_userr';
   id: Scalars['ID'];
   name?: Maybe<Scalars['String']>;
   position1_id?: Maybe<Scalars['String']>;

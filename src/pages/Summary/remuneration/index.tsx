@@ -20,7 +20,6 @@ import { AntDesignOutlined, MoreOutlined } from '@ant-design/icons';
 import type { DatePickerProps } from 'antd';
 import Swal from 'sweetalert2';
 
-import { gql } from '../../../__generated__/gql';
 import { useQuery, useMutation, from } from '@apollo/client';
 import {
   FETCH_SELECT_BOOK_BANK,

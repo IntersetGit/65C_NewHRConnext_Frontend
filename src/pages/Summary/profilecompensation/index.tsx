@@ -59,7 +59,15 @@ const Compensation: React.FC = () => {
     // const { data: header } = useQuery(FETCH_GETALLUSER);
     const { data: position_data } = useQuery(FETCH_GETALL_POSITION);
     const { data: TableDataSalary, refetch } = useQuery(FETCH_AllSALARY_USER);
+    console.log("Data", TableDataSalary)
     const [creteSalaryUser] = useMutation(CREATE_SALARY_USER);
+
+    // const onFilterData = async (userId: any) => {
+    //     let data = [] as any;
+    //     if (userId == propsstate?.profile.user_Id) { TableDataSalary?.salary?.push(data) }
+    //     console.log("++", data)
+    // }
+
 
     const showDrawer = (type: any) => {
         setOpen(true);
@@ -201,18 +209,24 @@ const Compensation: React.FC = () => {
         console.log(date, dateString);
     };
 
+
+    const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
     const columns: ColumnsType<any> = [
         {
             title: 'เดือน/ปี',
             key: 'date',
-            dataIndex: 'date',
             align: 'center',
+            render: (record: any) => moment(record).format('MM' + ' ' + 'YYYY') as any,
         },
         {
             title: 'รายได้รวม',
             key: 'total_income',
             dataIndex: 'total_income',
             align: 'center',
+            render: (record) => {
+                return record?.salary?.total_income;
+            },
         },
         {
             title: 'รายหักรวม',

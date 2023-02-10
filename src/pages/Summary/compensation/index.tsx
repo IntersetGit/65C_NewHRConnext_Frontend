@@ -24,9 +24,8 @@ import View from '../../../assets/View.png';
 import type { CheckboxValueType } from 'antd/es/checkbox/Group';
 import { useState } from 'react';
 import Swal from 'sweetalert2';
+import moment from 'moment';
 
-
-import { gql } from '../../../__generated__';
 import { useQuery, useMutation, from } from '@apollo/client';
 import { FETCH_SELECT_BOOK_BANK, FETCH_AllSALARY_BASE, CREATE_ExpenseCom } from '../../../service/graphql/Summary';
 
@@ -83,7 +82,7 @@ const Compensation: React.FC = () => {
     if (key === 'view') {
       setSelectedRow(record);
       navigate(`profileCompensation?id=${record.profile.userId}`, {
-        state: record,
+        state: { ...record, userId: selectedRow?.profile?.userId, },
       });
 
       console.log("State", record)
@@ -107,7 +106,9 @@ const Compensation: React.FC = () => {
           variables: {
             data: {
               ...value,
-              user_id: propsstate?.userId,
+              date: new Date(),
+              vat_per: parseFloat(value.vat_per),
+              ss_per: parseFloat(value.ss_per),
             },
           },
         })
@@ -283,7 +284,7 @@ const Compensation: React.FC = () => {
         <Form layout="horizontal" form={form} labelCol={{ span: 8 }} onFinish={onSubmitForm}>
           <Row>
             <Col span={16}>
-              <Form.Item name="name" label={'ธนาคาร (บริษัท)'}>
+              <Form.Item name="bankId" label={'ธนาคาร (บริษัท)'}>
                 <Select allowClear options={selectBookBank} ></Select>
               </Form.Item>
             </Col>
@@ -291,7 +292,7 @@ const Compensation: React.FC = () => {
 
           <Row>
             <Col span={16}>
-              <Form.Item name="vat" label={'หักภาษี (%)'}>
+              <Form.Item name="vat_per" label={'หักภาษี (%)'}>
                 <Input />
               </Form.Item>
             </Col>
@@ -299,7 +300,7 @@ const Compensation: React.FC = () => {
 
           <Row>
             <Col span={16}>
-              <Form.Item name="social_security" label={'หักประกันสังคม (%)'}>
+              <Form.Item name="ss_per" label={'หักประกันสังคม (%)'}>
                 <Input />
               </Form.Item>
             </Col>
