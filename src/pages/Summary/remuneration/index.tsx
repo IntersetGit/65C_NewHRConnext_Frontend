@@ -41,7 +41,7 @@ import edit from '../../../assets/Edit.png';
 import Del from '../../../assets/DEL.png';
 import View from '../../../assets/View.png';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import moment from 'moment';
 
 const { useToken } = theme;
@@ -50,8 +50,14 @@ const Remuneration: React.FC = () => {
   const token = useToken();
   const location = useLocation();
   const propsstate = location.state as any;
+
+  useEffect(() => {
+    refetch();
+  }, []);
+
   const [open, setOpen] = useState(false);
   const [form] = Form.useForm<any>();
+  const [formshow] = Form.useForm<any>();
   const [drawerType, setDrawerType] = useState(1);
   const [selectedRow, setSelectedRow] = useState(null);
 
@@ -60,6 +66,10 @@ const Remuneration: React.FC = () => {
   const { data: book_bank_data, refetch } = useQuery(FETCH_GETALLBOOKBANK_LOG, { variables: { userId: propsstate?.userId } });
   const [creteBookBank] = useMutation(CREATE_BOOKBANK);
 
+  useEffect(() => {
+    const sarary: any = book_bank_data ? book_bank_data?.bookbank_log_admin[0]?.base_salary : '0';
+    formshow.setFieldsValue({ base_salary: sarary })
+  }, [book_bank_data]);
   const selectBookBank = BookBank?.mas_bank?.map((e: any) => {
     return {
       label: e?.name,
@@ -288,7 +298,9 @@ const Remuneration: React.FC = () => {
           </Col>
         </Row>
 
-        <Form size="middle">
+        <Form form={formshow} initialValues={
+          { base_salary: '0000' }
+        } size="middle">
           <Row gutter={16}>
             <Col xs={24} sm={24} md={24} lg={6} xl={6}>
               <Form.Item
@@ -298,7 +310,7 @@ const Remuneration: React.FC = () => {
               >
                 <Input disabled
                   allowClear
-                  defaultValue={propsstate?.bookbank_log[0]?.base_salary}></Input>
+                />
               </Form.Item>
             </Col>
           </Row>
