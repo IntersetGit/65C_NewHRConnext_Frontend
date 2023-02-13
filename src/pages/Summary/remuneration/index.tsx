@@ -67,8 +67,12 @@ const Remuneration: React.FC = () => {
   const [creteBookBank] = useMutation(CREATE_BOOKBANK);
 
   useEffect(() => {
-    const sarary: any = book_bank_data ? book_bank_data?.bookbank_log_admin[0]?.base_salary : '0';
-    formshow.setFieldsValue({ base_salary: sarary })
+    const salary: any = book_bank_data ? book_bank_data?.bookbank_log_admin[0]?.base_salary : '0.00';
+    const banknumber: any = book_bank_data ? book_bank_data?.bookbank_log_admin[0]?.bank_number : '0.00';
+    const bankname: any = book_bank_data ? book_bank_data?.bookbank_log_admin[0]?.mas_bank?.name : '';
+
+
+    formshow.setFieldsValue({ base_salary: salary, bank_number: banknumber, mas_bankId: bankname })
   }, [book_bank_data]);
   const selectBookBank = BookBank?.mas_bank?.map((e: any) => {
     return {
