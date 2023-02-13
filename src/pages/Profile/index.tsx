@@ -10,7 +10,6 @@ const Profile: React.FC = () => {
   const token = useToken();
   const { user } = useAuth();
   let { companycode } = useParams();
-  console.log(user?.me?.profile);
 
   const onChange = (key: string) => {
     navigate(generatePath(key, { companycode }));

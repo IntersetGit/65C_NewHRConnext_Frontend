@@ -14,6 +14,8 @@ import {
   useParams,
 } from 'react-router-dom';
 import ErrorBoundary from '../Error/BaseError';
+import { routing, RoutingType } from '../routes/routes';
+import ErrorPage from '../Error/ErrorPage';
 
 const cookie = new Cookies();
 
@@ -120,6 +122,66 @@ const AuthProvider = ({ children, company: companydata }: Props) => {
     { action: string; subject: string }[]
   >([]);
   const ability = createMongoAbility(permission);
+  const [isError, setError] = useState<boolean>(false);
+
+  // useEffect(() => {
+  //   /** Compare routing. */
+  //   const array: {
+  //     path: string;
+  //     requireRole?: { action: string; subject: string };
+  //   }[] = [];
+  //   (async () => {
+  //     const PAIR_ROUTES = (data: RoutingType[]) => {
+  //       data.forEach((e, i) => {
+  //         array.push({
+  //           path: generatePath(e.path, { companycode }),
+  //           requireRole: e.requireRole,
+  //         });
+  //         if (e.children) {
+  //           PAIR_ROUTES(e.children);
+  //         }
+  //       });
+  //     };
+  //     PAIR_ROUTES(routing);
+  //     console.log(array);
+  //   })();
+  //   setRoutinglist(array);
+  // }, []);
+
+  useEffect(() => {
+    const array: {
+      path: string;
+      requireRole?: { action: string; subject: string };
+    }[] = [];
+    (async () => {
+      const PAIR_ROUTES = (data: RoutingType[]) => {
+        data.forEach((e, i) => {
+          const path = generatePath(e.path, { companycode });
+          //if (array.find((e) => e.path === path)) return;
+          array.push({
+            path: path,
+            requireRole: e.requireRole,
+          });
+          if (e.children) {
+            PAIR_ROUTES(e.children);
+          }
+        });
+      };
+      PAIR_ROUTES(routing);
+      //console.log(array);
+    })();
+    const F = array?.find((e) => e.path === location.pathname);
+    console.log(F, location.pathname);
+    if (F && permission.length >= 1) {
+      if (F.requireRole) {
+        if (!ability.can(F.requireRole.action, F.requireRole.subject)) {
+          setError(true);
+        } else {
+          setError(false);
+        }
+      }
+    }
+  }, [permission, location.pathname]);
 
   useEffect(() => {
     let rawData: { action: string; subject: string }[] = [];
@@ -164,7 +226,13 @@ const AuthProvider = ({ children, company: companydata }: Props) => {
     companycode,
   };
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  // if (isError && permission.length >= 1)
+  // return <ErrorPage title="Access denied" />;
+  return (
+    <AuthContext.Provider value={value}>
+      {isError ? <ErrorPage title="Access denied" /> : children}
+    </AuthContext.Provider>
+  );
 };
 
 export { AuthContext, AuthProvider };

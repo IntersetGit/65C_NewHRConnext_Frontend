@@ -16,12 +16,11 @@ export function perMissionCheckloader() {
 
 const BaseError = () => {
   const error: any = useRouteError();
-  console.log(error.data);
-  if (error.status === 403) {
-    return <div>Hello</div>;
-  }
-
-  throw error;
+  console.log(error);
+  // if (error.status === 403) {
+  //   return <div>Hello</div>;
+  // }
+  return <p>Error</p>;
 };
 
 export default BaseError;
