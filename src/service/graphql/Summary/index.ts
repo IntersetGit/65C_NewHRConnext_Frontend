@@ -172,3 +172,39 @@ export const CREATE_ExpenseCom = gql(`
   }
 `);
 
+export const CREATE_BOOKBANK = gql(`
+mutation Createbookbank($data: bookbank_logInput) {
+  Createbookbank(data: $data) {
+    message
+    status
+  }
+}
+`);
+
+export const DELETE_BOOKBANK = gql(`
+mutation Deletebookbank($deletebookbankId: ID!) {
+  Deletebookbank(id: $deletebookbankId) {
+    message
+    status
+  }
+}
+`)
+
+export const FETCH_GETALLBOOKBANK_LOG = gql(`
+query Bookbank_log_admin($userId: String) {
+  bookbank_log_admin(userId: $userId) {
+    id
+    date
+    mas_bankId
+    bank_number
+    base_salary
+    provident_com
+    provident_emp
+    mas_bank {
+      id
+      name
+    }
+    userId
+  }
+}
+`)

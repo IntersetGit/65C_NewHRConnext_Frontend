@@ -44,6 +44,9 @@ const Compensation = React.lazy(() => import('../pages/Summary/compensation'));
 const ProfileCompensation = React.lazy(
   () => import('../pages/Summary/profilecompensation'),
 );
+const Compensationbase = React.lazy(
+  () => import('../pages/Summary/compensationbase'),
+);
 const Remuneration = React.lazy(() => import('../pages/Summary/remuneration'));
 const Payslip = React.lazy(() => import('../pages/Summary/payslip'));
 const UserEmployee = React.lazy(
@@ -221,8 +224,8 @@ export const routing: RoutingType[] = [
         element: <Summaryroot />,
         children: [
           {
-            label: 'จัดการค่าตอบแทน',
-            path: '/:companycode/summary/summary',
+            label: 'จัดการข้อมูลเงินเดือน',
+            path: '/:companycode/summary',
             element: <Compensation />,
           },
           {
@@ -231,9 +234,14 @@ export const routing: RoutingType[] = [
             hideInmenu: true,
           },
           {
-            label: 'ข้อมูลการเงิน',
-            path: '/:companycode/summary/remuneration',
+            label: 'จัดการข้อมูลฐานเงินเดือน',
+            path: '/:companycode/summary/compensationbase',
+            element: <Compensationbase />,
+          },
+          {
+            path: '/:companycode/summary/compensationbase/remuneration',
             element: <Remuneration />,
+            hideInmenu: true,
           },
           {
             path: '/:companycode/summary/profileCompensation/payslip',
