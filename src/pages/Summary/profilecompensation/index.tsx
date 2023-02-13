@@ -58,7 +58,7 @@ const Compensation: React.FC = () => {
 
     // const { data: header } = useQuery(FETCH_GETALLUSER);
     const { data: position_data } = useQuery(FETCH_GETALL_POSITION);
-    const { data: TableDataSalary, refetch } = useQuery(FETCH_AllSALARY_USER);
+    const { data: TableDataSalary, refetch } = useQuery(FETCH_AllSALARY_USER, { variables: { userId: propsstate?.userId } });
     console.log("Data", TableDataSalary)
     const [creteSalaryUser] = useMutation(CREATE_SALARY_USER);
 

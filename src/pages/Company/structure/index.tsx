@@ -753,7 +753,7 @@ const CompanyStructure: React.FC = () => {
                     },
                 });
                 console.log('dataAdd', dataAdd);
-                Swal.fire('ลบข้อมูลสำเร็จ!', '', 'success');
+                Swal.fire('บันทึกข้อมูลสำเร็จ!', '', 'success');
             }
         });
     };

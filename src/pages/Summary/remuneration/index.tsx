@@ -24,7 +24,15 @@ import { useQuery, useMutation, from } from '@apollo/client';
 import {
   FETCH_SELECT_BOOK_BANK,
   UPDATE_SALARY_BASE,
+  FETCH_GETALLBOOKBANK_LOG,
+  CREATE_BOOKBANK,
 } from '../../../service/graphql/Summary';
+
+import {
+  FETCH_GETALL_POSITION,
+  CRETE_POSITION_USER,
+  POSITION,
+} from '../../../service/graphql/Position';
 
 import { GiReceiveMoney } from 'react-icons/gi';
 import type { ColumnsType } from 'antd/es/table';
@@ -34,37 +42,23 @@ import Del from '../../../assets/DEL.png';
 import View from '../../../assets/View.png';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useState } from 'react';
+import moment from 'moment';
 
 const { useToken } = theme;
 
-type UpdateSummaryType = {
-  id: string;
-  name: string;
-  date: any;
-  base_salary: any;
-  mas_bankId: any;
-  bank_number: any;
-  provident_com: any;
-  provident_emp: any;
-};
-
-interface DataType {
-  date: any;
-  base_salary: any;
-  bank: any;
-  bank_number: string;
-  provident_collect_employee: number;
-  provident_collect_company: number;
-}
-
 const Remuneration: React.FC = () => {
   const token = useToken();
+  const location = useLocation();
+  const propsstate = location.state as any;
   const [open, setOpen] = useState(false);
-  const [form] = Form.useForm<UpdateSummaryType>();
+  const [form] = Form.useForm<any>();
   const [drawerType, setDrawerType] = useState(1);
   const [selectedRow, setSelectedRow] = useState(null);
 
   const { data: BookBank } = useQuery(FETCH_SELECT_BOOK_BANK);
+  const { data: position_data } = useQuery(FETCH_GETALL_POSITION);
+  const { data: book_bank_data, refetch } = useQuery(FETCH_GETALLBOOKBANK_LOG, { variables: { userId: propsstate?.userId } });
+  const [creteBookBank] = useMutation(CREATE_BOOKBANK);
 
   const selectBookBank = BookBank?.mas_bank?.map((e: any) => {
     return {
@@ -111,7 +105,80 @@ const Remuneration: React.FC = () => {
   };
 
   const onSubmitForm = (value: any) => {
-    console.log('Update', value)
+    console.log("Update", value)
+    drawerType === 1
+      ? Swal.fire({
+        title: `ยืนยันการ Update ฐานเงินเดือน`,
+        icon: 'warning',
+        showDenyButton: true,
+        showCancelButton: false,
+        confirmButtonColor: token.token.colorPrimary,
+        denyButtonColor: '#ea4e4e',
+        confirmButtonText: 'ตกลง',
+        denyButtonText: `ยกเลิก`,
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          creteBookBank({
+            variables: {
+              data: {
+                ...value,
+                userId: propsstate?.userId,
+                base_salary: parseFloat(value.base_salary),
+                provident_emp: parseFloat(value.provident_emp),
+                provident_com: parseFloat(value.provident_com),
+              },
+            },
+          })
+            .then((val) => {
+              console.log(val);
+              if (val.data?.Createbookbank?.status) {
+                Swal.fire(`Update ฐานเงินเดือนสำเร็จ!`, '', 'success');
+                refetch();
+                form.resetFields();
+              }
+            })
+            .catch((err) => {
+              Swal.fire(`Update ฐานเงินเดือนไม่สำเร็จ!`, '', 'error');
+              console.error(err);
+            });
+        }
+      })
+      : Swal.fire({
+        title: `ยืนยันการแก้ไขฐานเงินเดือน`,
+        icon: 'warning',
+        showDenyButton: true,
+        showCancelButton: false,
+        confirmButtonColor: token.token.colorPrimary,
+        denyButtonColor: '#ea4e4e',
+        confirmButtonText: 'ตกลง',
+        denyButtonText: `ยกเลิก`,
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          creteBookBank({
+            variables: {
+              data: {
+                ...value,
+                userId: propsstate?.userId,
+                date: moment(value),
+              },
+            },
+          })
+            .then((val) => {
+              console.log(val);
+              if (val.data?.Createbookbank?.status) {
+                Swal.fire(`แก้ไขข้อมูลฐานเงินเดือนสำเร็จ!`, '', 'success');
+                refetch();
+                form.resetFields();
+              }
+            })
+            .catch((err) => {
+              Swal.fire(`แก้ไขข้อมูลฐานเงินเดือนไม่สำเร็จ!`, '', 'error');
+              console.error(err);
+              form.resetFields();
+            });
+        }
+      });
+    setOpen(false);
   };
 
   const onMenuClick = (event: any, record: any) => {
@@ -124,24 +191,31 @@ const Remuneration: React.FC = () => {
     }
   };
 
-  const columns: ColumnsType<DataType> = [
+  const columns: ColumnsType<any> = [
     {
       title: 'วันที่มีผล',
       key: 'date',
       dataIndex: 'date',
       align: 'center',
+      render: (record: any) => moment(record).format('DD/MM/YYYY') as any,
     },
     {
       title: 'ฐานเงินเดือน',
       key: 'base_salary',
       dataIndex: 'base_salary',
       align: 'center',
+      // render: (record) => {
+      //   return record?.Position_user[0]?.mas_positionlevel2?.name;
+      // },
     },
     {
       title: 'ธนาคาร',
-      key: 'bank',
-      dataIndex: 'bank',
+      key: 'mas_bank',
+      dataIndex: 'mas_bank',
       align: 'center',
+      render: (record) => {
+        return record?.name;
+      },
     },
     {
       title: 'เลขบัญชี',
@@ -151,14 +225,14 @@ const Remuneration: React.FC = () => {
     },
     {
       title: 'กองทุนสำรองสะสม (พนักงาน (%))',
-      key: 'provident_collect_employee',
-      dataIndex: 'provident_collect_employee',
+      key: 'provident_emp',
+      dataIndex: 'provident_emp',
       align: 'center',
     },
     {
       title: 'กองทุนสำรองสะสม (บริษัท (%))',
-      key: 'provident_collect_company',
-      dataIndex: 'provident_collect_company',
+      key: 'provident_com',
+      dataIndex: 'provident_com',
       align: 'center',
     },
     {
@@ -178,32 +252,6 @@ const Remuneration: React.FC = () => {
     },
   ];
 
-  const data: DataType[] = [
-    {
-      date: '01/01/2555',
-      base_salary: 22000.0,
-      bank: 'ทหารไทย',
-      bank_number: '1003524896',
-      provident_collect_employee: 3,
-      provident_collect_company: 3,
-    },
-    {
-      date: '01/08/2555',
-      base_salary: 23000.0,
-      bank: 'กสิกรไทย',
-      bank_number: '1002480836',
-      provident_collect_employee: 3,
-      provident_collect_company: 3,
-    },
-    {
-      date: '01/01/2559',
-      base_salary: 25000.0,
-      bank: 'กสิกรไทย',
-      bank_number: '1002480836',
-      provident_collect_employee: 3,
-      provident_collect_company: 3,
-    },
-  ];
   return (
     <>
       <div className="flex text-3xl ml-2 pt-4">
@@ -214,36 +262,29 @@ const Remuneration: React.FC = () => {
       <Divider />
 
       <Card className="shadow-xl">
-        <Row className="py-6" gutter={16}>
+        <Row gutter={16}>
           <Col xs={24} sm={24} md={4} lg={4} xl={4}>
             <div>
               <Avatar
                 size={{ xs: 24, sm: 32, md: 40, lg: 64, xl: 80, xxl: 100 }}
                 icon={<AntDesignOutlined />}
-              // src={propsstate.avatar}
+              // src={getFilePath() + propsstate?.avatar}
               ></Avatar>
             </div>
           </Col>
-          <Col
-            className="flex justify-center items-center"
-            xs={24}
-            sm={24}
-            md={4}
-            lg={4}
-            xl={6}
-          >
+
+          <Col xs={24} sm={24} md={4} lg={4} xl={4}>
             <div className="text-lg font-bold">
-              <u style={{ color: token.token.colorPrimary }}>
-                Firstname Lastname
+              <u className="text-blue-800">
+                {propsstate?.profile?.prefix_th} {propsstate?.profile?.firstname_th}{' '}
+                {propsstate?.profile?.lastname_th}
               </u>
-              <div className="my-4">position</div>
+              <div className="mt-4">
+                {position_data?.getposition_user?.[
+                  position_data?.getposition_user?.length - 1
+                ]?.mas_positionlevel3?.name ?? 'ไม่มีตำแหน่งงาน'}
+              </div>
             </div>
-            {/* <div className="text-lg font-bold">
-                            <u style={{ color: token.token.colorPrimary }}>
-                                {propsstate?.firstname_th} {propsstate?.lastname_th}
-                            </u>
-                            <div className="my-4">{propsstate?.position}</div>
-                        </div> */}
           </Col>
         </Row>
 
@@ -255,7 +296,9 @@ const Remuneration: React.FC = () => {
                 colon={false}
                 label={'ฐานเงินเดือน'}
               >
-                <Input disabled allowClear></Input>
+                <Input disabled
+                  allowClear
+                  defaultValue={propsstate?.bookbank_log[0]?.base_salary}></Input>
               </Form.Item>
             </Col>
           </Row>
@@ -268,18 +311,22 @@ const Remuneration: React.FC = () => {
                 label={'เลชบัญชี'}
                 style={{ marginLeft: '24px' }}
               >
-                <Input disabled allowClear></Input>
+                <Input disabled
+                  allowClear
+                  defaultValue={propsstate?.bookbank_log[0]?.bank_number}></Input>
               </Form.Item>
             </Col>
 
             <Col xs={24} sm={24} md={24} lg={6} xl={6}>
               <Form.Item
-                name="bank"
+                name="mas_bankId"
                 colon={false}
                 label={'ธนาคาร'}
                 style={{ marginLeft: '32px' }}
               >
-                <Input disabled allowClear></Input>
+                <Input disabled
+                  allowClear
+                  defaultValue={propsstate?.bookbank_log[0]?.mas_bank?.name}></Input>
               </Form.Item>
             </Col>
 
@@ -301,7 +348,7 @@ const Remuneration: React.FC = () => {
         </Form>
       </Card>
       <Card className="shadow-xl mt-4">
-        <Table columns={columns} dataSource={data} />
+        <Table columns={columns} dataSource={book_bank_data?.bookbank_log_admin as any} />
       </Card>
 
       <Drawer
@@ -338,7 +385,7 @@ const Remuneration: React.FC = () => {
 
           <Row>
             <Col span={24}>
-              <Form.Item name="bank" label={'ธนาคาร'}>
+              <Form.Item name="mas_bankId" label={'ธนาคาร'}>
                 {/* <Select allowClear disabled={drawerType === 3 ? true : false} ></Select> */}
                 <Select
                   allowClear
@@ -360,7 +407,7 @@ const Remuneration: React.FC = () => {
           <Row>
             <Col span={24}>
               <Form.Item
-                name="provident_collect_employee"
+                name="provident_emp"
                 label={'กองทุนสำรองเลี้ยงชีพสะสม ( พนักงาน (%))'}
               >
                 <Input disabled={drawerType === 3 ? true : false} />
@@ -371,7 +418,7 @@ const Remuneration: React.FC = () => {
           <Row>
             <Col span={24}>
               <Form.Item
-                name="provident_collect_company"
+                name="provident_com"
                 label={'กองทุนสำรองเลี้ยงชีพสะสม ( บริษัท (%))'}
               >
                 <Input disabled={drawerType === 3 ? true : false} />
