@@ -136,7 +136,7 @@ export const routing: RoutingType[] = [
         children: [
           {
             label: 'ข้อมูลของฉัน',
-            path: '/:companycode/profile',
+            path: '/:companycode/profile/profile',
             element: <ProfileEmployee />,
             requireRole: { action: 'read', subject: 'manageSelfDetail' },
           },
@@ -222,7 +222,7 @@ export const routing: RoutingType[] = [
         children: [
           {
             label: 'จัดการค่าตอบแทน',
-            path: '/:companycode/summary',
+            path: '/:companycode/summary/summary',
             element: <Compensation />,
           },
           {
