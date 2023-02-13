@@ -24,33 +24,40 @@ import { MoreOutlined, UploadOutlined } from '@ant-design/icons';
 import edit from '../../assets/Edit.png';
 import Del from '../../assets/DEL.png';
 import View from '../../assets/View.png';
+import { FETCH_ALL_APPROVE } from '../../service/graphql/Approve';
+import { LEAVE_TYPE_DATA, CREATE_LEAVE } from '../../service/graphql/Leave';
+import { useMutation, useQuery } from '@apollo/client';
+import moment from 'moment';
+import Swal from 'sweetalert2';
 
 const { useToken } = theme;
 const { TextArea } = Input;
-
-interface DataType {
-  key: number;
-  name: string;
-  number: number;
-  typeofleave: string;
-  fromdate: string;
-  uptodate: string;
-  numberofdays: number;
-  leavestatus: string;
-}
 
 const Approveleave: React.FC = () => {
   const token = useToken();
   const [open, setOpen] = useState(false);
   const [form] = Form.useForm();
+  const [drawertype, setdrawertype] = useState(1);
   const [selectedrow, setselectedrow] = useState<any>([]);
+  const { data: data_approve, refetch } = useQuery(FETCH_ALL_APPROVE);
+  const { data: leavetypedata } = useQuery(LEAVE_TYPE_DATA);
+  const [createLeaveData] = useMutation(CREATE_LEAVE);
 
-  const showDrawer = () => {
+  const selectleavetype = leavetypedata?.getleavetypedata?.map((e) => {
+    return {
+      label: e?.name,
+      value: e?.id,
+    };
+  });
+
+  const showDrawer = (type) => {
     setOpen(true);
+    setdrawertype(type);
   };
 
   const onClose = () => {
     setOpen(false);
+    form.resetFields();
   };
 
   const genarateMenu = (record: any) => {
@@ -78,55 +85,78 @@ const Approveleave: React.FC = () => {
     const { key } = event;
 
     if (key === 'edit') {
-      showDrawer();
+      console.log(record);
+      showDrawer(1);
       setselectedrow(record);
-      form.setFieldsValue(record);
+      form.setFieldsValue({
+        ...record,
+        start_date: record.start_date ? moment(record.start_date) : undefined,
+        end_date: record.end_date ? moment(record.end_date) : undefined,
+      });
     } else if (key === 'view') {
     } else if (key === 'delete') {
     }
   };
 
-  const columns: ColumnsType<DataType> = [
+  const columns: ColumnsType<any> = [
     {
       title: 'ลำดับ',
       key: 'number',
       dataIndex: 'number',
       align: 'center',
+      render: (_: any, record: any, index: any) => {
+        return index + 1;
+      },
     },
     {
       title: 'ชื่อ',
-      key: 'name',
-      dataIndex: 'name',
+      key: 'user',
+      dataIndex: 'user',
       align: 'center',
+      render: (txt) =>
+        txt?.profile?.firstname_th + ' ' + txt?.profile?.lastname_th,
     },
     {
       title: 'ประเภทการลา',
-      key: 'typeofleave',
-      dataIndex: 'typeofleave',
+      key: 'mas_leave_type',
+      dataIndex: 'mas_leave_type',
       align: 'center',
+      render: (record) => {
+        return <div>{record?.name}</div>;
+      },
     },
     {
       title: 'จากวันที่',
-      key: 'fromdate',
-      dataIndex: 'fromdate',
+      key: 'start_date',
+      dataIndex: 'start_date',
       align: 'center',
+      render: (record) => {
+        return record
+          ? moment(new Date(record)).format('DD/MM/YYYY')
+          : undefined;
+      },
     },
     {
       title: 'ถึงวันที่',
-      key: 'uptodate',
-      dataIndex: 'uptodate',
+      key: 'end_date',
+      dataIndex: 'end_date',
       align: 'center',
+      render: (record) => {
+        return record
+          ? moment(new Date(record)).format('DD/MM/YYYY')
+          : undefined;
+      },
     },
     {
       title: 'จำนวนวัน',
-      key: 'numberofdays',
-      dataIndex: 'numberofdays',
+      key: 'quantity_day',
+      dataIndex: 'quantity_day',
       align: 'center',
     },
     {
       title: 'สถานะการลา',
-      key: 'leavestatus',
-      dataIndex: 'leavestatus',
+      key: 'quantity_hours',
+      dataIndex: 'quantity_hours',
       align: 'center',
     },
     {
@@ -146,34 +176,48 @@ const Approveleave: React.FC = () => {
     },
   ];
 
-  const data: DataType[] = [
-    {
-      key: 1,
-      number: 1,
-      name: 'นาย ใจจริง จริงใจไมจิงโจ้',
-      typeofleave: 'ลาป่วย',
-      fromdate: '20-9-2021',
-      uptodate: '25-5-2021',
-      numberofdays: 5,
-      leavestatus: 'รออนุมัติ',
-    },
-    {
-      key: 2,
-      number: 2,
-      name: 'นาย มิตร มิตรแท้ประกันใคร',
-      typeofleave: 'ลากิจ',
-      fromdate: '29-9-2021',
-      uptodate: '30-5-2021',
-      numberofdays: 1,
-      leavestatus: 'รออนุมัติ',
-    },
-  ];
-
   const [value, setValue] = useState(1);
 
   const onChange = (e: RadioChangeEvent) => {
     console.log('radio checked', e.target.value);
     setValue(e.target.value);
+  };
+
+  const onFinish = (value) => {
+    Swal.fire({
+      title: `ยืนยันการแก้ไขข้อมูลการลา`,
+      icon: 'warning',
+      showDenyButton: true,
+      showCancelButton: false,
+      confirmButtonColor: token.token.colorPrimary,
+      denyButtonColor: '#ea4e4e',
+      confirmButtonText: 'ตกลง',
+      denyButtonText: `ยกเลิก`,
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        createLeaveData({
+          variables: {
+            data: {
+              ...value,
+              id: selectedrow?.id,
+            },
+          },
+        })
+          .then((val) => {
+            console.log(val);
+            if (val.data?.createddata_leave?.status) {
+              Swal.fire(`แก้ไขข้อมูลการลาสำเร็จ!`, '', 'success');
+              refetch();
+              form.resetFields();
+              setOpen(false);
+            }
+          })
+          .catch((err) => {
+            Swal.fire(`แก้ไขข้อมูลการลาไม่สำเร็จ!`, '', 'error');
+            console.error(err);
+          });
+      }
+    });
   };
 
   return (
@@ -234,7 +278,11 @@ const Approveleave: React.FC = () => {
       </Card>
 
       <Card className="shadow-md mb-3">
-        <Table columns={columns} dataSource={data}></Table>
+        <Table
+          columns={columns}
+          rowKey={'id'}
+          dataSource={data_approve?.getleava_alldata as any}
+        ></Table>
       </Card>
 
       <Drawer
@@ -244,13 +292,14 @@ const Approveleave: React.FC = () => {
         open={open}
         width="40%"
       >
-        <Form form={form} layout="vertical">
+        <Form form={form} layout="vertical" onFinish={onFinish}>
           <Row>
             <Col span={12}>
               <Form.Item className="mb-3" label={'การอนุมัติใบลา'}>
                 <div className="text-lg font-bold">
                   <u style={{ color: token.token.colorPrimary }}>
-                    {selectedrow?.name}
+                    {selectedrow?.user?.profile.firstname_th}{' '}
+                    {selectedrow?.user?.profile?.lastname_th}
                   </u>
                 </div>
               </Form.Item>
@@ -258,21 +307,21 @@ const Approveleave: React.FC = () => {
           </Row>
           <Row>
             <Col span={12}>
-              <Form.Item name={'typeofleave'} label={'ประเภทการลา'}>
-                <Input />
+              <Form.Item name={'leavetype_id'} label={'ประเภทการลา'}>
+                <Select options={selectleavetype} allowClear />
               </Form.Item>
             </Col>
           </Row>
 
           <Row gutter={16}>
             <Col span={12}>
-              <Form.Item name={''} label={'จากวันที่'}>
+              <Form.Item name={'start_date'} label={'จากวันที่'}>
                 <DatePicker style={{ width: '100%' }} format={'YYYY-MM-DD'} />
               </Form.Item>
             </Col>
 
             <Col span={12}>
-              <Form.Item name={''} label={'ถึงวันที่'}>
+              <Form.Item name={'end_date'} label={'ถึงวันที่'}>
                 <DatePicker style={{ width: '100%' }} format={'YYYY-MM-DD'} />
               </Form.Item>
             </Col>
@@ -280,28 +329,20 @@ const Approveleave: React.FC = () => {
 
           <Row gutter={16}>
             <Col span={12}>
-              <Form.Item name={'numberofdays'} label={'จำนวนวัน'}>
+              <Form.Item name={'quantity_day'} label={'จำนวนวัน'}>
                 <Input />
               </Form.Item>
             </Col>
             <Col span={12}>
-              <Form.Item label={'จำนวนชั่วโมง'}>
+              <Form.Item name={'quantity_hours'} label={'จำนวนชั่วโมง'}>
                 <Input />
-              </Form.Item>
-            </Col>
-          </Row>
-
-          <Row>
-            <Col span={12}>
-              <Form.Item name={'leavestatus'} label={'สถานะการลา'}>
-                <Input disabled style={{ color: token.token.colorPrimary }} />
               </Form.Item>
             </Col>
           </Row>
 
           <Row>
             <Col span={24}>
-              <Form.Item label={'เหตุผลการลา'}>
+              <Form.Item name={'detail_leave'} label={'เหตุผลการลา'}>
                 <TextArea rows={4} />
               </Form.Item>
             </Col>
@@ -329,10 +370,12 @@ const Approveleave: React.FC = () => {
             }}
           >
             <Col>
-              <Radio.Group onChange={onChange} value={value}>
-                <Radio value={1}>อนุมัติ</Radio>
-                <Radio value={2}>ไม่อนุมัติ</Radio>
-              </Radio.Group>
+              <Form.Item name={'Status'}>
+                <Radio.Group onChange={onChange} value={value}>
+                  <Radio value={1}>อนุมัติ</Radio>
+                  <Radio value={2}>ไม่อนุมัติ</Radio>
+                </Radio.Group>
+              </Form.Item>
             </Col>
           </Row>
 
