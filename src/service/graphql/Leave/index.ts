@@ -71,6 +71,7 @@ query Getleava_datame {
           start_date
           end_date
           quantity_day
+          quantity_hours
           detail_leave
           Status
           user_id
@@ -78,4 +79,23 @@ query Getleava_datame {
       }
     }
   }
+`);
+
+export const LEAVE_TYPE_DATA = gql(`
+query Getleavetypedata {
+  getleavetypedata {
+    id
+    name
+    orderby
+  }
+}
+`);
+
+export const CREATE_LEAVE = gql(`
+mutation Createddata_leave($data: leave) {
+  createddata_leave(data: $data) {
+    message
+    status
+  }
+}
 `);
