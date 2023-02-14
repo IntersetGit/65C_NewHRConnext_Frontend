@@ -19,12 +19,15 @@ import Del from '../../../assets/DEL.png';
 import View from '../../../assets/View.png';
 import type { ColumnsType } from 'antd/es/table';
 import { useNavigate } from 'react-router-dom';
+import { FETCH_ALL_LEAVE } from '../../../service/graphql/Leave';
+import { useQuery } from '@apollo/client';
 
 const { useToken } = theme;
 
 const Leave: React.FC = () => {
   const token = useToken();
   const navigate = useNavigate();
+  const { data: leave_data, refetch } = useQuery(FETCH_ALL_LEAVE);
 
   const genarateMenu = (record: any) => {
     return [
@@ -53,8 +56,8 @@ const Leave: React.FC = () => {
     const { key } = event;
     if (key === 'edit') {
     } else if (key === 'view') {
-      navigate(`approve?id=${record.profile.id}`, {
-        state: { ...record?.profile, mode: 'edit' },
+      navigate(`approve?id=${record.id}`, {
+        state: { ...record, mode: 'edit' },
       });
     } else if (key === 'delete') {
     }
@@ -73,35 +76,38 @@ const Leave: React.FC = () => {
       key: 'profile',
       dataIndex: 'profile',
       align: 'center',
-      render: (txt: any) => txt.firstname_th + ' ' + txt.lastname_th,
+      render: (txt: any) => txt?.firstname_th + ' ' + txt?.lastname_th,
     },
     {
       title: 'ตำแหน่ง',
-      key: 'profile',
-      dataIndex: 'profile',
       align: 'center',
-      render: (record: any) => record.position,
+      render: (record) => {
+        console.log(record);
+        return record?.Position_user[0]?.mas_positionlevel3?.name;
+      },
     },
     {
       title: 'แผนก',
-      key: 'profile',
-      dataIndex: 'profile',
       align: 'center',
-      render: (record: any) => record.department,
+      render: (record) => {
+        return record?.Position_user[0]?.mas_positionlevel2?.name;
+      },
     },
     {
       title: 'เบอร์โทร',
       key: 'profile',
       dataIndex: 'profile',
       align: 'center',
-      render: (record: any) => record.tel,
+      render: (record: any) => record?.tel,
     },
     {
       title: 'หัวหน้างาน',
-      key: 'profile',
-      dataIndex: 'profile',
       align: 'center',
-      render: (txt: any) => txt.boss_firstname_th + ' ' + txt.boss_lastname_th,
+      render: (txt: any) => {
+        const name = txt.Position_user?.[0]?.header?.profile?.firstname_th;
+        const last = txt.Position_user?.[0]?.header?.profile?.lastname_th;
+        return `${name ? name : ''} ${last ? last : ''}`;
+      },
     },
     {
       title: 'Action',
@@ -120,24 +126,6 @@ const Leave: React.FC = () => {
     },
   ];
 
-  const data: any = [
-    {
-      profile: {
-        id: '55b36639-fd5c-4a76-a3ed-019f76f7b559',
-        firstname_th: 'ธีรดล',
-        lastname_th: 'บุญมาก',
-        position: 'Developer',
-        department: 'IT',
-        tel: '02-586-7623',
-        boss_firstname_th: 'สุนิษา',
-        boss_lastname_th: 'เปี่ยมจันทร์',
-        leave_bussiness: '4',
-        leave_vacation: '3',
-        leave_sick: '5',
-        leave_other: '1',
-      },
-    },
-  ];
   return (
     <>
       <div className="flex text-3xl ml-2 pt-4">
@@ -217,7 +205,11 @@ const Leave: React.FC = () => {
           </div>
         </Row>
 
-        <Table columns={columns} dataSource={data}></Table>
+        <Table
+          columns={columns}
+          rowKey={'id'}
+          dataSource={leave_data?.getAllleave?.data_all as any}
+        ></Table>
       </Card>
     </>
   );

@@ -32,7 +32,7 @@ import { useState } from 'react';
 const { useToken } = theme;
 const { TextArea } = Input;
 import {
-  FETCH_ALL_LEAVE,
+  FETCH_BYID_LEAVE,
   LEAVE_TYPE_DATA,
   CREATE_LEAVE,
 } from '../../../../service/graphql/Leave';
@@ -40,6 +40,7 @@ import { useQuery, useMutation } from '@apollo/client';
 import moment from 'moment';
 import Swal from 'sweetalert2';
 import { PageRoleAndPermissionType } from '../../../../context/AuthContext';
+import { getFilePath } from '../../../../util';
 
 type ProfileApprovePropsType = {
   role?: PageRoleAndPermissionType;
@@ -51,7 +52,7 @@ const ProfileApprove: React.FC<ProfileApprovePropsType> = ({ role }) => {
   const token = useToken();
   const [drawertype, setDrawertype] = useState(1);
   const [selectedrow, setselectedrow] = useState<any>();
-  const { data: dataleaveme, loading, refetch } = useQuery(FETCH_ALL_LEAVE);
+  const { data: dataleaveme, loading, refetch } = useQuery(FETCH_BYID_LEAVE);
   const { data: leave_type_data } = useQuery(LEAVE_TYPE_DATA);
   const [createLeaveData] = useMutation(CREATE_LEAVE);
 
@@ -285,6 +286,10 @@ const ProfileApprove: React.FC<ProfileApprovePropsType> = ({ role }) => {
               <Avatar
                 size={{ xs: 24, sm: 32, md: 40, lg: 64, xl: 80, xxl: 100 }}
                 style={{ width: 150, height: 150 }}
+                src={
+                  getFilePath() +
+                  dataleaveme?.getleava_datame?.data_all?.[0]?.profile?.avatar
+                }
               ></Avatar>
             </div>
           </Col>

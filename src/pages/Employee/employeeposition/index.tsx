@@ -360,8 +360,9 @@ const PositionEmployee: React.FC = (props) => {
                 {propsstate?.lastname_th}
               </u>
               <div className="mt-4">
-                {position_data?.getposition_user[0]?.mas_positionlevel3?.name
-                  ? position_data?.getposition_user[0]?.mas_positionlevel3?.name
+                {position_data?.getposition_user?.[0]?.mas_positionlevel3?.name
+                  ? position_data?.getposition_user?.[0]?.mas_positionlevel3
+                      ?.name
                   : 'ไม่มีตำแหน่งงาน'}
                 {/* {position_data?.getposition_user?.[
                   position_data?.getposition_user?.length - 1

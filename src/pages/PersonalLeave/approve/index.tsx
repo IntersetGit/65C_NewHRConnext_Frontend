@@ -31,6 +31,13 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useState } from 'react';
 import { useAuth } from '../../../hooks/useAuth';
 import moment from 'moment';
+import { useMutation, useQuery } from '@apollo/client';
+import {
+  FETCH_ALL_LEAVE,
+  LEAVE_TYPE_DATA,
+  CREATE_LEAVE,
+} from '../../../service/graphql/Leave';
+import { getFilePath } from '../../../util';
 const { useToken } = theme;
 const { TextArea } = Input;
 
@@ -41,6 +48,14 @@ const Approve: React.FC = () => {
   const location = useLocation();
   const { ability } = useAuth();
   let propsstate = location.state as any;
+  console.log(propsstate);
+  const {
+    data: dataleaveme,
+    loading,
+    refetch,
+  } = useQuery(FETCH_ALL_LEAVE, { variables: { userId: propsstate?.id } });
+  const { data: leave_type_data } = useQuery(LEAVE_TYPE_DATA);
+  const [createLeaveData] = useMutation(CREATE_LEAVE);
 
   const showDrawer = () => {
     setOpen(true);
@@ -97,39 +112,54 @@ const Approve: React.FC = () => {
     },
     {
       title: 'ประเภทการลา',
-      key: 'leave_type',
-      dataIndex: 'leave_type',
+      key: 'mas_leave_type',
+      dataIndex: 'mas_leave_type',
       align: 'center',
+      render: (record) => {
+        return record.name;
+      },
     },
     {
       title: 'จากวันที่',
-      key: 'from_date',
-      dataIndex: 'from_date',
+      key: 'start_date',
+      dataIndex: 'start_date',
       align: 'center',
+      render: (record) => {
+        return moment(new Date(record)).format('DD/MM/YYYY');
+      },
     },
     {
       title: 'ถึงวันที่',
-      key: 'to_date',
-      dataIndex: 'to_date',
+      key: 'end_date',
+      dataIndex: 'end_date',
       align: 'center',
+      render: (record) => {
+        return moment(new Date(record)).format('DD/MM/YYYY');
+      },
     },
     {
       title: 'จำนวนวัน',
-      key: 'count_date',
-      dataIndex: 'count_date',
+      key: 'quantity_day',
+      dataIndex: 'quantity_day',
+      align: 'center',
+    },
+    {
+      title: 'จำนวนชั่วโมง',
+      key: 'quantity_hours',
+      dataIndex: 'quantity_hours',
       align: 'center',
     },
     {
       title: 'สถานะการลา',
-      key: 'leave_approve',
-      dataIndex: 'leave_approve',
+      key: 'Status',
+      dataIndex: 'Status',
       align: 'center',
       render: (record) => {
         return (
           <div>
-            {record === '1'
+            {record === 1
               ? 'อนุมัติ'
-              : record === '2'
+              : record === 2
               ? 'รออนุมัติ'
               : 'ไม่อนุมัติ'}
           </div>
@@ -153,15 +183,6 @@ const Approve: React.FC = () => {
     },
   ];
 
-  const data: any = [
-    {
-      leave_type: 'ลาป่วย',
-      from_date: '20-9-2021',
-      to_date: '20-9-2021',
-      count_date: '1',
-      leave_approve: '1',
-    },
-  ];
   return (
     <>
       <div className="flex text-2xl ml-2 pt-4">
@@ -178,6 +199,7 @@ const Approve: React.FC = () => {
               <Avatar
                 size={{ xs: 24, sm: 32, md: 40, lg: 64, xl: 80, xxl: 100 }}
                 style={{ width: 150, height: 150 }}
+                src={getFilePath() + propsstate?.profile?.avatar}
               ></Avatar>
             </div>
           </Col>
@@ -192,9 +214,12 @@ const Approve: React.FC = () => {
           >
             <div className="text-lg font-bold">
               <u style={{ color: token.token.colorPrimary }}>
-                {propsstate?.firstname_th} {propsstate?.lastname_th}
+                {propsstate?.profile?.firstname_th}{' '}
+                {propsstate?.profile?.lastname_th}
               </u>
-              <div className="my-4">{propsstate?.position}</div>
+              <div className="my-4">
+                {propsstate?.Position_user?.[0]?.mas_positionlevel3?.name}
+              </div>
             </div>
           </Col>
         </Row>
@@ -252,7 +277,13 @@ const Approve: React.FC = () => {
           </Col>
         </Row> */}
 
-        <Table columns={columns} dataSource={data}></Table>
+        <Table
+          columns={columns}
+          rowKey={'id'}
+          dataSource={
+            dataleaveme?.getAllleave?.data_all?.[0]?.data_leave as any
+          }
+        ></Table>
       </Card>
 
       <Drawer
@@ -272,13 +303,13 @@ const Approve: React.FC = () => {
 
           <Row gutter={16}>
             <Col span={12}>
-              <Form.Item label={'จากวันที่'}>
+              <Form.Item name={'start_date'} label={'จากวันที่'}>
                 <DatePicker style={{ width: '100%' }} format={'YYYY-MM-DD'} />
               </Form.Item>
             </Col>
 
             <Col span={12}>
-              <Form.Item label={'ถึงวันที่'}>
+              <Form.Item name={'end_date'} label={'ถึงวันที่'}>
                 <DatePicker style={{ width: '100%' }} format={'YYYY-MM-DD'} />
               </Form.Item>
             </Col>
@@ -286,13 +317,13 @@ const Approve: React.FC = () => {
 
           <Row gutter={16}>
             <Col span={12}>
-              <Form.Item label={'จำนวนวัน'}>
+              <Form.Item name={'quantity_day'} label={'จำนวนวัน'}>
                 <Input />
               </Form.Item>
             </Col>
 
             <Col span={12}>
-              <Form.Item label={'จำนวนชั่วโมง'}>
+              <Form.Item name={'quantity_hours'} label={'จำนวนชั่วโมง'}>
                 <Input />
               </Form.Item>
             </Col>
@@ -300,7 +331,7 @@ const Approve: React.FC = () => {
 
           <Row>
             <Col span={24}>
-              <Form.Item label={'เหตุผลการลา'}>
+              <Form.Item name={'detail_leave'} label={'เหตุผลการลา'}>
                 <TextArea rows={6} />
               </Form.Item>
             </Col>
@@ -320,7 +351,7 @@ const Approve: React.FC = () => {
 
           <Row>
             <Col span={12}>
-              <Form.Item name={'leave_approve'} label={'สถานะการลา'}>
+              <Form.Item name={'Status'} label={'สถานะการลา'}>
                 <Select
                   options={[
                     { value: '1', label: 'อนุมัติ' },
