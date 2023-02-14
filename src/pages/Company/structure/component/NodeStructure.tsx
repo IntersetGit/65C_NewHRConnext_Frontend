@@ -33,8 +33,8 @@ export default function NodeStructure({ titleNodes, title, onAddChild, onDelhild
             <div className='toolbox' >
                 {onDelhild &&
                     <Tooltip title="ลบ">
-                        <ItemTool color='red'>
-                            <IoTrashBin onClick={onDelhild} style={{
+                        <ItemTool  onClick={onDelhild} color='red'>
+                            <IoTrashBin style={{
                                 fontSize: '18px',
                                 color: 'white',
                             }} />
@@ -42,16 +42,16 @@ export default function NodeStructure({ titleNodes, title, onAddChild, onDelhild
                     </Tooltip>
                 }
                 {onEditChild &&
-                    <Tooltip title="แก้ไข"><ItemTool color='#F95'>
-                        <IoPencil onClick={onEditChild} style={{
+                    <Tooltip title="แก้ไข"><ItemTool onClick={onEditChild} color='#F95'>
+                        <IoPencil  style={{
                             fontSize: '18px',
                             color: 'white',
                         }} />
                     </ItemTool></Tooltip>
                 }
                 {onAddChild &&
-                    <Tooltip title="เพิ่ม"><ItemTool>
-                        <IoDuplicate onClick={onAddChild} style={{
+                    <Tooltip title="เพิ่ม"><ItemTool onClick={onAddChild} >
+                        <IoDuplicate  style={{
                             fontSize: '18px',
                             color: 'white',
                         }} />

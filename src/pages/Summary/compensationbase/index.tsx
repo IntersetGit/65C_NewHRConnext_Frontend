@@ -35,6 +35,7 @@ const Compensationbase: React.FC = () => {
   const token = useToken();
   const [open, setOpen] = useState(false);
   const [form] = Form.useForm<any>();
+  // const [formSearch] = Form.useForm<any>();
   const navigate = useNavigate();
   const location = useLocation();
   let propsstate = location.state as any;
@@ -127,7 +128,7 @@ const Compensationbase: React.FC = () => {
       key: 'bookbank_log',
       align: 'center',
       render: (record) => {
-        return record?.bookbank_log[0]?.base_salary;
+        return record?.bookbank_log[0]?.base_salary?.toFixed(2);
       },
     },
     {
@@ -161,7 +162,7 @@ const Compensationbase: React.FC = () => {
         <Form size="middle">
           <Row gutter={16}>
             <Col xs={24} sm={12} md={12} lg={6} xl={6}>
-              <Form.Item name="search" colon={false} label={'ชื่อ'}>
+              <Form.Item name="fristname" colon={false} label={'ชื่อ'}>
                 <Input allowClear></Input>
               </Form.Item>
             </Col>

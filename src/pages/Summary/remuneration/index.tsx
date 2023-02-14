@@ -23,9 +23,8 @@ import Swal from 'sweetalert2';
 import { useQuery, useMutation, from } from '@apollo/client';
 import {
   FETCH_SELECT_BOOK_BANK,
-  UPDATE_SALARY_BASE,
   FETCH_GETALLBOOKBANK_LOG,
-  CREATE_BOOKBANK,
+  CREATE_UPDATE_BOOKBANK,
   DELETE_BOOKBANK,
 } from '../../../service/graphql/Summary';
 
@@ -50,7 +49,7 @@ const { useToken } = theme;
 const Remuneration: React.FC = () => {
   const token = useToken();
   const location = useLocation();
-  const propsstate = location.state as any;
+  let propsstate = location.state as any;
 
   const [open, setOpen] = useState(false);
   const [form] = Form.useForm<any>();
@@ -63,23 +62,21 @@ const Remuneration: React.FC = () => {
   const { data: book_bank_data, refetch } = useQuery(FETCH_GETALLBOOKBANK_LOG, {
     variables: { userId: propsstate?.userId },
   });
-  const [creteBookBank] = useMutation(CREATE_BOOKBANK);
+  const [creteBookBank] = useMutation(CREATE_UPDATE_BOOKBANK);
   const [deleteBookBank] = useMutation(DELETE_BOOKBANK);
 
-  const salary: any = book_bank_data
-    ? book_bank_data?.bookbank_log_admin?.[0]?.base_salary
-    : '0.00';
-  const banknumber: any = book_bank_data
-    ? book_bank_data?.bookbank_log_admin?.[0]?.bank_number
-    : '0.00';
-  const bankname: any = book_bank_data
-    ? book_bank_data?.bookbank_log_admin?.[0]?.mas_bank?.name
-    : '';
+
 
   useEffect(() => {
-    // const salary: any = book_bank_data ? book_bank_data?.bookbank_log_admin[0]?.base_salary : '0.00';
-    // const banknumber: any = book_bank_data ? book_bank_data?.bookbank_log_admin[0]?.bank_number : '0.00';
-    // const bankname: any = book_bank_data ? book_bank_data?.bookbank_log_admin[0]?.mas_bank?.name : '';
+    const salary: any = book_bank_data
+      ? book_bank_data?.bookbank_log_admin?.[0]?.base_salary?.toFixed(2)
+      : '0.00';
+    const banknumber: any = book_bank_data
+      ? book_bank_data?.bookbank_log_admin?.[0]?.bank_number
+      : '0.00';
+    const bankname: any = book_bank_data
+      ? book_bank_data?.bookbank_log_admin?.[0]?.mas_bank?.name
+      : '';
 
     formshow.setFieldsValue({
       base_salary: salary,
@@ -135,80 +132,80 @@ const Remuneration: React.FC = () => {
     console.log('Update', value);
     drawerType === 1
       ? Swal.fire({
-          title: `ยืนยันการ Update ฐานเงินเดือน`,
-          icon: 'warning',
-          showDenyButton: true,
-          showCancelButton: false,
-          confirmButtonColor: token.token.colorPrimary,
-          denyButtonColor: '#ea4e4e',
-          confirmButtonText: 'ตกลง',
-          denyButtonText: `ยกเลิก`,
-        }).then(async (result) => {
-          if (result.isConfirmed) {
-            creteBookBank({
-              variables: {
-                data: {
-                  ...value,
-                  userId: propsstate?.userId,
-                  base_salary: parseFloat(value.base_salary)?.toFixed(2),
-                  provident_emp: parseFloat(value.provident_emp),
-                  provident_com: parseFloat(value.provident_com),
-                },
+        title: `ยืนยันการ Update ฐานเงินเดือน`,
+        icon: 'warning',
+        showDenyButton: true,
+        showCancelButton: false,
+        confirmButtonColor: token.token.colorPrimary,
+        denyButtonColor: '#ea4e4e',
+        confirmButtonText: 'ตกลง',
+        denyButtonText: `ยกเลิก`,
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          creteBookBank({
+            variables: {
+              data: {
+                ...value,
+                userId: propsstate?.userId,
+                base_salary: parseFloat(value.base_salary),
+                provident_emp: parseFloat(value.provident_emp),
+                provident_com: parseFloat(value.provident_com),
               },
-            })
-              .then((val) => {
-                console.log(val);
-                if (val.data?.Createbookbank?.status) {
-                  Swal.fire(`Update ฐานเงินเดือนสำเร็จ!`, '', 'success');
-                  refetch();
-                  form.resetFields();
-                }
-              })
-              .catch((err) => {
-                Swal.fire(`Update ฐานเงินเดือนไม่สำเร็จ!`, '', 'error');
-                console.error(err);
-              });
-          }
-        })
-      : Swal.fire({
-          title: `ยืนยันการแก้ไขฐานเงินเดือน`,
-          icon: 'warning',
-          showDenyButton: true,
-          showCancelButton: false,
-          confirmButtonColor: token.token.colorPrimary,
-          denyButtonColor: '#ea4e4e',
-          confirmButtonText: 'ตกลง',
-          denyButtonText: `ยกเลิก`,
-        }).then(async (result) => {
-          if (result.isConfirmed) {
-            creteBookBank({
-              variables: {
-                data: {
-                  ...value,
-                  id: selectedRow?.id ? selectedRow?.id : undefined,
-                  userId: propsstate?.userId,
-                  base_salary: parseFloat(value.base_salary),
-                  provident_emp: parseFloat(value.provident_emp),
-                  provident_com: parseFloat(value.provident_com),
-                  // date: moment(value),
-                },
-              },
-            })
-              .then((val) => {
-                console.log(val);
-                if (val.data?.Createbookbank?.status) {
-                  Swal.fire(`แก้ไขข้อมูลฐานเงินเดือนสำเร็จ!`, '', 'success');
-                  refetch();
-                  form.resetFields();
-                }
-              })
-              .catch((err) => {
-                Swal.fire(`แก้ไขข้อมูลฐานเงินเดือนไม่สำเร็จ!`, '', 'error');
-                console.error(err);
+            },
+          })
+            .then((val) => {
+              console.log(val);
+              if (val.data?.Createandupdatebookbank?.status) {
+                Swal.fire(`Update ฐานเงินเดือนสำเร็จ!`, '', 'success');
+                refetch();
                 form.resetFields();
-              });
-          }
-        });
+              }
+            })
+            .catch((err) => {
+              Swal.fire(`Update ฐานเงินเดือนไม่สำเร็จ!`, '', 'error');
+              console.error(err);
+            });
+        }
+      })
+      : Swal.fire({
+        title: `ยืนยันการแก้ไขฐานเงินเดือน`,
+        icon: 'warning',
+        showDenyButton: true,
+        showCancelButton: false,
+        confirmButtonColor: token.token.colorPrimary,
+        denyButtonColor: '#ea4e4e',
+        confirmButtonText: 'ตกลง',
+        denyButtonText: `ยกเลิก`,
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          creteBookBank({
+            variables: {
+              data: {
+                ...value,
+                id: selectedRow?.id ? selectedRow?.id : undefined,
+                userId: propsstate?.userId,
+                base_salary: parseFloat(value.base_salary),
+                provident_emp: parseFloat(value.provident_emp),
+                provident_com: parseFloat(value.provident_com),
+                // date: moment(value),
+              },
+            },
+          })
+            .then((val) => {
+              console.log(val);
+              if (val.data?.Createandupdatebookbank?.status) {
+                Swal.fire(`แก้ไขข้อมูลฐานเงินเดือนสำเร็จ!`, '', 'success');
+                refetch();
+                form.resetFields();
+              }
+            })
+            .catch((err) => {
+              Swal.fire(`แก้ไขข้อมูลฐานเงินเดือนไม่สำเร็จ!`, '', 'error');
+              console.error(err);
+              form.resetFields();
+            });
+        }
+      });
     setOpen(false);
   };
 
@@ -336,7 +333,7 @@ const Remuneration: React.FC = () => {
               <Avatar
                 size={{ xs: 24, sm: 32, md: 40, lg: 64, xl: 80, xxl: 100 }}
                 icon={<AntDesignOutlined />}
-                // src={getFilePath() + propsstate?.avatar}
+              // src={getFilePath() + propsstate?.avatar}
               ></Avatar>
             </div>
           </Col>
@@ -430,13 +427,12 @@ const Remuneration: React.FC = () => {
       </Card>
 
       <Drawer
-        title={`${
-          drawerType === 1
-            ? 'Update ข้อมูลฐานเงินเดือน'
-            : drawerType === 2
+        title={`${drawerType === 1
+          ? 'Update ข้อมูลฐานเงินเดือน'
+          : drawerType === 2
             ? 'แก้ไขข้อมูลฐานเงินเดือน'
             : 'ข้อมูลฐานเงินเดือน'
-        }`}
+          }`}
         onClose={onClose}
         open={open}
         width={400}
