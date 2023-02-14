@@ -24,8 +24,14 @@ import { CompanyQuery } from '../../../__generated__/graphql';
 import { useNavigate } from 'react-router-dom';
 import { MoreOutlined } from '@ant-design/icons';
 import Swal from 'sweetalert2';
+import { PageRoleAndPermissionType } from '../../../context/AuthContext';
+import { useAuth } from '../../../hooks/useAuth';
 
 const { useToken } = theme;
+
+type CompanynitiPropsType = {
+  role?: PageRoleAndPermissionType;
+};
 
 const GET_COMPANY = gql(/* GraphQL */ `
   query Company {
@@ -68,11 +74,12 @@ const GET_COMPANY = gql(/* GraphQL */ `
   }
 `);
 
-const Companyniti: React.FC = () => {
+const Companyniti: React.FC<CompanynitiPropsType> = ({ role }) => {
   const token = useToken();
   const { loading, data, refetch } = useQuery(GET_COMPANY);
   const [deletecomapany] = useMutation(DELETE_COMPANY);
   const navigate = useNavigate();
+  const { ability } = useAuth();
 
   const onMenuClick = (event: any, record: any) => {
     const { key } = event;
@@ -247,18 +254,23 @@ const Companyniti: React.FC = () => {
       </Card>
       <Card className="shadow-md">
         <Col className="pb-4 flex justify-end">
-          <Button
-            type="primary"
-            style={{
-              marginBottom: '10px',
-              backgroundColor: token.token.colorPrimary,
-            }}
-            onClick={() => {
-              navigate('newCompany');
-            }}
-          >
-            + เพิ่มสาขา
-          </Button>
+          {ability.can(
+            role?.add?.action as string,
+            role?.add?.subject as string,
+          ) && (
+            <Button
+              type="primary"
+              style={{
+                marginBottom: '10px',
+                backgroundColor: token.token.colorPrimary,
+              }}
+              onClick={() => {
+                navigate('newCompany');
+              }}
+            >
+              + เพิ่มสาขา
+            </Button>
+          )}
         </Col>
         <Table
           rowKey={'id'}

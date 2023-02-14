@@ -19,6 +19,18 @@ import ErrorPage from '../Error/ErrorPage';
 
 const cookie = new Cookies();
 
+export type RoleAndPermission = {
+  action: string;
+  subject: string;
+};
+
+export type PageRoleAndPermissionType = {
+  add?: RoleAndPermission;
+  edit?: RoleAndPermission;
+  delete?: RoleAndPermission;
+  read?: RoleAndPermission;
+};
+
 const GET_ME = gql(`
 query Me {
   me {

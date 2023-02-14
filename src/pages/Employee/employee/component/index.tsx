@@ -39,7 +39,11 @@ import { RcFile } from 'antd/es/upload';
 
 import { FETCH_GETALLROLE } from '../../../../service/graphql/Role';
 import { useAuth } from '../../../../hooks/useAuth';
-import { json } from 'react-router-dom';
+import { PageRoleAndPermissionType } from '../../../../context/AuthContext';
+
+type ProfileEmployeePropsType = {
+  role?: PageRoleAndPermissionType;
+};
 const { useToken } = theme;
 
 const GET_ME = gql(`
@@ -130,7 +134,7 @@ mutation CreateAccountUser($data: CreateAccountUserInput!) {
   }
 }`);
 
-const ProfileEmployee: React.FC = () => {
+const ProfileEmployee: React.FC<ProfileEmployeePropsType> = ({ role }) => {
   /** Declare ability */
   const { ability, loading } = useAuth();
   /** End Declare */
@@ -1027,16 +1031,21 @@ const ProfileEmployee: React.FC = () => {
           <Row gutter={16}>
             <Form.Item>
               <Space>
-                <Button
-                  htmlType="submit"
-                  type="primary"
-                  style={{
-                    marginBottom: '10px',
-                    backgroundColor: token.token.colorPrimary,
-                  }}
-                >
-                  บันทึก
-                </Button>
+                {ability.can(
+                  role?.edit?.action as string,
+                  role?.edit?.subject as string,
+                ) && (
+                  <Button
+                    htmlType="submit"
+                    type="primary"
+                    style={{
+                      marginBottom: '10px',
+                      backgroundColor: token.token.colorPrimary,
+                    }}
+                  >
+                    บันทึก
+                  </Button>
+                )}
                 {/* <Button
                     style={{
                       marginBottom: '10px',
