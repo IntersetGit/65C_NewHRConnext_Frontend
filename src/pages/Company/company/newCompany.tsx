@@ -10,6 +10,7 @@ import {
   Select,
   Space,
   theme,
+  Upload
 } from 'antd';
 import { useEffect, useState } from 'react';
 import { RiCloseFill, RiHotelLine } from 'react-icons/ri';
@@ -23,6 +24,7 @@ import { CREATE_COMPANY_ACCOUNT } from '../../../service/graphql/Company';
 import { CreateCompanyBranch } from '../../../__generated__/graphql';
 import { GET_PROVINCE } from '../../../service/graphql/Province';
 import { useAuth } from '../../../hooks/useAuth';
+import './index.css'
 
 const { useToken } = theme;
 
@@ -620,28 +622,40 @@ const Newcompany = () => {
           <Row gutter={16} className="px-2">
             <Col xs={24} sm={6} md={6} lg={6} xl={4}>
               {Editdata?.mode == 'view' ? (
-                <Button
-                  disabled
-                  type="primary"
-                  style={{
-                    width: '100%',
-                    marginBottom: '10px',
-                    backgroundColor: token.token.colorPrimary,
-                  }}
+                <Upload
+                  action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                  maxCount={1}
+                  className={'upload-custom'}
                 >
-                  เลือกรูป
-                </Button>
+                  <Button
+                    disabled
+                    type="primary"
+                    style={{
+                      width: '100%',
+                      marginBottom: '10px',
+                      backgroundColor: token.token.colorPrimary,
+                    }}
+                  >
+                    เลือกรูป
+                  </Button>
+                </Upload>
               ) : (
-                <Button
-                  type="primary"
-                  style={{
-                    width: '100%',
-                    marginBottom: '10px',
-                    backgroundColor: token.token.colorPrimary,
-                  }}
+                <Upload
+                  action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                  maxCount={1}
+                  className={'upload-custom'}
                 >
-                  เลือกรูป
-                </Button>
+                  <Button
+                    type="primary"
+                    style={{
+                      width: '100%',
+                      marginBottom: '10px',
+                      backgroundColor: token.token.colorPrimary,
+                    }}
+                  >
+                    เลือกรูป
+                  </Button>
+                </Upload>
               )}
             </Col>
             <Col xs={24} sm={14} md={14} lg={14} xl={14}>
