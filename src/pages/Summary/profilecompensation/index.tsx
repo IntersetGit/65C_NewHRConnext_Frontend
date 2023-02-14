@@ -47,6 +47,7 @@ import { getFilePath } from '../../../util';
 
 const { useToken } = theme;
 
+
 const Compensation: React.FC = () => {
     const token = useToken();
     const [open, setOpen] = useState(false);
@@ -382,7 +383,6 @@ const Compensation: React.FC = () => {
                                             showDrawer(1)
                                             form.setFieldsValue({
                                                 base_salary: propsstate?.bookbank_log[0]?.base_salary,
-
                                             })
                                         }}
                                     >

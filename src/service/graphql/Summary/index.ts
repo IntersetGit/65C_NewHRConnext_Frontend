@@ -73,6 +73,7 @@ query Data_salary($fristname: String, $position2: String, $position3: String) {
         CompanyId
       }
     }
+    companyBranchId
   }
 }
 `);
