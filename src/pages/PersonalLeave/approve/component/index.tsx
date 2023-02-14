@@ -16,6 +16,7 @@ import {
   Upload,
   Select,
   Space,
+  InputNumber,
 } from 'antd';
 import { RiCalendar2Line, RiBriefcase5Line } from 'react-icons/ri';
 import {
@@ -30,16 +31,31 @@ import type { ColumnsType } from 'antd/es/table';
 import { useState } from 'react';
 const { useToken } = theme;
 const { TextArea } = Input;
-import { FETCH_ALL_LEAVE } from '../../../../service/graphql/Leave';
-import { useQuery } from '@apollo/client';
+import {
+  FETCH_ALL_LEAVE,
+  LEAVE_TYPE_DATA,
+  CREATE_LEAVE,
+} from '../../../../service/graphql/Leave';
+import { useQuery, useMutation } from '@apollo/client';
 import moment from 'moment';
+import Swal from 'sweetalert2';
 
 const ProfileApprove: React.FC = () => {
   const [open, setOpen] = useState(false);
   const [form] = Form.useForm();
   const token = useToken();
   const [drawertype, setDrawertype] = useState(1);
+  const [selectedrow, setselectedrow] = useState<any>();
   const { data: dataleaveme, loading, refetch } = useQuery(FETCH_ALL_LEAVE);
+  const { data: leave_type_data } = useQuery(LEAVE_TYPE_DATA);
+  const [createLeaveData] = useMutation(CREATE_LEAVE);
+
+  const selectleavetype = leave_type_data?.getleavetypedata?.map((e) => {
+    return {
+      label: e?.name,
+      value: e?.id,
+    };
+  });
 
   const showDrawer = (type: any) => {
     setDrawertype(type);
@@ -48,6 +64,7 @@ const ProfileApprove: React.FC = () => {
 
   const onClose = () => {
     setOpen(false);
+    form.resetFields();
   };
 
   const genarateMenu = (record: any) => {
@@ -76,7 +93,14 @@ const ProfileApprove: React.FC = () => {
   const onMenuClick = (event: any, record: any) => {
     const { key } = event;
     if (key === 'edit') {
+      console.log(record);
       showDrawer(2);
+      setselectedrow(record);
+      form.setFieldsValue({
+        ...record,
+        start_date: record.start_date ? moment(record.start_date) : undefined,
+        end_date: record.end_date ? moment(record.end_date) : undefined,
+      });
     } else if (key === 'view') {
       showDrawer(3);
     } else if (key === 'delete') {
@@ -128,6 +152,14 @@ const ProfileApprove: React.FC = () => {
       },
     },
     {
+      title: 'จำนวนวัน',
+      key: 'count_hour',
+      align: 'center',
+      render: (record) => {
+        return record.quantity_hours;
+      },
+    },
+    {
       title: 'สถานะการลา',
       key: 'Status',
       align: 'center',
@@ -160,6 +192,78 @@ const ProfileApprove: React.FC = () => {
     },
   ];
 
+  const onFinish = (value) => {
+    drawertype === 1
+      ? Swal.fire({
+          title: `ยืนยันการสร้างข้อมูลการลา`,
+          icon: 'warning',
+          showDenyButton: true,
+          showCancelButton: false,
+          confirmButtonColor: token.token.colorPrimary,
+          denyButtonColor: '#ea4e4e',
+          confirmButtonText: 'ตกลง',
+          denyButtonText: `ยกเลิก`,
+        }).then(async (result) => {
+          if (result.isConfirmed) {
+            createLeaveData({
+              variables: {
+                data: {
+                  ...value,
+                  user_id: dataleaveme?.getleava_datame?.data_all?.[0]?.id,
+                },
+              },
+            })
+              .then((val) => {
+                console.log(val);
+                if (val.data?.createddata_leave?.status) {
+                  Swal.fire(`สร้างข้อมูลการลาสำเร็จ!`, '', 'success');
+                  refetch();
+                  form.resetFields();
+                  setOpen(false);
+                }
+              })
+              .catch((err) => {
+                Swal.fire(`สร้างข้อมูลการลาไม่สำเร็จ!`, '', 'error');
+                console.error(err);
+              });
+          }
+        })
+      : Swal.fire({
+          title: `ยืนยันการแก้ไขข้อมูลการลา`,
+          icon: 'warning',
+          showDenyButton: true,
+          showCancelButton: false,
+          confirmButtonColor: token.token.colorPrimary,
+          denyButtonColor: '#ea4e4e',
+          confirmButtonText: 'ตกลง',
+          denyButtonText: `ยกเลิก`,
+        }).then(async (result) => {
+          if (result.isConfirmed) {
+            createLeaveData({
+              variables: {
+                data: {
+                  ...value,
+                  id: selectedrow?.id,
+                },
+              },
+            })
+              .then((val) => {
+                console.log(val);
+                if (val.data?.createddata_leave?.status) {
+                  Swal.fire(`แก้ไขข้อมูลการลาสำเร็จ!`, '', 'success');
+                  refetch();
+                  form.resetFields();
+                  setOpen(false);
+                }
+              })
+              .catch((err) => {
+                Swal.fire(`แก้ไขข้อมูลการลาไม่สำเร็จ!`, '', 'error');
+                console.error(err);
+              });
+          }
+        });
+  };
+
   return (
     <>
       <div className="flex text-2xl ml-2 pt-4">
@@ -191,19 +295,20 @@ const ProfileApprove: React.FC = () => {
             <div className="text-lg font-bold">
               <u style={{ color: token.token.colorPrimary }}>
                 {
-                  dataleaveme?.getleava_datame?.data_all[0]?.profile
+                  dataleaveme?.getleava_datame?.data_all?.[0]?.profile
                     ?.firstname_th
                 }{' '}
                 {
-                  dataleaveme?.getleava_datame?.data_all[0]?.profile
+                  dataleaveme?.getleava_datame?.data_all?.[0]?.profile
                     ?.lastname_th
                 }
               </u>
               <div className="my-4">
-                {
-                  dataleaveme?.getleava_datame?.data_all[0]?.Position_user[0]
-                    ?.mas_positionlevel3?.name
-                }
+                {dataleaveme?.getleava_datame?.data_all?.[0]?.Position_user?.[0]
+                  ?.mas_positionlevel3?.name
+                  ? dataleaveme?.getleava_datame?.data_all[0]?.Position_user[0]
+                      ?.mas_positionlevel3?.name
+                  : 'ไม่มีตำแหน่งงาน'}
               </div>
             </div>
           </Col>
@@ -214,7 +319,7 @@ const ProfileApprove: React.FC = () => {
             <Card className="shadow-lg border-4 border-[#8cb369] bg-[#8cb369]">
               <div className="flex text-lg font-bold justify-center items-center mx-12">
                 <MdAirplanemodeActive className="text-green-900" size={'38'} />{' '}
-                {dataleaveme?.getleava_datame?.data_count?.name_1}
+                ลาพักร้อน {dataleaveme?.getleava_datame?.data_count?.count1}
               </div>
             </Card>
           </Col>
@@ -222,7 +327,7 @@ const ProfileApprove: React.FC = () => {
             <Card className="shadow-lg border-4 border-[#fddd5c] bg-[#fddd5c]">
               <div className="flex text-lg font-bold justify-center items-center">
                 <RiBriefcase5Line className="text-[#b48a4d]" size={'38'} />{' '}
-                {dataleaveme?.getleava_datame?.data_count?.name_3}
+                ลาป่วย {dataleaveme?.getleava_datame?.data_count?.count3}
               </div>
             </Card>
           </Col>
@@ -233,7 +338,7 @@ const ProfileApprove: React.FC = () => {
                   className="text-[#e2711d]"
                   size={'38'}
                 />{' '}
-                {dataleaveme?.getleava_datame?.data_count?.name_2}
+                ลากิจ {dataleaveme?.getleava_datame?.data_count?.count2}
               </div>
             </Card>
           </Col>
@@ -241,7 +346,7 @@ const ProfileApprove: React.FC = () => {
             <Card className="shadow-lg border-4 border-[#b491c8] bg-[#b491c8]">
               <div className="flex text-lg font-bold justify-center items-center">
                 <MdDragIndicator className="text-[#7c5295]" size={'38'} />{' '}
-                {dataleaveme?.getleava_datame?.data_count?.name_4}
+                ลาอื่น ๆ {dataleaveme?.getleava_datame?.data_count?.count4}
               </div>
             </Card>
           </Col>
@@ -279,31 +384,31 @@ const ProfileApprove: React.FC = () => {
           columns={columns}
           dataSource={
             dataleaveme?.getleava_datame?.data_all?.length > 0
-              ? (dataleaveme?.getleava_datame?.data_all[0]?.data_leave as any)
+              ? (dataleaveme?.getleava_datame?.data_all?.[0]?.data_leave as any)
               : []
           }
         ></Table>
       </Card>
 
       <Drawer title="สร้างใบลา" size="large" onClose={onClose} open={open}>
-        <Form form={form} layout="vertical">
+        <Form form={form} onFinish={onFinish} layout="vertical">
           <Row>
             <Col span={12}>
-              <Form.Item name={'leave_type'} label={'ประเภทการลา'}>
-                <Input />
+              <Form.Item name={'leavetype_id'} label={'ประเภทการลา'}>
+                <Select options={selectleavetype} allowClear />
               </Form.Item>
             </Col>
           </Row>
 
           <Row gutter={16}>
             <Col span={12}>
-              <Form.Item label={'จากวันที่'}>
+              <Form.Item name={'start_date'} label={'จากวันที่'}>
                 <DatePicker style={{ width: '100%' }} format={'YYYY-MM-DD'} />
               </Form.Item>
             </Col>
 
             <Col span={12}>
-              <Form.Item label={'ถึงวันที่'}>
+              <Form.Item name={'end_date'} label={'ถึงวันที่'}>
                 <DatePicker style={{ width: '100%' }} format={'YYYY-MM-DD'} />
               </Form.Item>
             </Col>
@@ -311,21 +416,31 @@ const ProfileApprove: React.FC = () => {
 
           <Row gutter={16}>
             <Col span={12}>
-              <Form.Item label={'จำนวนวัน'}>
-                <Input />
+              <Form.Item name={'quantity_day'} label={'จำนวนวัน'}>
+                <InputNumber
+                  style={{ width: '100%' }}
+                  min={0}
+                  max={31}
+                  defaultValue={0}
+                />
               </Form.Item>
             </Col>
 
             <Col span={12}>
-              <Form.Item label={'จำนวนชั่วโมง'}>
-                <Input />
+              <Form.Item name={'quantity_hours'} label={'จำนวนชั่วโมง'}>
+                <InputNumber
+                  style={{ width: '100%' }}
+                  min={0}
+                  max={24}
+                  defaultValue={0}
+                />
               </Form.Item>
             </Col>
           </Row>
 
           <Row>
             <Col span={24}>
-              <Form.Item label={'เหตุผลการลา'}>
+              <Form.Item name={'detail_leave'} label={'เหตุผลการลา'}>
                 <TextArea rows={6} />
               </Form.Item>
             </Col>

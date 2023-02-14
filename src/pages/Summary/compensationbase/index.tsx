@@ -31,10 +31,11 @@ import { FETCH_SELECT_BOOK_BANK, FETCH_AllSALARY_BASE, CREATE_ExpenseCom } from 
 
 const { useToken } = theme;
 
-const Compensation: React.FC = () => {
+const Compensationbase: React.FC = () => {
   const token = useToken();
   const [open, setOpen] = useState(false);
   const [form] = Form.useForm<any>();
+  // const [formSearch] = Form.useForm<any>();
   const navigate = useNavigate();
   const location = useLocation();
   let propsstate = location.state as any;
@@ -81,7 +82,7 @@ const Compensation: React.FC = () => {
     const { key } = event;
     if (key === 'view') {
       setSelectedRow(record);
-      navigate(`profileCompensation?id=${record.profile.userId}`, {
+      navigate(`remuneration?id=${record.profile.userId}`, {
         state: { ...record, userId: record?.profile?.userId, },
       });
 
@@ -89,46 +90,6 @@ const Compensation: React.FC = () => {
     }
   };
 
-  const onSubmitForm = (value: any) => {
-    console.log("onSubmit", value)
-    Swal.fire({
-      title: `ยืนยันการตั้งค่าการคำนวณเงินเดือน`,
-      icon: 'warning',
-      showDenyButton: true,
-      showCancelButton: false,
-      confirmButtonColor: token.token.colorPrimary,
-      denyButtonColor: '#ea4e4e',
-      confirmButtonText: 'ตกลง',
-      denyButtonText: `ยกเลิก`,
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        creteExpenseCom({
-          variables: {
-            data: {
-              ...value,
-              date: new Date(),
-              vat_per: parseFloat(value.vat_per),
-              ss_per: parseFloat(value.ss_per),
-            },
-          },
-        })
-          .then((val) => {
-            console.log(val);
-            if (val.data?.CreateAndUpdateExpenseCom?.status) {
-              Swal.fire(`ตั้งค่าการคำนวณเงินเดือนสำเร็จ!`, '', 'success');
-              refetch();
-              form.resetFields();
-            }
-          })
-          .catch((err) => {
-            Swal.fire(`ตั้งค่าการคำนวณเงินเดือนไม่สำเร็จ!`, '', 'error');
-            console.error(err);
-          });
-      }
-    });
-
-    setOpen(false);
-  }
 
   const columns: ColumnsType<any> = [
     {
@@ -192,7 +153,7 @@ const Compensation: React.FC = () => {
       <div className="flex text-3xl ml-2 pt-4">
         <GiReceiveMoney />
         <div className="ml-2 text-xl">
-          ข้อมูลเงินเดือน ( ค่าล่วงเวลา ค่าบริหาร เบี้ยขยัน และ อื่น ๆ )
+          ข้อมูลฐานเงินเดือน
         </div>
       </div>
 
@@ -201,7 +162,7 @@ const Compensation: React.FC = () => {
         <Form size="middle">
           <Row gutter={16}>
             <Col xs={24} sm={12} md={12} lg={6} xl={6}>
-              <Form.Item name="search" colon={false} label={'ชื่อ'}>
+              <Form.Item name="fristname" colon={false} label={'ชื่อ'}>
                 <Input allowClear></Input>
               </Form.Item>
             </Col>
@@ -255,102 +216,12 @@ const Compensation: React.FC = () => {
       </Card>
 
       <Card className="shadow-xl mt-4">
-        <Col>
-          <Row style={{ float: 'right' }}>
-            <Space>
-              <Button
-                type="primary"
-                size="middle"
-                style={{
-                  marginBottom: '10px',
-                  backgroundColor: token.token.colorPrimary,
-                }}
-                onClick={showDrawer}
-              >
-                ตั้งค่าการคำนวณเงินเดือน
-              </Button>
-            </Space>
-          </Row>
-        </Col>
         <Table rowKey={'id'} columns={columns} dataSource={TableData?.data_salary as any}></Table>
       </Card>
       {/* position_data?.getposition_user as any */}
-      <Drawer
-        title={'ตั้งค่าการคำนวณเงินเดือน'}
-        onClose={onClose}
-        open={open}
-        size="large"
-      >
-        <Form layout="horizontal" form={form} labelCol={{ span: 8 }} onFinish={onSubmitForm}>
-          <Row>
-            <Col span={16}>
-              <Form.Item name="bankId" label={'ธนาคาร (บริษัท)'}>
-                <Select allowClear options={selectBookBank} ></Select>
-              </Form.Item>
-            </Col>
-          </Row>
 
-          <Row>
-            <Col span={16}>
-              <Form.Item name="vat_per" label={'หักภาษี (%)'}>
-                <Input />
-              </Form.Item>
-            </Col>
-          </Row>
-
-          <Row>
-            <Col span={16}>
-              <Form.Item name="ss_per" label={'หักประกันสังคม (%)'}>
-                <Input />
-              </Form.Item>
-            </Col>
-          </Row>
-
-          <Row>
-            <Col span={16}>
-              <Form.Item label={'หักภาษีจากรายรับประเภท'}>
-                <Checkbox.Group style={{ width: '100%' }} onChange={onChange}>
-                  <Row>
-                    <Col span={8}>
-                      <Checkbox value={'เงินเดือน'}>เงินเดือน</Checkbox>
-                    </Col>
-                    <Col span={8}>
-                      <Checkbox value={'ค่าคอม'}>ค่าคอม</Checkbox>
-                    </Col>
-                    <Col span={8}>
-                      <Checkbox value={'ค่าล่วงเวลา'}>ค่าล่วงเวลา</Checkbox>
-                    </Col>
-                    <Col span={8}>
-                      <Checkbox value={'โบนัส'}>โบนัส</Checkbox>
-                    </Col>
-                    <Col span={8}>
-                      <Checkbox value={'เงินพิเศษ'}>เงินพิเศษ</Checkbox>
-                    </Col>
-                    <Col span={8}>
-                      <Checkbox value={'รายได้อื่น'}>รายได้อื่น</Checkbox>
-                    </Col>
-                  </Row>
-                </Checkbox.Group>
-              </Form.Item>
-
-              <Form.Item>
-                <Space style={{ display: 'flex', justifyContent: 'center' }}>
-                  <Button
-                    type="primary"
-                    style={{ backgroundColor: token.token.colorPrimary }}
-                    htmlType="submit"
-                  >
-                    บันทึก
-                  </Button>
-                  <Button onClick={onClose}>ยกเลิก</Button>
-                </Space>
-              </Form.Item>
-            </Col>
-          </Row>
-        </Form>
-      </Drawer>
     </>
   );
 };
 
-export default Compensation;
+export default Compensationbase;
