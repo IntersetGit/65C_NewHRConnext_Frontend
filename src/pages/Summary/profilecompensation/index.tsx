@@ -215,9 +215,6 @@ const Compensation: React.FC = () => {
         console.log(date, dateString);
     };
 
-
-    const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-
     const columns: ColumnsType<any> = [
         {
             title: 'เดือน/ปี',
