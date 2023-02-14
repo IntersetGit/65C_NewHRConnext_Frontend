@@ -150,23 +150,36 @@ const convertDataToComponent = (data: any, level = 1) => {
         };
     });
 };
-const convertData = (data: any, level = 1) => {
-    return data?.map((data: any, index: number) => {
+const convertData = (data: any, level = 1, masid = '') => {
+    return data?.map((i: any, index: number) => {
+        // console.log("i",i)
         if (level + 1 == 4) {
             return {
-                ['id_Position' + level]: data?.data?.id,
-                ['name_Position' + level]: data?.title,
+                ['id_Position' + level]: i?.data?.id,
+                ['name_Position' + level]: i?.title,
                 ['level_Position' + level]: index + 1,
-                ['code_position' + level]: data.id,
+                ['code_position' + level]: i.id,
+                ['positionlevel' + (level - 1) + '_id']: masid !== '' ? masid : i?.data?.id,
+            };
+        } else if (level == 1) {
+            return {
+                ['id_Position' + level]: i?.data?.id,
+                ['name_Position' + level]: i?.title,
+                ['level_Position' + level]: index + 1,
+                ['code_position' + level]: i.id,
+                ['masPosition' + (level + 1)]: i.children
+                    ? convertData(i.children, level + 1, (i?.data?.id ?? masid))
+                    : [],
             };
         } else {
             return {
-                ['id_Position' + level]: data?.data?.id,
-                ['name_Position' + level]: data?.title,
+                ['id_Position' + level]: i?.data?.id,
+                ['name_Position' + level]: i?.title,
                 ['level_Position' + level]: index + 1,
-                ['code_position' + level]: data.id,
-                ['masPosition' + (level + 1)]: data.children
-                    ? convertData(data.children, level + 1)
+                ['code_position' + level]: i.id,
+                ['positionlevel' + (level - 1) + '_id']: masid !== '' ? masid : i?.data?.id,
+                ['masPosition' + (level + 1)]: i.children
+                    ? convertData(i.children, level + 1, (i?.data?.id ?? masid))
                     : [],
             };
         }
@@ -690,31 +703,31 @@ const CompanyStructure: React.FC = () => {
                     value.push(item);
                     return value;
                 }
-                if (item.masPosition2) {
-                    for (const subItem2 of item.masPosition2) {
-                        if (subItem2.id_Position2 === undefined) {
-                            console.log(
-                                `id_Position2 is undefined for item ${subItem2.name_Position2}`,
-                            );
-                            value.push({ ...subItem2, positionlevel1_id: item.id_Position1 });
-                            return value;
-                        }
-                        if (item.masPosition3) {
-                            for (const subItem3 of item.masPosition3) {
-                                if (subItem3.id_Position3 === undefined) {
-                                    console.log(
-                                        `id_Position3 is undefined for item ${subItem3.name_Position3}`,
-                                    );
-                                    value.push({
-                                        ...subItem3,
-                                        positionlevel2_id: subItem2.id_Position2,
-                                    });
-                                    return value;
-                                }
-                            }
-                        }
-                    }
-                }
+                // if (item.masPosition2) {
+                //     for (const subItem2 of item.masPosition2) {
+                //         if (subItem2.id_Position2 === undefined) {
+                //             console.log(
+                //                 `id_Position2 is undefined for item ${subItem2.name_Position2}`,
+                //             );
+                //             value.push({ ...subItem2, positionlevel1_id: item.id_Position1 });
+                //             return value;
+                //         }
+                //         if (item.masPosition3) {
+                //             for (const subItem3 of item.masPosition3) {
+                //                 if (subItem3.id_Position3 === undefined) {
+                //                     console.log(
+                //                         `id_Position3 is undefined for item ${subItem3.name_Position3}`,
+                //                     );
+                //                     value.push({
+                //                         ...subItem3,
+                //                         positionlevel2_id: subItem2.id_Position2,
+                //                     });
+                //                     return value;
+                //                 }
+                //             }
+                //         }
+                //     }
+                // }
             }
             return value;
         };
@@ -729,6 +742,7 @@ const CompanyStructure: React.FC = () => {
             });
         };
 
+
         let Adddata = filtertAdd(ConvertData);
         let Editdata = filtertEdit(ConvertData);
         console.log('Adddata Editdata :>> ', Adddata, Editdata);
@@ -742,18 +756,22 @@ const CompanyStructure: React.FC = () => {
             cancelButtonText: 'ยกเลิก',
         }).then(async (result) => {
             if (result.isConfirmed) {
-                let dataAdd = await CreatedPosition({
-                    variables: {
-                        data: Adddata,
-                    },
-                });
-                let dataEdit = await EditPosition({
-                    variables: {
-                        data: Editdata,
-                    },
-                });
-                console.log('dataAdd', dataAdd);
-                Swal.fire('ลบข้อมูลสำเร็จ!', '', 'success');
+                if (Editdata.length > 0) {
+                    let dataEdit = await EditPosition({
+                        variables: {
+                            data: Editdata,
+                        },
+                    });
+                }
+                 if (Adddata.length > 0) {
+                    let dataAdd = await CreatedPosition({
+                        variables: {
+                            data: Adddata,
+                        },
+                    });
+                }
+                Swal.fire('บันทึกข้อมูลสำเร็จ!', '', 'success');
+                refetch();
             }
         });
     };

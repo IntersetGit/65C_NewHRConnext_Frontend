@@ -26,6 +26,7 @@ export type Amphoe = {
 };
 
 export type BankInput = {
+  bank_code?: InputMaybe<Scalars['String']>;
   id?: InputMaybe<Scalars['ID']>;
   name?: InputMaybe<Scalars['String']>;
 };
@@ -317,6 +318,12 @@ export type DeleteSalaryResponseType = {
   status?: Maybe<Scalars['Boolean']>;
 };
 
+export type DeletebookbankResponseType = {
+  __typename?: 'DeletebookbankResponseType';
+  message?: Maybe<Scalars['String']>;
+  status?: Maybe<Scalars['Boolean']>;
+};
+
 export type District = {
   __typename?: 'District';
   amphoe?: Maybe<Array<Maybe<Amphoe>>>;
@@ -418,6 +425,7 @@ export type MeprofileType = {
 export type Mutation = {
   __typename?: 'Mutation';
   CreateAndUpdateExpenseCom?: Maybe<CreateAndUpdateExpenseComResponseType>;
+  CreateSalaryStatus?: Maybe<SalaryStatusResponseType>;
   Createbookbank?: Maybe<CreatebookbanklogResponseType>;
   CreatedPosition?: Maybe<CreatepositionResponseType>;
   Createincometype?: Maybe<IncometypeResponseType>;
@@ -425,6 +433,7 @@ export type Mutation = {
   Createsalary?: Maybe<CreatesalaryResponseType>;
   Createyears?: Maybe<YearsResponseType>;
   DeleteSalary?: Maybe<DeleteSalaryResponseType>;
+  Deletebookbank?: Maybe<DeletebookbankResponseType>;
   EditPosition?: Maybe<CreatepositionResponseType>;
   createAccount?: Maybe<CreateCompanyResponseType>;
   createAccountUser?: Maybe<CreateUserResponseType>;
@@ -440,6 +449,7 @@ export type Mutation = {
   deleteHolidayDate?: Maybe<DeleteHolidayDateResponseType>;
   deleteHolidayYear?: Maybe<DeleteHolidayYearResponseType>;
   deleteRoleCompany?: Maybe<DeleteRoleCompanyRespnsetType>;
+  editstatusleave?: Maybe<CreateleaveResponseType>;
   login?: Maybe<LoginResponse>;
   refreshToken?: Maybe<RefreshtokenResponseType>;
   updateRoleCompanyMangement?: Maybe<CreateRoleCompanyResponseType>;
@@ -449,6 +459,11 @@ export type Mutation = {
 
 export type MutationCreateAndUpdateExpenseComArgs = {
   data?: InputMaybe<ExpenseComInput>;
+};
+
+
+export type MutationCreateSalaryStatusArgs = {
+  data?: InputMaybe<Salary_Status_Input>;
 };
 
 
@@ -483,6 +498,11 @@ export type MutationCreateyearsArgs = {
 
 
 export type MutationDeleteSalaryArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type MutationDeletebookbankArgs = {
   id: Scalars['ID'];
 };
 
@@ -559,6 +579,11 @@ export type MutationDeleteHolidayYearArgs = {
 
 export type MutationDeleteRoleCompanyArgs = {
   id: Scalars['ID'];
+};
+
+
+export type MutationEditstatusleaveArgs = {
+  data?: InputMaybe<Leave>;
 };
 
 
@@ -665,7 +690,8 @@ export type Query = {
   GetHoliDayYear?: Maybe<Array<Maybe<Holiday_Years>>>;
   GetHolidayDate?: Maybe<Array<Holiday_Date>>;
   SalarySlip?: Maybe<Slipresolvers>;
-  bookbank_log?: Maybe<Array<Maybe<Bookbank_Log>>>;
+  bookbank_log?: Maybe<Array<Maybe<Bookbank_Log_Type>>>;
+  bookbank_log_admin?: Maybe<Array<Maybe<Bookbank_Log_Type>>>;
   company?: Maybe<ResponseCompany>;
   data_salary?: Maybe<Array<Maybe<Data_Salary>>>;
   datasalary_mee?: Maybe<Array<Maybe<Data_Salary_Me>>>;
@@ -673,6 +699,7 @@ export type Query = {
   getMasPositon?: Maybe<Array<Maybe<Mas_Positionlevel1>>>;
   getProvince?: Maybe<Array<Maybe<Province>>>;
   getcompanyRole?: Maybe<Array<Maybe<Role_Company>>>;
+  getleava_alldata?: Maybe<Array<Maybe<Getdataaboutleave>>>;
   getleava_datame?: Maybe<GetleaveResponseType>;
   getleavetypedata?: Maybe<Array<Maybe<Mas_Leave_Type>>>;
   getownCompany?: Maybe<GetOwncompanytype>;
@@ -683,6 +710,7 @@ export type Query = {
   me?: Maybe<Me>;
   provident_log?: Maybe<Array<Maybe<Provident_Log>>>;
   salary?: Maybe<Array<Maybe<Data_Salary>>>;
+  salary_inmonthSlip?: Maybe<Array<Maybe<Data_Salary>>>;
   users?: Maybe<Array<Maybe<User>>>;
   verifyCompanycode?: Maybe<Scalars['Boolean']>;
 };
@@ -695,8 +723,8 @@ export type QuerySalarySlipArgs = {
 };
 
 
-export type QueryBookbank_LogArgs = {
-  id?: InputMaybe<Scalars['String']>;
+export type QueryBookbank_Log_AdminArgs = {
+  userId?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -727,6 +755,11 @@ export type QueryGetcompanyRoleArgs = {
 };
 
 
+export type QueryGetleava_AlldataArgs = {
+  dataleaveId?: InputMaybe<Scalars['ID']>;
+};
+
+
 export type QueryGetposition_UserArgs = {
   id?: InputMaybe<Scalars['ID']>;
 };
@@ -744,6 +777,13 @@ export type QueryProvident_LogArgs = {
 
 export type QuerySalaryArgs = {
   userId?: InputMaybe<Scalars['String']>;
+};
+
+
+export type QuerySalary_InmonthSlipArgs = {
+  month?: InputMaybe<Scalars['String']>;
+  userId?: InputMaybe<Scalars['String']>;
+  years?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -847,6 +887,12 @@ export type Role_Company = {
 export type SalaryResponseType = {
   __typename?: 'SalaryResponseType';
   userId?: Maybe<Scalars['String']>;
+};
+
+export type SalaryStatusResponseType = {
+  __typename?: 'SalaryStatusResponseType';
+  message?: Maybe<Scalars['String']>;
+  status?: Maybe<Scalars['Boolean']>;
 };
 
 export type UpdateRoleCompanyMangementType = {
@@ -1133,6 +1179,7 @@ export type Leave = {
   id?: InputMaybe<Scalars['String']>;
   leavetype_id?: InputMaybe<Scalars['String']>;
   quantity_day?: InputMaybe<Scalars['Int']>;
+  quantity_hours?: InputMaybe<Scalars['Int']>;
   start_date?: InputMaybe<Scalars['Date']>;
   user_id?: InputMaybe<Scalars['String']>;
 };
@@ -1142,10 +1189,11 @@ export type Leave_Data = {
   Status?: Maybe<Scalars['Int']>;
   detail_leave?: Maybe<Scalars['String']>;
   end_date?: Maybe<Scalars['Date']>;
-  id?: Maybe<Scalars['String']>;
+  id?: Maybe<Scalars['ID']>;
   leavetype_id?: Maybe<Scalars['String']>;
   mas_leave_type?: Maybe<Mas_Leave_Type>;
   quantity_day?: Maybe<Scalars['Int']>;
+  quantity_hours?: Maybe<Scalars['Int']>;
   start_date?: Maybe<Scalars['Date']>;
   user_id?: Maybe<Scalars['String']>;
 };
@@ -1166,6 +1214,7 @@ export type Mas_All_Collect = {
 
 export type Mas_Bank = {
   __typename?: 'mas_bank';
+  bank_code?: Maybe<Scalars['String']>;
   bookbank_log?: Maybe<Bookbank_Log_Type>;
   expense_company?: Maybe<Expense_Company>;
   id?: Maybe<Scalars['ID']>;
@@ -1230,6 +1279,14 @@ export type Mas_Positionlevel3 = {
   name?: Maybe<Scalars['String']>;
   positionlevel2_id?: Maybe<Scalars['String']>;
   type?: Maybe<Scalars['String']>;
+};
+
+export type Mas_Salary_Status = {
+  __typename?: 'mas_salary_status';
+  id?: Maybe<Scalars['ID']>;
+  name?: Maybe<Scalars['String']>;
+  no?: Maybe<Scalars['Int']>;
+  salary?: Maybe<Array<Maybe<Salary>>>;
 };
 
 export type MonthInput = {
@@ -1374,9 +1431,16 @@ export type SalaryInput = {
   year?: InputMaybe<Scalars['String']>;
 };
 
+export type Salary_Status_Input = {
+  id?: InputMaybe<Scalars['ID']>;
+  name?: InputMaybe<Scalars['String']>;
+  no?: InputMaybe<Scalars['Int']>;
+};
+
 export type Slipresolvers = {
   __typename?: 'slipresolvers';
   message?: Maybe<Scalars['String']>;
+  path?: Maybe<Scalars['String']>;
   status: Scalars['Boolean'];
 };
 
