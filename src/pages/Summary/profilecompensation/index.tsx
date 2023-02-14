@@ -350,7 +350,10 @@ const Compensation: React.FC = () => {
                                         style={{ backgroundColor: token.token.colorPrimary }}
                                         onClick={() => {
                                             showDrawer(1)
-                                            form.setFieldsValue({ base_salary: propsstate?.bookbank_log[0]?.base_salary })
+                                            form.setFieldsValue({
+                                                base_salary: propsstate?.bookbank_log[0]?.base_salary,
+
+                                            })
                                         }}
                                     >
                                         คำนวณเงินเดือน

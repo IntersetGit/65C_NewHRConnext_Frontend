@@ -38,15 +38,6 @@ query Datasalary_mee {
 }
 `);
 
-export const UPDATE_SALARY_BASE = gql(`
-mutation Createbookbank($data: bookbank_logInput) {
-  Createbookbank(data: $data) {
-    message
-    status
-  }
-}
-`);
-
 export const FETCH_AllSALARY_BASE = gql(`
 query Data_salary($fristname: String, $position2: String, $position3: String) {
   data_salary(fristname: $fristname, Position2: $position2, Position3: $position3) {
@@ -155,8 +146,8 @@ query Salary($userId: String) {
 `);
 
 export const CREATE_SALARY_USER = gql(`
-  mutation Createsalary($data: salaryInput) {
-    Createsalary(data: $data) {
+  mutation Createandupdatesalary($data: salaryInput) {
+    Createandupdatesalary(data: $data) {
       message
       status
     }
@@ -172,13 +163,13 @@ export const CREATE_ExpenseCom = gql(`
   }
 `);
 
-export const CREATE_BOOKBANK = gql(`
-mutation Createbookbank($data: bookbank_logInput) {
-  Createbookbank(data: $data) {
-    message
-    status
+export const CREATE_UPDATE_BOOKBANK = gql(`
+  mutation Createandupdatebookbank($data: bookbank_logInput) {
+    Createandupdatebookbank(data: $data) {
+      message
+      status
+    }
   }
-}
 `);
 
 export const DELETE_BOOKBANK = gql(`

@@ -2,15 +2,9 @@
 import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
-export type Exact<T extends { [key: string]: unknown }> = {
-  [K in keyof T]: T[K];
-};
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
-  [SubKey in K]?: Maybe<T[SubKey]>;
-};
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
-  [SubKey in K]: Maybe<T[SubKey]>;
-};
+export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -432,11 +426,11 @@ export type Mutation = {
   __typename?: 'Mutation';
   CreateAndUpdateExpenseCom?: Maybe<CreateAndUpdateExpenseComResponseType>;
   CreateSalaryStatus?: Maybe<SalaryStatusResponseType>;
-  Createbookbank?: Maybe<CreatebookbanklogResponseType>;
+  Createandupdatebookbank?: Maybe<CreatebookbanklogResponseType>;
+  Createandupdatesalary?: Maybe<CreatesalaryResponseType>;
   CreatedPosition?: Maybe<CreatepositionResponseType>;
   Createincometype?: Maybe<IncometypeResponseType>;
   Createmonth?: Maybe<MonthResponseType>;
-  Createsalary?: Maybe<CreatesalaryResponseType>;
   Createyears?: Maybe<YearsResponseType>;
   DeleteSalary?: Maybe<DeleteSalaryResponseType>;
   Deletebookbank?: Maybe<DeletebookbankResponseType>;
@@ -462,118 +456,147 @@ export type Mutation = {
   validateRoute?: Maybe<ValidateRoute>;
 };
 
+
 export type MutationCreateAndUpdateExpenseComArgs = {
   data?: InputMaybe<ExpenseComInput>;
 };
+
 
 export type MutationCreateSalaryStatusArgs = {
   data?: InputMaybe<Salary_Status_Input>;
 };
 
-export type MutationCreatebookbankArgs = {
+
+export type MutationCreateandupdatebookbankArgs = {
   data?: InputMaybe<Bookbank_LogInput>;
 };
+
+
+export type MutationCreateandupdatesalaryArgs = {
+  data?: InputMaybe<SalaryInput>;
+};
+
 
 export type MutationCreatedPositionArgs = {
   data?: InputMaybe<Array<CreatedAndUpdatePosition>>;
 };
 
+
 export type MutationCreateincometypeArgs = {
   data?: InputMaybe<Incometype>;
 };
+
 
 export type MutationCreatemonthArgs = {
   data?: InputMaybe<MonthInput>;
 };
 
-export type MutationCreatesalaryArgs = {
-  data?: InputMaybe<SalaryInput>;
-};
 
 export type MutationCreateyearsArgs = {
   data?: InputMaybe<YearsInput>;
 };
+
 
 export type MutationDeleteSalaryArgs = {
   salaryid: Scalars['ID'];
   userId: Scalars['String'];
 };
 
+
 export type MutationDeletebookbankArgs = {
   id: Scalars['ID'];
 };
+
 
 export type MutationEditPositionArgs = {
   data?: InputMaybe<Array<CreatedAndUpdatePosition>>;
 };
 
+
 export type MutationCreateAccountArgs = {
   data: CreateAccountInput;
 };
+
 
 export type MutationCreateAccountUserArgs = {
   data: CreateAccountUserInput;
 };
 
+
 export type MutationCreateAndUpdateComBaranceArgs = {
   data: CreateCompanyBranch;
 };
+
 
 export type MutationCreateAndUpdateHolidayDateArgs = {
   data: CreateHolidayDate;
 };
 
+
 export type MutationCreateBankArgs = {
   data?: InputMaybe<BankInput>;
 };
+
 
 export type MutationCreateHolidayYearArgs = {
   data?: InputMaybe<Array<CreateHolidayYears>>;
 };
 
+
 export type MutationCreateRoleCompanyArgs = {
   data: CreateRoleCompanyGroup;
 };
+
 
 export type MutationCreateddata_LeaveArgs = {
   data?: InputMaybe<Leave>;
 };
 
+
 export type MutationCreatedposition_UserArgs = {
   data: Position;
 };
+
 
 export type MutationDeleteAccountUserArgs = {
   id: Scalars['ID'];
 };
 
+
 export type MutationDeleteComBaranceArgs = {
   id: Scalars['ID'];
 };
+
 
 export type MutationDeleteHolidayDateArgs = {
   id: Scalars['ID'];
 };
 
+
 export type MutationDeleteHolidayYearArgs = {
   id: Scalars['ID'];
 };
+
 
 export type MutationDeleteRoleCompanyArgs = {
   id: Scalars['ID'];
 };
 
+
 export type MutationEditstatusleaveArgs = {
   data?: InputMaybe<Leave>;
 };
+
 
 export type MutationLoginArgs = {
   data: LoginaInput;
 };
 
+
 export type MutationUpdateRoleCompanyMangementArgs = {
   data: Array<UpdateRoleCompanyMangementType>;
 };
+
 
 export type MutationValidateRouteArgs = {
   args: Scalars['String'];
@@ -694,19 +717,23 @@ export type Query = {
   verifyCompanycode?: Maybe<Scalars['Boolean']>;
 };
 
+
 export type QuerySalarySlipArgs = {
   month?: InputMaybe<Scalars['String']>;
   userId?: InputMaybe<Scalars['String']>;
   years?: InputMaybe<Scalars['String']>;
 };
 
+
 export type QueryBookbank_Log_AdminArgs = {
   userId?: InputMaybe<Scalars['String']>;
 };
 
+
 export type QueryCompanyArgs = {
   name?: InputMaybe<Scalars['String']>;
 };
+
 
 export type QueryData_SalaryArgs = {
   Position2?: InputMaybe<Scalars['String']>;
@@ -714,17 +741,16 @@ export type QueryData_SalaryArgs = {
   fristname?: InputMaybe<Scalars['String']>;
 };
 
+
 export type QueryDatasalary_MeeArgs = {
   date?: InputMaybe<Scalars['String']>;
 };
+
 
 export type QueryGetAllcompanyArgs = {
   name?: InputMaybe<Scalars['String']>;
 };
 
-export type QueryGetAllleaveArgs = {
-  dataleaveId?: InputMaybe<Scalars['ID']>;
-};
 
 export type QueryGetAllleaveArgs = {
   dataleaveId?: InputMaybe<Scalars['ID']>;
@@ -735,25 +761,31 @@ export type QueryGetcompanyRoleArgs = {
   role_name?: InputMaybe<Scalars['String']>;
 };
 
+
 export type QueryGetleava_AlldataArgs = {
   dataleaveId?: InputMaybe<Scalars['ID']>;
 };
+
 
 export type QueryGetposition_UserArgs = {
   id?: InputMaybe<Scalars['ID']>;
 };
 
+
 export type QueryMas_BankArgs = {
   id?: InputMaybe<Scalars['String']>;
 };
+
 
 export type QueryProvident_LogArgs = {
   userId?: InputMaybe<Scalars['String']>;
 };
 
+
 export type QuerySalaryArgs = {
   userId?: InputMaybe<Scalars['String']>;
 };
+
 
 export type QuerySalary_InmonthSlipArgs = {
   month?: InputMaybe<Scalars['String']>;
@@ -761,9 +793,11 @@ export type QuerySalary_InmonthSlipArgs = {
   years?: InputMaybe<Scalars['String']>;
 };
 
+
 export type QueryUsersArgs = {
   userid?: InputMaybe<Scalars['String']>;
 };
+
 
 export type QueryVerifyCompanycodeArgs = {
   companyname: Scalars['String'];
@@ -1433,827 +1467,198 @@ export type YearsResponseType = {
   status?: Maybe<Scalars['Boolean']>;
 };
 
-export type RefreshTokenMutationVariables = Exact<{ [key: string]: never }>;
+export type RefreshTokenMutationVariables = Exact<{ [key: string]: never; }>;
 
-export type RefreshTokenMutation = {
-  __typename?: 'Mutation';
-  refreshToken?: {
-    __typename?: 'RefreshtokenResponseType';
-    access_token?: string | null;
-  } | null;
-};
+
+export type RefreshTokenMutation = { __typename?: 'Mutation', refreshToken?: { __typename?: 'RefreshtokenResponseType', access_token?: string | null } | null };
 
 export type ValidateRouteMutationVariables = Exact<{
   args: Scalars['String'];
   branch?: InputMaybe<Scalars['String']>;
 }>;
 
-export type ValidateRouteMutation = {
-  __typename?: 'Mutation';
-  validateRoute?: {
-    __typename?: 'ValidateRoute';
-    acess?: boolean | null;
-    path?: string | null;
-    reAccess?: string | null;
-    reFresh?: string | null;
-    currentBranch?: {
-      __typename?: 'ResponseBranchValidateRouteType';
-      branchId?: string | null;
-      branchName?: string | null;
-      companyId?: string | null;
-      companyName?: string | null;
-    } | null;
-  } | null;
-};
 
-export type MeQueryVariables = Exact<{ [key: string]: never }>;
+export type ValidateRouteMutation = { __typename?: 'Mutation', validateRoute?: { __typename?: 'ValidateRoute', acess?: boolean | null, path?: string | null, reAccess?: string | null, reFresh?: string | null, currentBranch?: { __typename?: 'ResponseBranchValidateRouteType', branchId?: string | null, branchName?: string | null, companyId?: string | null, companyName?: string | null } | null } | null };
 
-export type MeQuery = {
-  __typename?: 'Query';
-  me?: {
-    __typename?: 'Me';
-    email?: string | null;
-    id: string;
-    isOwner?: boolean | null;
-    Role_Company?: {
-      __typename: 'MePositionType';
-      access?: any | null;
-      id: string;
-      name?: string | null;
-    } | null;
-    companyBranch?: {
-      __typename: 'MeCompanyBranch';
-      companyId?: string | null;
-      createdAt?: any | null;
-      id: string;
-      name?: string | null;
-      company?: {
-        __typename: 'MecompanyType';
-        companyCode?: string | null;
-        icon?: string | null;
-        id: string;
-        name?: string | null;
-      } | null;
-    } | null;
-    profile?: {
-      __typename: 'Profile';
-      id: string;
-      bio?: string | null;
-      firstname_th?: string | null;
-      lastname_th?: string | null;
-      firstname_en?: string | null;
-      lastname_en?: string | null;
-      avatar?: string | null;
-      dob?: any | null;
-      age?: string | null;
-      relationship?: string | null;
-      shirt_size?: string | null;
-      prefix_th?: string | null;
-      prefix_en?: string | null;
-      citizen_id?: string | null;
-      social_id?: string | null;
-      staff_status?: string | null;
-      tel?: string | null;
-      address?: string | null;
-      gender?: string | null;
-      staff_code?: string | null;
-      religion?: string | null;
-      userId?: string | null;
-      citizen_addressnumber?: string | null;
-      citizen_address?: string | null;
-      citizen_country?: string | null;
-      citizen_province?: string | null;
-      citizen_district?: string | null;
-      citizen_state?: string | null;
-      citizen_zipcode?: string | null;
-      citizen_tel?: string | null;
-      contract_sameCitizen?: boolean | null;
-      contract_addressnumber?: string | null;
-      contract_address?: string | null;
-      contract_country?: string | null;
-      contract_province?: string | null;
-      contract_district?: string | null;
-      contract_state?: string | null;
-      contract_zipcode?: string | null;
-      contract_email?: string | null;
-      contract_companyemail?: string | null;
-      social_facebook?: string | null;
-      social_likedin?: string | null;
-      social_line?: string | null;
-      social_telegram?: string | null;
-      nickname?: string | null;
-      blood_type?: string | null;
-      employee_status?: string | null;
-      start_date_work?: any | null;
-    } | null;
-  } | null;
-};
+export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
-export type CompanyQueryVariables = Exact<{ [key: string]: never }>;
 
-export type CompanyQuery = {
-  __typename?: 'Query';
-  company?: {
-    __typename?: 'ResponseCompany';
-    userlimit?: number | null;
-    name?: string | null;
-    _count?: { __typename?: 'CountBranch'; branch?: number | null } | null;
-    branch?: Array<{
-      __typename?: 'ResponseCompany_Branch';
-      id: string;
-      name?: string | null;
-      address?: string | null;
-      address_2?: string | null;
-      city?: string | null;
-      state?: string | null;
-      zip?: string | null;
-      country?: string | null;
-      tel?: string | null;
-      fax?: string | null;
-      website?: string | null;
-      lat?: string | null;
-      lng?: string | null;
-      email?: string | null;
-      email_2?: string | null;
-      company_type?: string | null;
-      sub_company_type?: string | null;
-      registeredamount?: string | null;
-      social_facebook?: string | null;
-      social_likedin?: string | null;
-      social_instragram?: string | null;
-      social_line?: string | null;
-      createdAt?: any | null;
-      updatedAt?: any | null;
-      _count?: {
-        __typename?: 'CountInsideBranch';
-        users?: number | null;
-      } | null;
-    } | null> | null;
-  } | null;
-};
+export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'Me', email?: string | null, id: string, isOwner?: boolean | null, Role_Company?: { __typename: 'MePositionType', access?: any | null, id: string, name?: string | null } | null, companyBranch?: { __typename: 'MeCompanyBranch', companyId?: string | null, createdAt?: any | null, id: string, name?: string | null, company?: { __typename: 'MecompanyType', companyCode?: string | null, icon?: string | null, id: string, name?: string | null } | null } | null, profile?: { __typename: 'Profile', id: string, bio?: string | null, firstname_th?: string | null, lastname_th?: string | null, firstname_en?: string | null, lastname_en?: string | null, avatar?: string | null, dob?: any | null, age?: string | null, relationship?: string | null, shirt_size?: string | null, prefix_th?: string | null, prefix_en?: string | null, citizen_id?: string | null, social_id?: string | null, staff_status?: string | null, tel?: string | null, address?: string | null, gender?: string | null, staff_code?: string | null, religion?: string | null, userId?: string | null, citizen_addressnumber?: string | null, citizen_address?: string | null, citizen_country?: string | null, citizen_province?: string | null, citizen_district?: string | null, citizen_state?: string | null, citizen_zipcode?: string | null, citizen_tel?: string | null, contract_sameCitizen?: boolean | null, contract_addressnumber?: string | null, contract_address?: string | null, contract_country?: string | null, contract_province?: string | null, contract_district?: string | null, contract_state?: string | null, contract_zipcode?: string | null, contract_email?: string | null, contract_companyemail?: string | null, social_facebook?: string | null, social_likedin?: string | null, social_line?: string | null, social_telegram?: string | null, nickname?: string | null, blood_type?: string | null, employee_status?: string | null, start_date_work?: any | null } | null } | null };
+
+export type CompanyQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type CompanyQuery = { __typename?: 'Query', company?: { __typename?: 'ResponseCompany', userlimit?: number | null, name?: string | null, _count?: { __typename?: 'CountBranch', branch?: number | null } | null, branch?: Array<{ __typename?: 'ResponseCompany_Branch', id: string, name?: string | null, address?: string | null, address_2?: string | null, city?: string | null, state?: string | null, zip?: string | null, country?: string | null, tel?: string | null, fax?: string | null, website?: string | null, lat?: string | null, lng?: string | null, email?: string | null, email_2?: string | null, company_type?: string | null, sub_company_type?: string | null, registeredamount?: string | null, social_facebook?: string | null, social_likedin?: string | null, social_instragram?: string | null, social_line?: string | null, createdAt?: any | null, updatedAt?: any | null, _count?: { __typename?: 'CountInsideBranch', users?: number | null } | null } | null> | null } | null };
 
 export type CreatedPositionMutationVariables = Exact<{
   data?: InputMaybe<Array<CreatedAndUpdatePosition> | CreatedAndUpdatePosition>;
 }>;
 
-export type CreatedPositionMutation = {
-  __typename?: 'Mutation';
-  CreatedPosition?: {
-    __typename?: 'CreatepositionResponseType';
-    message?: string | null;
-    status?: boolean | null;
-  } | null;
-};
+
+export type CreatedPositionMutation = { __typename?: 'Mutation', CreatedPosition?: { __typename?: 'CreatepositionResponseType', message?: string | null, status?: boolean | null } | null };
 
 export type EditPositionMutationVariables = Exact<{
   data?: InputMaybe<Array<CreatedAndUpdatePosition> | CreatedAndUpdatePosition>;
 }>;
 
-export type EditPositionMutation = {
-  __typename?: 'Mutation';
-  EditPosition?: {
-    __typename?: 'CreatepositionResponseType';
-    message?: string | null;
-    status?: boolean | null;
-  } | null;
-};
+
+export type EditPositionMutation = { __typename?: 'Mutation', EditPosition?: { __typename?: 'CreatepositionResponseType', message?: string | null, status?: boolean | null } | null };
 
 export type CreateAccountUserMutationVariables = Exact<{
   data: CreateAccountUserInput;
 }>;
 
-export type CreateAccountUserMutation = {
-  __typename?: 'Mutation';
-  createAccountUser?: {
-    __typename?: 'CreateUserResponseType';
-    message?: string | null;
-    status?: boolean | null;
-  } | null;
-};
+
+export type CreateAccountUserMutation = { __typename?: 'Mutation', createAccountUser?: { __typename?: 'CreateUserResponseType', message?: string | null, status?: boolean | null } | null };
 
 export type DeleteAccountUserMutationVariables = Exact<{
   deleteAccountUserId: Scalars['ID'];
 }>;
 
-export type DeleteAccountUserMutation = {
-  __typename?: 'Mutation';
-  deleteAccountUser?: {
-    __typename?: 'DeleteAccountUserResponseType';
-    message?: string | null;
-    status?: boolean | null;
-  } | null;
-};
+
+export type DeleteAccountUserMutation = { __typename?: 'Mutation', deleteAccountUser?: { __typename?: 'DeleteAccountUserResponseType', message?: string | null, status?: boolean | null } | null };
 
 export type LoginMutationVariables = Exact<{
   data: LoginaInput;
 }>;
 
-export type LoginMutation = {
-  __typename?: 'Mutation';
-  login?: {
-    __typename?: 'LoginResponse';
-    access_token?: string | null;
-    refresh_token?: string | null;
-    status?: boolean | null;
-  } | null;
-};
+
+export type LoginMutation = { __typename?: 'Mutation', login?: { __typename?: 'LoginResponse', access_token?: string | null, refresh_token?: string | null, status?: boolean | null } | null };
 
 export type MutationMutationVariables = Exact<{
   data: CreateRoleCompanyGroup;
 }>;
 
-export type MutationMutation = {
-  __typename?: 'Mutation';
-  createRoleCompany?: {
-    __typename?: 'CreateRoleCompanyResponseType';
-    message?: string | null;
-    status?: boolean | null;
-  } | null;
-};
+
+export type MutationMutation = { __typename?: 'Mutation', createRoleCompany?: { __typename?: 'CreateRoleCompanyResponseType', message?: string | null, status?: boolean | null } | null };
 
 export type DeleteRoleCompanyMutationVariables = Exact<{
   deleteRoleCompanyId: Scalars['ID'];
 }>;
 
-export type DeleteRoleCompanyMutation = {
-  __typename?: 'Mutation';
-  deleteRoleCompany?: {
-    __typename?: 'DeleteRoleCompanyRespnsetType';
-    message?: string | null;
-    status?: boolean | null;
-  } | null;
-};
+
+export type DeleteRoleCompanyMutation = { __typename?: 'Mutation', deleteRoleCompany?: { __typename?: 'DeleteRoleCompanyRespnsetType', message?: string | null, status?: boolean | null } | null };
 
 export type CreateAccountMutationVariables = Exact<{
   data: CreateAccountInput;
 }>;
 
-export type CreateAccountMutation = {
-  __typename?: 'Mutation';
-  createAccount?: {
-    __typename?: 'CreateCompanyResponseType';
-    status?: boolean | null;
-    message?: string | null;
-  } | null;
-};
+
+export type CreateAccountMutation = { __typename?: 'Mutation', createAccount?: { __typename?: 'CreateCompanyResponseType', status?: boolean | null, message?: string | null } | null };
 
 export type QueryQueryVariables = Exact<{
   companyname: Scalars['String'];
 }>;
 
-export type QueryQuery = {
-  __typename?: 'Query';
-  verifyCompanycode?: boolean | null;
-};
 
-export type Getleava_AlldataQueryVariables = Exact<{ [key: string]: never }>;
+export type QueryQuery = { __typename?: 'Query', verifyCompanycode?: boolean | null };
 
-export type Getleava_AlldataQuery = {
-  __typename?: 'Query';
-  getleava_alldata?: Array<{
-    __typename?: 'leave_data';
-    id?: string | null;
-    leavetype_id?: string | null;
-    start_date?: any | null;
-    end_date?: any | null;
-    quantity_day?: number | null;
-    quantity_hours?: number | null;
-    detail_leave?: string | null;
-    Status?: number | null;
-    user_id?: string | null;
-    mas_leave_type?: {
-      __typename?: 'mas_leave_type';
-      id?: string | null;
-      name?: string | null;
-      orderby?: number | null;
-    } | null;
-    user?: {
-      __typename?: 'User';
-      id: string;
-      email: string;
-      profile?: {
-        __typename?: 'Profile';
-        id: string;
-        firstname_th?: string | null;
-        lastname_th?: string | null;
-        firstname_en?: string | null;
-        lastname_en?: string | null;
-        avatar?: string | null;
-      } | null;
-    } | null;
-  } | null> | null;
-};
+export type Getleava_AlldataQueryVariables = Exact<{ [key: string]: never; }>;
 
-export type FetchcompanySelectQueryVariables = Exact<{ [key: string]: never }>;
 
-export type FetchcompanySelectQuery = {
-  __typename?: 'Query';
-  company?: {
-    __typename?: 'ResponseCompany';
-    name?: string | null;
-    branch?: Array<{
-      __typename?: 'ResponseCompany_Branch';
-      id: string;
-      name?: string | null;
-      address?: string | null;
-      _count?: {
-        __typename?: 'CountInsideBranch';
-        users?: number | null;
-      } | null;
-    } | null> | null;
-  } | null;
-};
+export type Getleava_AlldataQuery = { __typename?: 'Query', getleava_alldata?: Array<{ __typename?: 'leave_data', id?: string | null, leavetype_id?: string | null, start_date?: any | null, end_date?: any | null, quantity_day?: number | null, quantity_hours?: number | null, detail_leave?: string | null, Status?: number | null, user_id?: string | null, mas_leave_type?: { __typename?: 'mas_leave_type', id?: string | null, name?: string | null, orderby?: number | null } | null, user?: { __typename?: 'User', id: string, email: string, profile?: { __typename?: 'Profile', id: string, firstname_th?: string | null, lastname_th?: string | null, firstname_en?: string | null, lastname_en?: string | null, avatar?: string | null } | null } | null } | null> | null };
 
-export type GetownCompanyQueryVariables = Exact<{ [key: string]: never }>;
+export type FetchcompanySelectQueryVariables = Exact<{ [key: string]: never; }>;
 
-export type GetownCompanyQuery = {
-  __typename?: 'Query';
-  getownCompany?: {
-    __typename?: 'GetOwncompanytype';
-    redirect?: boolean | null;
-    isOwner?: boolean | null;
-    company?: {
-      __typename?: 'OwnCompanyType';
-      companyCode?: string | null;
-      icon?: string | null;
-      id?: string | null;
-      name?: string | null;
-    } | null;
-    companies?: Array<{
-      __typename?: 'OwnCompanyType';
-      companyCode?: string | null;
-      icon?: string | null;
-      id?: string | null;
-      name?: string | null;
-    } | null> | null;
-  } | null;
-};
+
+export type FetchcompanySelectQuery = { __typename?: 'Query', company?: { __typename?: 'ResponseCompany', name?: string | null, branch?: Array<{ __typename?: 'ResponseCompany_Branch', id: string, name?: string | null, address?: string | null, _count?: { __typename?: 'CountInsideBranch', users?: number | null } | null } | null> | null } | null };
+
+export type GetownCompanyQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetownCompanyQuery = { __typename?: 'Query', getownCompany?: { __typename?: 'GetOwncompanytype', redirect?: boolean | null, isOwner?: boolean | null, company?: { __typename?: 'OwnCompanyType', companyCode?: string | null, icon?: string | null, id?: string | null, name?: string | null } | null, companies?: Array<{ __typename?: 'OwnCompanyType', companyCode?: string | null, icon?: string | null, id?: string | null, name?: string | null } | null> | null } | null };
 
 export type CreateAndUpdateComBaranceMutationVariables = Exact<{
   data: CreateCompanyBranch;
 }>;
 
-export type CreateAndUpdateComBaranceMutation = {
-  __typename?: 'Mutation';
-  createAndUpdateComBarance?: {
-    __typename?: 'CreateComapnyBranchResponseType';
-    message?: string | null;
-    status?: boolean | null;
-  } | null;
-};
+
+export type CreateAndUpdateComBaranceMutation = { __typename?: 'Mutation', createAndUpdateComBarance?: { __typename?: 'CreateComapnyBranchResponseType', message?: string | null, status?: boolean | null } | null };
 
 export type DeleteComBaranceMutationVariables = Exact<{
   deleteComBaranceId: Scalars['ID'];
 }>;
 
-export type DeleteComBaranceMutation = {
-  __typename?: 'Mutation';
-  deleteComBarance?: {
-    __typename?: 'DeleteComapnyBranchResponseType';
-    message?: string | null;
-    status?: boolean | null;
-  } | null;
-};
 
-export type GetHoliDayYearQueryVariables = Exact<{ [key: string]: never }>;
+export type DeleteComBaranceMutation = { __typename?: 'Mutation', deleteComBarance?: { __typename?: 'DeleteComapnyBranchResponseType', message?: string | null, status?: boolean | null } | null };
 
-export type GetHoliDayYearQuery = {
-  __typename?: 'Query';
-  GetHoliDayYear?: Array<{
-    __typename?: 'holiday_years';
-    id: string;
-    day?: number | null;
-    month?: number | null;
-    year?: number | null;
-    holiday_name?: string | null;
-  } | null> | null;
-};
+export type GetHoliDayYearQueryVariables = Exact<{ [key: string]: never; }>;
 
-export type Getleava_DatameQueryVariables = Exact<{ [key: string]: never }>;
 
-export type Getleava_DatameQuery = {
-  __typename?: 'Query';
-  getleava_datame?: {
-    __typename?: 'getleaveResponseType';
-    data_count?: {
-      __typename?: 'getcount';
-      name_1?: string | null;
-      count1?: number | null;
-      name_2?: string | null;
-      count2?: number | null;
-      name_3?: string | null;
-      count3?: number | null;
-      name_4?: string | null;
-      count4?: number | null;
-    } | null;
-    data_all?: Array<{
-      __typename?: 'getdataaboutleave';
-      email: string;
-      id: string;
-      profile?: {
-        __typename?: 'Profile';
-        firstname_th?: string | null;
-        lastname_th?: string | null;
-        firstname_en?: string | null;
-        lastname_en?: string | null;
-        avatar?: string | null;
-        dob?: any | null;
-        id: string;
-        userId?: string | null;
-        start_date_work?: any | null;
-        prefix_th?: string | null;
-        prefix_en?: string | null;
-      } | null;
-      Position_user?: Array<{
-        __typename?: 'Position_user';
-        id?: string | null;
-        position1_id?: string | null;
-        position2_id?: string | null;
-        position3_id?: string | null;
-        user_id?: string | null;
-        role?: string | null;
-        headderId?: string | null;
-        date?: any | null;
-        mas_positionlevel1?: {
-          __typename?: 'mas_positionlevel1';
-          id: string;
-          name?: string | null;
-          level?: number | null;
-          code?: string | null;
-          type?: string | null;
-        } | null;
-        mas_positionlevel2?: {
-          __typename?: 'mas_positionlevel2';
-          id: string;
-          name?: string | null;
-          level?: number | null;
-          code?: string | null;
-          type?: string | null;
-        } | null;
-        mas_positionlevel3?: {
-          __typename?: 'mas_positionlevel3';
-          id: string;
-          name?: string | null;
-          level?: number | null;
-          code?: string | null;
-          type?: string | null;
-        } | null;
-      } | null> | null;
-      data_leave?: Array<{
-        __typename?: 'leave_data';
-        id?: string | null;
-        leavetype_id?: string | null;
-        start_date?: any | null;
-        end_date?: any | null;
-        quantity_day?: number | null;
-        quantity_hours?: number | null;
-        detail_leave?: string | null;
-        Status?: number | null;
-        user_id?: string | null;
-        mas_leave_type?: {
-          __typename?: 'mas_leave_type';
-          id?: string | null;
-          name?: string | null;
-          orderby?: number | null;
-        } | null;
-      } | null> | null;
-    } | null> | null;
-  } | null;
-};
+export type GetHoliDayYearQuery = { __typename?: 'Query', GetHoliDayYear?: Array<{ __typename?: 'holiday_years', id: string, day?: number | null, month?: number | null, year?: number | null, holiday_name?: string | null } | null> | null };
 
-export type GetleavetypedataQueryVariables = Exact<{ [key: string]: never }>;
+export type Getleava_DatameQueryVariables = Exact<{ [key: string]: never; }>;
 
-export type GetleavetypedataQuery = {
-  __typename?: 'Query';
-  getleavetypedata?: Array<{
-    __typename?: 'mas_leave_type';
-    id?: string | null;
-    name?: string | null;
-    orderby?: number | null;
-  } | null> | null;
-};
+
+export type Getleava_DatameQuery = { __typename?: 'Query', getleava_datame?: { __typename?: 'getleaveResponseType', data_count?: { __typename?: 'getcount', name_1?: string | null, count1?: number | null, name_2?: string | null, count2?: number | null, name_3?: string | null, count3?: number | null, name_4?: string | null, count4?: number | null } | null, data_all?: Array<{ __typename?: 'getdataaboutleave', email: string, id: string, profile?: { __typename?: 'Profile', firstname_th?: string | null, lastname_th?: string | null, firstname_en?: string | null, lastname_en?: string | null, avatar?: string | null, dob?: any | null, id: string, userId?: string | null, start_date_work?: any | null, prefix_th?: string | null, prefix_en?: string | null } | null, Position_user?: Array<{ __typename?: 'Position_user', id?: string | null, position1_id?: string | null, position2_id?: string | null, position3_id?: string | null, user_id?: string | null, role?: string | null, headderId?: string | null, date?: any | null, mas_positionlevel1?: { __typename?: 'mas_positionlevel1', id: string, name?: string | null, level?: number | null, code?: string | null, type?: string | null } | null, mas_positionlevel2?: { __typename?: 'mas_positionlevel2', id: string, name?: string | null, level?: number | null, code?: string | null, type?: string | null } | null, mas_positionlevel3?: { __typename?: 'mas_positionlevel3', id: string, name?: string | null, level?: number | null, code?: string | null, type?: string | null } | null } | null> | null, data_leave?: Array<{ __typename?: 'leave_data', id?: string | null, leavetype_id?: string | null, start_date?: any | null, end_date?: any | null, quantity_day?: number | null, quantity_hours?: number | null, detail_leave?: string | null, Status?: number | null, user_id?: string | null, mas_leave_type?: { __typename?: 'mas_leave_type', id?: string | null, name?: string | null, orderby?: number | null } | null } | null> | null } | null> | null } | null };
+
+export type GetleavetypedataQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetleavetypedataQuery = { __typename?: 'Query', getleavetypedata?: Array<{ __typename?: 'mas_leave_type', id?: string | null, name?: string | null, orderby?: number | null } | null> | null };
 
 export type Createddata_LeaveMutationVariables = Exact<{
   data?: InputMaybe<Leave>;
 }>;
 
-export type Createddata_LeaveMutation = {
-  __typename?: 'Mutation';
-  createddata_leave?: {
-    __typename?: 'CreateleaveResponseType';
-    message?: string | null;
-    status?: boolean | null;
-  } | null;
-};
 
-export type GetMasPositonQueryVariables = Exact<{ [key: string]: never }>;
+export type Createddata_LeaveMutation = { __typename?: 'Mutation', createddata_leave?: { __typename?: 'CreateleaveResponseType', message?: string | null, status?: boolean | null } | null };
 
-export type GetMasPositonQuery = {
-  __typename?: 'Query';
-  getMasPositon?: Array<{
-    __typename?: 'mas_positionlevel1';
-    id: string;
-    name?: string | null;
-    level?: number | null;
-    code?: string | null;
-    type?: string | null;
-    CompanyId?: string | null;
-    mas_positionlevel2?: Array<{
-      __typename?: 'mas_positionlevel2';
-      type?: string | null;
-      code?: string | null;
-      name?: string | null;
-      level?: number | null;
-      id: string;
-      mas_positionlevel3?: Array<{
-        __typename?: 'mas_positionlevel3';
-        id: string;
-        name?: string | null;
-        level?: number | null;
-        code?: string | null;
-        type?: string | null;
-      } | null> | null;
-    } | null> | null;
-    Position_user?: Array<{
-      __typename?: 'Position_user';
-      id?: string | null;
-      user_id?: string | null;
-      position1_id?: string | null;
-      position2_id?: string | null;
-      position3_id?: string | null;
-      role?: string | null;
-      headderId?: string | null;
-      date?: any | null;
-    } | null> | null;
-  } | null> | null;
-};
+export type GetMasPositonQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetMasPositonQuery = { __typename?: 'Query', getMasPositon?: Array<{ __typename?: 'mas_positionlevel1', id: string, name?: string | null, level?: number | null, code?: string | null, type?: string | null, CompanyId?: string | null, mas_positionlevel2?: Array<{ __typename?: 'mas_positionlevel2', type?: string | null, code?: string | null, name?: string | null, level?: number | null, id: string, mas_positionlevel3?: Array<{ __typename?: 'mas_positionlevel3', id: string, name?: string | null, level?: number | null, code?: string | null, type?: string | null } | null> | null } | null> | null, Position_user?: Array<{ __typename?: 'Position_user', id?: string | null, user_id?: string | null, position1_id?: string | null, position2_id?: string | null, position3_id?: string | null, role?: string | null, headderId?: string | null, date?: any | null } | null> | null } | null> | null };
 
 export type Getposition_UserQueryVariables = Exact<{
   getpositionUserId?: InputMaybe<Scalars['ID']>;
 }>;
 
-export type Getposition_UserQuery = {
-  __typename?: 'Query';
-  getposition_user?: Array<{
-    __typename?: 'getPositionUser';
-    id?: string | null;
-    position1_id?: string | null;
-    position2_id?: string | null;
-    position3_id?: string | null;
-    role?: string | null;
-    date?: any | null;
-    user?: {
-      __typename?: 'User';
-      id: string;
-      email: string;
-      password: string;
-      profile?: {
-        __typename?: 'Profile';
-        firstname_th?: string | null;
-        lastname_th?: string | null;
-        id: string;
-        firstname_en?: string | null;
-        lastname_en?: string | null;
-        prefix_th?: string | null;
-        prefix_en?: string | null;
-      } | null;
-    } | null;
-    mas_positionlevel1?: {
-      __typename?: 'mas_positionlevel1';
-      id: string;
-      name?: string | null;
-      level?: number | null;
-    } | null;
-    mas_positionlevel2?: {
-      __typename?: 'mas_positionlevel2';
-      id: string;
-      name?: string | null;
-      level?: number | null;
-    } | null;
-    mas_positionlevel3?: {
-      __typename?: 'mas_positionlevel3';
-      id: string;
-      name?: string | null;
-      level?: number | null;
-    } | null;
-    header?: {
-      __typename?: 'User';
-      id: string;
-      email: string;
-      profile?: {
-        __typename?: 'Profile';
-        firstname_th?: string | null;
-        lastname_th?: string | null;
-        firstname_en?: string | null;
-        lastname_en?: string | null;
-        prefix_th?: string | null;
-        prefix_en?: string | null;
-      } | null;
-    } | null;
-  } | null> | null;
-};
 
-export type GetpositionMeQueryVariables = Exact<{ [key: string]: never }>;
+export type Getposition_UserQuery = { __typename?: 'Query', getposition_user?: Array<{ __typename?: 'getPositionUser', id?: string | null, position1_id?: string | null, position2_id?: string | null, position3_id?: string | null, role?: string | null, date?: any | null, user?: { __typename?: 'User', id: string, email: string, password: string, profile?: { __typename?: 'Profile', firstname_th?: string | null, lastname_th?: string | null, id: string, firstname_en?: string | null, lastname_en?: string | null, prefix_th?: string | null, prefix_en?: string | null } | null } | null, mas_positionlevel1?: { __typename?: 'mas_positionlevel1', id: string, name?: string | null, level?: number | null } | null, mas_positionlevel2?: { __typename?: 'mas_positionlevel2', id: string, name?: string | null, level?: number | null } | null, mas_positionlevel3?: { __typename?: 'mas_positionlevel3', id: string, name?: string | null, level?: number | null } | null, header?: { __typename?: 'User', id: string, email: string, profile?: { __typename?: 'Profile', firstname_th?: string | null, lastname_th?: string | null, firstname_en?: string | null, lastname_en?: string | null, prefix_th?: string | null, prefix_en?: string | null } | null } | null } | null> | null };
 
-export type GetpositionMeQuery = {
-  __typename?: 'Query';
-  getpositionMe?: Array<{
-    __typename?: 'getPositionUser';
-    id?: string | null;
-    position1_id?: string | null;
-    position2_id?: string | null;
-    position3_id?: string | null;
-    role?: string | null;
-    date?: any | null;
-    user?: {
-      __typename?: 'User';
-      email: string;
-      id: string;
-      profile?: {
-        __typename?: 'Profile';
-        id: string;
-        firstname_th?: string | null;
-        lastname_th?: string | null;
-        firstname_en?: string | null;
-        lastname_en?: string | null;
-        avatar?: string | null;
-        dob?: any | null;
-        userId?: string | null;
-        start_date_work?: any | null;
-      } | null;
-    } | null;
-    header?: {
-      __typename?: 'User';
-      email: string;
-      id: string;
-      profile?: {
-        __typename?: 'Profile';
-        firstname_th?: string | null;
-        lastname_th?: string | null;
-        firstname_en?: string | null;
-        lastname_en?: string | null;
-        avatar?: string | null;
-        dob?: any | null;
-        start_date_work?: any | null;
-      } | null;
-    } | null;
-    mas_positionlevel1?: {
-      __typename?: 'mas_positionlevel1';
-      id: string;
-      name?: string | null;
-      level?: number | null;
-      code?: string | null;
-      type?: string | null;
-    } | null;
-    mas_positionlevel2?: {
-      __typename?: 'mas_positionlevel2';
-      id: string;
-      name?: string | null;
-      level?: number | null;
-      code?: string | null;
-      type?: string | null;
-    } | null;
-    mas_positionlevel3?: {
-      __typename?: 'mas_positionlevel3';
-      id: string;
-      name?: string | null;
-      level?: number | null;
-      code?: string | null;
-      type?: string | null;
-    } | null;
-  } | null> | null;
-};
+export type GetpositionMeQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetpositionMeQuery = { __typename?: 'Query', getpositionMe?: Array<{ __typename?: 'getPositionUser', id?: string | null, position1_id?: string | null, position2_id?: string | null, position3_id?: string | null, role?: string | null, date?: any | null, user?: { __typename?: 'User', email: string, id: string, profile?: { __typename?: 'Profile', id: string, firstname_th?: string | null, lastname_th?: string | null, firstname_en?: string | null, lastname_en?: string | null, avatar?: string | null, dob?: any | null, userId?: string | null, start_date_work?: any | null } | null } | null, header?: { __typename?: 'User', email: string, id: string, profile?: { __typename?: 'Profile', firstname_th?: string | null, lastname_th?: string | null, firstname_en?: string | null, lastname_en?: string | null, avatar?: string | null, dob?: any | null, start_date_work?: any | null } | null } | null, mas_positionlevel1?: { __typename?: 'mas_positionlevel1', id: string, name?: string | null, level?: number | null, code?: string | null, type?: string | null } | null, mas_positionlevel2?: { __typename?: 'mas_positionlevel2', id: string, name?: string | null, level?: number | null, code?: string | null, type?: string | null } | null, mas_positionlevel3?: { __typename?: 'mas_positionlevel3', id: string, name?: string | null, level?: number | null, code?: string | null, type?: string | null } | null } | null> | null };
 
 export type Createdposition_UserMutationVariables = Exact<{
   data: Position;
 }>;
 
-export type Createdposition_UserMutation = {
-  __typename?: 'Mutation';
-  createdposition_user?: {
-    __typename?: 'CreatepositionResponseType';
-    message?: string | null;
-    status?: boolean | null;
-  } | null;
-};
 
-export type GetProvinceQueryVariables = Exact<{ [key: string]: never }>;
+export type Createdposition_UserMutation = { __typename?: 'Mutation', createdposition_user?: { __typename?: 'CreatepositionResponseType', message?: string | null, status?: boolean | null } | null };
 
-export type GetProvinceQuery = {
-  __typename?: 'Query';
-  getProvince?: Array<{
-    __typename?: 'Province';
-    name?: string | null;
-    id: string;
-    district?: Array<{
-      __typename?: 'District';
-      id: string;
-      name?: string | null;
-      amphoe?: Array<{
-        __typename?: 'Amphoe';
-        id: string;
-        name?: string | null;
-        zipcode?: string | null;
-      } | null> | null;
-    } | null> | null;
-  } | null> | null;
-};
+export type GetProvinceQueryVariables = Exact<{ [key: string]: never; }>;
 
-export type GetcompanyRoleQueryVariables = Exact<{ [key: string]: never }>;
 
-export type GetcompanyRoleQuery = {
-  __typename?: 'Query';
-  getcompanyRole?: Array<{
-    __typename?: 'Role_Company';
-    access?: any | null;
-    id: string;
-    name?: string | null;
-    status?: number | null;
-  } | null> | null;
-};
+export type GetProvinceQuery = { __typename?: 'Query', getProvince?: Array<{ __typename?: 'Province', name?: string | null, id: string, district?: Array<{ __typename?: 'District', id: string, name?: string | null, amphoe?: Array<{ __typename?: 'Amphoe', id: string, name?: string | null, zipcode?: string | null } | null> | null } | null> | null } | null> | null };
 
-export type GetcompanyRoleManagementQueryVariables = Exact<{
-  [key: string]: never;
-}>;
+export type GetcompanyRoleQueryVariables = Exact<{ [key: string]: never; }>;
 
-export type GetcompanyRoleManagementQuery = {
-  __typename?: 'Query';
-  getcompanyRole?: Array<{
-    __typename?: 'Role_Company';
-    access?: any | null;
-    id: string;
-    name?: string | null;
-  } | null> | null;
-};
+
+export type GetcompanyRoleQuery = { __typename?: 'Query', getcompanyRole?: Array<{ __typename?: 'Role_Company', access?: any | null, id: string, name?: string | null, status?: number | null } | null> | null };
+
+export type GetcompanyRoleManagementQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetcompanyRoleManagementQuery = { __typename?: 'Query', getcompanyRole?: Array<{ __typename?: 'Role_Company', access?: any | null, id: string, name?: string | null } | null> | null };
 
 export type UpdateRoleCompanyManagementMutationVariables = Exact<{
   data: Array<UpdateRoleCompanyMangementType> | UpdateRoleCompanyMangementType;
 }>;
 
-export type UpdateRoleCompanyManagementMutation = {
-  __typename?: 'Mutation';
-  updateRoleCompanyMangement?: {
-    __typename?: 'CreateRoleCompanyResponseType';
-    message?: string | null;
-    status?: boolean | null;
-  } | null;
-};
 
-export type Mas_BankQueryVariables = Exact<{ [key: string]: never }>;
+export type UpdateRoleCompanyManagementMutation = { __typename?: 'Mutation', updateRoleCompanyMangement?: { __typename?: 'CreateRoleCompanyResponseType', message?: string | null, status?: boolean | null } | null };
 
-export type Mas_BankQuery = {
-  __typename?: 'Query';
-  mas_bank?: Array<{
-    __typename?: 'mas_bank';
-    id?: string | null;
-    name?: string | null;
-  } | null> | null;
-};
+export type Mas_BankQueryVariables = Exact<{ [key: string]: never; }>;
 
-export type Datasalary_MeeQueryVariables = Exact<{ [key: string]: never }>;
 
-export type Datasalary_MeeQuery = {
-  __typename?: 'Query';
-  datasalary_mee?: Array<{
-    __typename?: 'data_salary_me';
-    email?: string | null;
-    id: string;
-    profile?: {
-      __typename?: 'Profile';
-      firstname_th?: string | null;
-      lastname_th?: string | null;
-      avatar?: string | null;
-    } | null;
-    salary?: Array<{
-      __typename?: 'salary';
-      month?: string | null;
-      years?: string | null;
-      net?: number | null;
-      total_expense?: number | null;
-      total_income?: number | null;
-      provident_company?: number | null;
-      provident_employee?: number | null;
-      mas_bank?: { __typename?: 'mas_bank'; name?: string | null } | null;
-      bookbank_log?: {
-        __typename?: 'Bookbank_log_type';
-        bank_number?: string | null;
-      } | null;
-    } | null> | null;
-  } | null> | null;
-};
+export type Mas_BankQuery = { __typename?: 'Query', mas_bank?: Array<{ __typename?: 'mas_bank', id?: string | null, name?: string | null } | null> | null };
 
-export type CreatebookbankMutationVariables = Exact<{
-  data?: InputMaybe<Bookbank_LogInput>;
-}>;
+export type Datasalary_MeeQueryVariables = Exact<{ [key: string]: never; }>;
 
-export type CreatebookbankMutation = {
-  __typename?: 'Mutation';
-  Createbookbank?: {
-    __typename?: 'createbookbanklogResponseType';
-    message?: string | null;
-    status?: boolean | null;
-  } | null;
-};
+
+export type Datasalary_MeeQuery = { __typename?: 'Query', datasalary_mee?: Array<{ __typename?: 'data_salary_me', email?: string | null, id: string, profile?: { __typename?: 'Profile', firstname_th?: string | null, lastname_th?: string | null, avatar?: string | null } | null, salary?: Array<{ __typename?: 'salary', month?: string | null, years?: string | null, net?: number | null, total_expense?: number | null, total_income?: number | null, provident_company?: number | null, provident_employee?: number | null, mas_bank?: { __typename?: 'mas_bank', name?: string | null } | null, bookbank_log?: { __typename?: 'Bookbank_log_type', bank_number?: string | null } | null } | null> | null } | null> | null };
 
 export type Data_SalaryQueryVariables = Exact<{
   fristname?: InputMaybe<Scalars['String']>;
@@ -2261,4002 +1666,94 @@ export type Data_SalaryQueryVariables = Exact<{
   position3?: InputMaybe<Scalars['String']>;
 }>;
 
-export type Data_SalaryQuery = {
-  __typename?: 'Query';
-  data_salary?: Array<{
-    __typename?: 'data_salary';
-    id: string;
-    profile?: {
-      __typename?: 'Profile';
-      id: string;
-      firstname_th?: string | null;
-      lastname_th?: string | null;
-      prefix_th?: string | null;
-      staff_code?: string | null;
-      staff_status?: string | null;
-      start_date_work?: any | null;
-      userId?: string | null;
-      employee_status?: string | null;
-    } | null;
-    bookbank_log?: Array<{
-      __typename?: 'Bookbank_log_type';
-      base_salary?: number | null;
-      id?: string | null;
-      date?: any | null;
-      bank_number?: string | null;
-      mas_bankId?: string | null;
-      all_collectId?: string | null;
-      provident_com?: number | null;
-      provident_emp?: number | null;
-      userId?: string | null;
-      mas_bank?: {
-        __typename?: 'mas_bank';
-        id?: string | null;
-        name?: string | null;
-      } | null;
-    } | null> | null;
-    Position_user?: Array<{
-      __typename?: 'Position_user';
-      position2_id?: string | null;
-      position3_id?: string | null;
-      id?: string | null;
-      user_id?: string | null;
-      position1_id?: string | null;
-      role?: string | null;
-      headderId?: string | null;
-      date?: any | null;
-      mas_positionlevel2?: {
-        __typename?: 'mas_positionlevel2';
-        id: string;
-        name?: string | null;
-        level?: number | null;
-        code?: string | null;
-        type?: string | null;
-        positionlevel1_id?: string | null;
-      } | null;
-      mas_positionlevel3?: {
-        __typename?: 'mas_positionlevel3';
-        id: string;
-        name?: string | null;
-        level?: number | null;
-        code?: string | null;
-        type?: string | null;
-        positionlevel2_id?: string | null;
-      } | null;
-      mas_positionlevel1?: {
-        __typename?: 'mas_positionlevel1';
-        id: string;
-        name?: string | null;
-        level?: number | null;
-        code?: string | null;
-        type?: string | null;
-        CompanyId?: string | null;
-      } | null;
-    } | null> | null;
-  } | null> | null;
-};
+
+export type Data_SalaryQuery = { __typename?: 'Query', data_salary?: Array<{ __typename?: 'data_salary', id: string, profile?: { __typename?: 'Profile', id: string, firstname_th?: string | null, lastname_th?: string | null, prefix_th?: string | null, staff_code?: string | null, staff_status?: string | null, start_date_work?: any | null, userId?: string | null, employee_status?: string | null } | null, bookbank_log?: Array<{ __typename?: 'Bookbank_log_type', base_salary?: number | null, id?: string | null, date?: any | null, bank_number?: string | null, mas_bankId?: string | null, all_collectId?: string | null, provident_com?: number | null, provident_emp?: number | null, userId?: string | null, mas_bank?: { __typename?: 'mas_bank', id?: string | null, name?: string | null } | null } | null> | null, Position_user?: Array<{ __typename?: 'Position_user', position2_id?: string | null, position3_id?: string | null, id?: string | null, user_id?: string | null, position1_id?: string | null, role?: string | null, headderId?: string | null, date?: any | null, mas_positionlevel2?: { __typename?: 'mas_positionlevel2', id: string, name?: string | null, level?: number | null, code?: string | null, type?: string | null, positionlevel1_id?: string | null } | null, mas_positionlevel3?: { __typename?: 'mas_positionlevel3', id: string, name?: string | null, level?: number | null, code?: string | null, type?: string | null, positionlevel2_id?: string | null } | null, mas_positionlevel1?: { __typename?: 'mas_positionlevel1', id: string, name?: string | null, level?: number | null, code?: string | null, type?: string | null, CompanyId?: string | null } | null } | null> | null } | null> | null };
 
 export type SalaryQueryVariables = Exact<{
   userId?: InputMaybe<Scalars['String']>;
 }>;
 
-export type SalaryQuery = {
-  __typename?: 'Query';
-  salary?: Array<{
-    __typename?: 'data_salary';
-    id: string;
-    profile?: {
-      __typename?: 'Profile';
-      firstname_th?: string | null;
-      lastname_th?: string | null;
-    } | null;
-    salary?: Array<{
-      __typename?: 'salary';
-      net?: number | null;
-      month?: string | null;
-      years?: string | null;
-    } | null> | null;
-    Position_user?: Array<{
-      __typename?: 'Position_user';
-      role?: string | null;
-      user_id?: string | null;
-      date?: any | null;
-      mas_positionlevel3?: {
-        __typename?: 'mas_positionlevel3';
-        name?: string | null;
-      } | null;
-    } | null> | null;
-    bookbank_log?: Array<{
-      __typename?: 'Bookbank_log_type';
-      bank_number?: string | null;
-      base_salary?: number | null;
-      mas_bank?: { __typename?: 'mas_bank'; name?: string | null } | null;
-    } | null> | null;
-    companyBranch?: {
-      __typename?: 'CompanyBranch';
-      address?: string | null;
-      address_2?: string | null;
-      company?: { __typename?: 'Company'; name?: string | null } | null;
-    } | null;
-  } | null> | null;
-};
 
-export type CreatesalaryMutationVariables = Exact<{
+export type SalaryQuery = { __typename?: 'Query', salary?: Array<{ __typename?: 'data_salary', id: string, profile?: { __typename?: 'Profile', firstname_th?: string | null, lastname_th?: string | null } | null, salary?: Array<{ __typename?: 'salary', net?: number | null, month?: string | null, years?: string | null } | null> | null, Position_user?: Array<{ __typename?: 'Position_user', role?: string | null, user_id?: string | null, date?: any | null, mas_positionlevel3?: { __typename?: 'mas_positionlevel3', name?: string | null } | null } | null> | null, bookbank_log?: Array<{ __typename?: 'Bookbank_log_type', bank_number?: string | null, base_salary?: number | null, mas_bank?: { __typename?: 'mas_bank', name?: string | null } | null } | null> | null, companyBranch?: { __typename?: 'CompanyBranch', address?: string | null, address_2?: string | null, company?: { __typename?: 'Company', name?: string | null } | null } | null } | null> | null };
+
+export type CreateandupdatesalaryMutationVariables = Exact<{
   data?: InputMaybe<SalaryInput>;
 }>;
 
-export type CreatesalaryMutation = {
-  __typename?: 'Mutation';
-  Createsalary?: {
-    __typename?: 'createsalaryResponseType';
-    message?: string | null;
-    status?: boolean | null;
-  } | null;
-};
+
+export type CreateandupdatesalaryMutation = { __typename?: 'Mutation', Createandupdatesalary?: { __typename?: 'createsalaryResponseType', message?: string | null, status?: boolean | null } | null };
 
 export type CreateAndUpdateExpenseComMutationVariables = Exact<{
   data?: InputMaybe<ExpenseComInput>;
 }>;
 
-export type CreateAndUpdateExpenseComMutation = {
-  __typename?: 'Mutation';
-  CreateAndUpdateExpenseCom?: {
-    __typename?: 'CreateAndUpdateExpenseComResponseType';
-    message?: string | null;
-    status?: boolean | null;
-  } | null;
-};
+
+export type CreateAndUpdateExpenseComMutation = { __typename?: 'Mutation', CreateAndUpdateExpenseCom?: { __typename?: 'CreateAndUpdateExpenseComResponseType', message?: string | null, status?: boolean | null } | null };
+
+export type CreateandupdatebookbankMutationVariables = Exact<{
+  data?: InputMaybe<Bookbank_LogInput>;
+}>;
+
+
+export type CreateandupdatebookbankMutation = { __typename?: 'Mutation', Createandupdatebookbank?: { __typename?: 'createbookbanklogResponseType', message?: string | null, status?: boolean | null } | null };
 
 export type DeletebookbankMutationVariables = Exact<{
   deletebookbankId: Scalars['ID'];
 }>;
 
-export type DeletebookbankMutation = {
-  __typename?: 'Mutation';
-  Deletebookbank?: {
-    __typename?: 'DeletebookbankResponseType';
-    message?: string | null;
-    status?: boolean | null;
-  } | null;
-};
+
+export type DeletebookbankMutation = { __typename?: 'Mutation', Deletebookbank?: { __typename?: 'DeletebookbankResponseType', message?: string | null, status?: boolean | null } | null };
 
 export type Bookbank_Log_AdminQueryVariables = Exact<{
   userId?: InputMaybe<Scalars['String']>;
 }>;
 
-export type Bookbank_Log_AdminQuery = {
-  __typename?: 'Query';
-  bookbank_log_admin?: Array<{
-    __typename?: 'Bookbank_log_type';
-    id?: string | null;
-    date?: any | null;
-    mas_bankId?: string | null;
-    bank_number?: string | null;
-    base_salary?: number | null;
-    provident_com?: number | null;
-    provident_emp?: number | null;
-    userId?: string | null;
-    mas_bank?: {
-      __typename?: 'mas_bank';
-      id?: string | null;
-      name?: string | null;
-    } | null;
-  } | null> | null;
-};
 
-export type UsersQueryVariables = Exact<{ [key: string]: never }>;
+export type Bookbank_Log_AdminQuery = { __typename?: 'Query', bookbank_log_admin?: Array<{ __typename?: 'Bookbank_log_type', id?: string | null, date?: any | null, mas_bankId?: string | null, bank_number?: string | null, base_salary?: number | null, provident_com?: number | null, provident_emp?: number | null, userId?: string | null, mas_bank?: { __typename?: 'mas_bank', id?: string | null, name?: string | null } | null } | null> | null };
 
-export type UsersQuery = {
-  __typename?: 'Query';
-  users?: Array<{
-    __typename?: 'User';
-    id: string;
-    email: string;
-    profile?: {
-      __typename?: 'Profile';
-      address?: string | null;
-      age?: string | null;
-      avatar?: string | null;
-      bio?: string | null;
-      citizen_address?: string | null;
-      citizen_addressnumber?: string | null;
-      citizen_country?: string | null;
-      citizen_district?: string | null;
-      citizen_id?: string | null;
-      citizen_province?: string | null;
-      citizen_state?: string | null;
-      citizen_tel?: string | null;
-      citizen_zipcode?: string | null;
-      contract_address?: string | null;
-      contract_addressnumber?: string | null;
-      contract_companyemail?: string | null;
-      contract_country?: string | null;
-      contract_district?: string | null;
-      id: string;
-      firstname_th?: string | null;
-      lastname_th?: string | null;
-      firstname_en?: string | null;
-      lastname_en?: string | null;
-      dob?: any | null;
-      relationship?: string | null;
-      shirt_size?: string | null;
-      prefix_th?: string | null;
-      prefix_en?: string | null;
-      social_id?: string | null;
-      staff_status?: string | null;
-      tel?: string | null;
-      gender?: string | null;
-      staff_code?: string | null;
-      religion?: string | null;
-      userId?: string | null;
-      contract_sameCitizen?: boolean | null;
-      contract_province?: string | null;
-      contract_state?: string | null;
-      contract_zipcode?: string | null;
-      contract_email?: string | null;
-      social_facebook?: string | null;
-      social_likedin?: string | null;
-      social_line?: string | null;
-      social_telegram?: string | null;
-      nickname?: string | null;
-      blood_type?: string | null;
-      employee_status?: string | null;
-      start_date_work?: any | null;
-      user?: { __typename?: 'User'; email: string; password: string } | null;
-    } | null;
-    Role_Company?: {
-      __typename?: 'Role_Company';
-      id: string;
-      name?: string | null;
-    } | null;
-    Position_user?: Array<{
-      __typename?: 'Position_user';
-      date?: any | null;
-      mas_positionlevel1?: {
-        __typename?: 'mas_positionlevel1';
-        id: string;
-        name?: string | null;
-        level?: number | null;
-        code?: string | null;
-        type?: string | null;
-        CompanyId?: string | null;
-      } | null;
-      mas_positionlevel2?: {
-        __typename?: 'mas_positionlevel2';
-        id: string;
-        name?: string | null;
-        level?: number | null;
-        code?: string | null;
-        type?: string | null;
-        positionlevel1_id?: string | null;
-      } | null;
-      mas_positionlevel3?: {
-        __typename?: 'mas_positionlevel3';
-        id: string;
-        name?: string | null;
-        level?: number | null;
-        code?: string | null;
-        type?: string | null;
-        positionlevel2_id?: string | null;
-      } | null;
-    } | null> | null;
-  } | null> | null;
-};
+export type UsersQueryVariables = Exact<{ [key: string]: never; }>;
 
-export const RefreshTokenDocument = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'mutation',
-      name: { kind: 'Name', value: 'refreshToken' },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'refreshToken' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'access_token' },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<
-  RefreshTokenMutation,
-  RefreshTokenMutationVariables
->;
-export const ValidateRouteDocument = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'mutation',
-      name: { kind: 'Name', value: 'ValidateRoute' },
-      variableDefinitions: [
-        {
-          kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'args' } },
-          type: {
-            kind: 'NonNullType',
-            type: {
-              kind: 'NamedType',
-              name: { kind: 'Name', value: 'String' },
-            },
-          },
-        },
-        {
-          kind: 'VariableDefinition',
-          variable: {
-            kind: 'Variable',
-            name: { kind: 'Name', value: 'branch' },
-          },
-          type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
-        },
-      ],
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'validateRoute' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'args' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'args' },
-                },
-              },
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'branch' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'branch' },
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'acess' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'currentBranch' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'branchId' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'branchName' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'companyId' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'companyName' },
-                      },
-                    ],
-                  },
-                },
-                { kind: 'Field', name: { kind: 'Name', value: 'path' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'reAccess' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'reFresh' } },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<
-  ValidateRouteMutation,
-  ValidateRouteMutationVariables
->;
-export const MeDocument = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'query',
-      name: { kind: 'Name', value: 'Me' },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'me' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'Role_Company' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'access' },
-                      },
-                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: '__typename' },
-                      },
-                    ],
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'companyBranch' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'companyId' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'company' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'companyCode' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'icon' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'id' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'name' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: '__typename' },
-                            },
-                          ],
-                        },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'createdAt' },
-                      },
-                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: '__typename' },
-                      },
-                    ],
-                  },
-                },
-                { kind: 'Field', name: { kind: 'Name', value: 'email' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'isOwner' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'profile' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'bio' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'firstname_th' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'lastname_th' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'firstname_en' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'lastname_en' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'avatar' },
-                      },
-                      { kind: 'Field', name: { kind: 'Name', value: 'dob' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'age' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'relationship' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'shirt_size' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'prefix_th' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'prefix_en' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'citizen_id' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'social_id' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'staff_status' },
-                      },
-                      { kind: 'Field', name: { kind: 'Name', value: 'tel' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'address' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'gender' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'staff_code' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'religion' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'userId' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'citizen_addressnumber' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'citizen_address' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'citizen_country' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'citizen_province' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'citizen_district' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'citizen_state' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'citizen_zipcode' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'citizen_tel' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'contract_sameCitizen' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'contract_addressnumber' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'contract_address' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'contract_country' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'contract_province' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'contract_district' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'contract_state' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'contract_zipcode' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'contract_email' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'contract_companyemail' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'social_facebook' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'social_likedin' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'social_line' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'social_telegram' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'nickname' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'blood_type' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'employee_status' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'start_date_work' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: '__typename' },
-                      },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<MeQuery, MeQueryVariables>;
-export const CompanyDocument = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'query',
-      name: { kind: 'Name', value: 'Company' },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'company' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: '_count' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'branch' },
-                      },
-                    ],
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'branch' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: '_count' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'users' },
-                            },
-                          ],
-                        },
-                      },
-                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'address' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'address_2' },
-                      },
-                      { kind: 'Field', name: { kind: 'Name', value: 'city' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'state' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'zip' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'country' },
-                      },
-                      { kind: 'Field', name: { kind: 'Name', value: 'tel' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'fax' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'website' },
-                      },
-                      { kind: 'Field', name: { kind: 'Name', value: 'lat' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'lng' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'email' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'email_2' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'company_type' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'sub_company_type' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'registeredamount' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'social_facebook' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'social_likedin' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'social_instragram' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'social_line' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'createdAt' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'updatedAt' },
-                      },
-                    ],
-                  },
-                },
-                { kind: 'Field', name: { kind: 'Name', value: 'userlimit' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<CompanyQuery, CompanyQueryVariables>;
-export const CreatedPositionDocument = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'mutation',
-      name: { kind: 'Name', value: 'CreatedPosition' },
-      variableDefinitions: [
-        {
-          kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'data' } },
-          type: {
-            kind: 'ListType',
-            type: {
-              kind: 'NonNullType',
-              type: {
-                kind: 'NamedType',
-                name: { kind: 'Name', value: 'CreatedAndUpdatePosition' },
-              },
-            },
-          },
-        },
-      ],
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'CreatedPosition' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'data' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'data' },
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'message' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'status' } },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<
-  CreatedPositionMutation,
-  CreatedPositionMutationVariables
->;
-export const EditPositionDocument = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'mutation',
-      name: { kind: 'Name', value: 'EditPosition' },
-      variableDefinitions: [
-        {
-          kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'data' } },
-          type: {
-            kind: 'ListType',
-            type: {
-              kind: 'NonNullType',
-              type: {
-                kind: 'NamedType',
-                name: { kind: 'Name', value: 'CreatedAndUpdatePosition' },
-              },
-            },
-          },
-        },
-      ],
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'EditPosition' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'data' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'data' },
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'message' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'status' } },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<
-  EditPositionMutation,
-  EditPositionMutationVariables
->;
-export const CreateAccountUserDocument = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'mutation',
-      name: { kind: 'Name', value: 'CreateAccountUser' },
-      variableDefinitions: [
-        {
-          kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'data' } },
-          type: {
-            kind: 'NonNullType',
-            type: {
-              kind: 'NamedType',
-              name: { kind: 'Name', value: 'CreateAccountUserInput' },
-            },
-          },
-        },
-      ],
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'createAccountUser' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'data' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'data' },
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'message' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'status' } },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<
-  CreateAccountUserMutation,
-  CreateAccountUserMutationVariables
->;
-export const DeleteAccountUserDocument = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'mutation',
-      name: { kind: 'Name', value: 'DeleteAccountUser' },
-      variableDefinitions: [
-        {
-          kind: 'VariableDefinition',
-          variable: {
-            kind: 'Variable',
-            name: { kind: 'Name', value: 'deleteAccountUserId' },
-          },
-          type: {
-            kind: 'NonNullType',
-            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
-          },
-        },
-      ],
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'deleteAccountUser' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'id' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'deleteAccountUserId' },
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'message' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'status' } },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<
-  DeleteAccountUserMutation,
-  DeleteAccountUserMutationVariables
->;
-export const LoginDocument = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'mutation',
-      name: { kind: 'Name', value: 'Login' },
-      variableDefinitions: [
-        {
-          kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'data' } },
-          type: {
-            kind: 'NonNullType',
-            type: {
-              kind: 'NamedType',
-              name: { kind: 'Name', value: 'LoginaInput' },
-            },
-          },
-        },
-      ],
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'login' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'data' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'data' },
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'access_token' },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'refresh_token' },
-                },
-                { kind: 'Field', name: { kind: 'Name', value: 'status' } },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<LoginMutation, LoginMutationVariables>;
-export const MutationDocument = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'mutation',
-      name: { kind: 'Name', value: 'Mutation' },
-      variableDefinitions: [
-        {
-          kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'data' } },
-          type: {
-            kind: 'NonNullType',
-            type: {
-              kind: 'NamedType',
-              name: { kind: 'Name', value: 'createRoleCompanyGroup' },
-            },
-          },
-        },
-      ],
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'createRoleCompany' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'data' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'data' },
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'message' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'status' } },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<MutationMutation, MutationMutationVariables>;
-export const DeleteRoleCompanyDocument = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'mutation',
-      name: { kind: 'Name', value: 'DeleteRoleCompany' },
-      variableDefinitions: [
-        {
-          kind: 'VariableDefinition',
-          variable: {
-            kind: 'Variable',
-            name: { kind: 'Name', value: 'deleteRoleCompanyId' },
-          },
-          type: {
-            kind: 'NonNullType',
-            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
-          },
-        },
-      ],
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'deleteRoleCompany' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'id' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'deleteRoleCompanyId' },
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'message' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'status' } },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<
-  DeleteRoleCompanyMutation,
-  DeleteRoleCompanyMutationVariables
->;
-export const CreateAccountDocument = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'mutation',
-      name: { kind: 'Name', value: 'CreateAccount' },
-      variableDefinitions: [
-        {
-          kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'data' } },
-          type: {
-            kind: 'NonNullType',
-            type: {
-              kind: 'NamedType',
-              name: { kind: 'Name', value: 'CreateAccountInput' },
-            },
-          },
-        },
-      ],
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'createAccount' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'data' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'data' },
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'status' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'message' } },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<
-  CreateAccountMutation,
-  CreateAccountMutationVariables
->;
-export const QueryDocument = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'query',
-      name: { kind: 'Name', value: 'Query' },
-      variableDefinitions: [
-        {
-          kind: 'VariableDefinition',
-          variable: {
-            kind: 'Variable',
-            name: { kind: 'Name', value: 'companyname' },
-          },
-          type: {
-            kind: 'NonNullType',
-            type: {
-              kind: 'NamedType',
-              name: { kind: 'Name', value: 'String' },
-            },
-          },
-        },
-      ],
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'verifyCompanycode' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'companyname' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'companyname' },
-                },
-              },
-            ],
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<QueryQuery, QueryQueryVariables>;
-export const Getleava_AlldataDocument = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'query',
-      name: { kind: 'Name', value: 'Getleava_alldata' },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'getleava_alldata' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'leavetype_id' },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'mas_leave_type' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'orderby' },
-                      },
-                    ],
-                  },
-                },
-                { kind: 'Field', name: { kind: 'Name', value: 'start_date' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'end_date' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'quantity_day' },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'quantity_hours' },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'detail_leave' },
-                },
-                { kind: 'Field', name: { kind: 'Name', value: 'Status' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'user_id' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'user' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'email' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'profile' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'id' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'firstname_th' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'lastname_th' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'firstname_en' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'lastname_en' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'avatar' },
-                            },
-                          ],
-                        },
-                      },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<
-  Getleava_AlldataQuery,
-  Getleava_AlldataQueryVariables
->;
-export const FetchcompanySelectDocument = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'query',
-      name: { kind: 'Name', value: 'FetchcompanySelect' },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'company' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'branch' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: '_count' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'users' },
-                            },
-                          ],
-                        },
-                      },
-                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'address' },
-                      },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<
-  FetchcompanySelectQuery,
-  FetchcompanySelectQueryVariables
->;
-export const GetownCompanyDocument = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'query',
-      name: { kind: 'Name', value: 'GetownCompany' },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'getownCompany' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'redirect' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'isOwner' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'company' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'companyCode' },
-                      },
-                      { kind: 'Field', name: { kind: 'Name', value: 'icon' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-                    ],
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'companies' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'companyCode' },
-                      },
-                      { kind: 'Field', name: { kind: 'Name', value: 'icon' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<GetownCompanyQuery, GetownCompanyQueryVariables>;
-export const CreateAndUpdateComBaranceDocument = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'mutation',
-      name: { kind: 'Name', value: 'CreateAndUpdateComBarance' },
-      variableDefinitions: [
-        {
-          kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'data' } },
-          type: {
-            kind: 'NonNullType',
-            type: {
-              kind: 'NamedType',
-              name: { kind: 'Name', value: 'createCompanyBranch' },
-            },
-          },
-        },
-      ],
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'createAndUpdateComBarance' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'data' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'data' },
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'message' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'status' } },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<
-  CreateAndUpdateComBaranceMutation,
-  CreateAndUpdateComBaranceMutationVariables
->;
-export const DeleteComBaranceDocument = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'mutation',
-      name: { kind: 'Name', value: 'DeleteComBarance' },
-      variableDefinitions: [
-        {
-          kind: 'VariableDefinition',
-          variable: {
-            kind: 'Variable',
-            name: { kind: 'Name', value: 'deleteComBaranceId' },
-          },
-          type: {
-            kind: 'NonNullType',
-            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
-          },
-        },
-      ],
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'deleteComBarance' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'id' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'deleteComBaranceId' },
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'message' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'status' } },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<
-  DeleteComBaranceMutation,
-  DeleteComBaranceMutationVariables
->;
-export const GetHoliDayYearDocument = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'query',
-      name: { kind: 'Name', value: 'GetHoliDayYear' },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'GetHoliDayYear' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'day' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'month' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'year' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'holiday_name' },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<GetHoliDayYearQuery, GetHoliDayYearQueryVariables>;
-export const Getleava_DatameDocument = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'query',
-      name: { kind: 'Name', value: 'Getleava_datame' },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'getleava_datame' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'data_count' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'name_1' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'count1' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'name_2' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'count2' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'name_3' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'count3' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'name_4' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'count4' },
-                      },
-                    ],
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'data_all' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'email' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'profile' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'firstname_th' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'lastname_th' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'firstname_en' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'lastname_en' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'avatar' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'dob' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'id' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'userId' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'start_date_work' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'prefix_th' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'prefix_en' },
-                            },
-                          ],
-                        },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'Position_user' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'id' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'position1_id' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'position2_id' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'position3_id' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'user_id' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'role' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'headderId' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'date' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: {
-                                kind: 'Name',
-                                value: 'mas_positionlevel1',
-                              },
-                              selectionSet: {
-                                kind: 'SelectionSet',
-                                selections: [
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'id' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'name' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'level' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'code' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'type' },
-                                  },
-                                ],
-                              },
-                            },
-                            {
-                              kind: 'Field',
-                              name: {
-                                kind: 'Name',
-                                value: 'mas_positionlevel2',
-                              },
-                              selectionSet: {
-                                kind: 'SelectionSet',
-                                selections: [
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'id' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'name' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'level' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'code' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'type' },
-                                  },
-                                ],
-                              },
-                            },
-                            {
-                              kind: 'Field',
-                              name: {
-                                kind: 'Name',
-                                value: 'mas_positionlevel3',
-                              },
-                              selectionSet: {
-                                kind: 'SelectionSet',
-                                selections: [
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'id' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'name' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'level' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'code' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'type' },
-                                  },
-                                ],
-                              },
-                            },
-                          ],
-                        },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'data_leave' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'id' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'leavetype_id' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'mas_leave_type' },
-                              selectionSet: {
-                                kind: 'SelectionSet',
-                                selections: [
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'id' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'name' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'orderby' },
-                                  },
-                                ],
-                              },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'start_date' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'end_date' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'quantity_day' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'quantity_hours' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'detail_leave' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'Status' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'user_id' },
-                            },
-                          ],
-                        },
-                      },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<
-  Getleava_DatameQuery,
-  Getleava_DatameQueryVariables
->;
-export const GetleavetypedataDocument = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'query',
-      name: { kind: 'Name', value: 'Getleavetypedata' },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'getleavetypedata' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'orderby' } },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<
-  GetleavetypedataQuery,
-  GetleavetypedataQueryVariables
->;
-export const Createddata_LeaveDocument = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'mutation',
-      name: { kind: 'Name', value: 'Createddata_leave' },
-      variableDefinitions: [
-        {
-          kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'data' } },
-          type: { kind: 'NamedType', name: { kind: 'Name', value: 'leave' } },
-        },
-      ],
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'createddata_leave' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'data' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'data' },
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'message' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'status' } },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<
-  Createddata_LeaveMutation,
-  Createddata_LeaveMutationVariables
->;
-export const GetMasPositonDocument = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'query',
-      name: { kind: 'Name', value: 'getMasPositon' },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'getMasPositon' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'level' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'code' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'type' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'mas_positionlevel2' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'type' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'code' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'level' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'mas_positionlevel3' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'id' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'name' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'level' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'code' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'type' },
-                            },
-                          ],
-                        },
-                      },
-                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                    ],
-                  },
-                },
-                { kind: 'Field', name: { kind: 'Name', value: 'CompanyId' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'Position_user' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'user_id' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'position1_id' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'position2_id' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'position3_id' },
-                      },
-                      { kind: 'Field', name: { kind: 'Name', value: 'role' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'headderId' },
-                      },
-                      { kind: 'Field', name: { kind: 'Name', value: 'date' } },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<GetMasPositonQuery, GetMasPositonQueryVariables>;
-export const Getposition_UserDocument = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'query',
-      name: { kind: 'Name', value: 'Getposition_user' },
-      variableDefinitions: [
-        {
-          kind: 'VariableDefinition',
-          variable: {
-            kind: 'Variable',
-            name: { kind: 'Name', value: 'getpositionUserId' },
-          },
-          type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
-        },
-      ],
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'getposition_user' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'id' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'getpositionUserId' },
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'user' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'email' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'password' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'profile' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'firstname_th' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'lastname_th' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'id' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'firstname_en' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'lastname_en' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'prefix_th' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'prefix_en' },
-                            },
-                          ],
-                        },
-                      },
-                    ],
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'position1_id' },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'mas_positionlevel1' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'level' } },
-                    ],
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'position2_id' },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'mas_positionlevel2' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'level' } },
-                    ],
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'position3_id' },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'mas_positionlevel3' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'level' } },
-                    ],
-                  },
-                },
-                { kind: 'Field', name: { kind: 'Name', value: 'role' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'date' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'header' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'email' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'profile' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'firstname_th' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'lastname_th' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'firstname_en' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'lastname_en' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'prefix_th' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'prefix_en' },
-                            },
-                          ],
-                        },
-                      },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<
-  Getposition_UserQuery,
-  Getposition_UserQueryVariables
->;
-export const GetpositionMeDocument = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'query',
-      name: { kind: 'Name', value: 'GetpositionMe' },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'getpositionMe' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'user' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'email' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'profile' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'id' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'firstname_th' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'lastname_th' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'firstname_en' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'lastname_en' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'avatar' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'dob' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'userId' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'start_date_work' },
-                            },
-                          ],
-                        },
-                      },
-                    ],
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'header' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'email' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'profile' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'firstname_th' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'lastname_th' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'firstname_en' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'lastname_en' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'avatar' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'dob' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'start_date_work' },
-                            },
-                          ],
-                        },
-                      },
-                    ],
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'position1_id' },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'position2_id' },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'position3_id' },
-                },
-                { kind: 'Field', name: { kind: 'Name', value: 'role' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'date' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'mas_positionlevel1' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'level' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'code' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'type' } },
-                    ],
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'mas_positionlevel2' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'level' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'code' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'type' } },
-                    ],
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'mas_positionlevel3' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'level' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'code' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'type' } },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<GetpositionMeQuery, GetpositionMeQueryVariables>;
-export const Createdposition_UserDocument = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'mutation',
-      name: { kind: 'Name', value: 'Createdposition_user' },
-      variableDefinitions: [
-        {
-          kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'data' } },
-          type: {
-            kind: 'NonNullType',
-            type: {
-              kind: 'NamedType',
-              name: { kind: 'Name', value: 'position' },
-            },
-          },
-        },
-      ],
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'createdposition_user' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'data' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'data' },
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'message' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'status' } },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<
-  Createdposition_UserMutation,
-  Createdposition_UserMutationVariables
->;
-export const GetProvinceDocument = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'query',
-      name: { kind: 'Name', value: 'getProvince' },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'getProvince' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'district' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'amphoe' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'id' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'name' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'zipcode' },
-                            },
-                          ],
-                        },
-                      },
-                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<GetProvinceQuery, GetProvinceQueryVariables>;
-export const GetcompanyRoleDocument = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'query',
-      name: { kind: 'Name', value: 'GetcompanyRole' },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'getcompanyRole' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'access' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'status' } },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<GetcompanyRoleQuery, GetcompanyRoleQueryVariables>;
-export const GetcompanyRoleManagementDocument = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'query',
-      name: { kind: 'Name', value: 'GetcompanyRoleManagement' },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'getcompanyRole' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'access' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<
-  GetcompanyRoleManagementQuery,
-  GetcompanyRoleManagementQueryVariables
->;
-export const UpdateRoleCompanyManagementDocument = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'mutation',
-      name: { kind: 'Name', value: 'updateRoleCompanyManagement' },
-      variableDefinitions: [
-        {
-          kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'data' } },
-          type: {
-            kind: 'NonNullType',
-            type: {
-              kind: 'ListType',
-              type: {
-                kind: 'NonNullType',
-                type: {
-                  kind: 'NamedType',
-                  name: {
-                    kind: 'Name',
-                    value: 'UpdateRoleCompanyMangementType',
-                  },
-                },
-              },
-            },
-          },
-        },
-      ],
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'updateRoleCompanyMangement' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'data' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'data' },
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'message' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'status' } },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<
-  UpdateRoleCompanyManagementMutation,
-  UpdateRoleCompanyManagementMutationVariables
->;
-export const Mas_BankDocument = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'query',
-      name: { kind: 'Name', value: 'Mas_bank' },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'mas_bank' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<Mas_BankQuery, Mas_BankQueryVariables>;
-export const Datasalary_MeeDocument = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'query',
-      name: { kind: 'Name', value: 'Datasalary_mee' },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'datasalary_mee' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'email' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'profile' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'firstname_th' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'lastname_th' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'avatar' },
-                      },
-                    ],
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'salary' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'month' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'years' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'net' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'total_expense' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'total_income' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'provident_company' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'provident_employee' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'mas_bank' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'name' },
-                            },
-                          ],
-                        },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'bookbank_log' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'bank_number' },
-                            },
-                          ],
-                        },
-                      },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<Datasalary_MeeQuery, Datasalary_MeeQueryVariables>;
-export const CreatebookbankDocument = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'mutation',
-      name: { kind: 'Name', value: 'Createbookbank' },
-      variableDefinitions: [
-        {
-          kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'data' } },
-          type: {
-            kind: 'NamedType',
-            name: { kind: 'Name', value: 'bookbank_logInput' },
-          },
-        },
-      ],
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'Createbookbank' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'data' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'data' },
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'message' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'status' } },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<
-  CreatebookbankMutation,
-  CreatebookbankMutationVariables
->;
-export const Data_SalaryDocument = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'query',
-      name: { kind: 'Name', value: 'Data_salary' },
-      variableDefinitions: [
-        {
-          kind: 'VariableDefinition',
-          variable: {
-            kind: 'Variable',
-            name: { kind: 'Name', value: 'fristname' },
-          },
-          type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
-        },
-        {
-          kind: 'VariableDefinition',
-          variable: {
-            kind: 'Variable',
-            name: { kind: 'Name', value: 'position2' },
-          },
-          type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
-        },
-        {
-          kind: 'VariableDefinition',
-          variable: {
-            kind: 'Variable',
-            name: { kind: 'Name', value: 'position3' },
-          },
-          type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
-        },
-      ],
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'data_salary' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'fristname' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'fristname' },
-                },
-              },
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'Position2' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'position2' },
-                },
-              },
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'Position3' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'position3' },
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'profile' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'firstname_th' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'lastname_th' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'prefix_th' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'staff_code' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'staff_status' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'start_date_work' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'userId' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'employee_status' },
-                      },
-                    ],
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'bookbank_log' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'base_salary' },
-                      },
-                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'date' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'bank_number' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'mas_bank' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'id' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'name' },
-                            },
-                          ],
-                        },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'mas_bankId' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'all_collectId' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'provident_com' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'provident_emp' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'userId' },
-                      },
-                    ],
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'Position_user' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'position2_id' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'mas_positionlevel2' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'id' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'name' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'level' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'code' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'type' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: {
-                                kind: 'Name',
-                                value: 'positionlevel1_id',
-                              },
-                            },
-                          ],
-                        },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'position3_id' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'mas_positionlevel3' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'id' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'name' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'level' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'code' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'type' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: {
-                                kind: 'Name',
-                                value: 'positionlevel2_id',
-                              },
-                            },
-                          ],
-                        },
-                      },
-                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'user_id' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'position1_id' },
-                      },
-                      { kind: 'Field', name: { kind: 'Name', value: 'role' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'headderId' },
-                      },
-                      { kind: 'Field', name: { kind: 'Name', value: 'date' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'mas_positionlevel1' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'id' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'name' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'level' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'code' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'type' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'CompanyId' },
-                            },
-                          ],
-                        },
-                      },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<Data_SalaryQuery, Data_SalaryQueryVariables>;
-export const SalaryDocument = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'query',
-      name: { kind: 'Name', value: 'Salary' },
-      variableDefinitions: [
-        {
-          kind: 'VariableDefinition',
-          variable: {
-            kind: 'Variable',
-            name: { kind: 'Name', value: 'userId' },
-          },
-          type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
-        },
-      ],
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'salary' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'userId' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'userId' },
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'profile' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'firstname_th' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'lastname_th' },
-                      },
-                    ],
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'salary' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'net' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'month' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'years' } },
-                    ],
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'Position_user' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'role' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'user_id' },
-                      },
-                      { kind: 'Field', name: { kind: 'Name', value: 'date' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'mas_positionlevel3' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'name' },
-                            },
-                          ],
-                        },
-                      },
-                    ],
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'bookbank_log' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'mas_bank' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'name' },
-                            },
-                          ],
-                        },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'bank_number' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'base_salary' },
-                      },
-                    ],
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'companyBranch' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'company' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'name' },
-                            },
-                          ],
-                        },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'address' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'address_2' },
-                      },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<SalaryQuery, SalaryQueryVariables>;
-export const CreatesalaryDocument = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'mutation',
-      name: { kind: 'Name', value: 'Createsalary' },
-      variableDefinitions: [
-        {
-          kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'data' } },
-          type: {
-            kind: 'NamedType',
-            name: { kind: 'Name', value: 'salaryInput' },
-          },
-        },
-      ],
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'Createsalary' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'data' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'data' },
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'message' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'status' } },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<
-  CreatesalaryMutation,
-  CreatesalaryMutationVariables
->;
-export const CreateAndUpdateExpenseComDocument = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'mutation',
-      name: { kind: 'Name', value: 'CreateAndUpdateExpenseCom' },
-      variableDefinitions: [
-        {
-          kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'data' } },
-          type: {
-            kind: 'NamedType',
-            name: { kind: 'Name', value: 'ExpenseComInput' },
-          },
-        },
-      ],
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'CreateAndUpdateExpenseCom' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'data' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'data' },
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'message' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'status' } },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<
-  CreateAndUpdateExpenseComMutation,
-  CreateAndUpdateExpenseComMutationVariables
->;
-export const DeletebookbankDocument = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'mutation',
-      name: { kind: 'Name', value: 'Deletebookbank' },
-      variableDefinitions: [
-        {
-          kind: 'VariableDefinition',
-          variable: {
-            kind: 'Variable',
-            name: { kind: 'Name', value: 'deletebookbankId' },
-          },
-          type: {
-            kind: 'NonNullType',
-            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
-          },
-        },
-      ],
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'Deletebookbank' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'id' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'deletebookbankId' },
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'message' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'status' } },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<
-  DeletebookbankMutation,
-  DeletebookbankMutationVariables
->;
-export const Bookbank_Log_AdminDocument = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'query',
-      name: { kind: 'Name', value: 'Bookbank_log_admin' },
-      variableDefinitions: [
-        {
-          kind: 'VariableDefinition',
-          variable: {
-            kind: 'Variable',
-            name: { kind: 'Name', value: 'userId' },
-          },
-          type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
-        },
-      ],
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'bookbank_log_admin' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'userId' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'userId' },
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'date' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'mas_bankId' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'bank_number' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'base_salary' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'provident_com' },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'provident_emp' },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'mas_bank' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-                    ],
-                  },
-                },
-                { kind: 'Field', name: { kind: 'Name', value: 'userId' } },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<
-  Bookbank_Log_AdminQuery,
-  Bookbank_Log_AdminQueryVariables
->;
-export const UsersDocument = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'query',
-      name: { kind: 'Name', value: 'Users' },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'users' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'email' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'profile' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'address' },
-                      },
-                      { kind: 'Field', name: { kind: 'Name', value: 'age' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'avatar' },
-                      },
-                      { kind: 'Field', name: { kind: 'Name', value: 'bio' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'citizen_address' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'citizen_addressnumber' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'citizen_country' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'citizen_district' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'citizen_id' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'citizen_province' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'citizen_state' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'citizen_tel' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'citizen_zipcode' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'contract_address' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'contract_addressnumber' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'contract_companyemail' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'contract_country' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'contract_district' },
-                      },
-                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'firstname_th' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'lastname_th' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'firstname_en' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'lastname_en' },
-                      },
-                      { kind: 'Field', name: { kind: 'Name', value: 'dob' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'relationship' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'shirt_size' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'prefix_th' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'prefix_en' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'social_id' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'staff_status' },
-                      },
-                      { kind: 'Field', name: { kind: 'Name', value: 'tel' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'gender' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'staff_code' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'religion' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'userId' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'contract_sameCitizen' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'contract_province' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'contract_state' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'contract_zipcode' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'contract_email' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'social_facebook' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'social_likedin' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'social_line' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'social_telegram' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'nickname' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'blood_type' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'employee_status' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'start_date_work' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'user' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'email' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'password' },
-                            },
-                          ],
-                        },
-                      },
-                    ],
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'Role_Company' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-                    ],
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'Position_user' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'date' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'mas_positionlevel1' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'id' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'name' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'level' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'code' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'type' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'CompanyId' },
-                            },
-                          ],
-                        },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'mas_positionlevel2' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'id' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'name' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'level' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'code' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'type' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: {
-                                kind: 'Name',
-                                value: 'positionlevel1_id',
-                              },
-                            },
-                          ],
-                        },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'mas_positionlevel3' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'id' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'name' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'level' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'code' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'type' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: {
-                                kind: 'Name',
-                                value: 'positionlevel2_id',
-                              },
-                            },
-                          ],
-                        },
-                      },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<UsersQuery, UsersQueryVariables>;
+
+export type UsersQuery = { __typename?: 'Query', users?: Array<{ __typename?: 'User', id: string, email: string, profile?: { __typename?: 'Profile', address?: string | null, age?: string | null, avatar?: string | null, bio?: string | null, citizen_address?: string | null, citizen_addressnumber?: string | null, citizen_country?: string | null, citizen_district?: string | null, citizen_id?: string | null, citizen_province?: string | null, citizen_state?: string | null, citizen_tel?: string | null, citizen_zipcode?: string | null, contract_address?: string | null, contract_addressnumber?: string | null, contract_companyemail?: string | null, contract_country?: string | null, contract_district?: string | null, id: string, firstname_th?: string | null, lastname_th?: string | null, firstname_en?: string | null, lastname_en?: string | null, dob?: any | null, relationship?: string | null, shirt_size?: string | null, prefix_th?: string | null, prefix_en?: string | null, social_id?: string | null, staff_status?: string | null, tel?: string | null, gender?: string | null, staff_code?: string | null, religion?: string | null, userId?: string | null, contract_sameCitizen?: boolean | null, contract_province?: string | null, contract_state?: string | null, contract_zipcode?: string | null, contract_email?: string | null, social_facebook?: string | null, social_likedin?: string | null, social_line?: string | null, social_telegram?: string | null, nickname?: string | null, blood_type?: string | null, employee_status?: string | null, start_date_work?: any | null, user?: { __typename?: 'User', email: string, password: string } | null } | null, Role_Company?: { __typename?: 'Role_Company', id: string, name?: string | null } | null, Position_user?: Array<{ __typename?: 'Position_user', date?: any | null, mas_positionlevel1?: { __typename?: 'mas_positionlevel1', id: string, name?: string | null, level?: number | null, code?: string | null, type?: string | null, CompanyId?: string | null } | null, mas_positionlevel2?: { __typename?: 'mas_positionlevel2', id: string, name?: string | null, level?: number | null, code?: string | null, type?: string | null, positionlevel1_id?: string | null } | null, mas_positionlevel3?: { __typename?: 'mas_positionlevel3', id: string, name?: string | null, level?: number | null, code?: string | null, type?: string | null, positionlevel2_id?: string | null } | null } | null> | null } | null> | null };
+
+
+export const RefreshTokenDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"refreshToken"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"refreshToken"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"access_token"}}]}}]}}]} as unknown as DocumentNode<RefreshTokenMutation, RefreshTokenMutationVariables>;
+export const ValidateRouteDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"ValidateRoute"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"args"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"branch"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"validateRoute"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"args"},"value":{"kind":"Variable","name":{"kind":"Name","value":"args"}}},{"kind":"Argument","name":{"kind":"Name","value":"branch"},"value":{"kind":"Variable","name":{"kind":"Name","value":"branch"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"acess"}},{"kind":"Field","name":{"kind":"Name","value":"currentBranch"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"branchId"}},{"kind":"Field","name":{"kind":"Name","value":"branchName"}},{"kind":"Field","name":{"kind":"Name","value":"companyId"}},{"kind":"Field","name":{"kind":"Name","value":"companyName"}}]}},{"kind":"Field","name":{"kind":"Name","value":"path"}},{"kind":"Field","name":{"kind":"Name","value":"reAccess"}},{"kind":"Field","name":{"kind":"Name","value":"reFresh"}}]}}]}}]} as unknown as DocumentNode<ValidateRouteMutation, ValidateRouteMutationVariables>;
+export const MeDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Me"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"me"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"Role_Company"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"access"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"__typename"}}]}},{"kind":"Field","name":{"kind":"Name","value":"companyBranch"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"companyId"}},{"kind":"Field","name":{"kind":"Name","value":"company"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"companyCode"}},{"kind":"Field","name":{"kind":"Name","value":"icon"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"__typename"}}]}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"__typename"}}]}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"isOwner"}},{"kind":"Field","name":{"kind":"Name","value":"profile"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"bio"}},{"kind":"Field","name":{"kind":"Name","value":"firstname_th"}},{"kind":"Field","name":{"kind":"Name","value":"lastname_th"}},{"kind":"Field","name":{"kind":"Name","value":"firstname_en"}},{"kind":"Field","name":{"kind":"Name","value":"lastname_en"}},{"kind":"Field","name":{"kind":"Name","value":"avatar"}},{"kind":"Field","name":{"kind":"Name","value":"dob"}},{"kind":"Field","name":{"kind":"Name","value":"age"}},{"kind":"Field","name":{"kind":"Name","value":"relationship"}},{"kind":"Field","name":{"kind":"Name","value":"shirt_size"}},{"kind":"Field","name":{"kind":"Name","value":"prefix_th"}},{"kind":"Field","name":{"kind":"Name","value":"prefix_en"}},{"kind":"Field","name":{"kind":"Name","value":"citizen_id"}},{"kind":"Field","name":{"kind":"Name","value":"social_id"}},{"kind":"Field","name":{"kind":"Name","value":"staff_status"}},{"kind":"Field","name":{"kind":"Name","value":"tel"}},{"kind":"Field","name":{"kind":"Name","value":"address"}},{"kind":"Field","name":{"kind":"Name","value":"gender"}},{"kind":"Field","name":{"kind":"Name","value":"staff_code"}},{"kind":"Field","name":{"kind":"Name","value":"religion"}},{"kind":"Field","name":{"kind":"Name","value":"userId"}},{"kind":"Field","name":{"kind":"Name","value":"citizen_addressnumber"}},{"kind":"Field","name":{"kind":"Name","value":"citizen_address"}},{"kind":"Field","name":{"kind":"Name","value":"citizen_country"}},{"kind":"Field","name":{"kind":"Name","value":"citizen_province"}},{"kind":"Field","name":{"kind":"Name","value":"citizen_district"}},{"kind":"Field","name":{"kind":"Name","value":"citizen_state"}},{"kind":"Field","name":{"kind":"Name","value":"citizen_zipcode"}},{"kind":"Field","name":{"kind":"Name","value":"citizen_tel"}},{"kind":"Field","name":{"kind":"Name","value":"contract_sameCitizen"}},{"kind":"Field","name":{"kind":"Name","value":"contract_addressnumber"}},{"kind":"Field","name":{"kind":"Name","value":"contract_address"}},{"kind":"Field","name":{"kind":"Name","value":"contract_country"}},{"kind":"Field","name":{"kind":"Name","value":"contract_province"}},{"kind":"Field","name":{"kind":"Name","value":"contract_district"}},{"kind":"Field","name":{"kind":"Name","value":"contract_state"}},{"kind":"Field","name":{"kind":"Name","value":"contract_zipcode"}},{"kind":"Field","name":{"kind":"Name","value":"contract_email"}},{"kind":"Field","name":{"kind":"Name","value":"contract_companyemail"}},{"kind":"Field","name":{"kind":"Name","value":"social_facebook"}},{"kind":"Field","name":{"kind":"Name","value":"social_likedin"}},{"kind":"Field","name":{"kind":"Name","value":"social_line"}},{"kind":"Field","name":{"kind":"Name","value":"social_telegram"}},{"kind":"Field","name":{"kind":"Name","value":"nickname"}},{"kind":"Field","name":{"kind":"Name","value":"blood_type"}},{"kind":"Field","name":{"kind":"Name","value":"employee_status"}},{"kind":"Field","name":{"kind":"Name","value":"start_date_work"}},{"kind":"Field","name":{"kind":"Name","value":"__typename"}}]}}]}}]}}]} as unknown as DocumentNode<MeQuery, MeQueryVariables>;
+export const CompanyDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Company"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"company"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_count"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"branch"}}]}},{"kind":"Field","name":{"kind":"Name","value":"branch"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_count"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"users"}}]}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"address"}},{"kind":"Field","name":{"kind":"Name","value":"address_2"}},{"kind":"Field","name":{"kind":"Name","value":"city"}},{"kind":"Field","name":{"kind":"Name","value":"state"}},{"kind":"Field","name":{"kind":"Name","value":"zip"}},{"kind":"Field","name":{"kind":"Name","value":"country"}},{"kind":"Field","name":{"kind":"Name","value":"tel"}},{"kind":"Field","name":{"kind":"Name","value":"fax"}},{"kind":"Field","name":{"kind":"Name","value":"website"}},{"kind":"Field","name":{"kind":"Name","value":"lat"}},{"kind":"Field","name":{"kind":"Name","value":"lng"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"email_2"}},{"kind":"Field","name":{"kind":"Name","value":"company_type"}},{"kind":"Field","name":{"kind":"Name","value":"sub_company_type"}},{"kind":"Field","name":{"kind":"Name","value":"registeredamount"}},{"kind":"Field","name":{"kind":"Name","value":"social_facebook"}},{"kind":"Field","name":{"kind":"Name","value":"social_likedin"}},{"kind":"Field","name":{"kind":"Name","value":"social_instragram"}},{"kind":"Field","name":{"kind":"Name","value":"social_line"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"userlimit"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]} as unknown as DocumentNode<CompanyQuery, CompanyQueryVariables>;
+export const CreatedPositionDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreatedPosition"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"data"}},"type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CreatedAndUpdatePosition"}}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"CreatedPosition"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"data"},"value":{"kind":"Variable","name":{"kind":"Name","value":"data"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"message"}},{"kind":"Field","name":{"kind":"Name","value":"status"}}]}}]}}]} as unknown as DocumentNode<CreatedPositionMutation, CreatedPositionMutationVariables>;
+export const EditPositionDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"EditPosition"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"data"}},"type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CreatedAndUpdatePosition"}}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"EditPosition"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"data"},"value":{"kind":"Variable","name":{"kind":"Name","value":"data"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"message"}},{"kind":"Field","name":{"kind":"Name","value":"status"}}]}}]}}]} as unknown as DocumentNode<EditPositionMutation, EditPositionMutationVariables>;
+export const CreateAccountUserDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateAccountUser"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"data"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CreateAccountUserInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createAccountUser"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"data"},"value":{"kind":"Variable","name":{"kind":"Name","value":"data"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"message"}},{"kind":"Field","name":{"kind":"Name","value":"status"}}]}}]}}]} as unknown as DocumentNode<CreateAccountUserMutation, CreateAccountUserMutationVariables>;
+export const DeleteAccountUserDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"DeleteAccountUser"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"deleteAccountUserId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"deleteAccountUser"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"deleteAccountUserId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"message"}},{"kind":"Field","name":{"kind":"Name","value":"status"}}]}}]}}]} as unknown as DocumentNode<DeleteAccountUserMutation, DeleteAccountUserMutationVariables>;
+export const LoginDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"Login"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"data"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"LoginaInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"login"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"data"},"value":{"kind":"Variable","name":{"kind":"Name","value":"data"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"access_token"}},{"kind":"Field","name":{"kind":"Name","value":"refresh_token"}},{"kind":"Field","name":{"kind":"Name","value":"status"}}]}}]}}]} as unknown as DocumentNode<LoginMutation, LoginMutationVariables>;
+export const MutationDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"Mutation"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"data"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"createRoleCompanyGroup"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createRoleCompany"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"data"},"value":{"kind":"Variable","name":{"kind":"Name","value":"data"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"message"}},{"kind":"Field","name":{"kind":"Name","value":"status"}}]}}]}}]} as unknown as DocumentNode<MutationMutation, MutationMutationVariables>;
+export const DeleteRoleCompanyDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"DeleteRoleCompany"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"deleteRoleCompanyId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"deleteRoleCompany"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"deleteRoleCompanyId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"message"}},{"kind":"Field","name":{"kind":"Name","value":"status"}}]}}]}}]} as unknown as DocumentNode<DeleteRoleCompanyMutation, DeleteRoleCompanyMutationVariables>;
+export const CreateAccountDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateAccount"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"data"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CreateAccountInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createAccount"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"data"},"value":{"kind":"Variable","name":{"kind":"Name","value":"data"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"message"}}]}}]}}]} as unknown as DocumentNode<CreateAccountMutation, CreateAccountMutationVariables>;
+export const QueryDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Query"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"companyname"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"verifyCompanycode"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"companyname"},"value":{"kind":"Variable","name":{"kind":"Name","value":"companyname"}}}]}]}}]} as unknown as DocumentNode<QueryQuery, QueryQueryVariables>;
+export const Getleava_AlldataDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Getleava_alldata"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getleava_alldata"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"leavetype_id"}},{"kind":"Field","name":{"kind":"Name","value":"mas_leave_type"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"orderby"}}]}},{"kind":"Field","name":{"kind":"Name","value":"start_date"}},{"kind":"Field","name":{"kind":"Name","value":"end_date"}},{"kind":"Field","name":{"kind":"Name","value":"quantity_day"}},{"kind":"Field","name":{"kind":"Name","value":"quantity_hours"}},{"kind":"Field","name":{"kind":"Name","value":"detail_leave"}},{"kind":"Field","name":{"kind":"Name","value":"Status"}},{"kind":"Field","name":{"kind":"Name","value":"user_id"}},{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"profile"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"firstname_th"}},{"kind":"Field","name":{"kind":"Name","value":"lastname_th"}},{"kind":"Field","name":{"kind":"Name","value":"firstname_en"}},{"kind":"Field","name":{"kind":"Name","value":"lastname_en"}},{"kind":"Field","name":{"kind":"Name","value":"avatar"}}]}}]}}]}}]}}]} as unknown as DocumentNode<Getleava_AlldataQuery, Getleava_AlldataQueryVariables>;
+export const FetchcompanySelectDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"FetchcompanySelect"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"company"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"branch"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_count"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"users"}}]}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"address"}}]}}]}}]}}]} as unknown as DocumentNode<FetchcompanySelectQuery, FetchcompanySelectQueryVariables>;
+export const GetownCompanyDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetownCompany"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getownCompany"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"redirect"}},{"kind":"Field","name":{"kind":"Name","value":"isOwner"}},{"kind":"Field","name":{"kind":"Name","value":"company"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"companyCode"}},{"kind":"Field","name":{"kind":"Name","value":"icon"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"companies"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"companyCode"}},{"kind":"Field","name":{"kind":"Name","value":"icon"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]}}]} as unknown as DocumentNode<GetownCompanyQuery, GetownCompanyQueryVariables>;
+export const CreateAndUpdateComBaranceDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateAndUpdateComBarance"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"data"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"createCompanyBranch"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createAndUpdateComBarance"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"data"},"value":{"kind":"Variable","name":{"kind":"Name","value":"data"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"message"}},{"kind":"Field","name":{"kind":"Name","value":"status"}}]}}]}}]} as unknown as DocumentNode<CreateAndUpdateComBaranceMutation, CreateAndUpdateComBaranceMutationVariables>;
+export const DeleteComBaranceDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"DeleteComBarance"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"deleteComBaranceId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"deleteComBarance"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"deleteComBaranceId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"message"}},{"kind":"Field","name":{"kind":"Name","value":"status"}}]}}]}}]} as unknown as DocumentNode<DeleteComBaranceMutation, DeleteComBaranceMutationVariables>;
+export const GetHoliDayYearDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetHoliDayYear"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"GetHoliDayYear"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"day"}},{"kind":"Field","name":{"kind":"Name","value":"month"}},{"kind":"Field","name":{"kind":"Name","value":"year"}},{"kind":"Field","name":{"kind":"Name","value":"holiday_name"}}]}}]}}]} as unknown as DocumentNode<GetHoliDayYearQuery, GetHoliDayYearQueryVariables>;
+export const Getleava_DatameDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Getleava_datame"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getleava_datame"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"data_count"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name_1"}},{"kind":"Field","name":{"kind":"Name","value":"count1"}},{"kind":"Field","name":{"kind":"Name","value":"name_2"}},{"kind":"Field","name":{"kind":"Name","value":"count2"}},{"kind":"Field","name":{"kind":"Name","value":"name_3"}},{"kind":"Field","name":{"kind":"Name","value":"count3"}},{"kind":"Field","name":{"kind":"Name","value":"name_4"}},{"kind":"Field","name":{"kind":"Name","value":"count4"}}]}},{"kind":"Field","name":{"kind":"Name","value":"data_all"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"profile"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"firstname_th"}},{"kind":"Field","name":{"kind":"Name","value":"lastname_th"}},{"kind":"Field","name":{"kind":"Name","value":"firstname_en"}},{"kind":"Field","name":{"kind":"Name","value":"lastname_en"}},{"kind":"Field","name":{"kind":"Name","value":"avatar"}},{"kind":"Field","name":{"kind":"Name","value":"dob"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"userId"}},{"kind":"Field","name":{"kind":"Name","value":"start_date_work"}},{"kind":"Field","name":{"kind":"Name","value":"prefix_th"}},{"kind":"Field","name":{"kind":"Name","value":"prefix_en"}}]}},{"kind":"Field","name":{"kind":"Name","value":"Position_user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"position1_id"}},{"kind":"Field","name":{"kind":"Name","value":"position2_id"}},{"kind":"Field","name":{"kind":"Name","value":"position3_id"}},{"kind":"Field","name":{"kind":"Name","value":"user_id"}},{"kind":"Field","name":{"kind":"Name","value":"role"}},{"kind":"Field","name":{"kind":"Name","value":"headderId"}},{"kind":"Field","name":{"kind":"Name","value":"date"}},{"kind":"Field","name":{"kind":"Name","value":"mas_positionlevel1"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"level"}},{"kind":"Field","name":{"kind":"Name","value":"code"}},{"kind":"Field","name":{"kind":"Name","value":"type"}}]}},{"kind":"Field","name":{"kind":"Name","value":"mas_positionlevel2"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"level"}},{"kind":"Field","name":{"kind":"Name","value":"code"}},{"kind":"Field","name":{"kind":"Name","value":"type"}}]}},{"kind":"Field","name":{"kind":"Name","value":"mas_positionlevel3"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"level"}},{"kind":"Field","name":{"kind":"Name","value":"code"}},{"kind":"Field","name":{"kind":"Name","value":"type"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"data_leave"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"leavetype_id"}},{"kind":"Field","name":{"kind":"Name","value":"mas_leave_type"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"orderby"}}]}},{"kind":"Field","name":{"kind":"Name","value":"start_date"}},{"kind":"Field","name":{"kind":"Name","value":"end_date"}},{"kind":"Field","name":{"kind":"Name","value":"quantity_day"}},{"kind":"Field","name":{"kind":"Name","value":"quantity_hours"}},{"kind":"Field","name":{"kind":"Name","value":"detail_leave"}},{"kind":"Field","name":{"kind":"Name","value":"Status"}},{"kind":"Field","name":{"kind":"Name","value":"user_id"}}]}}]}}]}}]}}]} as unknown as DocumentNode<Getleava_DatameQuery, Getleava_DatameQueryVariables>;
+export const GetleavetypedataDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Getleavetypedata"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getleavetypedata"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"orderby"}}]}}]}}]} as unknown as DocumentNode<GetleavetypedataQuery, GetleavetypedataQueryVariables>;
+export const Createddata_LeaveDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"Createddata_leave"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"data"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"leave"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createddata_leave"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"data"},"value":{"kind":"Variable","name":{"kind":"Name","value":"data"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"message"}},{"kind":"Field","name":{"kind":"Name","value":"status"}}]}}]}}]} as unknown as DocumentNode<Createddata_LeaveMutation, Createddata_LeaveMutationVariables>;
+export const GetMasPositonDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getMasPositon"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getMasPositon"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"level"}},{"kind":"Field","name":{"kind":"Name","value":"code"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"mas_positionlevel2"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"code"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"level"}},{"kind":"Field","name":{"kind":"Name","value":"mas_positionlevel3"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"level"}},{"kind":"Field","name":{"kind":"Name","value":"code"}},{"kind":"Field","name":{"kind":"Name","value":"type"}}]}},{"kind":"Field","name":{"kind":"Name","value":"id"}}]}},{"kind":"Field","name":{"kind":"Name","value":"CompanyId"}},{"kind":"Field","name":{"kind":"Name","value":"Position_user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"user_id"}},{"kind":"Field","name":{"kind":"Name","value":"position1_id"}},{"kind":"Field","name":{"kind":"Name","value":"position2_id"}},{"kind":"Field","name":{"kind":"Name","value":"position3_id"}},{"kind":"Field","name":{"kind":"Name","value":"role"}},{"kind":"Field","name":{"kind":"Name","value":"headderId"}},{"kind":"Field","name":{"kind":"Name","value":"date"}}]}}]}}]}}]} as unknown as DocumentNode<GetMasPositonQuery, GetMasPositonQueryVariables>;
+export const Getposition_UserDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Getposition_user"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"getpositionUserId"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getposition_user"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"getpositionUserId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"password"}},{"kind":"Field","name":{"kind":"Name","value":"profile"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"firstname_th"}},{"kind":"Field","name":{"kind":"Name","value":"lastname_th"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"firstname_en"}},{"kind":"Field","name":{"kind":"Name","value":"lastname_en"}},{"kind":"Field","name":{"kind":"Name","value":"prefix_th"}},{"kind":"Field","name":{"kind":"Name","value":"prefix_en"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"position1_id"}},{"kind":"Field","name":{"kind":"Name","value":"mas_positionlevel1"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"level"}}]}},{"kind":"Field","name":{"kind":"Name","value":"position2_id"}},{"kind":"Field","name":{"kind":"Name","value":"mas_positionlevel2"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"level"}}]}},{"kind":"Field","name":{"kind":"Name","value":"position3_id"}},{"kind":"Field","name":{"kind":"Name","value":"mas_positionlevel3"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"level"}}]}},{"kind":"Field","name":{"kind":"Name","value":"role"}},{"kind":"Field","name":{"kind":"Name","value":"date"}},{"kind":"Field","name":{"kind":"Name","value":"header"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"profile"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"firstname_th"}},{"kind":"Field","name":{"kind":"Name","value":"lastname_th"}},{"kind":"Field","name":{"kind":"Name","value":"firstname_en"}},{"kind":"Field","name":{"kind":"Name","value":"lastname_en"}},{"kind":"Field","name":{"kind":"Name","value":"prefix_th"}},{"kind":"Field","name":{"kind":"Name","value":"prefix_en"}}]}}]}}]}}]}}]} as unknown as DocumentNode<Getposition_UserQuery, Getposition_UserQueryVariables>;
+export const GetpositionMeDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetpositionMe"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getpositionMe"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"profile"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"firstname_th"}},{"kind":"Field","name":{"kind":"Name","value":"lastname_th"}},{"kind":"Field","name":{"kind":"Name","value":"firstname_en"}},{"kind":"Field","name":{"kind":"Name","value":"lastname_en"}},{"kind":"Field","name":{"kind":"Name","value":"avatar"}},{"kind":"Field","name":{"kind":"Name","value":"dob"}},{"kind":"Field","name":{"kind":"Name","value":"userId"}},{"kind":"Field","name":{"kind":"Name","value":"start_date_work"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"header"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"profile"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"firstname_th"}},{"kind":"Field","name":{"kind":"Name","value":"lastname_th"}},{"kind":"Field","name":{"kind":"Name","value":"firstname_en"}},{"kind":"Field","name":{"kind":"Name","value":"lastname_en"}},{"kind":"Field","name":{"kind":"Name","value":"avatar"}},{"kind":"Field","name":{"kind":"Name","value":"dob"}},{"kind":"Field","name":{"kind":"Name","value":"start_date_work"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"position1_id"}},{"kind":"Field","name":{"kind":"Name","value":"position2_id"}},{"kind":"Field","name":{"kind":"Name","value":"position3_id"}},{"kind":"Field","name":{"kind":"Name","value":"role"}},{"kind":"Field","name":{"kind":"Name","value":"date"}},{"kind":"Field","name":{"kind":"Name","value":"mas_positionlevel1"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"level"}},{"kind":"Field","name":{"kind":"Name","value":"code"}},{"kind":"Field","name":{"kind":"Name","value":"type"}}]}},{"kind":"Field","name":{"kind":"Name","value":"mas_positionlevel2"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"level"}},{"kind":"Field","name":{"kind":"Name","value":"code"}},{"kind":"Field","name":{"kind":"Name","value":"type"}}]}},{"kind":"Field","name":{"kind":"Name","value":"mas_positionlevel3"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"level"}},{"kind":"Field","name":{"kind":"Name","value":"code"}},{"kind":"Field","name":{"kind":"Name","value":"type"}}]}}]}}]}}]} as unknown as DocumentNode<GetpositionMeQuery, GetpositionMeQueryVariables>;
+export const Createdposition_UserDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"Createdposition_user"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"data"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"position"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createdposition_user"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"data"},"value":{"kind":"Variable","name":{"kind":"Name","value":"data"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"message"}},{"kind":"Field","name":{"kind":"Name","value":"status"}}]}}]}}]} as unknown as DocumentNode<Createdposition_UserMutation, Createdposition_UserMutationVariables>;
+export const GetProvinceDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getProvince"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getProvince"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"district"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"amphoe"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"zipcode"}}]}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]}}]} as unknown as DocumentNode<GetProvinceQuery, GetProvinceQueryVariables>;
+export const GetcompanyRoleDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetcompanyRole"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getcompanyRole"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"access"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"status"}}]}}]}}]} as unknown as DocumentNode<GetcompanyRoleQuery, GetcompanyRoleQueryVariables>;
+export const GetcompanyRoleManagementDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetcompanyRoleManagement"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getcompanyRole"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"access"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]} as unknown as DocumentNode<GetcompanyRoleManagementQuery, GetcompanyRoleManagementQueryVariables>;
+export const UpdateRoleCompanyManagementDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"updateRoleCompanyManagement"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"data"}},"type":{"kind":"NonNullType","type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UpdateRoleCompanyMangementType"}}}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateRoleCompanyMangement"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"data"},"value":{"kind":"Variable","name":{"kind":"Name","value":"data"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"message"}},{"kind":"Field","name":{"kind":"Name","value":"status"}}]}}]}}]} as unknown as DocumentNode<UpdateRoleCompanyManagementMutation, UpdateRoleCompanyManagementMutationVariables>;
+export const Mas_BankDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Mas_bank"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"mas_bank"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]} as unknown as DocumentNode<Mas_BankQuery, Mas_BankQueryVariables>;
+export const Datasalary_MeeDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Datasalary_mee"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"datasalary_mee"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"profile"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"firstname_th"}},{"kind":"Field","name":{"kind":"Name","value":"lastname_th"}},{"kind":"Field","name":{"kind":"Name","value":"avatar"}}]}},{"kind":"Field","name":{"kind":"Name","value":"salary"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"month"}},{"kind":"Field","name":{"kind":"Name","value":"years"}},{"kind":"Field","name":{"kind":"Name","value":"net"}},{"kind":"Field","name":{"kind":"Name","value":"total_expense"}},{"kind":"Field","name":{"kind":"Name","value":"total_income"}},{"kind":"Field","name":{"kind":"Name","value":"provident_company"}},{"kind":"Field","name":{"kind":"Name","value":"provident_employee"}},{"kind":"Field","name":{"kind":"Name","value":"mas_bank"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"bookbank_log"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"bank_number"}}]}}]}}]}}]}}]} as unknown as DocumentNode<Datasalary_MeeQuery, Datasalary_MeeQueryVariables>;
+export const Data_SalaryDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Data_salary"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"fristname"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"position2"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"position3"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"data_salary"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"fristname"},"value":{"kind":"Variable","name":{"kind":"Name","value":"fristname"}}},{"kind":"Argument","name":{"kind":"Name","value":"Position2"},"value":{"kind":"Variable","name":{"kind":"Name","value":"position2"}}},{"kind":"Argument","name":{"kind":"Name","value":"Position3"},"value":{"kind":"Variable","name":{"kind":"Name","value":"position3"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"profile"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"firstname_th"}},{"kind":"Field","name":{"kind":"Name","value":"lastname_th"}},{"kind":"Field","name":{"kind":"Name","value":"prefix_th"}},{"kind":"Field","name":{"kind":"Name","value":"staff_code"}},{"kind":"Field","name":{"kind":"Name","value":"staff_status"}},{"kind":"Field","name":{"kind":"Name","value":"start_date_work"}},{"kind":"Field","name":{"kind":"Name","value":"userId"}},{"kind":"Field","name":{"kind":"Name","value":"employee_status"}}]}},{"kind":"Field","name":{"kind":"Name","value":"bookbank_log"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"base_salary"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"date"}},{"kind":"Field","name":{"kind":"Name","value":"bank_number"}},{"kind":"Field","name":{"kind":"Name","value":"mas_bank"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"mas_bankId"}},{"kind":"Field","name":{"kind":"Name","value":"all_collectId"}},{"kind":"Field","name":{"kind":"Name","value":"provident_com"}},{"kind":"Field","name":{"kind":"Name","value":"provident_emp"}},{"kind":"Field","name":{"kind":"Name","value":"userId"}}]}},{"kind":"Field","name":{"kind":"Name","value":"Position_user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"position2_id"}},{"kind":"Field","name":{"kind":"Name","value":"mas_positionlevel2"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"level"}},{"kind":"Field","name":{"kind":"Name","value":"code"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"positionlevel1_id"}}]}},{"kind":"Field","name":{"kind":"Name","value":"position3_id"}},{"kind":"Field","name":{"kind":"Name","value":"mas_positionlevel3"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"level"}},{"kind":"Field","name":{"kind":"Name","value":"code"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"positionlevel2_id"}}]}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"user_id"}},{"kind":"Field","name":{"kind":"Name","value":"position1_id"}},{"kind":"Field","name":{"kind":"Name","value":"role"}},{"kind":"Field","name":{"kind":"Name","value":"headderId"}},{"kind":"Field","name":{"kind":"Name","value":"date"}},{"kind":"Field","name":{"kind":"Name","value":"mas_positionlevel1"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"level"}},{"kind":"Field","name":{"kind":"Name","value":"code"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"CompanyId"}}]}}]}}]}}]}}]} as unknown as DocumentNode<Data_SalaryQuery, Data_SalaryQueryVariables>;
+export const SalaryDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Salary"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"userId"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"salary"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"userId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"userId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"profile"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"firstname_th"}},{"kind":"Field","name":{"kind":"Name","value":"lastname_th"}}]}},{"kind":"Field","name":{"kind":"Name","value":"salary"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"net"}},{"kind":"Field","name":{"kind":"Name","value":"month"}},{"kind":"Field","name":{"kind":"Name","value":"years"}}]}},{"kind":"Field","name":{"kind":"Name","value":"Position_user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"role"}},{"kind":"Field","name":{"kind":"Name","value":"user_id"}},{"kind":"Field","name":{"kind":"Name","value":"date"}},{"kind":"Field","name":{"kind":"Name","value":"mas_positionlevel3"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"bookbank_log"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"mas_bank"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"bank_number"}},{"kind":"Field","name":{"kind":"Name","value":"base_salary"}}]}},{"kind":"Field","name":{"kind":"Name","value":"companyBranch"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"company"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"address"}},{"kind":"Field","name":{"kind":"Name","value":"address_2"}}]}}]}}]}}]} as unknown as DocumentNode<SalaryQuery, SalaryQueryVariables>;
+export const CreateandupdatesalaryDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"Createandupdatesalary"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"data"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"salaryInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"Createandupdatesalary"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"data"},"value":{"kind":"Variable","name":{"kind":"Name","value":"data"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"message"}},{"kind":"Field","name":{"kind":"Name","value":"status"}}]}}]}}]} as unknown as DocumentNode<CreateandupdatesalaryMutation, CreateandupdatesalaryMutationVariables>;
+export const CreateAndUpdateExpenseComDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateAndUpdateExpenseCom"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"data"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"ExpenseComInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"CreateAndUpdateExpenseCom"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"data"},"value":{"kind":"Variable","name":{"kind":"Name","value":"data"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"message"}},{"kind":"Field","name":{"kind":"Name","value":"status"}}]}}]}}]} as unknown as DocumentNode<CreateAndUpdateExpenseComMutation, CreateAndUpdateExpenseComMutationVariables>;
+export const CreateandupdatebookbankDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"Createandupdatebookbank"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"data"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"bookbank_logInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"Createandupdatebookbank"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"data"},"value":{"kind":"Variable","name":{"kind":"Name","value":"data"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"message"}},{"kind":"Field","name":{"kind":"Name","value":"status"}}]}}]}}]} as unknown as DocumentNode<CreateandupdatebookbankMutation, CreateandupdatebookbankMutationVariables>;
+export const DeletebookbankDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"Deletebookbank"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"deletebookbankId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"Deletebookbank"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"deletebookbankId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"message"}},{"kind":"Field","name":{"kind":"Name","value":"status"}}]}}]}}]} as unknown as DocumentNode<DeletebookbankMutation, DeletebookbankMutationVariables>;
+export const Bookbank_Log_AdminDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Bookbank_log_admin"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"userId"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"bookbank_log_admin"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"userId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"userId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"date"}},{"kind":"Field","name":{"kind":"Name","value":"mas_bankId"}},{"kind":"Field","name":{"kind":"Name","value":"bank_number"}},{"kind":"Field","name":{"kind":"Name","value":"base_salary"}},{"kind":"Field","name":{"kind":"Name","value":"provident_com"}},{"kind":"Field","name":{"kind":"Name","value":"provident_emp"}},{"kind":"Field","name":{"kind":"Name","value":"mas_bank"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"userId"}}]}}]}}]} as unknown as DocumentNode<Bookbank_Log_AdminQuery, Bookbank_Log_AdminQueryVariables>;
+export const UsersDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Users"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"users"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"profile"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"address"}},{"kind":"Field","name":{"kind":"Name","value":"age"}},{"kind":"Field","name":{"kind":"Name","value":"avatar"}},{"kind":"Field","name":{"kind":"Name","value":"bio"}},{"kind":"Field","name":{"kind":"Name","value":"citizen_address"}},{"kind":"Field","name":{"kind":"Name","value":"citizen_addressnumber"}},{"kind":"Field","name":{"kind":"Name","value":"citizen_country"}},{"kind":"Field","name":{"kind":"Name","value":"citizen_district"}},{"kind":"Field","name":{"kind":"Name","value":"citizen_id"}},{"kind":"Field","name":{"kind":"Name","value":"citizen_province"}},{"kind":"Field","name":{"kind":"Name","value":"citizen_state"}},{"kind":"Field","name":{"kind":"Name","value":"citizen_tel"}},{"kind":"Field","name":{"kind":"Name","value":"citizen_zipcode"}},{"kind":"Field","name":{"kind":"Name","value":"contract_address"}},{"kind":"Field","name":{"kind":"Name","value":"contract_addressnumber"}},{"kind":"Field","name":{"kind":"Name","value":"contract_companyemail"}},{"kind":"Field","name":{"kind":"Name","value":"contract_country"}},{"kind":"Field","name":{"kind":"Name","value":"contract_district"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"firstname_th"}},{"kind":"Field","name":{"kind":"Name","value":"lastname_th"}},{"kind":"Field","name":{"kind":"Name","value":"firstname_en"}},{"kind":"Field","name":{"kind":"Name","value":"lastname_en"}},{"kind":"Field","name":{"kind":"Name","value":"dob"}},{"kind":"Field","name":{"kind":"Name","value":"relationship"}},{"kind":"Field","name":{"kind":"Name","value":"shirt_size"}},{"kind":"Field","name":{"kind":"Name","value":"prefix_th"}},{"kind":"Field","name":{"kind":"Name","value":"prefix_en"}},{"kind":"Field","name":{"kind":"Name","value":"social_id"}},{"kind":"Field","name":{"kind":"Name","value":"staff_status"}},{"kind":"Field","name":{"kind":"Name","value":"tel"}},{"kind":"Field","name":{"kind":"Name","value":"gender"}},{"kind":"Field","name":{"kind":"Name","value":"staff_code"}},{"kind":"Field","name":{"kind":"Name","value":"religion"}},{"kind":"Field","name":{"kind":"Name","value":"userId"}},{"kind":"Field","name":{"kind":"Name","value":"contract_sameCitizen"}},{"kind":"Field","name":{"kind":"Name","value":"contract_province"}},{"kind":"Field","name":{"kind":"Name","value":"contract_state"}},{"kind":"Field","name":{"kind":"Name","value":"contract_zipcode"}},{"kind":"Field","name":{"kind":"Name","value":"contract_email"}},{"kind":"Field","name":{"kind":"Name","value":"social_facebook"}},{"kind":"Field","name":{"kind":"Name","value":"social_likedin"}},{"kind":"Field","name":{"kind":"Name","value":"social_line"}},{"kind":"Field","name":{"kind":"Name","value":"social_telegram"}},{"kind":"Field","name":{"kind":"Name","value":"nickname"}},{"kind":"Field","name":{"kind":"Name","value":"blood_type"}},{"kind":"Field","name":{"kind":"Name","value":"employee_status"}},{"kind":"Field","name":{"kind":"Name","value":"start_date_work"}},{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"password"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"Role_Company"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"Position_user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"date"}},{"kind":"Field","name":{"kind":"Name","value":"mas_positionlevel1"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"level"}},{"kind":"Field","name":{"kind":"Name","value":"code"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"CompanyId"}}]}},{"kind":"Field","name":{"kind":"Name","value":"mas_positionlevel2"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"level"}},{"kind":"Field","name":{"kind":"Name","value":"code"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"positionlevel1_id"}}]}},{"kind":"Field","name":{"kind":"Name","value":"mas_positionlevel3"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"level"}},{"kind":"Field","name":{"kind":"Name","value":"code"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"positionlevel2_id"}}]}}]}}]}}]}}]} as unknown as DocumentNode<UsersQuery, UsersQueryVariables>;
