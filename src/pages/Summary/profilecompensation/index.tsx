@@ -418,7 +418,15 @@ const Compensation: React.FC = () => {
                     </div>
                 </div>
 
-                <Form layout="horizontal" form={form} onFinish={onSubmitForm} >
+                <Form  layout="horizontal" onValuesChange={(value,all)=>{
+                    console.log(value,all)
+                    const sum=()=>{
+                        let sumval = parseFloat(all.base_salary  ?  all.base_salary : 0) + parseFloat(all.commission ? all.commission : 0) + parseFloat(all.position_income ? all.position_income : 0);
+                        console.log(sumval);
+                        form.setFieldValue('total_income',(sumval).toString())
+                    }
+                    sum();
+                }} form={form} onFinish={onSubmitForm} >
                     <Row>
                         <Col xs={24} sm={24} md={24} lg={24} xl={24}>
                             <Form.Item name="date" label={'เดือน/ปี'} className='ml-[82px]'>
