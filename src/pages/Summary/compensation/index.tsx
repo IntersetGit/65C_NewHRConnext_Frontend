@@ -25,6 +25,7 @@ import type { CheckboxValueType } from 'antd/es/checkbox/Group';
 import { useState } from 'react';
 import Swal from 'sweetalert2';
 import moment from 'moment';
+import { useAuth } from '../../../hooks/useAuth';
 
 import { useQuery, useMutation, from } from '@apollo/client';
 import { FETCH_SELECT_BOOK_BANK, FETCH_AllSALARY_BASE, CREATE_ExpenseCom } from '../../../service/graphql/Summary';
@@ -37,6 +38,9 @@ const Compensation: React.FC = () => {
   const [form] = Form.useForm<any>();
   const navigate = useNavigate();
   const location = useLocation();
+  const { company } = useAuth();
+  console.log('aaa', company)
+
   let propsstate = location.state as any;
   const [selectedRow, setSelectedRow] = useState<any>();
 
@@ -109,6 +113,7 @@ const Compensation: React.FC = () => {
               date: new Date(),
               vat_per: parseFloat(value.vat_per),
               ss_per: parseFloat(value.ss_per),
+              companyBranchId: company?.branchId as any,
             },
           },
         })

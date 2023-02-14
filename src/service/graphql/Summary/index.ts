@@ -9,35 +9,6 @@ query Mas_bank {
   }
 `);
 
-export const FETCH_DATA_SUMMARY = gql(`
-query Datasalary_mee {
-  datasalary_mee {
-    email
-    id
-    profile {
-      firstname_th
-      lastname_th
-      avatar
-    }
-    salary {
-      month
-      years
-      net
-      total_expense
-      total_income
-      provident_company
-      provident_employee
-      mas_bank {
-        name
-      }
-      bookbank_log {
-        bank_number
-      }
-    }
-  }
-}
-`);
-
 export const FETCH_AllSALARY_BASE = gql(`
 query Data_salary($fristname: String, $position2: String, $position3: String) {
   data_salary(fristname: $fristname, Position2: $position2, Position3: $position3) {
@@ -102,30 +73,60 @@ query Data_salary($fristname: String, $position2: String, $position3: String) {
         CompanyId
       }
     }
+    companyBranchId
   }
 }
 `);
 
 export const FETCH_AllSALARY_USER = gql(`
-query Salary($userId: String) {
-  salary(userId: $userId) {
+query Salary($userId: String, $years: String) {
+  salary(userId: $userId, years: $years) {
     id
     profile {
+      id
+      prefix_th
       firstname_th
       lastname_th
     }
     salary {
-      net
       month
       years
-    }
-    Position_user {
-      role
-      user_id
+      total_income
+      total_expense
+      net
+      id
+      commission
+      position_income
+      ot
+      bonus
+      special_income
+      other_income
+      travel_income
+      bursary
+      welfare_money
+      vatper
+      ss_per
+      vat
+      social_security
+      miss
+      ra
+      late
+      other
+      provident_employee
+      provident_company
+      userId
+      bookbank_logId
+      mas_income_typeId
       date
-      mas_positionlevel3 {
-        name
-      }
+      mas_salary_statusId
+      provident_date
+      pro_employee
+      pro_company
+      mas_all_collectId
+      socialYears
+      vatYears
+      incomeYears
+      mas_bankId
     }
     bookbank_log {
       mas_bank {
@@ -133,13 +134,6 @@ query Salary($userId: String) {
       }
       bank_number
       base_salary
-    }
-    companyBranch {
-      company {
-        name
-      }
-      address
-      address_2
     }
   }
 }
