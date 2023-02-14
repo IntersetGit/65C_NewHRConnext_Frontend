@@ -19,22 +19,25 @@ import {
 import type { DatePickerProps } from 'antd';
 import { AntDesignOutlined, MoreOutlined } from '@ant-design/icons';
 import Swal from 'sweetalert2';
-
 import { GiReceiveMoney } from 'react-icons/gi';
 import type { ColumnsType } from 'antd/es/table';
-
+import type { RangePickerProps } from 'antd/es/date-picker';
 import edit from '../../../assets/Edit.png';
 import Slip from '../../../assets/Slip.png';
 import View from '../../../assets/View.png';
 import Cal1 from '../../../assets/Cal1.png';
 
 import moment from 'moment';
+import th from 'antd/locale/th_TH'
 import { generatePath, useNavigate, useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { useMutation, useQuery } from '@apollo/client';
 
-import { FETCH_AllSALARY_USER, CREATE_SALARY_USER } from '../../../service/graphql/Summary';
-// import { FETCH_GETALLUSER, } from '../../../service/graphql/Users';
+import {
+    FETCH_AllSALARY_USER,
+    CREATE_SALARY_USER,
+} from '../../../service/graphql/Summary';
+
 import {
     FETCH_GETALL_POSITION,
     CRETE_POSITION_USER,
@@ -58,8 +61,10 @@ const Compensation: React.FC = () => {
 
     // const { data: header } = useQuery(FETCH_GETALLUSER);
     const { data: position_data } = useQuery(FETCH_GETALL_POSITION);
-    const { data: TableDataSalary, refetch } = useQuery(FETCH_AllSALARY_USER, { variables: { userId: propsstate?.userId } });
-    console.log("Data", TableDataSalary)
+    const { data: TableDataSalary, refetch } = useQuery(FETCH_AllSALARY_USER, {
+        variables: { userId: propsstate?.userId },
+    });
+    console.log("DataT", TableDataSalary)
     const [creteSalaryUser] = useMutation(CREATE_SALARY_USER);
 
     // const onFilterData = async (userId: any) => {
@@ -217,7 +222,7 @@ const Compensation: React.FC = () => {
             title: 'เดือน/ปี',
             key: 'date',
             align: 'center',
-            render: (record: any) => moment(record).format('MM' + ' ' + 'YYYY') as any,
+            render: (text: any, record: any) => text ? moment(`${record.month}/${record.years}`, 'MM/YYYY').format('MMMM' + ' ' + 'YYYY') as any : '',
         },
         {
             title: 'รายได้รวม',
@@ -225,7 +230,7 @@ const Compensation: React.FC = () => {
             dataIndex: 'total_income',
             align: 'center',
             render: (record) => {
-                return record?.salary?.total_income;
+                return record?.salary?.salary?.total_income ?? '-';
             },
         },
         {
@@ -233,18 +238,31 @@ const Compensation: React.FC = () => {
             key: 'total_expense',
             dataIndex: 'total_expense',
             align: 'center',
+            render: (record) => {
+                return record?.salary?.salary?.total_expense ?? '-';
+            },
         },
         {
             title: 'รายได้สุทธิ',
             key: 'net',
             dataIndex: 'net',
             align: 'center',
+            render: (record) => {
+                return <div>{record.toFixed(2)}</div>;
+            },
         },
         {
             title: 'สถานะ',
-            key: 'status',
-            dataIndex: 'status',
+            key: 'mas_salary_statusId',
+            dataIndex: 'mas_salary_statusId',
             align: 'center',
+            render: (record) => {
+                if (record == '765d31b6-ab63-11ed-afa1-0242ac120002') {
+                    return "คำนวณสำเร็จ"
+                }
+
+            },
+
         },
         {
             title: 'Action',
@@ -263,6 +281,18 @@ const Compensation: React.FC = () => {
         },
     ];
 
+    const disabledDate: RangePickerProps['disabledDate'] = current => {
+        const getmount = TableDataSalary?.salary;
+        // console.log('getmount', getmount)
+        // console.log('current && current ', current)
+        return current && current < moment().endOf('day');
+    };
+
+    // const onChangeCalculate: any = salary: any, value: any) => {
+    //     const num = value?.base_salary + value?.commission;
+
+    // }
+    // console.log(onChangeCalculate)
     return (
         <>
             <div className="flex text-3xl ml-2 pt-4">
@@ -369,7 +399,7 @@ const Compensation: React.FC = () => {
 
             </Card>
             <Card className="shadow-xl mt-4">
-                <Table columns={columns} dataSource={TableDataSalary?.salary as any} /></Card>
+                <Table columns={columns} dataSource={TableDataSalary?.salary?.salary as any} /></Card>
 
             <Drawer
                 title={`${drawerType === 1 ? "คำนวณเงินเดือน"
@@ -396,7 +426,9 @@ const Compensation: React.FC = () => {
                         <Col xs={24} sm={24} md={24} lg={24} xl={24}>
                             <Form.Item name="date" label={'เดือน/ปี'} className='ml-[82px]'>
                                 <DatePicker onChange={onChangeDate} picker="month" format={'MM/YYYY'}
-                                    disabled={drawerType === 3 ? true : false} />
+                                    disabled={drawerType === 3 ? true : false}
+                                    disabledDate={disabledDate}
+                                />
                             </Form.Item>
                         </Col>
                     </Row>

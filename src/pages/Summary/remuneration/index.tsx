@@ -49,7 +49,7 @@ const { useToken } = theme;
 const Remuneration: React.FC = () => {
   const token = useToken();
   const location = useLocation();
-  const propsstate = location.state as any;
+  let propsstate = location.state as any;
 
   const [open, setOpen] = useState(false);
   const [form] = Form.useForm<any>();

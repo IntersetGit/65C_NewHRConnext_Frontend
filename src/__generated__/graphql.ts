@@ -615,6 +615,7 @@ export type Position_User = {
   __typename?: 'Position_user';
   date?: Maybe<Scalars['Date']>;
   headderId?: Maybe<Scalars['String']>;
+  header?: Maybe<User>;
   id?: Maybe<Scalars['ID']>;
   mas_positionlevel1?: Maybe<Mas_Positionlevel1>;
   mas_positionlevel2?: Maybe<Mas_Positionlevel2>;
@@ -695,7 +696,6 @@ export type Query = {
   bookbank_log_admin?: Maybe<Array<Maybe<Bookbank_Log_Type>>>;
   company?: Maybe<ResponseCompany>;
   data_salary?: Maybe<Array<Maybe<Data_Salary>>>;
-  datasalary_mee?: Maybe<Array<Maybe<Data_Salary_Me>>>;
   getAllcompany?: Maybe<Array<Maybe<CompanyBranch>>>;
   getAllleave?: Maybe<Array<Maybe<Leave_Data>>>;
   getMasPositon?: Maybe<Array<Maybe<Mas_Positionlevel1>>>;
@@ -710,8 +710,9 @@ export type Query = {
   mas_all_collect?: Maybe<Mas_All_Collect>;
   mas_bank?: Maybe<Array<Maybe<Mas_Bank>>>;
   me?: Maybe<Me>;
+  mydata_salary?: Maybe<Data_Salary>;
   provident_log?: Maybe<Array<Maybe<Provident_Log>>>;
-  salary?: Maybe<Array<Maybe<Data_Salary>>>;
+  salary?: Maybe<Data_Salary>;
   salary_inmonthSlip?: Maybe<Array<Maybe<Data_Salary>>>;
   users?: Maybe<Array<Maybe<User>>>;
   verifyCompanycode?: Maybe<Scalars['Boolean']>;
@@ -742,11 +743,6 @@ export type QueryData_SalaryArgs = {
 };
 
 
-export type QueryDatasalary_MeeArgs = {
-  date?: InputMaybe<Scalars['String']>;
-};
-
-
 export type QueryGetAllcompanyArgs = {
   name?: InputMaybe<Scalars['String']>;
 };
@@ -767,6 +763,11 @@ export type QueryGetleava_AlldataArgs = {
 };
 
 
+export type QueryGetleava_DatameArgs = {
+  dataleaveId?: InputMaybe<Scalars['ID']>;
+};
+
+
 export type QueryGetposition_UserArgs = {
   id?: InputMaybe<Scalars['ID']>;
 };
@@ -777,6 +778,11 @@ export type QueryMas_BankArgs = {
 };
 
 
+export type QueryMydata_SalaryArgs = {
+  years?: InputMaybe<Scalars['String']>;
+};
+
+
 export type QueryProvident_LogArgs = {
   userId?: InputMaybe<Scalars['String']>;
 };
@@ -784,6 +790,7 @@ export type QueryProvident_LogArgs = {
 
 export type QuerySalaryArgs = {
   userId?: InputMaybe<Scalars['String']>;
+  years?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -1204,6 +1211,19 @@ export type Leave_Data = {
   start_date?: Maybe<Scalars['Date']>;
   user?: Maybe<User>;
   user_id?: Maybe<Scalars['String']>;
+};
+
+export type Log_Positionn = {
+  __typename?: 'log_positionn';
+  Position_user?: Maybe<Array<Maybe<Position_User>>>;
+  cretedBy?: Maybe<Scalars['String']>;
+  cretedByfk?: Maybe<User>;
+  creteddate?: Maybe<Scalars['Date']>;
+  id?: Maybe<Scalars['ID']>;
+  positionId?: Maybe<Scalars['String']>;
+  updtedBy?: Maybe<Scalars['String']>;
+  updtedByfk?: Maybe<User>;
+  updteddate?: Maybe<Scalars['Date']>;
 };
 
 export type Mas_All_Collect = {
@@ -1655,11 +1675,6 @@ export type Mas_BankQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type Mas_BankQuery = { __typename?: 'Query', mas_bank?: Array<{ __typename?: 'mas_bank', id?: string | null, name?: string | null } | null> | null };
 
-export type Datasalary_MeeQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type Datasalary_MeeQuery = { __typename?: 'Query', datasalary_mee?: Array<{ __typename?: 'data_salary_me', email?: string | null, id: string, profile?: { __typename?: 'Profile', firstname_th?: string | null, lastname_th?: string | null, avatar?: string | null } | null, salary?: Array<{ __typename?: 'salary', month?: string | null, years?: string | null, net?: number | null, total_expense?: number | null, total_income?: number | null, provident_company?: number | null, provident_employee?: number | null, mas_bank?: { __typename?: 'mas_bank', name?: string | null } | null, bookbank_log?: { __typename?: 'Bookbank_log_type', bank_number?: string | null } | null } | null> | null } | null> | null };
-
 export type Data_SalaryQueryVariables = Exact<{
   fristname?: InputMaybe<Scalars['String']>;
   position2?: InputMaybe<Scalars['String']>;
@@ -1671,10 +1686,11 @@ export type Data_SalaryQuery = { __typename?: 'Query', data_salary?: Array<{ __t
 
 export type SalaryQueryVariables = Exact<{
   userId?: InputMaybe<Scalars['String']>;
+  years?: InputMaybe<Scalars['String']>;
 }>;
 
 
-export type SalaryQuery = { __typename?: 'Query', salary?: Array<{ __typename?: 'data_salary', id: string, profile?: { __typename?: 'Profile', firstname_th?: string | null, lastname_th?: string | null } | null, salary?: Array<{ __typename?: 'salary', net?: number | null, month?: string | null, years?: string | null } | null> | null, Position_user?: Array<{ __typename?: 'Position_user', role?: string | null, user_id?: string | null, date?: any | null, mas_positionlevel3?: { __typename?: 'mas_positionlevel3', name?: string | null } | null } | null> | null, bookbank_log?: Array<{ __typename?: 'Bookbank_log_type', bank_number?: string | null, base_salary?: number | null, mas_bank?: { __typename?: 'mas_bank', name?: string | null } | null } | null> | null, companyBranch?: { __typename?: 'CompanyBranch', address?: string | null, address_2?: string | null, company?: { __typename?: 'Company', name?: string | null } | null } | null } | null> | null };
+export type SalaryQuery = { __typename?: 'Query', salary?: { __typename?: 'data_salary', id: string, profile?: { __typename?: 'Profile', id: string, prefix_th?: string | null, firstname_th?: string | null, lastname_th?: string | null } | null, salary?: Array<{ __typename?: 'salary', month?: string | null, years?: string | null, total_income?: number | null, total_expense?: number | null, net?: number | null, id?: string | null, commission?: number | null, position_income?: number | null, ot?: number | null, bonus?: number | null, special_income?: number | null, other_income?: number | null, travel_income?: number | null, bursary?: number | null, welfare_money?: number | null, vatper?: number | null, ss_per?: number | null, vat?: number | null, social_security?: number | null, miss?: number | null, ra?: number | null, late?: number | null, other?: number | null, provident_employee?: number | null, provident_company?: number | null, userId?: string | null, bookbank_logId?: string | null, mas_income_typeId?: string | null, date?: any | null, mas_salary_statusId?: string | null, provident_date?: any | null, pro_employee?: number | null, pro_company?: number | null, mas_all_collectId?: string | null, socialYears?: number | null, vatYears?: number | null, incomeYears?: number | null, mas_bankId?: string | null } | null> | null, bookbank_log?: Array<{ __typename?: 'Bookbank_log_type', bank_number?: string | null, base_salary?: number | null, mas_bank?: { __typename?: 'mas_bank', name?: string | null } | null } | null> | null } | null };
 
 export type CreateandupdatesalaryMutationVariables = Exact<{
   data?: InputMaybe<SalaryInput>;
@@ -1748,9 +1764,8 @@ export const GetcompanyRoleDocument = {"kind":"Document","definitions":[{"kind":
 export const GetcompanyRoleManagementDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetcompanyRoleManagement"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getcompanyRole"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"access"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]} as unknown as DocumentNode<GetcompanyRoleManagementQuery, GetcompanyRoleManagementQueryVariables>;
 export const UpdateRoleCompanyManagementDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"updateRoleCompanyManagement"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"data"}},"type":{"kind":"NonNullType","type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UpdateRoleCompanyMangementType"}}}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateRoleCompanyMangement"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"data"},"value":{"kind":"Variable","name":{"kind":"Name","value":"data"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"message"}},{"kind":"Field","name":{"kind":"Name","value":"status"}}]}}]}}]} as unknown as DocumentNode<UpdateRoleCompanyManagementMutation, UpdateRoleCompanyManagementMutationVariables>;
 export const Mas_BankDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Mas_bank"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"mas_bank"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]} as unknown as DocumentNode<Mas_BankQuery, Mas_BankQueryVariables>;
-export const Datasalary_MeeDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Datasalary_mee"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"datasalary_mee"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"profile"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"firstname_th"}},{"kind":"Field","name":{"kind":"Name","value":"lastname_th"}},{"kind":"Field","name":{"kind":"Name","value":"avatar"}}]}},{"kind":"Field","name":{"kind":"Name","value":"salary"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"month"}},{"kind":"Field","name":{"kind":"Name","value":"years"}},{"kind":"Field","name":{"kind":"Name","value":"net"}},{"kind":"Field","name":{"kind":"Name","value":"total_expense"}},{"kind":"Field","name":{"kind":"Name","value":"total_income"}},{"kind":"Field","name":{"kind":"Name","value":"provident_company"}},{"kind":"Field","name":{"kind":"Name","value":"provident_employee"}},{"kind":"Field","name":{"kind":"Name","value":"mas_bank"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"bookbank_log"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"bank_number"}}]}}]}}]}}]}}]} as unknown as DocumentNode<Datasalary_MeeQuery, Datasalary_MeeQueryVariables>;
 export const Data_SalaryDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Data_salary"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"fristname"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"position2"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"position3"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"data_salary"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"fristname"},"value":{"kind":"Variable","name":{"kind":"Name","value":"fristname"}}},{"kind":"Argument","name":{"kind":"Name","value":"Position2"},"value":{"kind":"Variable","name":{"kind":"Name","value":"position2"}}},{"kind":"Argument","name":{"kind":"Name","value":"Position3"},"value":{"kind":"Variable","name":{"kind":"Name","value":"position3"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"profile"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"firstname_th"}},{"kind":"Field","name":{"kind":"Name","value":"lastname_th"}},{"kind":"Field","name":{"kind":"Name","value":"prefix_th"}},{"kind":"Field","name":{"kind":"Name","value":"staff_code"}},{"kind":"Field","name":{"kind":"Name","value":"staff_status"}},{"kind":"Field","name":{"kind":"Name","value":"start_date_work"}},{"kind":"Field","name":{"kind":"Name","value":"userId"}},{"kind":"Field","name":{"kind":"Name","value":"employee_status"}}]}},{"kind":"Field","name":{"kind":"Name","value":"bookbank_log"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"base_salary"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"date"}},{"kind":"Field","name":{"kind":"Name","value":"bank_number"}},{"kind":"Field","name":{"kind":"Name","value":"mas_bank"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"mas_bankId"}},{"kind":"Field","name":{"kind":"Name","value":"all_collectId"}},{"kind":"Field","name":{"kind":"Name","value":"provident_com"}},{"kind":"Field","name":{"kind":"Name","value":"provident_emp"}},{"kind":"Field","name":{"kind":"Name","value":"userId"}}]}},{"kind":"Field","name":{"kind":"Name","value":"Position_user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"position2_id"}},{"kind":"Field","name":{"kind":"Name","value":"mas_positionlevel2"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"level"}},{"kind":"Field","name":{"kind":"Name","value":"code"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"positionlevel1_id"}}]}},{"kind":"Field","name":{"kind":"Name","value":"position3_id"}},{"kind":"Field","name":{"kind":"Name","value":"mas_positionlevel3"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"level"}},{"kind":"Field","name":{"kind":"Name","value":"code"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"positionlevel2_id"}}]}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"user_id"}},{"kind":"Field","name":{"kind":"Name","value":"position1_id"}},{"kind":"Field","name":{"kind":"Name","value":"role"}},{"kind":"Field","name":{"kind":"Name","value":"headderId"}},{"kind":"Field","name":{"kind":"Name","value":"date"}},{"kind":"Field","name":{"kind":"Name","value":"mas_positionlevel1"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"level"}},{"kind":"Field","name":{"kind":"Name","value":"code"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"CompanyId"}}]}}]}}]}}]}}]} as unknown as DocumentNode<Data_SalaryQuery, Data_SalaryQueryVariables>;
-export const SalaryDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Salary"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"userId"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"salary"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"userId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"userId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"profile"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"firstname_th"}},{"kind":"Field","name":{"kind":"Name","value":"lastname_th"}}]}},{"kind":"Field","name":{"kind":"Name","value":"salary"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"net"}},{"kind":"Field","name":{"kind":"Name","value":"month"}},{"kind":"Field","name":{"kind":"Name","value":"years"}}]}},{"kind":"Field","name":{"kind":"Name","value":"Position_user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"role"}},{"kind":"Field","name":{"kind":"Name","value":"user_id"}},{"kind":"Field","name":{"kind":"Name","value":"date"}},{"kind":"Field","name":{"kind":"Name","value":"mas_positionlevel3"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"bookbank_log"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"mas_bank"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"bank_number"}},{"kind":"Field","name":{"kind":"Name","value":"base_salary"}}]}},{"kind":"Field","name":{"kind":"Name","value":"companyBranch"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"company"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"address"}},{"kind":"Field","name":{"kind":"Name","value":"address_2"}}]}}]}}]}}]} as unknown as DocumentNode<SalaryQuery, SalaryQueryVariables>;
+export const SalaryDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Salary"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"userId"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"years"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"salary"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"userId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"userId"}}},{"kind":"Argument","name":{"kind":"Name","value":"years"},"value":{"kind":"Variable","name":{"kind":"Name","value":"years"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"profile"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"prefix_th"}},{"kind":"Field","name":{"kind":"Name","value":"firstname_th"}},{"kind":"Field","name":{"kind":"Name","value":"lastname_th"}}]}},{"kind":"Field","name":{"kind":"Name","value":"salary"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"month"}},{"kind":"Field","name":{"kind":"Name","value":"years"}},{"kind":"Field","name":{"kind":"Name","value":"total_income"}},{"kind":"Field","name":{"kind":"Name","value":"total_expense"}},{"kind":"Field","name":{"kind":"Name","value":"net"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"commission"}},{"kind":"Field","name":{"kind":"Name","value":"position_income"}},{"kind":"Field","name":{"kind":"Name","value":"ot"}},{"kind":"Field","name":{"kind":"Name","value":"bonus"}},{"kind":"Field","name":{"kind":"Name","value":"special_income"}},{"kind":"Field","name":{"kind":"Name","value":"other_income"}},{"kind":"Field","name":{"kind":"Name","value":"travel_income"}},{"kind":"Field","name":{"kind":"Name","value":"bursary"}},{"kind":"Field","name":{"kind":"Name","value":"welfare_money"}},{"kind":"Field","name":{"kind":"Name","value":"vatper"}},{"kind":"Field","name":{"kind":"Name","value":"ss_per"}},{"kind":"Field","name":{"kind":"Name","value":"vat"}},{"kind":"Field","name":{"kind":"Name","value":"social_security"}},{"kind":"Field","name":{"kind":"Name","value":"miss"}},{"kind":"Field","name":{"kind":"Name","value":"ra"}},{"kind":"Field","name":{"kind":"Name","value":"late"}},{"kind":"Field","name":{"kind":"Name","value":"other"}},{"kind":"Field","name":{"kind":"Name","value":"provident_employee"}},{"kind":"Field","name":{"kind":"Name","value":"provident_company"}},{"kind":"Field","name":{"kind":"Name","value":"userId"}},{"kind":"Field","name":{"kind":"Name","value":"bookbank_logId"}},{"kind":"Field","name":{"kind":"Name","value":"mas_income_typeId"}},{"kind":"Field","name":{"kind":"Name","value":"date"}},{"kind":"Field","name":{"kind":"Name","value":"mas_salary_statusId"}},{"kind":"Field","name":{"kind":"Name","value":"provident_date"}},{"kind":"Field","name":{"kind":"Name","value":"pro_employee"}},{"kind":"Field","name":{"kind":"Name","value":"pro_company"}},{"kind":"Field","name":{"kind":"Name","value":"mas_all_collectId"}},{"kind":"Field","name":{"kind":"Name","value":"socialYears"}},{"kind":"Field","name":{"kind":"Name","value":"vatYears"}},{"kind":"Field","name":{"kind":"Name","value":"incomeYears"}},{"kind":"Field","name":{"kind":"Name","value":"mas_bankId"}}]}},{"kind":"Field","name":{"kind":"Name","value":"bookbank_log"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"mas_bank"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"bank_number"}},{"kind":"Field","name":{"kind":"Name","value":"base_salary"}}]}}]}}]}}]} as unknown as DocumentNode<SalaryQuery, SalaryQueryVariables>;
 export const CreateandupdatesalaryDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"Createandupdatesalary"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"data"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"salaryInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"Createandupdatesalary"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"data"},"value":{"kind":"Variable","name":{"kind":"Name","value":"data"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"message"}},{"kind":"Field","name":{"kind":"Name","value":"status"}}]}}]}}]} as unknown as DocumentNode<CreateandupdatesalaryMutation, CreateandupdatesalaryMutationVariables>;
 export const CreateAndUpdateExpenseComDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateAndUpdateExpenseCom"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"data"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"ExpenseComInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"CreateAndUpdateExpenseCom"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"data"},"value":{"kind":"Variable","name":{"kind":"Name","value":"data"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"message"}},{"kind":"Field","name":{"kind":"Name","value":"status"}}]}}]}}]} as unknown as DocumentNode<CreateAndUpdateExpenseComMutation, CreateAndUpdateExpenseComMutationVariables>;
 export const CreateandupdatebookbankDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"Createandupdatebookbank"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"data"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"bookbank_logInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"Createandupdatebookbank"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"data"},"value":{"kind":"Variable","name":{"kind":"Name","value":"data"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"message"}},{"kind":"Field","name":{"kind":"Name","value":"status"}}]}}]}}]} as unknown as DocumentNode<CreateandupdatebookbankMutation, CreateandupdatebookbankMutationVariables>;
