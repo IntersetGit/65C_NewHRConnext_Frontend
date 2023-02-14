@@ -140,13 +140,31 @@ export const routing: RoutingType[] = [
           {
             label: 'ข้อมูลของฉัน',
             path: '/:companycode/profile/profile',
-            element: <ProfileEmployee />,
+            element: (
+              <ProfileEmployee
+                role={{
+                  add: { action: 'add', subject: 'manageSelfDetail' },
+                  edit: { action: 'edit', subject: 'manageSelfDetail' },
+                  delete: { action: 'delete', subject: 'manageSelfDetail' },
+                  read: { action: 'read', subject: 'manageSelfDetail' },
+                }}
+              />
+            ),
             requireRole: { action: 'read', subject: 'manageSelfDetail' },
           },
           {
             label: 'ตำแหน่งงานของฉัน',
             path: '/:companycode/profile/position',
-            element: <ProfilePosition />,
+            element: (
+              <ProfilePosition
+                role={{
+                  add: { action: 'add', subject: 'manageSelfPosition' },
+                  edit: { action: 'edit', subject: 'manageSelfPosition' },
+                  delete: { action: 'delete', subject: 'manageSelfPosition' },
+                  read: { action: 'read', subject: 'manageSelfPosition' },
+                }}
+              />
+            ),
             requireRole: { action: 'read', subject: 'manageSelfPosition' },
           },
           // {
@@ -158,7 +176,16 @@ export const routing: RoutingType[] = [
           {
             label: 'การลา',
             path: '/:companycode/profile/approve',
-            element: <ProfileApprove />,
+            element: (
+              <ProfileApprove
+                role={{
+                  add: { action: 'add', subject: 'manageSelfLeave' },
+                  edit: { action: 'edit', subject: 'manageSelfLeave' },
+                  delete: { action: 'delete', subject: 'manageSelfLeave' },
+                  read: { action: 'read', subject: 'manageSelfLeave' },
+                }}
+              />
+            ),
             requireRole: { action: 'read', subject: 'manageSelfLeave' },
           },
         ],
@@ -172,18 +199,30 @@ export const routing: RoutingType[] = [
         children: [
           {
             path: '/:companycode/company',
-            element: <Company />,
+            element: (
+              <Company
+                role={{
+                  add: { action: 'add', subject: 'manageCompany' },
+                  edit: { action: 'edit', subject: 'manageCompany' },
+                  delete: { action: 'delete', subject: 'manageCompany' },
+                  read: { action: 'read', subject: 'manageCompany' },
+                }}
+              />
+            ),
             hideInmenu: true,
+            requireRole: { action: 'read', subject: 'manageCompany' },
           },
           {
             path: '/:companycode/company/newCompany',
             element: <ManageCompanyData />,
             hideInmenu: true,
+            requireRole: { action: 'read', subject: 'manageCompanydetail' },
           },
           {
             path: '/:companycode/company/CompanyStructure',
             element: <CompanyStructure />,
             hideInmenu: true,
+            requireRole: { action: 'read', subject: 'manageCompanystructure' },
           },
         ],
       },

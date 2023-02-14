@@ -39,8 +39,13 @@ import {
 import { useQuery, useMutation } from '@apollo/client';
 import moment from 'moment';
 import Swal from 'sweetalert2';
+import { PageRoleAndPermissionType } from '../../../../context/AuthContext';
 
-const ProfileApprove: React.FC = () => {
+type ProfileApprovePropsType = {
+  role?: PageRoleAndPermissionType;
+};
+
+const ProfileApprove: React.FC<ProfileApprovePropsType> = ({ role }) => {
   const [open, setOpen] = useState(false);
   const [form] = Form.useForm();
   const token = useToken();

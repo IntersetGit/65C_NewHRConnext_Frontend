@@ -34,6 +34,8 @@ import {
 } from '../../../../service/graphql/Position';
 import { FETCH_GETALLUSER } from '../../../../service/graphql/Users';
 import Swal from 'sweetalert2';
+import { PageRoleAndPermissionType } from '../../../../context/AuthContext';
+import { useAuth } from '../../../../hooks/useAuth';
 
 const { useToken } = theme;
 
@@ -44,6 +46,10 @@ interface DataType {
   role: string;
   boss: string;
 }
+
+type ProfilePositionPropsType = {
+  role?: PageRoleAndPermissionType;
+};
 
 const GET_ME = gql(`
 query Me {
@@ -125,7 +131,7 @@ query Me {
   }
 }`);
 
-const ProfilePosition: React.FC = (props) => {
+const ProfilePosition: React.FC<ProfilePositionPropsType> = ({ role }) => {
   const [form] = Form.useForm();
   const token = useToken();
   const [drawerType, setDrawerType] = useState(1);
@@ -142,6 +148,7 @@ const ProfilePosition: React.FC = (props) => {
   const [maspositionlevel2, setMasPostionLevel2] = useState<
     { value?: string | null; label?: string | null }[] | undefined
   >(undefined);
+  const { ability } = useAuth();
 
   const header_data = header?.users?.map((e) => {
     return {
@@ -442,17 +449,22 @@ const ProfilePosition: React.FC = (props) => {
           }}
         >
           ตำแหน่ง / หน้าที่
-          <Button
-            type="primary"
-            style={{
-              backgroundColor: token.token.colorPrimary,
-            }}
-            onClick={() => {
-              showDrawer(1);
-            }}
-          >
-            + Update ตำแหน่งงานปัจจุบัน
-          </Button>
+          {ability.can(
+            role?.edit?.action as string,
+            role?.edit?.subject as string,
+          ) && (
+            <Button
+              type="primary"
+              style={{
+                backgroundColor: token.token.colorPrimary,
+              }}
+              onClick={() => {
+                showDrawer(1);
+              }}
+            >
+              + Update ตำแหน่งงานปัจจุบัน
+            </Button>
+          )}
         </div>
 
         <Table
