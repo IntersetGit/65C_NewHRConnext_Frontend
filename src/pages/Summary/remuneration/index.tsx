@@ -26,6 +26,7 @@ import {
   UPDATE_SALARY_BASE,
   FETCH_GETALLBOOKBANK_LOG,
   CREATE_BOOKBANK,
+  DELETE_BOOKBANK,
 } from '../../../service/graphql/Summary';
 
 import {
@@ -51,25 +52,27 @@ const Remuneration: React.FC = () => {
   const location = useLocation();
   const propsstate = location.state as any;
 
-  useEffect(() => {
-    refetch();
-  }, []);
-
   const [open, setOpen] = useState(false);
   const [form] = Form.useForm<any>();
   const [formshow] = Form.useForm<any>();
   const [drawerType, setDrawerType] = useState(1);
-  const [selectedRow, setSelectedRow] = useState(null);
+  const [selectedRow, setSelectedRow] = useState<any>();
+
 
   const { data: BookBank } = useQuery(FETCH_SELECT_BOOK_BANK);
   const { data: position_data } = useQuery(FETCH_GETALL_POSITION);
   const { data: book_bank_data, refetch } = useQuery(FETCH_GETALLBOOKBANK_LOG, { variables: { userId: propsstate?.userId } });
   const [creteBookBank] = useMutation(CREATE_BOOKBANK);
+  const [deleteBookBank] = useMutation(DELETE_BOOKBANK);
+
+  const salary: any = book_bank_data ? book_bank_data?.bookbank_log_admin[0]?.base_salary : '0.00';
+  const banknumber: any = book_bank_data ? book_bank_data?.bookbank_log_admin[0]?.bank_number : '0.00';
+  const bankname: any = book_bank_data ? book_bank_data?.bookbank_log_admin[0]?.mas_bank?.name : '';
 
   useEffect(() => {
-    const salary: any = book_bank_data ? book_bank_data?.bookbank_log_admin[0]?.base_salary : '0.00';
-    const banknumber: any = book_bank_data ? book_bank_data?.bookbank_log_admin[0]?.bank_number : '0.00';
-    const bankname: any = book_bank_data ? book_bank_data?.bookbank_log_admin[0]?.mas_bank?.name : '';
+    // const salary: any = book_bank_data ? book_bank_data?.bookbank_log_admin[0]?.base_salary : '0.00';
+    // const banknumber: any = book_bank_data ? book_bank_data?.bookbank_log_admin[0]?.bank_number : '0.00';
+    // const bankname: any = book_bank_data ? book_bank_data?.bookbank_log_admin[0]?.mas_bank?.name : '';
 
 
     formshow.setFieldsValue({ base_salary: salary, bank_number: banknumber, mas_bankId: bankname })
@@ -137,7 +140,7 @@ const Remuneration: React.FC = () => {
               data: {
                 ...value,
                 userId: propsstate?.userId,
-                base_salary: parseFloat(value.base_salary),
+                base_salary: parseFloat(value.base_salary)?.toFixed(2),
                 provident_emp: parseFloat(value.provident_emp),
                 provident_com: parseFloat(value.provident_com),
               },
@@ -172,8 +175,12 @@ const Remuneration: React.FC = () => {
             variables: {
               data: {
                 ...value,
+                id: selectedRow?.id ? selectedRow?.id : undefined,
                 userId: propsstate?.userId,
-                date: moment(value),
+                base_salary: parseFloat(value.base_salary),
+                provident_emp: parseFloat(value.provident_emp),
+                provident_com: parseFloat(value.provident_com),
+                // date: moment(value),
               },
             },
           })
@@ -199,9 +206,43 @@ const Remuneration: React.FC = () => {
     const { key } = event;
     if (key === 'edit') {
       showDrawer(2);
+      setSelectedRow(record);
+      form.setFieldsValue({
+        ...record,
+        date: record.date ? moment(record.date) : undefined,
+      });
     } else if (key === 'view') {
       showDrawer(3);
+
     } else if (key === 'delete') {
+      Swal.fire({
+        title: `ยืนยันการลบข้อมูลพนักงาน`,
+        icon: 'warning',
+        showDenyButton: true,
+        showCancelButton: false,
+        confirmButtonColor: token.token.colorPrimary,
+        denyButtonColor: '#ea4e4e',
+        confirmButtonText: 'ตกลง',
+        denyButtonText: `ยกเลิก`,
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          deleteBookBank({
+            variables: {
+              deletebookbankId: record.id,
+            },
+          })
+            .then((val) => {
+              if (val.data?.Deletebookbank?.status) {
+                Swal.fire(`ลบข้อมูลพนักงานสำเร็จ!`, '', 'success');
+                refetch();
+              }
+            })
+            .catch((err) => {
+              Swal.fire(`ลบข้อมูลพนักงานไม่สำเร็จ!`, '', 'error');
+              console.error(err);
+            });
+        }
+      });
     }
   };
 
@@ -218,9 +259,6 @@ const Remuneration: React.FC = () => {
       key: 'base_salary',
       dataIndex: 'base_salary',
       align: 'center',
-      // render: (record) => {
-      //   return record?.Position_user[0]?.mas_positionlevel2?.name;
-      // },
     },
     {
       title: 'ธนาคาร',

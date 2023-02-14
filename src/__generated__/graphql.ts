@@ -498,7 +498,8 @@ export type MutationCreateyearsArgs = {
 
 
 export type MutationDeleteSalaryArgs = {
-  id: Scalars['ID'];
+  salaryid: Scalars['ID'];
+  userId: Scalars['String'];
 };
 
 
@@ -696,10 +697,11 @@ export type Query = {
   data_salary?: Maybe<Array<Maybe<Data_Salary>>>;
   datasalary_mee?: Maybe<Array<Maybe<Data_Salary_Me>>>;
   getAllcompany?: Maybe<Array<Maybe<CompanyBranch>>>;
+  getAllleave?: Maybe<Array<Maybe<Leave_Data>>>;
   getMasPositon?: Maybe<Array<Maybe<Mas_Positionlevel1>>>;
   getProvince?: Maybe<Array<Maybe<Province>>>;
   getcompanyRole?: Maybe<Array<Maybe<Role_Company>>>;
-  getleava_alldata?: Maybe<Array<Maybe<Getdataaboutleave>>>;
+  getleava_alldata?: Maybe<Array<Maybe<Leave_Data>>>;
   getleava_datame?: Maybe<GetleaveResponseType>;
   getleavetypedata?: Maybe<Array<Maybe<Mas_Leave_Type>>>;
   getownCompany?: Maybe<GetOwncompanytype>;
@@ -747,6 +749,11 @@ export type QueryDatasalary_MeeArgs = {
 
 export type QueryGetAllcompanyArgs = {
   name?: InputMaybe<Scalars['String']>;
+};
+
+
+export type QueryGetAllleaveArgs = {
+  dataleaveId?: InputMaybe<Scalars['ID']>;
 };
 
 
@@ -1195,6 +1202,7 @@ export type Leave_Data = {
   quantity_day?: Maybe<Scalars['Int']>;
   quantity_hours?: Maybe<Scalars['Int']>;
   start_date?: Maybe<Scalars['Date']>;
+  user?: Maybe<User>;
   user_id?: Maybe<Scalars['String']>;
 };
 
@@ -1397,6 +1405,8 @@ export type SalaryInput = {
   bookbank_logId?: InputMaybe<Scalars['String']>;
   bursary?: InputMaybe<Scalars['Float']>;
   commission?: InputMaybe<Scalars['Float']>;
+  create_by?: InputMaybe<Scalars['String']>;
+  create_date?: InputMaybe<Scalars['Date']>;
   date?: InputMaybe<Scalars['Date']>;
   id?: InputMaybe<Scalars['ID']>;
   incomeYears?: InputMaybe<Scalars['Float']>;
@@ -1424,6 +1434,8 @@ export type SalaryInput = {
   total_expense?: InputMaybe<Scalars['Float']>;
   total_income?: InputMaybe<Scalars['Float']>;
   travel_income?: InputMaybe<Scalars['Float']>;
+  update_by?: InputMaybe<Scalars['String']>;
+  update_date?: InputMaybe<Scalars['Date']>;
   userId?: InputMaybe<Scalars['String']>;
   vat?: InputMaybe<Scalars['Float']>;
   vatYears?: InputMaybe<Scalars['Float']>;
