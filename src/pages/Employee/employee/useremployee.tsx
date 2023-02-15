@@ -40,7 +40,6 @@ import { useQuery, useMutation, from } from '@apollo/client';
 import { FETCH_GETALLUSER } from '../../../service/graphql/Users';
 import axios from 'axios';
 import Swal from 'sweetalert2';
-import moment from 'moment';
 import { GET_PROVINCE } from '../../../service/graphql/Province';
 import type { CheckboxChangeEvent } from 'antd/es/checkbox';
 import { useAuth } from '../../../hooks/useAuth';
@@ -48,6 +47,8 @@ import { User, UsersQuery } from '../../../__generated__/graphql';
 import { FETCH_GETALLROLE } from '../../../service/graphql/Role';
 import { getFilePath, getUploadUrl } from '../../../util';
 import { RcFile } from 'antd/es/upload';
+import type { DatePickerProps } from 'antd';
+import dayjs from 'dayjs';
 
 const { useToken } = theme;
 
@@ -137,6 +138,7 @@ const UserEmployee: React.FC = (props) => {
   const { data: role_company } = useQuery(FETCH_GETALLUSER);
   const [createEmployeeAccount] = useMutation(CREATE_EMPLOYEE_ACCOUNT);
   let propsstate = location.state as any;
+  console.log(propsstate);
   let { companycode } = useParams();
   const { companyNavigate } = useAuth();
 
@@ -159,9 +161,9 @@ const UserEmployee: React.FC = (props) => {
       ...propsstate,
       ...propsstate?.user,
       email: propsstate.contract_email,
-      dob: propsstate?.dob ? moment(propsstate?.dob) : undefined,
+      dob: propsstate?.dob ? dayjs(propsstate?.dob) : undefined,
       start_date_work: propsstate?.start_date_work
-        ? moment(propsstate?.start_date_work)
+        ? dayjs(propsstate?.start_date_work)
         : undefined,
     });
   };
@@ -182,6 +184,11 @@ const UserEmployee: React.FC = (props) => {
     navigate(generatePath(key, { companycode }), {
       state: propsstate,
     });
+  };
+
+  const onChangeAge: DatePickerProps['onChange'] = (date, dateString) => {
+    const newdate = dayjs().diff(dayjs(dateString), 'year');
+    form.setFieldValue('age', newdate);
   };
 
   const selectrole = role_data?.getcompanyRole?.map((e) => {
@@ -483,13 +490,31 @@ const UserEmployee: React.FC = (props) => {
 
           <Row gutter={16}>
             <Col xs={24} sm={12} md={12} lg={4} xl={4}>
-              <Form.Item name={'staff_code'} label={'รหัสพนักงาน'}>
+              <Form.Item
+                name={'staff_code'}
+                label={'รหัสพนักงาน'}
+                rules={[
+                  {
+                    required: true,
+                    message: 'กรุณากรอกรหัสพนักงาน',
+                  },
+                ]}
+              >
                 {propsstate?.mode == 'view' ? <Input disabled /> : <Input />}
               </Form.Item>
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={4} xl={4}>
-              <Form.Item name={'staff_status'} label={'Status'}>
+              <Form.Item
+                name={'staff_status'}
+                label={'Status'}
+                rules={[
+                  {
+                    required: true,
+                    message: 'กรุณาเลือก Status',
+                  },
+                ]}
+              >
                 {propsstate?.mode == 'view' ? (
                   <Select
                     disabled
@@ -745,19 +770,24 @@ const UserEmployee: React.FC = (props) => {
               <Form.Item name={'dob'} label={'วัน/เดือน/ปี'}>
                 {propsstate?.mode == 'view' ? (
                   <DatePicker
-                    format={'YYYY/MM/DD'}
+                    format={'DD-MM-YYYY'}
                     style={{ width: '100%' }}
+                    onChange={onChangeAge}
                     disabled
                   />
                 ) : (
-                  <DatePicker format={'YYYY/MM/DD'} style={{ width: '100%' }} />
+                  <DatePicker
+                    format={'DD-MM-YYYY'}
+                    onChange={onChangeAge}
+                    style={{ width: '100%' }}
+                  />
                 )}
               </Form.Item>
             </Col>
 
             <Col xs={24} sm={12} md={8} lg={4} xl={4}>
               <Form.Item name={'age'} label={'อายุ'}>
-                {propsstate?.mode == 'view' ? <Input disabled /> : <Input />}
+                <Input disabled />
               </Form.Item>
             </Col>
 
@@ -872,7 +902,16 @@ const UserEmployee: React.FC = (props) => {
             </Col>
 
             <Col xs={24} sm={8} md={12} lg={6} xl={6}>
-              <Form.Item name={'employee_status'} label={'สถานภาพพนักงาน'}>
+              <Form.Item
+                name={'employee_status'}
+                label={'สถานภาพพนักงาน'}
+                rules={[
+                  {
+                    required: true,
+                    message: 'กรุณากรอกสถานภาพพนักงาน',
+                  },
+                ]}
+              >
                 {propsstate?.mode == 'view' ? (
                   <Select
                     disabled
@@ -909,15 +948,24 @@ const UserEmployee: React.FC = (props) => {
 
           <Row gutter={16}>
             <Col xs={24} sm={12} md={12} lg={4} xl={4}>
-              <Form.Item name={'start_date_work'} label={'วันที่เริ่มงาน'}>
+              <Form.Item
+                name={'start_date_work'}
+                label={'วันที่เริ่มงาน'}
+                rules={[
+                  {
+                    required: true,
+                    message: 'กรุณากรอกวันที่เริ่มงาน',
+                  },
+                ]}
+              >
                 {propsstate?.mode == 'view' ? (
                   <DatePicker
-                    format={'YYYY/MM/DD'}
+                    format={'DD-MM-YYYY'}
                     style={{ width: '100%' }}
                     disabled
                   />
                 ) : (
-                  <DatePicker format={'YYYY/MM/DD'} style={{ width: '100%' }} />
+                  <DatePicker format={'DD-MM-YYYY'} style={{ width: '100%' }} />
                 )}
               </Form.Item>
             </Col>
@@ -957,7 +1005,16 @@ const UserEmployee: React.FC = (props) => {
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={8} xl={8}>
-              <Form.Item name={'role_company'} label={'Role'}>
+              <Form.Item
+                name={'role_company'}
+                label={'Role'}
+                rules={[
+                  {
+                    required: true,
+                    message: 'กรุณากรอก Role',
+                  },
+                ]}
+              >
                 {propsstate?.mode == 'view' ? (
                   <Select options={selectrole} allowClear disabled />
                 ) : (
@@ -1299,10 +1356,10 @@ const UserEmployee: React.FC = (props) => {
             </div>
           </Row>
 
-          {propsstate?.mode !== 'view' && (
-            <Row gutter={16}>
-              <Form.Item>
-                <Space>
+          <Row gutter={16}>
+            <Form.Item>
+              <Space>
+                {propsstate?.mode !== 'view' && (
                   <Button
                     htmlType="submit"
                     type="primary"
@@ -1313,20 +1370,20 @@ const UserEmployee: React.FC = (props) => {
                   >
                     บันทึก
                   </Button>
-                  <Button
-                    style={{
-                      marginBottom: '10px',
-                    }}
-                    onClick={() => {
-                      companyNavigate('/:companycode/employee');
-                    }}
-                  >
-                    ยกเลิก
-                  </Button>
-                </Space>
-              </Form.Item>
-            </Row>
-          )}
+                )}
+                <Button
+                  style={{
+                    marginBottom: '10px',
+                  }}
+                  onClick={() => {
+                    companyNavigate('/:companycode/employee');
+                  }}
+                >
+                  ยกเลิก
+                </Button>
+              </Space>
+            </Form.Item>
+          </Row>
         </Form>
       </Card>
     </>
