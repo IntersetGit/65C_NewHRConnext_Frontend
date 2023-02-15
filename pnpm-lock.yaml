@@ -21,6 +21,7 @@ specifiers:
   antd: 5.0.0
   autoprefixer: ^10.4.13
   axios: ^1.1.3
+  dayjs: ^1.11.7
   graphql: ^16.6.0
   graphql-tag: ^2.12.6
   less: ^4.1.3
@@ -35,6 +36,7 @@ specifiers:
   react-cookie: ^4.1.1
   react-dom: ^18.2.0
   react-icons: ^4.6.0
+  react-is: ^18.2.0
   react-router-dom: ^6.4.3
   sort-by: ^1.2.0
   styled-components: ^5.3.6
@@ -54,6 +56,7 @@ dependencies:
   '@tanstack/react-query-devtools': 4.22.0_gp275tdwez2a4eujt75dnnp754
   antd: 5.0.0_biqbaboplfbrettd7655fr4n2y
   axios: 1.2.2
+  dayjs: 1.11.7
   graphql: 16.6.0
   graphql-tag: 2.12.6_graphql@16.6.0
   localforage: 1.10.0
@@ -66,9 +69,10 @@ dependencies:
   react-cookie: 4.1.1_react@18.2.0
   react-dom: 18.2.0_react@18.2.0
   react-icons: 4.7.1_react@18.2.0
+  react-is: 18.2.0
   react-router-dom: 6.6.2_biqbaboplfbrettd7655fr4n2y
   sort-by: 1.2.0
-  styled-components: 5.3.6_biqbaboplfbrettd7655fr4n2y
+  styled-components: 5.3.6_7i5myeigehqah43i5u7wbekgba
   sweetalert2: 11.6.16
 
 devDependencies:
@@ -2087,7 +2091,7 @@ packages:
       babel-plugin-syntax-jsx: 6.18.0
       lodash: 4.17.21
       picomatch: 2.3.1
-      styled-components: 5.3.6_biqbaboplfbrettd7655fr4n2y
+      styled-components: 5.3.6_7i5myeigehqah43i5u7wbekgba
     dev: false
 
   /babel-plugin-syntax-jsx/6.18.0:
@@ -4668,6 +4672,10 @@ packages:
   /react-is/16.13.1:
     resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}
 
+  /react-is/18.2.0:
+    resolution: {integrity: sha512-xWGDIW6x921xtzPkhiULtthJHoJvBbF3q26fzloPCK0hsvxtPVelvftw3zjbHWSkR2km9Z+4uxbDDK/6Zw9B8w==}
+    dev: false
+
   /react-refresh/0.14.0:
     resolution: {integrity: sha512-wViHqhAd8OHeLS/IRMJjTSDHF3U9eWi62F/MledQGPdJGDhodXJ9PBLNGr6WWL7qlH12Mt3TyTpbS+hGXMjCzQ==}
     engines: {node: '>=0.10.0'}
@@ -5007,7 +5015,7 @@ packages:
       ansi-regex: 5.0.1
     dev: true
 
-  /styled-components/5.3.6_biqbaboplfbrettd7655fr4n2y:
+  /styled-components/5.3.6_7i5myeigehqah43i5u7wbekgba:
     resolution: {integrity: sha512-hGTZquGAaTqhGWldX7hhfzjnIYBZ0IXQXkCYdvF1Sq3DsUaLx6+NTHC5Jj1ooM2F68sBiVz3lvhfwQs/S3l6qg==}
     engines: {node: '>=10'}
     requiresBuild: true
@@ -5026,6 +5034,7 @@ packages:
       hoist-non-react-statics: 3.3.2
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
+      react-is: 18.2.0
       shallowequal: 1.1.0
       supports-color: 5.5.0
     dev: false

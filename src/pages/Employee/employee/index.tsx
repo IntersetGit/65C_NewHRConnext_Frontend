@@ -93,17 +93,24 @@ const Employee: React.FC = () => {
     const { key } = event;
     if (key === 'edit') {
       console.log(record.Position_user[0]);
+      console.log(record);
       navigate(`useremployee?id=${record.profile.id}`, {
         state: {
           ...record?.profile,
           mode: 'edit',
           userId: record?.id,
           loading: loading,
+          role_company: record?.Role_Company?.name,
         },
       });
     } else if (key === 'view') {
       navigate(`useremployee?id=${record.profile.id}`, {
-        state: { ...record?.profile, mode: 'view', userId: record?.id },
+        state: {
+          ...record?.profile,
+          mode: 'view',
+          userId: record?.id,
+          role_company: record?.Role_Company?.name,
+        },
       });
     } else if (key === 'delete') {
       Swal.fire({

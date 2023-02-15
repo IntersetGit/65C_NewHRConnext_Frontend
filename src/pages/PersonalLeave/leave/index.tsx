@@ -56,8 +56,9 @@ const Leave: React.FC = () => {
     const { key } = event;
     if (key === 'edit') {
     } else if (key === 'view') {
+      const count_all = leave_data?.getAllleave?.data_count;
       navigate(`approve?id=${record.id}`, {
-        state: { ...record, mode: 'edit' },
+        state: { ...record, count_all },
       });
     } else if (key === 'delete') {
     }
