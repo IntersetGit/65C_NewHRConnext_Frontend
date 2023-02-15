@@ -10,7 +10,7 @@ import {
   Select,
   Space,
   theme,
-  Upload
+  Upload,
 } from 'antd';
 import { useEffect, useState } from 'react';
 import { RiCloseFill, RiHotelLine } from 'react-icons/ri';
@@ -24,11 +24,16 @@ import { CREATE_COMPANY_ACCOUNT } from '../../../service/graphql/Company';
 import { CreateCompanyBranch } from '../../../__generated__/graphql';
 import { GET_PROVINCE } from '../../../service/graphql/Province';
 import { useAuth } from '../../../hooks/useAuth';
-import './index.css'
+import './index.css';
+import { PageRoleAndPermissionType } from '../../../context/AuthContext';
 
 const { useToken } = theme;
 
-const Newcompany = () => {
+type NewcompanyPropsType = {
+  role?: PageRoleAndPermissionType;
+};
+
+const Newcompany: React.FC<NewcompanyPropsType> = ({ role }) => {
   const token = useToken();
   const { companyNavigate } = useAuth();
   const location = useLocation();

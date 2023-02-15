@@ -18,7 +18,6 @@ import {
   Space,
 } from 'antd';
 import { ImProfile } from 'react-icons/im';
-import moment from 'moment';
 import type { ColumnsType } from 'antd/es/table';
 import edit from '../../../../assets/Edit.png';
 import Del from '../../../../assets/DEL.png';
@@ -36,6 +35,7 @@ import { FETCH_GETALLUSER } from '../../../../service/graphql/Users';
 import Swal from 'sweetalert2';
 import { PageRoleAndPermissionType } from '../../../../context/AuthContext';
 import { useAuth } from '../../../../hooks/useAuth';
+import dayjs from 'dayjs';
 
 const { useToken } = theme;
 
@@ -315,7 +315,7 @@ const ProfilePosition: React.FC<ProfilePositionPropsType> = ({ role }) => {
       onChangeMasLevel2(record?.mas_positionlevel2.id);
       form.setFieldsValue({
         ...record,
-        date: record.date ? moment(record.date) : undefined,
+        date: record.date ? dayjs(record.date) : undefined,
         headderId: record?.header?.id,
       });
     } else if (key === 'view') {
@@ -324,7 +324,7 @@ const ProfilePosition: React.FC<ProfilePositionPropsType> = ({ role }) => {
       onChangeMasLevel2(record?.mas_positionlevel2.id);
       form.setFieldsValue({
         ...record,
-        date: record.date ? moment(record.date) : undefined,
+        date: record.date ? dayjs(record.date) : undefined,
         headderId: record?.header?.id,
       });
     } else if (key === 'delete') {
@@ -337,7 +337,7 @@ const ProfilePosition: React.FC<ProfilePositionPropsType> = ({ role }) => {
       key: 'date',
       dataIndex: 'date',
       align: 'center',
-      render: (record: any) => moment(record).format('YYYY/MM/DD') as any,
+      render: (record: any) => dayjs(record).format('DD-MM-YYYY') as any,
     },
     {
       title: 'ตำแหน่ง',
@@ -424,9 +424,10 @@ const ProfilePosition: React.FC<ProfilePositionPropsType> = ({ role }) => {
             <DatePicker
               style={{ width: '100%' }}
               size="large"
+              format={'DD-MM-YYYY'}
               defaultValue={
                 user?.me?.profile?.start_date_work
-                  ? moment(user?.me?.profile?.start_date_work)
+                  ? dayjs(user?.me?.profile?.start_date_work)
                   : (undefined as any)
               }
               disabled
@@ -485,7 +486,10 @@ const ProfilePosition: React.FC<ProfilePositionPropsType> = ({ role }) => {
           <Row>
             <Col span={12}>
               <Form.Item name={'date'} label={'วันที่มีผล'}>
-                <DatePicker style={{ width: '100%' }}></DatePicker>
+                <DatePicker
+                  style={{ width: '100%' }}
+                  format={'DD-MM-YYYY'}
+                ></DatePicker>
               </Form.Item>
             </Col>
           </Row>

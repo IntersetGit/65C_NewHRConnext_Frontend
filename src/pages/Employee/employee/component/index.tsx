@@ -27,7 +27,6 @@ import { gql } from '../../../../__generated__/gql';
 import { useQuery, useMutation, NetworkStatus } from '@apollo/client';
 import axios from 'axios';
 import Swal from 'sweetalert2';
-import moment from 'moment';
 import { GET_PROVINCE } from '../../../../service/graphql/Province';
 import type { CheckboxChangeEvent } from 'antd/es/checkbox';
 import facebook from '../../../../assets/Facebook-logo.png';
@@ -40,6 +39,8 @@ import { RcFile } from 'antd/es/upload';
 import { FETCH_GETALLROLE } from '../../../../service/graphql/Role';
 import { useAuth } from '../../../../hooks/useAuth';
 import { PageRoleAndPermissionType } from '../../../../context/AuthContext';
+import type { DatePickerProps } from 'antd';
+import dayjs from 'dayjs';
 
 type ProfileEmployeePropsType = {
   role?: PageRoleAndPermissionType;
@@ -198,10 +199,11 @@ const ProfileEmployee: React.FC<ProfileEmployeePropsType> = ({ role }) => {
     form.setFieldsValue({
       ...user?.me?.profile,
       email: user?.me?.profile?.contract_email,
-      dob: user?.me?.profile?.dob ? moment(user?.me?.profile?.dob) : undefined,
+      dob: user?.me?.profile?.dob ? dayjs(user?.me?.profile?.dob) : undefined,
       start_date_work: user?.me?.profile?.start_date_work
-        ? moment(user?.me?.profile?.start_date_work)
+        ? dayjs(user?.me?.profile?.start_date_work)
         : undefined,
+      role_company: user?.me?.Role_Company?.id,
     });
   };
 
@@ -215,6 +217,11 @@ const ProfileEmployee: React.FC<ProfileEmployeePropsType> = ({ role }) => {
       });
       setCounrty(items);
     });
+  };
+
+  const onChangeAge: DatePickerProps['onChange'] = (date, dateString) => {
+    const newdate = dayjs().diff(dayjs(dateString), 'year');
+    form.setFieldValue('age', newdate);
   };
 
   const selectrole = role_data?.getcompanyRole?.map((e) => {
@@ -671,13 +678,17 @@ const ProfileEmployee: React.FC<ProfileEmployeePropsType> = ({ role }) => {
           <Row gutter={16}>
             <Col xs={24} sm={12} md={8} lg={4} xl={4}>
               <Form.Item name={'dob'} label={'วัน/เดือน/ปี'}>
-                <DatePicker format={'YYYY/MM/DD'} style={{ width: '100%' }} />
+                <DatePicker
+                  format={'DD-MM-YYYY'}
+                  onChange={onChangeAge}
+                  style={{ width: '100%' }}
+                />
               </Form.Item>
             </Col>
 
             <Col xs={24} sm={12} md={8} lg={4} xl={4}>
               <Form.Item name={'age'} label={'อายุ'}>
-                <Input />
+                <Input disabled />
               </Form.Item>
             </Col>
 
@@ -759,7 +770,7 @@ const ProfileEmployee: React.FC<ProfileEmployeePropsType> = ({ role }) => {
           <Row gutter={16}>
             <Col xs={24} sm={12} md={12} lg={4} xl={4}>
               <Form.Item name={'start_date_work'} label={'วันที่เริ่มงาน'}>
-                <DatePicker format={'YYYY/MM/DD'} style={{ width: '100%' }} />
+                <DatePicker format={'DD-MM-YYYY'} style={{ width: '100%' }} />
               </Form.Item>
             </Col>
 
