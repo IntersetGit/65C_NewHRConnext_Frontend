@@ -393,6 +393,7 @@ const ProfileApprove: React.FC<ProfileApprovePropsType> = ({ role }) => {
         <Table
           columns={columns}
           dataSource={
+            dataleaveme?.getleava_datame?.data_all &&
             dataleaveme?.getleava_datame?.data_all?.length > 0
               ? (dataleaveme?.getleava_datame?.data_all?.[0]?.data_leave as any)
               : []
