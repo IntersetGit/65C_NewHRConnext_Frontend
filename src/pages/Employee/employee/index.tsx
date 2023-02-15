@@ -100,7 +100,7 @@ const Employee: React.FC = () => {
           mode: 'edit',
           userId: record?.id,
           loading: loading,
-          role_company: record?.Role_Company?.name,
+          role_company: record?.Role_Company?.id,
         },
       });
     } else if (key === 'view') {
