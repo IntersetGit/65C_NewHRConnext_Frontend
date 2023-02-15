@@ -203,6 +203,7 @@ const ProfileEmployee: React.FC<ProfileEmployeePropsType> = ({ role }) => {
       start_date_work: user?.me?.profile?.start_date_work
         ? dayjs(user?.me?.profile?.start_date_work)
         : undefined,
+      role_company: user?.me?.Role_Company?.name,
     });
   };
 
