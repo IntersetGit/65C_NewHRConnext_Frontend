@@ -15,6 +15,7 @@ import {
     Avatar,
     Drawer,
     DatePicker,
+    InputNumber,
 } from 'antd';
 import type { DatePickerProps } from 'antd';
 import { AntDesignOutlined, MoreOutlined } from '@ant-design/icons';
@@ -36,6 +37,7 @@ import { useMutation, useQuery } from '@apollo/client';
 import {
     FETCH_AllSALARY_USER,
     CREATE_SALARY_USER,
+    FETCH_ExpenseCompany,
 } from '../../../service/graphql/Summary';
 
 import {
@@ -65,6 +67,7 @@ const Compensation: React.FC = () => {
     const { data: TableDataSalary, refetch } = useQuery(FETCH_AllSALARY_USER, {
         variables: { userId: propsstate?.userId },
     });
+    const { data: ExpenseComData, refetch: refetch2 } = useQuery(FETCH_ExpenseCompany);
     console.log("DataT", TableDataSalary)
     const [creteSalaryUser] = useMutation(CREATE_SALARY_USER);
 
@@ -73,7 +76,12 @@ const Compensation: React.FC = () => {
     //     if (userId == propsstate?.profile.user_Id) { TableDataSalary?.salary?.push(data) }
     //     console.log("++", data)
     // }
-
+    const setPer: any = () => {
+        form.setFieldsValue({
+            vat_per: ExpenseComData?.expense_company?.[0]?.vat_per,
+            ss_per: ExpenseComData?.expense_company?.[0]?.ss_per,
+        })
+    }
 
     const showDrawer = (type: any) => {
         setOpen(true);
@@ -404,6 +412,7 @@ const Compensation: React.FC = () => {
                         : "เงินเดือน"}`}
                 onClose={onClose}
                 open={open}
+                afterOpenChange={setPer}
                 width={500}
             >
                 <div className="text-lg font-bold">
@@ -421,14 +430,67 @@ const Compensation: React.FC = () => {
                 <Form layout="horizontal" onValuesChange={(column, all) => {
                     console.log(column, all)
                     // console.log((Object.keys(column)[0]) in { commission: '', wa: '' })
+                    const finish = () => {
+                        if (all.total_income !== undefined && all.total_expense !== undefined) {
+                            console.log('calculater', all.total_income, all.total_expense)
+                            let netval = parseFloat(all.total_income ? all.total_income : 0)
+                                - parseFloat(all.total_expense ? all.total_expense : 0);
+                            form.setFieldValue('net', (netval).toString())
+                        }
+                    }
                     const sum = () => {
-                        let sumval = parseFloat(all.base_salary ? all.base_salary : 0) + parseFloat(all.commission ? all.commission : 0) + parseFloat(all.position_income ? all.position_income : 0);
+                        let sumval = parseFloat(all.base_salary ? all.base_salary : 0)
+                            + parseFloat(all.commission ? all.commission : 0)
+                            + parseFloat(all.position_income ? all.position_income : 0)
+                            + parseFloat(all.special_income ? all.special_income : 0)
+                            + parseFloat(all.ot ? all.ot : 0)
+                            + parseFloat(all.other_income ? all.other_income : 0)
+                            + parseFloat(all.travel_income ? all.travel_income : 0)
+                            + parseFloat(all.bursary ? all.bursary : 0)
+                            + parseFloat(all.welfare_money ? all.welfare_money : 0)
+                            + parseFloat(all.bonus ? all.bonus : 0);
                         console.log(sumval);
                         form.setFieldValue('total_income', (sumval).toString())
+                        finish()
                     }
-                    if ((Object.keys(column)[0]) in { commission: '', position_income: '' }) {
+                    const minus = () => {
+                        let minusval = parseFloat(all.vat ? all.vat : 0)
+                            + parseFloat(all.social_security ? all.social_security : 0)
+                            + parseFloat(all.miss ? all.miss : 0)
+                            + parseFloat(all.ra ? all.ra : 0)
+                            + parseFloat(all.late ? all.late : 0)
+                            + parseFloat(all.other ? all.other : 0);
+                        console.log(minusval);
+                        form.setFieldValue('total_expense', (minusval).toString())
+                        finish()
+                    }
+                    if ((Object.keys(column)[0]) in {
+                        base_salary: '',
+                        commission: '',
+                        position_income: '',
+                        special_income: '',
+                        ot: '',
+                        other_income: '',
+                        travel_income: '',
+                        bursary: '',
+                        welfare_money: '',
+                        bonus: '',
+                    }) {
                         sum();
                     }
+                    if ((Object.keys(column)[0]) in {
+                        vat: '',
+                        social_security: '',
+                        miss: '',
+                        ra: '',
+                        late: '',
+                        other_income: '',
+                        other: '',
+                    }) {
+                        minus();
+                    }
+
+
                 }} form={form} onFinish={onSubmitForm} >
                     <Row>
                         <Col xs={24} sm={24} md={24} lg={24} xl={24}>
@@ -452,9 +514,9 @@ const Compensation: React.FC = () => {
                     <Row>
                         <Col xs={24} sm={24} md={24} lg={24} xl={24}>
                             <Form.Item name="base_salary" label={'ฐานเงินเดือน'} className='ml-[52px]'>
-                                <Input
+                                <InputNumber
                                     disabled
-                                // defaultValue={propsstate?.bookbank_log[0]?.base_salary}
+                                    style={{ width: "100%" }}
                                 />
                             </Form.Item>
                         </Col>
@@ -463,7 +525,7 @@ const Compensation: React.FC = () => {
                     <Row>
                         <Col xs={24} sm={24} md={24} lg={24} xl={24}>
                             <Form.Item name="commission" label={'ค่าคอมมิชชั่น'} className='ml-[52px]'>
-                                <Input disabled={drawerType === 3 ? true : false} />
+                                <InputNumber style={{ width: "100%" }} disabled={drawerType === 3 ? true : false} />
                             </Form.Item>
                         </Col>
                     </Row>
@@ -471,7 +533,7 @@ const Compensation: React.FC = () => {
                     <Row>
                         <Col xs={24} sm={24} md={24} lg={24} xl={24}>
                             <Form.Item name="position_income" label={'ค่าตำแหน่ง'} className='ml-[63px]'>
-                                <Input disabled={drawerType === 3 ? true : false} />
+                                <InputNumber style={{ width: "100%" }} disabled={drawerType === 3 ? true : false} />
                             </Form.Item>
                         </Col>
                     </Row>
@@ -479,7 +541,7 @@ const Compensation: React.FC = () => {
                     <Row>
                         <Col xs={24} sm={24} md={24} lg={24} xl={24}>
                             <Form.Item name="special_income" label={'เงินพิเศษ'} className='ml-[72px]'>
-                                <Input disabled={drawerType === 3 ? true : false} />
+                                <InputNumber style={{ width: "100%" }} disabled={drawerType === 3 ? true : false} />
                             </Form.Item>
                         </Col>
                     </Row>
@@ -487,7 +549,7 @@ const Compensation: React.FC = () => {
                     <Row>
                         <Col xs={24} sm={24} md={24} lg={24} xl={24}>
                             <Form.Item name="ot" label={'ค่าล่วงเวลา'} className='ml-[59px]'>
-                                <Input disabled={drawerType === 3 ? true : false} />
+                                <InputNumber style={{ width: "100%" }} disabled={drawerType === 3 ? true : false} />
                             </Form.Item>
                         </Col>
                     </Row>
@@ -495,7 +557,7 @@ const Compensation: React.FC = () => {
                     <Row>
                         <Col xs={24} sm={24} md={24} lg={24} xl={24}>
                             <Form.Item name="other_income" label={'รายได้อื่น'} className='ml-[72px]'>
-                                <Input disabled={drawerType === 3 ? true : false} />
+                                <InputNumber style={{ width: "100%" }} disabled={drawerType === 3 ? true : false} />
                             </Form.Item>
                         </Col>
                     </Row>
@@ -503,7 +565,7 @@ const Compensation: React.FC = () => {
                     <Row>
                         <Col xs={24} sm={24} md={24} lg={24} xl={24}>
                             <Form.Item name="travel_income" label={'ค่าเดินทาง'} className='ml-[64px]'>
-                                <Input disabled={drawerType === 3 ? true : false} />
+                                <InputNumber style={{ width: "100%" }} disabled={drawerType === 3 ? true : false} />
                             </Form.Item>
                         </Col>
                     </Row>
@@ -511,7 +573,7 @@ const Compensation: React.FC = () => {
                     <Row>
                         <Col xs={24} sm={24} md={24} lg={24} xl={24}>
                             <Form.Item name="bursary" label={'เงินอุดหนุน'} className='ml-[60px]'>
-                                <Input disabled={drawerType === 3 ? true : false} />
+                                <InputNumber style={{ width: "100%" }} disabled={drawerType === 3 ? true : false} />
                             </Form.Item>
                         </Col>
                     </Row>
@@ -519,7 +581,7 @@ const Compensation: React.FC = () => {
                     <Row>
                         <Col xs={24} sm={24} md={24} lg={24} xl={24}>
                             <Form.Item name="welfare_money" label={'เงินสวัสดิการ'} className='ml-[47px]'>
-                                <Input disabled={drawerType === 3 ? true : false} />
+                                <InputNumber style={{ width: "100%" }} disabled={drawerType === 3 ? true : false} />
                             </Form.Item>
                         </Col>
                     </Row>
@@ -527,7 +589,7 @@ const Compensation: React.FC = () => {
                     <Row>
                         <Col xs={24} sm={24} md={24} lg={24} xl={24}>
                             <Form.Item name="bonus" label={'เงินโบนัส'} className='ml-[73px]'>
-                                <Input disabled={drawerType === 3 ? true : false} />
+                                <InputNumber style={{ width: "100%" }} disabled={drawerType === 3 ? true : false} />
                             </Form.Item>
                         </Col>
                     </Row>
@@ -535,7 +597,7 @@ const Compensation: React.FC = () => {
                     <Row>
                         <Col xs={24} sm={24} md={24} lg={24} xl={24}>
                             <Form.Item name="total_income" label={'รายได้รวม'} className='ml-[73px]'>
-                                <Input disabled />
+                                <InputNumber style={{ width: "100%" }} disabled />
                             </Form.Item>
                         </Col>
                     </Row>
@@ -553,12 +615,12 @@ const Compensation: React.FC = () => {
 
                             <Space>
                                 <Form.Item name="vat_per" label={'ภาษี'} className='ml-[54px]'>
-                                    <Input className='w-16' disabled />
+                                    <InputNumber className='w-16' disabled />
                                 </Form.Item>
 
 
                                 <Form.Item name="vat" className='ml-[1px]'>
-                                    <Input disabled={drawerType === 3 ? true : false} className='w-[222px]' />
+                                    <InputNumber style={{ width: "100%" }} disabled={drawerType === 3 ? true : false} className='w-[222px]' />
                                 </Form.Item>
                             </Space>
                         </Col>
@@ -568,11 +630,11 @@ const Compensation: React.FC = () => {
                         <Col xs={24} sm={24} md={24} lg={24} xl={24} className='ml-[53px]'>
                             <Space>
                                 <Form.Item name="ss_per" label={'ประกันสังคม'}>
-                                    <Input className='w-16' disabled />
+                                    <InputNumber className='w-16' disabled />
                                 </Form.Item>
 
                                 <Form.Item name="social_security" className='ml-[0.5px]'>
-                                    <Input disabled={drawerType === 3 ? true : false} className='w-[222px]' />
+                                    <InputNumber style={{ width: "100%" }} disabled={drawerType === 3 ? true : false} className='w-[222px]' />
                                 </Form.Item>
                             </Space>
                         </Col>
@@ -581,7 +643,7 @@ const Compensation: React.FC = () => {
                     <Row>
                         <Col xs={24} sm={24} md={24} lg={24} xl={24}>
                             <Form.Item name="miss" label={'ขาด'} className='ml-[102px]'>
-                                <Input disabled={drawerType === 3 ? true : false} />
+                                <InputNumber style={{ width: "100%" }} disabled={drawerType === 3 ? true : false} />
                             </Form.Item>
                         </Col>
                     </Row>
@@ -589,7 +651,7 @@ const Compensation: React.FC = () => {
                     <Row>
                         <Col xs={24} sm={24} md={24} lg={24} xl={24}>
                             <Form.Item name="ra" label={'ลา'} className='ml-[111px]'>
-                                <Input disabled={drawerType === 3 ? true : false} />
+                                <InputNumber style={{ width: "100%" }} disabled={drawerType === 3 ? true : false} />
                             </Form.Item>
                         </Col>
                     </Row>
@@ -597,7 +659,7 @@ const Compensation: React.FC = () => {
                     <Row>
                         <Col xs={24} sm={24} md={24} lg={24} xl={24}>
                             <Form.Item name="late" label={'มาสาย'} className='ml-[86px]'>
-                                <Input disabled={drawerType === 3 ? true : false} />
+                                <InputNumber style={{ width: "100%" }} disabled={drawerType === 3 ? true : false} />
                             </Form.Item>
                         </Col>
                     </Row>
@@ -605,7 +667,7 @@ const Compensation: React.FC = () => {
                     <Row>
                         <Col xs={24} sm={24} md={24} lg={24} xl={24}>
                             <Form.Item name="other" label={'อื่น ๆ'} className='ml-[95px]'>
-                                <Input disabled={drawerType === 3 ? true : false} />
+                                <InputNumber style={{ width: "100%" }} disabled={drawerType === 3 ? true : false} />
                             </Form.Item>
                         </Col>
                     </Row>
@@ -613,15 +675,15 @@ const Compensation: React.FC = () => {
                     <Row>
                         <Col xs={24} sm={24} md={24} lg={24} xl={24}>
                             <Form.Item name="total_expense" label={'รายหักรวม'} className='ml-[73px]'>
-                                <Input disabled />
+                                <InputNumber style={{ width: "100%" }} disabled />
                             </Form.Item>
                         </Col>
                     </Row>
 
                     <Row>
                         <Col xs={24} sm={24} md={24} lg={24} xl={24}>
-                            <Form.Item name="other" label={'รวมรายรับสุทธิ'} className='font-bold ml-[37px]'>
-                                <Input disabled style={{ background: "#CCFFFF", }} />
+                            <Form.Item name="net" label={'รวมรายรับสุทธิ'} className='font-bold ml-[37px]'>
+                                <InputNumber disabled style={{ background: "#CCFFFF", width: "100%" }} />
                             </Form.Item>
                         </Col>
                     </Row>

@@ -22,13 +22,13 @@ import edit from '../../../assets/Edit.png';
 import Del from '../../../assets/DEL.png';
 import View from '../../../assets/View.png';
 import type { CheckboxValueType } from 'antd/es/checkbox/Group';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 import moment from 'moment';
 import { useAuth } from '../../../hooks/useAuth';
 
-import { useQuery, useMutation, from } from '@apollo/client';
-import { FETCH_SELECT_BOOK_BANK, FETCH_AllSALARY_BASE, CREATE_ExpenseCom } from '../../../service/graphql/Summary';
+import { useQuery, useMutation } from '@apollo/client';
+import { FETCH_SELECT_BOOK_BANK, FETCH_AllSALARY_BASE, CREATE_ExpenseCom, FETCH_ExpenseCompany } from '../../../service/graphql/Summary';
 
 const { useToken } = theme;
 
@@ -46,10 +46,24 @@ const Compensation: React.FC = () => {
 
   const { data: BookBank } = useQuery(FETCH_SELECT_BOOK_BANK);
   const { data: TableData, refetch } = useQuery(FETCH_AllSALARY_BASE);
+  const { data: ExpenseComData, refetch: refetch2 } = useQuery(FETCH_ExpenseCompany);
   const [creteExpenseCom] = useMutation(CREATE_ExpenseCom);
 
   console.log("table", TableData)
 
+  useEffect(() => {
+    const salary: any = TableData;
+    const ExpenseCom: any = ExpenseComData;
+    refetch(salary);
+    refetch2(ExpenseCom);
+  }, []);
+  const setDataEC: any = () => {
+    form.setFieldsValue({
+      bankId: ExpenseComData?.expense_company?.[0]?.mas_bank?.id,
+      vat_per: ExpenseComData?.expense_company?.[0]?.vat_per,
+      ss_per: ExpenseComData?.expense_company?.[0]?.ss_per,
+    })
+  }
   const showDrawer = () => {
     setOpen(true);
   };
@@ -121,7 +135,7 @@ const Compensation: React.FC = () => {
             console.log(val);
             if (val.data?.CreateAndUpdateExpenseCom?.status) {
               Swal.fire(`ตั้งค่าการคำนวณเงินเดือนสำเร็จ!`, '', 'success');
-              refetch();
+              refetch2();
               form.resetFields();
             }
           })
@@ -283,12 +297,16 @@ const Compensation: React.FC = () => {
       <Drawer
         title={'ตั้งค่าการคำนวณเงินเดือน'}
         onClose={onClose}
+        width={550}
         open={open}
         size="large"
+        afterOpenChange={() => {
+          setDataEC();
+        }}
       >
         <Form layout="horizontal" form={form} labelCol={{ span: 8 }} onFinish={onSubmitForm}>
           <Row>
-            <Col span={16}>
+            <Col span={24}>
               <Form.Item name="bankId" label={'ธนาคาร (บริษัท)'}>
                 <Select allowClear options={selectBookBank} ></Select>
               </Form.Item>
@@ -296,7 +314,7 @@ const Compensation: React.FC = () => {
           </Row>
 
           <Row>
-            <Col span={16}>
+            <Col span={24}>
               <Form.Item name="vat_per" label={'หักภาษี (%)'}>
                 <Input />
               </Form.Item>
@@ -304,7 +322,7 @@ const Compensation: React.FC = () => {
           </Row>
 
           <Row>
-            <Col span={16}>
+            <Col span={24}>
               <Form.Item name="ss_per" label={'หักประกันสังคม (%)'}>
                 <Input />
               </Form.Item>
@@ -312,38 +330,51 @@ const Compensation: React.FC = () => {
           </Row>
 
           <Row>
-            <Col span={16}>
+            <Col span={24}>
               <Form.Item label={'หักภาษีจากรายรับประเภท'}>
                 <Checkbox.Group style={{ width: '100%' }} onChange={onChange}>
                   <Row>
-                    <Col span={8}>
+                    <Col span={12}>
                       <Checkbox value={'เงินเดือน'}>เงินเดือน</Checkbox>
                     </Col>
-                    <Col span={8}>
-                      <Checkbox value={'ค่าคอม'}>ค่าคอม</Checkbox>
+                    <Col span={12}>
+                      <Checkbox value={'ค่าคอม'}>ค่าคอมมิชชั่น</Checkbox>
                     </Col>
-                    <Col span={8}>
-                      <Checkbox value={'ค่าล่วงเวลา'}>ค่าล่วงเวลา</Checkbox>
+                    <Col span={12}>
+                      <Checkbox value={'ค่าตำแหน่ง'}>ค่าตำแหน่ง</Checkbox>
                     </Col>
-                    <Col span={8}>
-                      <Checkbox value={'โบนัส'}>โบนัส</Checkbox>
-                    </Col>
-                    <Col span={8}>
+                    <Col span={12}>
                       <Checkbox value={'เงินพิเศษ'}>เงินพิเศษ</Checkbox>
                     </Col>
-                    <Col span={8}>
+                    <Col span={12}>
+                      <Checkbox value={'ค่าล่วงเวลา'}>ค่าล่วงเวลา</Checkbox>
+                    </Col>
+                    <Col span={12}>
                       <Checkbox value={'รายได้อื่น'}>รายได้อื่น</Checkbox>
+                    </Col>
+                    <Col span={12}>
+                      <Checkbox value={'ค่าเดินทาง'}>ค่าเดินทาง</Checkbox>
+                    </Col>
+                    <Col span={12}>
+                      <Checkbox value={'เงินอุดหนุน'}>เงินอุดหนุน</Checkbox>
+                    </Col>
+                    <Col span={12}>
+                      <Checkbox value={'เงินสวัสดิการ'}>เงินสวัสดิการ</Checkbox>
+                    </Col>
+                    <Col span={12}>
+                      <Checkbox value={'โบนัส'}>โบนัส</Checkbox>
                     </Col>
                   </Row>
                 </Checkbox.Group>
               </Form.Item>
 
               <Form.Item>
-                <Space style={{ display: 'flex', justifyContent: 'center' }}>
+                <Space style={{ display: 'flex', justifyContent: 'center' }} >
                   <Button
                     type="primary"
                     style={{ backgroundColor: token.token.colorPrimary }}
                     htmlType="submit"
+                    className='mr-8'
                   >
                     บันทึก
                   </Button>

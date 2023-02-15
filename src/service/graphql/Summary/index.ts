@@ -193,3 +193,18 @@ query Bookbank_log_admin($userId: String) {
   }
 }
 `)
+
+export const FETCH_ExpenseCompany = gql(`
+query Expense_company {
+  expense_company {
+    id
+    vat_per
+    ss_per
+    mas_bank {
+      name
+      id
+    }
+  }
+}
+
+`)
