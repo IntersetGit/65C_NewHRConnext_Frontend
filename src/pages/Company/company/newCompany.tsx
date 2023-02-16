@@ -11,6 +11,7 @@ import {
   Space,
   theme,
   Upload,
+  Modal
 } from 'antd';
 import { useEffect, useState } from 'react';
 import { RiCloseFill, RiHotelLine } from 'react-icons/ri';
@@ -24,7 +25,8 @@ import { CREATE_COMPANY_ACCOUNT } from '../../../service/graphql/Company';
 import { CreateCompanyBranch } from '../../../__generated__/graphql';
 import { GET_PROVINCE } from '../../../service/graphql/Province';
 import { useAuth } from '../../../hooks/useAuth';
-import './index.css';
+import Maps from './component/Maps'
+import './index.css'
 import { PageRoleAndPermissionType } from '../../../context/AuthContext';
 
 const { useToken } = theme;
@@ -39,8 +41,10 @@ const Newcompany: React.FC<NewcompanyPropsType> = ({ role }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const [form] = Form.useForm<CreateCompanyBranch>();
+  const getLatLng = Form.useWatch('latlng', form);
   const { data: province_data, refetch } = useQuery(GET_PROVINCE);
   const [createCompanyAccount] = useMutation(CREATE_COMPANY_ACCOUNT);
+  const [visible, setVisible] = useState(false)
   const [district, setDistrict] = useState<
     { value?: string | null; label?: string | null }[] | undefined
   >(undefined);
@@ -61,7 +65,7 @@ const Newcompany: React.FC<NewcompanyPropsType> = ({ role }) => {
     onProvinceChange(Editdata?.country);
     onDistrictChangeCitizen(Editdata?.state);
     onAmphoeChangeCitizen(Editdata?.city);
-    form.setFieldsValue(Editdata);
+    form.setFieldsValue({ ...Editdata, latlng: [Editdata.lat, Editdata.lng] });
   };
 
   const province = province_data?.getProvince?.map((e) => {
@@ -116,7 +120,14 @@ const Newcompany: React.FC<NewcompanyPropsType> = ({ role }) => {
     form.setFieldValue('zip', zipCode);
   };
 
-  const onSubmitForm = (value: CreateCompanyBranch) => {
+  const onSubmitForm = (value: any) => {
+    let objvalue = {
+      ...value,
+      id: Editdata?.id ? Editdata?.id : undefined,
+      lat: value?.latlng ? (value?.latlng[0]).toString() : '',
+      lng: value?.latlng ? (value?.latlng[1]).toString() : '',
+    };
+    delete objvalue?.latlng;
     Swal.fire({
       title: `${Editdata?.id ? 'แก้ไข' : 'สร้าง'}การสร้างข้อมูล!`,
       icon: 'warning',
@@ -130,10 +141,7 @@ const Newcompany: React.FC<NewcompanyPropsType> = ({ role }) => {
       if (result.isConfirmed) {
         createCompanyAccount({
           variables: {
-            data: {
-              ...value,
-              id: Editdata?.id ? Editdata?.id : undefined,
-            },
+            data: objvalue,
           },
         })
           .then((val) => {
@@ -483,6 +491,7 @@ const Newcompany: React.FC<NewcompanyPropsType> = ({ role }) => {
               <Form.Item label={'แผนที่'}>
                 {Editdata?.mode == 'view' ? (
                   <Button
+                    onClick={() => setVisible(true)}
                     type="primary"
                     disabled
                     style={{
@@ -495,6 +504,7 @@ const Newcompany: React.FC<NewcompanyPropsType> = ({ role }) => {
                   </Button>
                 ) : (
                   <Button
+                    onClick={() => setVisible(true)}
                     type="primary"
                     style={{
                       width: '100%',
@@ -508,7 +518,7 @@ const Newcompany: React.FC<NewcompanyPropsType> = ({ role }) => {
               </Form.Item>
             </Col>
             <Col xs={24} sm={24} md={12} lg={12} xl={6}>
-              <Form.Item label={'พิกัด'}>
+              <Form.Item name='latlng' label={'พิกัด'}>
                 {Editdata?.mode == 'view' ? (
                   <Input disabled autoComplete="off" />
                 ) : (
@@ -625,12 +635,13 @@ const Newcompany: React.FC<NewcompanyPropsType> = ({ role }) => {
             โลโก้บริษัท
           </div>
           <Row gutter={16} className="px-2">
-            <Col xs={24} sm={6} md={6} lg={6} xl={4}>
+            <Col span={12} offset={6}>
               {Editdata?.mode == 'view' ? (
                 <Upload
                   action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
                   maxCount={1}
                   className={'upload-custom'}
+                  listType="picture"
                 >
                   <Button
                     disabled
@@ -649,6 +660,7 @@ const Newcompany: React.FC<NewcompanyPropsType> = ({ role }) => {
                   action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
                   maxCount={1}
                   className={'upload-custom'}
+                  listType="picture"
                 >
                   <Button
                     type="primary"
@@ -663,27 +675,7 @@ const Newcompany: React.FC<NewcompanyPropsType> = ({ role }) => {
                 </Upload>
               )}
             </Col>
-            <Col xs={24} sm={14} md={14} lg={14} xl={14}>
-              {Editdata?.mode == 'view' ? (
-                <Input disabled autoComplete="off" />
-              ) : (
-                <Input autoComplete="off" />
-              )}
-            </Col>
-            <Col xs={24} sm={4} md={4} lg={4} xl={4}>
-              {Editdata?.mode == 'view' ? (
-                <Button
-                  disabled
-                  className="flex flex-row items-center text-2xl"
-                >
-                  <RiCloseFill />
-                </Button>
-              ) : (
-                <Button className="flex flex-row items-center text-2xl">
-                  <RiCloseFill />
-                </Button>
-              )}
-            </Col>
+
           </Row>
           <Divider style={{ backgroundColor: token.token.colorPrimary }} />
 
@@ -793,137 +785,126 @@ const Newcompany: React.FC<NewcompanyPropsType> = ({ role }) => {
           </div>
           <br />
           <Row gutter={16}>
-            <Col>
+            <Col md={12} xl={12} xs={24}>
               <Form.Item label="หนังสือรับรอง">
                 {Editdata?.mode == 'view' ? (
-                  <Button
-                    disabled
-                    type="primary"
-                    style={{
-                      width: '100%',
-                      marginBottom: '10px',
-                      backgroundColor: token.token.colorPrimary,
-                    }}
+                  <Upload
+                    action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                    maxCount={1}
+                    className={'upload-custom'}
+                    listType="picture"
                   >
-                    เลือกไฟล์เอกสาร
-                  </Button>
+                    <Button
+                      disabled
+                      type="primary"
+                      style={{
+                        width: '100%',
+                        marginBottom: '10px',
+                        backgroundColor: token.token.colorPrimary,
+                      }}
+                    >
+                      เลือกไฟล์เอกสาร
+                    </Button>
+                  </Upload>
+
                 ) : (
-                  <Button
-                    type="primary"
-                    style={{
-                      width: '100%',
-                      marginBottom: '10px',
-                      backgroundColor: token.token.colorPrimary,
-                    }}
+                  <Upload
+                    action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                    maxCount={1}
+                    className={'upload-custom'}
+                    listType="picture"
                   >
-                    เลือกไฟล์เอกสาร
-                  </Button>
+                    <Button
+                      type="primary"
+                      style={{
+                        width: '100%',
+                        marginBottom: '10px',
+                        backgroundColor: token.token.colorPrimary,
+                      }}
+                    >
+                      เลือกไฟล์เอกสาร
+                    </Button>
+                  </Upload>
                 )}
               </Form.Item>
             </Col>
-            <Col xs={24} sm={18} md={6} lg={8} xl={6}>
-              <Form.Item>
-                {Editdata?.mode == 'view' ? (
-                  <Input disabled autoComplete="off" />
-                ) : (
-                  <Input autoComplete="off" />
-                )}
-              </Form.Item>
-            </Col>
-            <Col xs={24} sm={6} md={6} lg={6} xl={1}>
-              {Editdata?.mode == 'view' ? (
-                <Button
-                  disabled
-                  className="flex flex-row items-center text-2xl"
-                >
-                  <RiCloseFill />
-                </Button>
-              ) : (
-                <Button className="flex flex-row items-center text-2xl">
-                  <RiCloseFill />
-                </Button>
-              )}
-            </Col>
-            <Col>
+
+            <Col md={12} xl={12} xs={24} >
               <Form.Item label="ก.พ. 20">
                 {Editdata?.mode == 'view' ? (
-                  <Button
-                    disabled
-                    type="primary"
-                    style={{
-                      width: '100%',
-                      marginBottom: '10px',
-                      backgroundColor: token.token.colorPrimary,
-                    }}
+                  <Upload
+                    action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                    maxCount={1}
+                    className={'upload-custom'}
+                    listType="picture"
                   >
-                    เลือกไฟล์เอกสาร
-                  </Button>
+                    <Button
+                      disabled
+                      type="primary"
+                      style={{
+                        width: '100%',
+                        marginBottom: '10px',
+                        backgroundColor: token.token.colorPrimary,
+                      }}
+                    >
+                      เลือกไฟล์เอกสาร
+                    </Button>
+                  </Upload>
                 ) : (
-                  <Button
-                    type="primary"
-                    style={{
-                      width: '100%',
-                      marginBottom: '10px',
-                      backgroundColor: token.token.colorPrimary,
-                    }}
+                  <Upload
+                    action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                    maxCount={1}
+                    className={'upload-custom'}
+                    listType="picture"
                   >
-                    เลือกไฟล์เอกสาร
-                  </Button>
+                    <Button
+                      type="primary"
+                      style={{
+                        width: '100%',
+                        marginBottom: '10px',
+                        backgroundColor: token.token.colorPrimary,
+                      }}
+                    >
+                      เลือกไฟล์เอกสาร
+                    </Button>
+                  </Upload>
                 )}
               </Form.Item>
             </Col>
-            <Col xs={24} sm={18} md={6} lg={8} xl={6}>
-              <Form.Item>
-                {Editdata?.mode == 'view' ? (
-                  <Input disabled autoComplete="off" />
-                ) : (
-                  <Input autoComplete="off" />
-                )}
-              </Form.Item>
-            </Col>
-            <Col xs={24} sm={6} md={6} lg={6} xl={1}>
-              {Editdata?.mode == 'view' ? (
-                <Button
-                  disabled
-                  className="flex flex-row items-center text-2xl"
-                >
-                  <RiCloseFill />
-                </Button>
-              ) : (
-                <Button className="flex flex-row items-center text-2xl">
-                  <RiCloseFill />
-                </Button>
-              )}
-            </Col>
+
+
           </Row>
 
           <Row gutter={16}>
-            <Form.Item>
-              <Space>
-                <Button
-                  htmlType="submit"
-                  type="primary"
-                  style={{
-                    marginBottom: '10px',
-                    backgroundColor: token.token.colorPrimary,
-                  }}
-                >
-                  บันทึก
-                </Button>
-                <Button
-                  style={{
-                    marginBottom: '10px',
-                  }}
-                  onClick={() => {
-                    companyNavigate('/:companycode/company');
-                  }}
-                >
-                  ยกเลิก
-                </Button>
-              </Space>
-            </Form.Item>
-          </Row>
 
+
+            <Col xs={24} sm={12} md={12} lg={8} xl={12}>
+              <Button
+                style={{
+                  width: '100%',
+                  marginBottom: '10px',
+                }}
+                onClick={() => {
+                  companyNavigate('/:companycode/company');
+                }}
+              >
+                ยกเลิก
+              </Button>
+            </Col>
+            <Col xs={24} sm={12} md={12} lg={8} xl={12}>
+              <Button
+                htmlType="submit"
+                type="primary"
+                style={{
+                  width: '100%',
+                  marginBottom: '10px',
+                  backgroundColor: token.token.colorPrimary,
+                }}
+              >
+                บันทึก
+              </Button>
+            </Col>
+          </Row>
           <div
             className="text-base"
             style={{ color: token.token.colorPrimary }}
@@ -934,7 +915,14 @@ const Newcompany: React.FC<NewcompanyPropsType> = ({ role }) => {
           </div>
         </Form>
       </Card>
+
+
+
       <br />
+      {getLatLng}
+      <Modal title="กรุณาเลือกพื้นที่" onOk={() => setVisible(false)} open={visible} okButtonProps={{ style: { backgroundColor: token.token.colorPrimary } }} onCancel={() => setVisible(false)} >
+        <Maps defaulCenter={getLatLng ? { lat: parseFloat(getLatLng[0]), lng: parseFloat(getLatLng[1]) } : { lat: 13.7740564, lng: 100.7852518 }} onChange={(latlng) => form.setFieldValue('latlng', [latlng.lat, latlng.lng])} />
+      </Modal>
     </>
   );
 };

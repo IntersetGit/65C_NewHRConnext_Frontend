@@ -62,7 +62,7 @@ const PositionEmployee: React.FC = (props) => {
   const [drawerType, setDrawerType] = useState(1);
   const [selectedrow, setselectedrow] = useState<any>();
   const { data: position_data, refetch } = useQuery(FETCH_GETALL_POSITION, {
-    variables: { getpositionUserId: propsstate.userId },
+    variables: { getpositionUserId: propsstate?.userId },
   });
   console.log('position_data', position_data);
   const { data: positionlevel1 } = useQuery(POSITION);
@@ -245,21 +245,21 @@ const PositionEmployee: React.FC = (props) => {
       showDrawer(2);
       setselectedrow(record);
       console.log(record);
-      onChangeMasLevel1(record?.mas_positionlevel1.id);
-      onChangeMasLevel2(record?.mas_positionlevel2.id);
+      onChangeMasLevel1(record?.mas_positionlevel1?.id);
+      onChangeMasLevel2(record?.mas_positionlevel2?.id);
       form.setFieldsValue({
         ...record,
-        date: record.date ? dayjs(record.date) : undefined,
+        date: record?.date ? dayjs(record?.date) : undefined,
         headderId: record?.header?.id,
         role_company: propsstate?.Role_company?.name,
       });
     } else if (key === 'view') {
       showDrawer(3);
-      onChangeMasLevel1(record?.mas_positionlevel1.id);
-      onChangeMasLevel2(record?.mas_positionlevel2.id);
+      onChangeMasLevel1(record?.mas_positionlevel1?.id);
+      onChangeMasLevel2(record?.mas_positionlevel2?.id);
       form.setFieldsValue({
         ...record,
-        date: record.date ? dayjs(record.date) : undefined,
+        date: record?.date ? dayjs(record?.date) : undefined,
       });
     } else if (key === 'delete') {
     }
