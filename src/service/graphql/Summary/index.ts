@@ -204,7 +204,7 @@ query Expense_company {
       name
       id
     }
+    check_vat
   }
 }
-
 `)

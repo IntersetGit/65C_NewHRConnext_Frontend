@@ -13,6 +13,7 @@ import {
   Dropdown,
   Drawer,
   Checkbox,
+  DatePicker,
 } from 'antd';
 import { GiReceiveMoney } from 'react-icons/gi';
 import type { ColumnsType } from 'antd/es/table';
@@ -29,7 +30,7 @@ import { useAuth } from '../../../hooks/useAuth';
 
 import { useQuery, useMutation } from '@apollo/client';
 import { FETCH_SELECT_BOOK_BANK, FETCH_AllSALARY_BASE, CREATE_ExpenseCom, FETCH_ExpenseCompany } from '../../../service/graphql/Summary';
-
+import 'dayjs/locale/th'
 const { useToken } = theme;
 
 const Compensation: React.FC = () => {
@@ -62,6 +63,7 @@ const Compensation: React.FC = () => {
       bankId: ExpenseComData?.expense_company?.[0]?.mas_bank?.id,
       vat_per: ExpenseComData?.expense_company?.[0]?.vat_per,
       ss_per: ExpenseComData?.expense_company?.[0]?.ss_per,
+      check_vat: ExpenseComData?.expense_company?.[0]?.check_vat,
     })
   }
   const showDrawer = () => {
@@ -206,6 +208,48 @@ const Compensation: React.FC = () => {
     },
   ];
 
+  const columnsCom: ColumnsType<any> = [
+    {
+      title: 'เดือน/ปี',
+      key: 'date',
+      dataIndex: 'date',
+      align: 'center',
+
+    },
+    {
+      title: 'ธนาคาร',
+      key: 'mas_bank',
+      dataIndex: 'mas_bank',
+      align: 'center',
+
+    },
+    {
+      title: 'เปอร์เซ็นต์ภาษี',
+      key: 'vat_per',
+      align: 'center',
+    },
+    {
+      title: 'เปอร์เซ็นต์ประกันสังคม',
+      key: 'vat_per',
+      align: 'center',
+    },
+    {
+      title: 'Action',
+      key: 'ss_per',
+      align: 'center',
+      render: (_: any, record: any) => (
+        <Dropdown
+          menu={{
+            items: genarateMenu(record),
+          }}
+          arrow
+        >
+          <MoreOutlined />
+        </Dropdown>
+      ),
+    },
+  ];
+
   return (
     <>
       <div className="flex text-3xl ml-2 pt-4">
@@ -291,6 +335,10 @@ const Compensation: React.FC = () => {
             </Space>
           </Row>
         </Col>
+        <Table rowKey={'id'} columns={columnsCom} ></Table>
+
+      </Card>
+      <Card className="shadow-md mt-6">
         <Table rowKey={'id'} columns={columns} dataSource={TableData?.data_salary as any}></Table>
       </Card>
       {/* position_data?.getposition_user as any */}
@@ -305,6 +353,20 @@ const Compensation: React.FC = () => {
         }}
       >
         <Form layout="horizontal" form={form} labelCol={{ span: 8 }} onFinish={onSubmitForm}>
+          <Row>
+            <Col xs={24} sm={24} md={24} lg={24} xl={24}>
+              <Form.Item name="date" label={'เดือน/ปี'} className='ml-[82px]'>
+                <DatePicker picker="month" format={'MM/YYYY'} />
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row>
+            <Col xs={24} sm={24} md={24} lg={24} xl={24}>
+              <Form.Item name="date" label={'วันที่จ่ายเงิน'} className='ml-[82px]'>
+                <DatePicker picker="date" format={'DD/MM'} />
+              </Form.Item>
+            </Col>
+          </Row>
           <Row>
             <Col span={24}>
               <Form.Item name="bankId" label={'ธนาคาร (บริษัท)'}>
@@ -331,43 +393,42 @@ const Compensation: React.FC = () => {
 
           <Row>
             <Col span={24}>
-              <Form.Item label={'หักภาษีจากรายรับประเภท'}>
+              <Form.Item name="check_vat" label={'หักภาษีจากรายรับประเภท'}>
                 <Checkbox.Group style={{ width: '100%' }} onChange={onChange}>
                   <Row>
                     <Col span={12}>
-                      <Checkbox value={'เงินเดือน'}>เงินเดือน</Checkbox>
+                      <Checkbox value={'base_salary'}>เงินเดือน</Checkbox>
                     </Col>
                     <Col span={12}>
-                      <Checkbox value={'ค่าคอม'}>ค่าคอมมิชชั่น</Checkbox>
+                      <Checkbox value={'commission'}>ค่าคอมมิชชั่น</Checkbox>
                     </Col>
                     <Col span={12}>
-                      <Checkbox value={'ค่าตำแหน่ง'}>ค่าตำแหน่ง</Checkbox>
+                      <Checkbox value={'position_income'}>ค่าตำแหน่ง</Checkbox>
                     </Col>
                     <Col span={12}>
-                      <Checkbox value={'เงินพิเศษ'}>เงินพิเศษ</Checkbox>
+                      <Checkbox value={'special_income'}>เงินพิเศษ</Checkbox>
                     </Col>
                     <Col span={12}>
-                      <Checkbox value={'ค่าล่วงเวลา'}>ค่าล่วงเวลา</Checkbox>
+                      <Checkbox value={'ot'}>ค่าล่วงเวลา</Checkbox>
                     </Col>
                     <Col span={12}>
-                      <Checkbox value={'รายได้อื่น'}>รายได้อื่น</Checkbox>
+                      <Checkbox value={'other_income'}>รายได้อื่น</Checkbox>
                     </Col>
                     <Col span={12}>
-                      <Checkbox value={'ค่าเดินทาง'}>ค่าเดินทาง</Checkbox>
+                      <Checkbox value={'travel_income'}>ค่าเดินทาง</Checkbox>
                     </Col>
                     <Col span={12}>
-                      <Checkbox value={'เงินอุดหนุน'}>เงินอุดหนุน</Checkbox>
+                      <Checkbox value={'bursary'}>เงินอุดหนุน</Checkbox>
                     </Col>
                     <Col span={12}>
-                      <Checkbox value={'เงินสวัสดิการ'}>เงินสวัสดิการ</Checkbox>
+                      <Checkbox value={'welfare_money'}>เงินสวัสดิการ</Checkbox>
                     </Col>
                     <Col span={12}>
-                      <Checkbox value={'โบนัส'}>โบนัส</Checkbox>
+                      <Checkbox value={'bonus'}>โบนัส</Checkbox>
                     </Col>
                   </Row>
                 </Checkbox.Group>
               </Form.Item>
-
               <Form.Item>
                 <Space style={{ display: 'flex', justifyContent: 'center' }} >
                   <Button
