@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   theme,
   Button,
@@ -67,6 +67,8 @@ const GET_COMPANY = gql(/* GraphQL */ `
         social_line
         createdAt
         updatedAt
+        regis_vat
+        regiscomnumber
       }
       userlimit
       name
@@ -80,6 +82,10 @@ const Companyniti: React.FC<CompanynitiPropsType> = ({ role }) => {
   const [deletecomapany] = useMutation(DELETE_COMPANY);
   const navigate = useNavigate();
   const { ability } = useAuth();
+
+  useEffect(() => {
+    refetch()
+  }, [])
 
   const onMenuClick = (event: any, record: any) => {
     const { key } = event;
@@ -266,19 +272,19 @@ const Companyniti: React.FC<CompanynitiPropsType> = ({ role }) => {
             role?.add?.action as string,
             role?.add?.subject as string,
           ) && (
-            <Button
-              type="primary"
-              style={{
-                marginBottom: '10px',
-                backgroundColor: token.token.colorPrimary,
-              }}
-              onClick={() => {
-                navigate('newCompany');
-              }}
-            >
-              + เพิ่มสาขา
-            </Button>
-          )}
+              <Button
+                type="primary"
+                style={{
+                  marginBottom: '10px',
+                  backgroundColor: token.token.colorPrimary,
+                }}
+                onClick={() => {
+                  navigate('newCompany');
+                }}
+              >
+                + เพิ่มสาขา
+              </Button>
+            )}
         </Col>
         <Table
           rowKey={'id'}

@@ -11,7 +11,8 @@ import {
   Space,
   theme,
   Upload,
-  Modal
+  Modal,
+  InputNumber
 } from 'antd';
 import { useEffect, useState } from 'react';
 import { RiCloseFill, RiHotelLine } from 'react-icons/ri';
@@ -126,6 +127,7 @@ const Newcompany: React.FC<NewcompanyPropsType> = ({ role }) => {
       id: Editdata?.id ? Editdata?.id : undefined,
       lat: value?.latlng ? (value?.latlng[0]).toString() : '',
       lng: value?.latlng ? (value?.latlng[1]).toString() : '',
+      registeredamount: (value.registeredamount).toString()
     };
     delete objvalue?.latlng;
     Swal.fire({
@@ -222,7 +224,7 @@ const Newcompany: React.FC<NewcompanyPropsType> = ({ role }) => {
 
             <Col xs={24} sm={24} md={12} lg={12} xl={8}>
               <Form.Item
-                name={'companyId'}
+                name={'regiscomnumber'}
                 label={'เลขจดทะเบียนบริษัท'}
                 rules={[
                   {
@@ -246,7 +248,7 @@ const Newcompany: React.FC<NewcompanyPropsType> = ({ role }) => {
               </Form.Item>
             </Col>
             <Col xs={24} sm={24} md={24} lg={24} xl={8}>
-              <Form.Item label={'เลขทะเบียนภาษีมูลค่าเพิ่ม'}>
+              <Form.Item name={'regis_vat'} label={'เลขทะเบียนภาษีมูลค่าเพิ่ม'}>
                 {Editdata?.mode == 'view' ? (
                   <Input
                     disabled
@@ -522,13 +524,13 @@ const Newcompany: React.FC<NewcompanyPropsType> = ({ role }) => {
                 {Editdata?.mode == 'view' ? (
                   <Input disabled autoComplete="off" />
                 ) : (
-                  <Input autoComplete="off" />
+                  <Input disabled autoComplete="off" />
                 )}
               </Form.Item>
             </Col>
 
             <Col xs={24} sm={24} md={12} lg={12} xl={6}>
-              <Form.Item name={'email'} label={'อีเมล์ #1'}>
+              <Form.Item name={'email'} label={'อีเมล์ #1'} rules={[{ type: 'email' }]}>
                 {Editdata?.mode == 'view' ? (
                   <Input disabled autoComplete="off" />
                 ) : (
@@ -537,7 +539,7 @@ const Newcompany: React.FC<NewcompanyPropsType> = ({ role }) => {
               </Form.Item>
             </Col>
             <Col xs={24} sm={24} md={12} lg={12} xl={6}>
-              <Form.Item name={'email_2'} label={'อีเมล์ #2'}>
+              <Form.Item name={'email_2'} label={'อีเมล์ #2'} rules={[{ type: 'email', message: 'กรุณากรอกอีเมลให้ถูกต้อง' }]}>
                 {Editdata?.mode == 'view' ? (
                   <Input disabled autoComplete="off" />
                 ) : (
@@ -617,11 +619,12 @@ const Newcompany: React.FC<NewcompanyPropsType> = ({ role }) => {
               <Form.Item
                 name={'registeredamount'}
                 label={'ทุนจดทะเบียน ( บาท )'}
+                rules={[{ type: 'number', message: 'กรุณากรอกตัวเลขให้ถูกต้อง' }]}
               >
                 {Editdata?.mode == 'view' ? (
-                  <Input disabled autoComplete="off" placeholder="( บาท )" />
+                  <InputNumber disabled autoComplete="off" placeholder="( บาท )" />
                 ) : (
-                  <Input autoComplete="off" placeholder="( บาท )" />
+                  <InputNumber autoComplete="off" placeholder="( บาท )" />
                 )}
               </Form.Item>
             </Col>
