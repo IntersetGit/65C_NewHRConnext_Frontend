@@ -42,7 +42,7 @@ import Del from '../../../assets/DEL.png';
 import View from '../../../assets/View.png';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import moment from 'moment';
+import * as dayjs from 'dayjs'
 
 const { useToken } = theme;
 
@@ -187,7 +187,7 @@ const Remuneration: React.FC = () => {
                 base_salary: parseFloat(value.base_salary),
                 provident_emp: parseFloat(value.provident_emp),
                 provident_com: parseFloat(value.provident_com),
-                // date: moment(value),
+                // date: dayjs(value),
               },
             },
           })
@@ -216,13 +216,13 @@ const Remuneration: React.FC = () => {
       setSelectedRow(record);
       form.setFieldsValue({
         ...record,
-        date: record.date ? moment(record.date) : undefined,
+        date: record.date ? dayjs(record.date) : undefined,
       });
     } else if (key === 'view') {
       showDrawer(3);
       form.setFieldsValue({
         ...record,
-        date: record.date ? moment(record.date) : undefined,
+        date: record.date ? dayjs(record.date) : undefined,
       });
     } else if (key === 'delete') {
       Swal.fire({
@@ -262,7 +262,7 @@ const Remuneration: React.FC = () => {
       key: 'date',
       dataIndex: 'date',
       align: 'center',
-      render: (record: any) => moment(record).format('DD/MM/YYYY') as any,
+      render: (record: any) => dayjs(record).format('DD/MM/YYYY') as any,
     },
     {
       title: 'ฐานเงินเดือน',
@@ -346,9 +346,7 @@ const Remuneration: React.FC = () => {
                 {propsstate?.profile?.lastname_th}
               </u>
               <div className="mt-4">
-                {position_data?.getposition_user?.[
-                  position_data?.getposition_user?.length - 1
-                ]?.mas_positionlevel3?.name ?? 'ไม่มีตำแหน่งงาน'}
+                {propsstate?.Position_user?.[0]?.mas_positionlevel3?.name ?? 'ไม่มีตำแหน่งงาน'}
               </div>
             </div>
           </Col>

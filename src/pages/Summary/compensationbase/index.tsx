@@ -88,13 +88,15 @@ const Compensationbase: React.FC = () => {
     if (key === 'view') {
       setSelectedRow(record);
       navigate(`remuneration?id=${record.profile.userId}`, {
-        state: { ...record, userId: record?.profile?.userId, },
+        state: {
+          ...record, userId: record?.profile?.userId,
+
+        },
       });
 
       console.log("State", record)
     }
   };
-
 
   const columns: ColumnsType<any> = [
     {

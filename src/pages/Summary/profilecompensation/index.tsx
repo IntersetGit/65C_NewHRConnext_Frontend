@@ -28,7 +28,7 @@ import Slip from '../../../assets/Slip.png';
 import View from '../../../assets/View.png';
 import Cal1 from '../../../assets/Cal1.png';
 
-import moment from 'moment';
+import * as dayjs from 'dayjs'
 import th from 'antd/locale/th_TH'
 import { generatePath, useNavigate, useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
@@ -54,6 +54,7 @@ const Compensation: React.FC = () => {
     const token = useToken();
     const [open, setOpen] = useState(false);
     const [form] = Form.useForm();
+    const [formshow] = Form.useForm();
     const navigate = useNavigate();
     const [drawerType, setDrawerType] = useState(1);
     const [selectedRow, setselectedRow] = useState<any>();
@@ -82,6 +83,25 @@ const Compensation: React.FC = () => {
             ss_per: ExpenseComData?.expense_company?.[0]?.ss_per,
         })
     }
+
+    useEffect(() => {
+        refetch2();
+        const salary: any = TableDataSalary
+            ? TableDataSalary?.salary?.bookbank_log?.[0]?.base_salary?.toFixed(2)
+            : '0.00';
+        const banknumber: any = TableDataSalary
+            ? TableDataSalary?.salary?.bookbank_log?.[0]?.bank_number
+            : '0.00';
+        const bankname: any = TableDataSalary
+            ? TableDataSalary?.salary?.bookbank_log?.[0]?.mas_bank?.name
+            : '';
+
+        formshow.setFieldsValue({
+            base_salary: salary,
+            bank_number: banknumber,
+            mas_bankId: bankname,
+        });
+    }, [TableDataSalary]);
 
     const showDrawer = (type: any) => {
         setOpen(true);
@@ -228,7 +248,7 @@ const Compensation: React.FC = () => {
             title: 'เดือน/ปี',
             key: 'date',
             align: 'center',
-            render: (text: any, record: any) => text ? moment(`${record.month}/${record.years}`, 'MM/YYYY').format('MMMM' + ' ' + 'YYYY') as any : '',
+            render: (text: any, record: any) => text ? dayjs(`${record.month}/${record.years}`, 'MM/YYYY').format('MMMM' + ' ' + 'YYYY') as any : '',
         },
         {
             title: 'รายได้รวม',
@@ -291,7 +311,7 @@ const Compensation: React.FC = () => {
         const getmount = TableDataSalary?.salary;
         // console.log('getmount', getmount)
         // console.log('current && current ', current)
-        return current && current < moment().endOf('day');
+        return current && current < dayjs().endOf('day');
     };
 
     // const onChangeCalculate: any = salary: any, value: any) => {
@@ -329,15 +349,13 @@ const Compensation: React.FC = () => {
                                 {propsstate?.profile?.lastname_th}
                             </u>
                             <div className="mt-4">
-                                {position_data?.getposition_user?.[
-                                    position_data?.getposition_user?.length - 1
-                                ]?.mas_positionlevel3?.name ?? 'ไม่มีตำแหน่งงาน'}
+                                {propsstate?.Position_user?.[0]?.mas_positionlevel3?.name ?? 'ไม่มีตำแหน่งงาน'}
                             </div>
                         </div>
                     </Col>
                 </Row>
 
-                <Form size="middle">
+                <Form form={formshow} size="middle">
                     <Row gutter={16}>
                         <Col xs={24} sm={24} md={24} lg={9} xl={6}>
                             <Form.Item name="base_salary" colon={false} label={'ฐานเงินเดือน'}>
@@ -435,7 +453,10 @@ const Compensation: React.FC = () => {
                             console.log('calculater', all.total_income, all.total_expense)
                             let netval = parseFloat(all.total_income ? all.total_income : 0)
                                 - parseFloat(all.total_expense ? all.total_expense : 0);
-                            form.setFieldValue('net', (netval).toString())
+                            const sumNets = (netval: any) => {
+                                form.setFieldValue('net', (netval).toString())
+                            }
+                            sumNets(netval)
                         }
                     }
                     const sum = () => {
@@ -454,6 +475,16 @@ const Compensation: React.FC = () => {
                         finish()
                     }
                     const minus = () => {
+                        let vatCal = (parseFloat(all.base_salary ? all.base_salary : 0)
+                            + parseFloat(all.commission ? all.commission : 0)
+                            + parseFloat(all.position_income ? all.position_income : 0)
+                            + parseFloat(all.special_income ? all.special_income : 0)
+                            + parseFloat(all.ot ? all.ot : 0)
+                            + parseFloat(all.other_income ? all.other_income : 0)
+                            + parseFloat(all.travel_income ? all.travel_income : 0)
+                            + parseFloat(all.bursary ? all.bursary : 0)
+                            + parseFloat(all.welfare_money ? all.welfare_money : 0)
+                            + parseFloat(all.bonus ? all.bonus : 0));
                         let minusval = parseFloat(all.vat ? all.vat : 0)
                             + parseFloat(all.social_security ? all.social_security : 0)
                             + parseFloat(all.miss ? all.miss : 0)
@@ -620,7 +651,9 @@ const Compensation: React.FC = () => {
 
 
                                 <Form.Item name="vat" className='ml-[1px]'>
-                                    <InputNumber style={{ width: "100%" }} disabled={drawerType === 3 ? true : false} className='w-[222px]' />
+                                    <InputNumber style={{ width: "100%" }} disabled={drawerType === 3 ? true : false}
+                                        className='w-[222px]'
+                                    />
                                 </Form.Item>
                             </Space>
                         </Col>
