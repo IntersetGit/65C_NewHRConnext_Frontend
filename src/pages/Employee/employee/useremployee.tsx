@@ -441,7 +441,7 @@ const UserEmployee: React.FC = (props) => {
               },
               {
                 label: `ตำแหน่งงาน`,
-                key: '/:companycode/employee/positionemployee',
+                key: `/:companycode/employee/positionemployee?id=${propsstate?.id}`,
               },
             ]}
           />

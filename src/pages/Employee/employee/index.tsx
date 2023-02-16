@@ -39,6 +39,7 @@ import { User } from '../../../__generated__/graphql';
 import { gql } from '../../../__generated__';
 import Swal from 'sweetalert2';
 import { getFilePath, getUploadUrl } from '../../../util';
+import { POSITION } from '../../../service/graphql/Position';
 
 const { useToken } = theme;
 
@@ -55,6 +56,7 @@ const Employee: React.FC = () => {
   const navigate = useNavigate();
   const [dataTable, setDataTable] = useState([]);
   const { data: userData, loading, refetch } = useQuery(FETCH_GETALLUSER);
+  const { data: position } = useQuery(POSITION);
   const [deleteEmployeeAccount] = useMutation(DELETE_EMPLOYEE_ACCOUNT);
   const [isDisplayfield, setDisplayfield] = useState(1);
   const [pagecurrent, setPageCurrent] = useState<number>(2);
@@ -205,6 +207,18 @@ const Employee: React.FC = () => {
     },
   ];
 
+  // const onChange = (value) => {
+  //   console.log(value);
+  // };
+
+  const mas_positionlevel2 =
+    position?.getMasPositon?.[0]?.mas_positionlevel2?.map((e) => {
+      return {
+        label: e?.name,
+        value: e?.id,
+      };
+    });
+
   return (
     <>
       <div className="flex text-2xl ml-2 pt-4">
@@ -223,13 +237,21 @@ const Employee: React.FC = () => {
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={6} xl={6}>
-              <Form.Item name="search" colon={false} label={'แผนก'}>
-                <Select allowClear></Select>
+              <Form.Item name="mas_positionleave2" colon={false} label={'แผนก'}>
+                <Select
+                  options={mas_positionlevel2}
+                  // onChange={onChange}
+                  allowClear
+                ></Select>
               </Form.Item>
             </Col>
 
             <Col xs={24} sm={24} md={24} lg={6} xl={6}>
-              <Form.Item name="search" colon={false} label={'ตำแหน่ง'}>
+              <Form.Item
+                name="mas_positionleave3"
+                colon={false}
+                label={'ตำแหน่ง'}
+              >
                 <Select allowClear></Select>
               </Form.Item>
             </Col>
