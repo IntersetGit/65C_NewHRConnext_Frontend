@@ -214,7 +214,16 @@ export const routing: RoutingType[] = [
           },
           {
             path: '/:companycode/company/newCompany',
-            element: <ManageCompanyData />,
+            element: (
+              <ManageCompanyData
+                role={{
+                  add: { action: 'add', subject: 'manageCompanydetail' },
+                  edit: { action: 'edit', subject: 'manageCompanydetail' },
+                  delete: { action: 'delete', subject: 'manageCompanydetail' },
+                  read: { action: 'read', subject: 'manageCompanydetail' },
+                }}
+              />
+            ),
             hideInmenu: true,
             requireRole: { action: 'read', subject: 'manageCompanydetail' },
           },

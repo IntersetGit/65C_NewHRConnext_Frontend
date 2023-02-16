@@ -32,14 +32,15 @@ import { useState } from 'react';
 const { useToken } = theme;
 const { TextArea } = Input;
 import {
-  FETCH_ALL_LEAVE,
+  FETCH_BYID_LEAVE,
   LEAVE_TYPE_DATA,
   CREATE_LEAVE,
 } from '../../../../service/graphql/Leave';
 import { useQuery, useMutation } from '@apollo/client';
-import moment from 'moment';
 import Swal from 'sweetalert2';
 import { PageRoleAndPermissionType } from '../../../../context/AuthContext';
+import { getFilePath } from '../../../../util';
+import dayjs from 'dayjs';
 
 type ProfileApprovePropsType = {
   role?: PageRoleAndPermissionType;
@@ -51,7 +52,7 @@ const ProfileApprove: React.FC<ProfileApprovePropsType> = ({ role }) => {
   const token = useToken();
   const [drawertype, setDrawertype] = useState(1);
   const [selectedrow, setselectedrow] = useState<any>();
-  const { data: dataleaveme, loading, refetch } = useQuery(FETCH_ALL_LEAVE);
+  const { data: dataleaveme, loading, refetch } = useQuery(FETCH_BYID_LEAVE);
   const { data: leave_type_data } = useQuery(LEAVE_TYPE_DATA);
   const [createLeaveData] = useMutation(CREATE_LEAVE);
 
@@ -103,8 +104,8 @@ const ProfileApprove: React.FC<ProfileApprovePropsType> = ({ role }) => {
       setselectedrow(record);
       form.setFieldsValue({
         ...record,
-        start_date: record.start_date ? moment(record.start_date) : undefined,
-        end_date: record.end_date ? moment(record.end_date) : undefined,
+        start_date: record.start_date ? dayjs(record.start_date) : undefined,
+        end_date: record.end_date ? dayjs(record.end_date) : undefined,
       });
     } else if (key === 'view') {
       showDrawer(3);
@@ -134,7 +135,7 @@ const ProfileApprove: React.FC<ProfileApprovePropsType> = ({ role }) => {
       align: 'center',
       render: (record) => {
         return record.start_date
-          ? moment(new Date(record.start_date)).format('DD/MM/YYYY')
+          ? dayjs(new Date(record.start_date)).format('DD/MM/YYYY')
           : undefined;
       },
     },
@@ -144,7 +145,7 @@ const ProfileApprove: React.FC<ProfileApprovePropsType> = ({ role }) => {
       align: 'center',
       render: (record) => {
         return record.end_date
-          ? moment(new Date(record.end_date)).format('DD/MM/YYYY')
+          ? dayjs(new Date(record.end_date)).format('DD/MM/YYYY')
           : undefined;
       },
     },
@@ -285,6 +286,10 @@ const ProfileApprove: React.FC<ProfileApprovePropsType> = ({ role }) => {
               <Avatar
                 size={{ xs: 24, sm: 32, md: 40, lg: 64, xl: 80, xxl: 100 }}
                 style={{ width: 150, height: 150 }}
+                src={
+                  getFilePath() +
+                  dataleaveme?.getleava_datame?.data_all?.[0]?.profile?.avatar
+                }
               ></Avatar>
             </div>
           </Col>
@@ -388,6 +393,7 @@ const ProfileApprove: React.FC<ProfileApprovePropsType> = ({ role }) => {
         <Table
           columns={columns}
           dataSource={
+            dataleaveme?.getleava_datame?.data_all &&
             dataleaveme?.getleava_datame?.data_all?.length > 0
               ? (dataleaveme?.getleava_datame?.data_all?.[0]?.data_leave as any)
               : []
@@ -408,13 +414,13 @@ const ProfileApprove: React.FC<ProfileApprovePropsType> = ({ role }) => {
           <Row gutter={16}>
             <Col span={12}>
               <Form.Item name={'start_date'} label={'จากวันที่'}>
-                <DatePicker style={{ width: '100%' }} format={'YYYY-MM-DD'} />
+                <DatePicker style={{ width: '100%' }} format={'DD-MM-YYYY'} />
               </Form.Item>
             </Col>
 
             <Col span={12}>
               <Form.Item name={'end_date'} label={'ถึงวันที่'}>
-                <DatePicker style={{ width: '100%' }} format={'YYYY-MM-DD'} />
+                <DatePicker style={{ width: '100%' }} format={'DD-MM-YYYY'} />
               </Form.Item>
             </Col>
           </Row>

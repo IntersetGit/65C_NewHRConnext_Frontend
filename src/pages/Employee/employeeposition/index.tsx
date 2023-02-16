@@ -24,7 +24,6 @@ import {
   useParams,
   useLocation,
 } from 'react-router-dom';
-import moment from 'moment';
 import type { ColumnsType } from 'antd/es/table';
 import edit from '../../../assets/Edit.png';
 import Del from '../../../assets/DEL.png';
@@ -40,6 +39,7 @@ import { useMutation, useQuery } from '@apollo/client';
 import { Getposition_UserQuery } from '../../../__generated__/graphql';
 import { getFilePath } from '../../../util';
 import Swal from 'sweetalert2';
+import dayjs from 'dayjs';
 
 const { useToken } = theme;
 
@@ -249,8 +249,9 @@ const PositionEmployee: React.FC = (props) => {
       onChangeMasLevel2(record?.mas_positionlevel2.id);
       form.setFieldsValue({
         ...record,
-        date: record.date ? moment(record.date) : undefined,
+        date: record.date ? dayjs(record.date) : undefined,
         headderId: record?.header?.id,
+        role_company: propsstate?.Role_company?.name,
       });
     } else if (key === 'view') {
       showDrawer(3);
@@ -258,7 +259,7 @@ const PositionEmployee: React.FC = (props) => {
       onChangeMasLevel2(record?.mas_positionlevel2.id);
       form.setFieldsValue({
         ...record,
-        date: record.date ? moment(record.date) : undefined,
+        date: record.date ? dayjs(record.date) : undefined,
       });
     } else if (key === 'delete') {
     }
@@ -270,7 +271,7 @@ const PositionEmployee: React.FC = (props) => {
       key: 'date',
       dataIndex: 'date',
       align: 'center',
-      render: (record: any) => moment(record).format('YYYY/MM/DD') as any,
+      render: (record: any) => dayjs(record).format('DD-MM-YYYY') as any,
     },
     {
       title: 'ตำแหน่ง',
@@ -360,8 +361,9 @@ const PositionEmployee: React.FC = (props) => {
                 {propsstate?.lastname_th}
               </u>
               <div className="mt-4">
-                {position_data?.getposition_user[0]?.mas_positionlevel3?.name
-                  ? position_data?.getposition_user[0]?.mas_positionlevel3?.name
+                {position_data?.getposition_user?.[0]?.mas_positionlevel3?.name
+                  ? position_data?.getposition_user?.[0]?.mas_positionlevel3
+                      ?.name
                   : 'ไม่มีตำแหน่งงาน'}
                 {/* {position_data?.getposition_user?.[
                   position_data?.getposition_user?.length - 1
@@ -377,7 +379,8 @@ const PositionEmployee: React.FC = (props) => {
             <DatePicker
               style={{ width: '100%' }}
               size="large"
-              defaultValue={moment(propsstate?.start_date_work) as any}
+              format={'DD-MM-YYYY'}
+              defaultValue={dayjs(propsstate?.start_date_work) as any}
               disabled
             />
           </Col>
@@ -435,10 +438,17 @@ const PositionEmployee: React.FC = (props) => {
           <Row>
             <Col span={12}>
               <Form.Item name={'date'} label={'วันที่มีผล'}>
-                {drawerType === 3 ? (
-                  <DatePicker style={{ width: '100%' }} disabled></DatePicker>
+                {drawerType === 3 || propsstate?.mode == 'view' ? (
+                  <DatePicker
+                    style={{ width: '100%' }}
+                    format={'DD-MM-YYYY'}
+                    disabled
+                  ></DatePicker>
                 ) : (
-                  <DatePicker style={{ width: '100%' }}></DatePicker>
+                  <DatePicker
+                    style={{ width: '100%' }}
+                    format={'DD-MM-YYYY'}
+                  ></DatePicker>
                 )}
               </Form.Item>
             </Col>
@@ -447,7 +457,7 @@ const PositionEmployee: React.FC = (props) => {
           <Row>
             <Col span={24}>
               <Form.Item name={'position1_id'} label={'ฝ่าย'}>
-                {drawerType === 3 ? (
+                {drawerType === 3 || propsstate?.mode == 'view' ? (
                   <Select
                     options={selectposition ? selectposition : []}
                     onChange={onChangeMasLevel1}
@@ -468,7 +478,7 @@ const PositionEmployee: React.FC = (props) => {
           <Row>
             <Col span={24}>
               <Form.Item name={'position2_id'} label={'แผนก'}>
-                {drawerType === 3 ? (
+                {drawerType === 3 || propsstate?.mode == 'view' ? (
                   <Select
                     options={maspositionlevel1 ? maspositionlevel1 : []}
                     onChange={onChangeMasLevel2}
@@ -489,7 +499,7 @@ const PositionEmployee: React.FC = (props) => {
           <Row>
             <Col span={24}>
               <Form.Item name={'position3_id'} label={'ตำแหน่ง'}>
-                {drawerType === 3 ? (
+                {drawerType === 3 || propsstate?.mode == 'view' ? (
                   <Select
                     options={maspositionlevel2 ? maspositionlevel2 : []}
                     allowClear
@@ -508,7 +518,11 @@ const PositionEmployee: React.FC = (props) => {
           <Row>
             <Col span={24}>
               <Form.Item name={'role'} label={'หน้าที่'}>
-                {drawerType === 3 ? <Input disabled /> : <Input />}
+                {drawerType === 3 || propsstate?.mode == 'view' ? (
+                  <Input disabled />
+                ) : (
+                  <Input />
+                )}
               </Form.Item>
             </Col>
           </Row>
@@ -516,7 +530,7 @@ const PositionEmployee: React.FC = (props) => {
           <Row>
             <Col span={24}>
               <Form.Item name={'headderId'} label={'หัวหน้างาน'}>
-                {drawerType === 3 ? (
+                {drawerType === 3 || propsstate?.mode == 'view' ? (
                   <Select options={header_data} allowClear disabled />
                 ) : (
                   <Select options={header_data} allowClear />

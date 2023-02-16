@@ -132,6 +132,10 @@ const Companyniti: React.FC<CompanynitiPropsType> = ({ role }) => {
         label: 'แก้ไข',
         icon: <img style={{ width: '17px', height: '17px' }} src={edit} />,
         onClick: (e: any) => onMenuClick(e, record),
+        disabled: !ability.can(
+          role?.edit?.action as string,
+          role?.edit?.subject as string,
+        ),
       },
       {
         key: 'view',
@@ -144,6 +148,10 @@ const Companyniti: React.FC<CompanynitiPropsType> = ({ role }) => {
         label: 'ลบข้อมูล',
         icon: <img style={{ width: '20px', height: '20px' }} src={Del} />,
         onClick: (e: any) => onMenuClick(e, record),
+        disabled: !ability.can(
+          role?.delete?.action as string,
+          role?.delete?.subject as string,
+        ),
       },
     ];
   };

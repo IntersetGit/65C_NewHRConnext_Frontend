@@ -22,7 +22,7 @@ import edit from '../../../assets/Edit.png';
 import Del from '../../../assets/DEL.png';
 import View from '../../../assets/View.png';
 import type { CheckboxValueType } from 'antd/es/checkbox/Group';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 import moment from 'moment';
 
@@ -46,6 +46,11 @@ const Compensationbase: React.FC = () => {
   const [creteExpenseCom] = useMutation(CREATE_ExpenseCom);
 
   console.log("table", TableData)
+
+  useEffect(() => {
+    const salary: any = TableData
+    refetch(salary)
+  }, []);
 
   const showDrawer = () => {
     setOpen(true);
@@ -83,13 +88,15 @@ const Compensationbase: React.FC = () => {
     if (key === 'view') {
       setSelectedRow(record);
       navigate(`remuneration?id=${record.profile.userId}`, {
-        state: { ...record, userId: record?.profile?.userId, },
+        state: {
+          ...record, userId: record?.profile?.userId,
+
+        },
       });
 
       console.log("State", record)
     }
   };
-
 
   const columns: ColumnsType<any> = [
     {

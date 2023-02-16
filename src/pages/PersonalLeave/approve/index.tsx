@@ -30,34 +30,58 @@ import type { ColumnsType } from 'antd/es/table';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useState } from 'react';
 import { useAuth } from '../../../hooks/useAuth';
-import moment from 'moment';
+import { useMutation, useQuery } from '@apollo/client';
+import {
+  FETCH_ALL_LEAVE,
+  LEAVE_TYPE_DATA,
+  CREATE_LEAVE,
+} from '../../../service/graphql/Leave';
+import { getFilePath } from '../../../util';
+import dayjs from 'dayjs';
+import Swal from 'sweetalert2';
 const { useToken } = theme;
 const { TextArea } = Input;
 
 const Approve: React.FC = () => {
   const [open, setOpen] = useState(false);
   const [form] = Form.useForm();
+  const [drawertype, setdrawertype] = useState(1);
+  const [selectedrow, setselectedrow] = useState<any>();
   const token = useToken();
   const location = useLocation();
-  const { ability } = useAuth();
   let propsstate = location.state as any;
+  const {
+    data: dataleaveme,
+    loading,
+    refetch,
+  } = useQuery(FETCH_ALL_LEAVE, { variables: { userId: propsstate?.id } });
+  const { data: leave_type_data } = useQuery(LEAVE_TYPE_DATA);
+  const [createLeaveData] = useMutation(CREATE_LEAVE);
 
-  const showDrawer = () => {
+  const showDrawer = (type) => {
     setOpen(true);
+    setdrawertype(type);
   };
 
   const onClose = () => {
     setOpen(false);
   };
 
+  const selectleavetype = leave_type_data?.getleavetypedata?.map((e) => {
+    return {
+      label: e?.name,
+      value: e?.id,
+    };
+  });
+
   const genarateMenu = (record: any) => {
     return [
-      // {
-      //   key: 'edit',
-      //   label: 'แก้ไข',
-      //   icon: <img style={{ width: '17px', height: '17px' }} src={edit} />,
-      //   onClick: (e: any) => onMenuClick(e, record),
-      // },
+      {
+        key: 'edit',
+        label: 'แก้ไข',
+        icon: <img style={{ width: '17px', height: '17px' }} src={edit} />,
+        onClick: (e: any) => onMenuClick(e, record),
+      },
       {
         key: 'view',
         label: 'ดูข้อมูล',
@@ -76,12 +100,19 @@ const Approve: React.FC = () => {
   const onMenuClick = (event: any, record: any) => {
     const { key } = event;
     if (key === 'edit') {
-    } else if (key === 'view') {
-      showDrawer();
+      showDrawer(1);
+      setselectedrow(record);
       form.setFieldsValue({
         ...record,
-        from_date: moment(record.from_date) as any,
-        to_date: moment(record.to_date) as any,
+        start_date: dayjs(record.start_date),
+        end_date: dayjs(record.end_date),
+      });
+    } else if (key === 'view') {
+      showDrawer(2);
+      form.setFieldsValue({
+        ...record,
+        start_date: dayjs(record.start_date),
+        end_date: dayjs(record.end_date),
       });
     } else if (key === 'delete') {
     }
@@ -97,39 +128,54 @@ const Approve: React.FC = () => {
     },
     {
       title: 'ประเภทการลา',
-      key: 'leave_type',
-      dataIndex: 'leave_type',
+      key: 'mas_leave_type',
+      dataIndex: 'mas_leave_type',
       align: 'center',
+      render: (record) => {
+        return record.name;
+      },
     },
     {
       title: 'จากวันที่',
-      key: 'from_date',
-      dataIndex: 'from_date',
+      key: 'start_date',
+      dataIndex: 'start_date',
       align: 'center',
+      render: (record) => {
+        return dayjs(new Date(record)).format('DD/MM/YYYY');
+      },
     },
     {
       title: 'ถึงวันที่',
-      key: 'to_date',
-      dataIndex: 'to_date',
+      key: 'end_date',
+      dataIndex: 'end_date',
       align: 'center',
+      render: (record) => {
+        return dayjs(new Date(record)).format('DD/MM/YYYY');
+      },
     },
     {
       title: 'จำนวนวัน',
-      key: 'count_date',
-      dataIndex: 'count_date',
+      key: 'quantity_day',
+      dataIndex: 'quantity_day',
+      align: 'center',
+    },
+    {
+      title: 'จำนวนชั่วโมง',
+      key: 'quantity_hours',
+      dataIndex: 'quantity_hours',
       align: 'center',
     },
     {
       title: 'สถานะการลา',
-      key: 'leave_approve',
-      dataIndex: 'leave_approve',
+      key: 'Status',
+      dataIndex: 'Status',
       align: 'center',
       render: (record) => {
         return (
           <div>
-            {record === '1'
+            {record === 1
               ? 'อนุมัติ'
-              : record === '2'
+              : record === 2
               ? 'รออนุมัติ'
               : 'ไม่อนุมัติ'}
           </div>
@@ -153,15 +199,44 @@ const Approve: React.FC = () => {
     },
   ];
 
-  const data: any = [
-    {
-      leave_type: 'ลาป่วย',
-      from_date: '20-9-2021',
-      to_date: '20-9-2021',
-      count_date: '1',
-      leave_approve: '1',
-    },
-  ];
+  const onFinish = (value) => {
+    drawertype === 1;
+    Swal.fire({
+      title: `ยืนยันการแก้ไขข้อมูลการลา`,
+      icon: 'warning',
+      showDenyButton: true,
+      showCancelButton: false,
+      confirmButtonColor: token.token.colorPrimary,
+      denyButtonColor: '#ea4e4e',
+      confirmButtonText: 'ตกลง',
+      denyButtonText: `ยกเลิก`,
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        createLeaveData({
+          variables: {
+            data: {
+              ...value,
+              id: selectedrow?.id,
+            },
+          },
+        })
+          .then((val) => {
+            console.log(val);
+            if (val.data?.createddata_leave?.status) {
+              Swal.fire(`แก้ไขข้อมูลการลาสำเร็จ!`, '', 'success');
+              refetch();
+              form.resetFields();
+              setOpen(false);
+            }
+          })
+          .catch((err) => {
+            Swal.fire(`แก้ไขข้อมูลการลาไม่สำเร็จ!`, '', 'error');
+            console.error(err);
+          });
+      }
+    });
+  };
+
   return (
     <>
       <div className="flex text-2xl ml-2 pt-4">
@@ -178,6 +253,7 @@ const Approve: React.FC = () => {
               <Avatar
                 size={{ xs: 24, sm: 32, md: 40, lg: 64, xl: 80, xxl: 100 }}
                 style={{ width: 150, height: 150 }}
+                src={getFilePath() + propsstate?.profile?.avatar}
               ></Avatar>
             </div>
           </Col>
@@ -192,9 +268,12 @@ const Approve: React.FC = () => {
           >
             <div className="text-lg font-bold">
               <u style={{ color: token.token.colorPrimary }}>
-                {propsstate?.firstname_th} {propsstate?.lastname_th}
+                {propsstate?.profile?.firstname_th}{' '}
+                {propsstate?.profile?.lastname_th}
               </u>
-              <div className="my-4">{propsstate?.position}</div>
+              <div className="my-4">
+                {propsstate?.Position_user?.[0]?.mas_positionlevel3?.name}
+              </div>
             </div>
           </Col>
         </Row>
@@ -204,7 +283,7 @@ const Approve: React.FC = () => {
             <Card className="shadow-lg border-4 border-[#8cb369] bg-[#8cb369]">
               <div className="flex text-lg font-bold justify-center items-center mx-12">
                 <MdAirplanemodeActive className="text-green-900" size={'38'} />{' '}
-                ลาพักร้อน {propsstate?.leave_vacation}
+                ลาพักร้อน {dataleaveme?.getAllleave?.data_count?.count1}
               </div>
             </Card>
           </Col>
@@ -212,7 +291,7 @@ const Approve: React.FC = () => {
             <Card className="shadow-lg border-4 border-[#fddd5c] bg-[#fddd5c]">
               <div className="flex text-lg font-bold justify-center items-center">
                 <RiBriefcase5Line className="text-[#b48a4d]" size={'38'} />{' '}
-                ลากิจ {propsstate?.leave_bussiness}
+                ลากิจ {dataleaveme?.getAllleave?.data_count?.count2}
               </div>
             </Card>
           </Col>
@@ -223,7 +302,7 @@ const Approve: React.FC = () => {
                   className="text-[#e2711d]"
                   size={'38'}
                 />{' '}
-                ลาป่วย {propsstate?.leave_sick}
+                ลาป่วย {dataleaveme?.getAllleave?.data_count?.count3}
               </div>
             </Card>
           </Col>
@@ -231,7 +310,7 @@ const Approve: React.FC = () => {
             <Card className="shadow-lg border-4 border-[#b491c8] bg-[#b491c8]">
               <div className="flex text-lg font-bold justify-center items-center">
                 <MdDragIndicator className="text-[#7c5295]" size={'38'} />{' '}
-                ลาอื่น ๆ {propsstate?.leave_other}
+                ลาอื่น ๆ {dataleaveme?.getAllleave?.data_count?.count4}
               </div>
             </Card>
           </Col>
@@ -252,7 +331,13 @@ const Approve: React.FC = () => {
           </Col>
         </Row> */}
 
-        <Table columns={columns} dataSource={data}></Table>
+        <Table
+          columns={columns}
+          rowKey={'id'}
+          dataSource={
+            dataleaveme?.getAllleave?.data_all?.[0]?.data_leave as any
+          }
+        ></Table>
       </Card>
 
       <Drawer
@@ -261,47 +346,71 @@ const Approve: React.FC = () => {
         onClose={onClose}
         open={open}
       >
-        <Form form={form} layout="vertical">
+        <Form form={form} layout="vertical" onFinish={onFinish}>
           <Row>
             <Col span={12}>
-              <Form.Item name={'leave_type'} label={'ประเภทการลา'}>
-                <Input />
+              <Form.Item name={'leavetype_id'} label={'ประเภทการลา'}>
+                {drawertype == 2 ? (
+                  <Select options={selectleavetype} allowClear disabled />
+                ) : (
+                  <Select options={selectleavetype} allowClear />
+                )}
               </Form.Item>
             </Col>
           </Row>
 
           <Row gutter={16}>
             <Col span={12}>
-              <Form.Item label={'จากวันที่'}>
-                <DatePicker style={{ width: '100%' }} format={'YYYY-MM-DD'} />
+              <Form.Item name={'start_date'} label={'จากวันที่'}>
+                {drawertype == 2 ? (
+                  <DatePicker
+                    style={{ width: '100%' }}
+                    format={'DD-MM-YYYY'}
+                    disabled
+                  />
+                ) : (
+                  <DatePicker style={{ width: '100%' }} format={'DD-MM-YYYY'} />
+                )}
               </Form.Item>
             </Col>
 
             <Col span={12}>
-              <Form.Item label={'ถึงวันที่'}>
-                <DatePicker style={{ width: '100%' }} format={'YYYY-MM-DD'} />
+              <Form.Item name={'end_date'} label={'ถึงวันที่'}>
+                {drawertype == 2 ? (
+                  <DatePicker
+                    style={{ width: '100%' }}
+                    format={'DD-MM-YYYY'}
+                    disabled
+                  />
+                ) : (
+                  <DatePicker style={{ width: '100%' }} format={'DD-MM-YYYY'} />
+                )}
               </Form.Item>
             </Col>
           </Row>
 
           <Row gutter={16}>
             <Col span={12}>
-              <Form.Item label={'จำนวนวัน'}>
-                <Input />
+              <Form.Item name={'quantity_day'} label={'จำนวนวัน'}>
+                {drawertype == 2 ? <Input disabled /> : <Input />}
               </Form.Item>
             </Col>
 
             <Col span={12}>
-              <Form.Item label={'จำนวนชั่วโมง'}>
-                <Input />
+              <Form.Item name={'quantity_hours'} label={'จำนวนชั่วโมง'}>
+                {drawertype == 2 ? <Input disabled /> : <Input />}
               </Form.Item>
             </Col>
           </Row>
 
           <Row>
             <Col span={24}>
-              <Form.Item label={'เหตุผลการลา'}>
-                <TextArea rows={6} />
+              <Form.Item name={'detail_leave'} label={'เหตุผลการลา'}>
+                {drawertype == 2 ? (
+                  <TextArea rows={6} disabled />
+                ) : (
+                  <TextArea rows={6} />
+                )}
               </Form.Item>
             </Col>
           </Row>
@@ -320,14 +429,25 @@ const Approve: React.FC = () => {
 
           <Row>
             <Col span={12}>
-              <Form.Item name={'leave_approve'} label={'สถานะการลา'}>
-                <Select
-                  options={[
-                    { value: '1', label: 'อนุมัติ' },
-                    { value: '2', label: 'รออนุมัติ' },
-                    { value: '3', label: 'ไม่อนุมัติ' },
-                  ]}
-                />
+              <Form.Item name={'Status'} label={'สถานะการลา'}>
+                {drawertype == 2 ? (
+                  <Select
+                    options={[
+                      { value: 1, label: 'อนุมัติ' },
+                      { value: 2, label: 'รออนุมัติ' },
+                      { value: 3, label: 'ไม่อนุมัติ' },
+                    ]}
+                    disabled
+                  />
+                ) : (
+                  <Select
+                    options={[
+                      { value: 1, label: 'อนุมัติ' },
+                      { value: 2, label: 'รออนุมัติ' },
+                      { value: 3, label: 'ไม่อนุมัติ' },
+                    ]}
+                  />
+                )}
               </Form.Item>
             </Col>
           </Row>
@@ -335,16 +455,18 @@ const Approve: React.FC = () => {
           <Row gutter={16} style={{ float: 'right' }}>
             <Form.Item>
               <Space>
-                <Button
-                  htmlType="submit"
-                  type="primary"
-                  style={{
-                    marginBottom: '10px',
-                    backgroundColor: token.token.colorPrimary,
-                  }}
-                >
-                  บันทึก
-                </Button>
+                {drawertype !== 2 && (
+                  <Button
+                    htmlType="submit"
+                    type="primary"
+                    style={{
+                      marginBottom: '10px',
+                      backgroundColor: token.token.colorPrimary,
+                    }}
+                  >
+                    บันทึก
+                  </Button>
+                )}
                 <Button
                   style={{
                     marginBottom: '10px',

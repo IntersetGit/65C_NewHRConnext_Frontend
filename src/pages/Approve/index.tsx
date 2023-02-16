@@ -27,8 +27,8 @@ import View from '../../assets/View.png';
 import { FETCH_ALL_APPROVE } from '../../service/graphql/Approve';
 import { LEAVE_TYPE_DATA, CREATE_LEAVE } from '../../service/graphql/Leave';
 import { useMutation, useQuery } from '@apollo/client';
-import moment from 'moment';
 import Swal from 'sweetalert2';
+import dayjs from 'dayjs';
 
 const { useToken } = theme;
 const { TextArea } = Input;
@@ -90,8 +90,8 @@ const Approveleave: React.FC = () => {
       setselectedrow(record);
       form.setFieldsValue({
         ...record,
-        start_date: record.start_date ? moment(record.start_date) : undefined,
-        end_date: record.end_date ? moment(record.end_date) : undefined,
+        start_date: record.start_date ? dayjs(record.start_date) : undefined,
+        end_date: record.end_date ? dayjs(record.end_date) : undefined,
       });
     } else if (key === 'view') {
     } else if (key === 'delete') {
@@ -132,7 +132,7 @@ const Approveleave: React.FC = () => {
       align: 'center',
       render: (record) => {
         return record
-          ? moment(new Date(record)).format('DD/MM/YYYY')
+          ? dayjs(new Date(record)).format('DD/MM/YYYY')
           : undefined;
       },
     },
@@ -143,7 +143,7 @@ const Approveleave: React.FC = () => {
       align: 'center',
       render: (record) => {
         return record
-          ? moment(new Date(record)).format('DD/MM/YYYY')
+          ? dayjs(new Date(record)).format('DD/MM/YYYY')
           : undefined;
       },
     },
@@ -316,13 +316,13 @@ const Approveleave: React.FC = () => {
           <Row gutter={16}>
             <Col span={12}>
               <Form.Item name={'start_date'} label={'จากวันที่'}>
-                <DatePicker style={{ width: '100%' }} format={'YYYY-MM-DD'} />
+                <DatePicker style={{ width: '100%' }} format={'DD-MM-YYYY'} />
               </Form.Item>
             </Col>
 
             <Col span={12}>
               <Form.Item name={'end_date'} label={'ถึงวันที่'}>
-                <DatePicker style={{ width: '100%' }} format={'YYYY-MM-DD'} />
+                <DatePicker style={{ width: '100%' }} format={'DD-MM-YYYY'} />
               </Form.Item>
             </Col>
           </Row>
