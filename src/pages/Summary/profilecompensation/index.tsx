@@ -38,6 +38,7 @@ import {
     FETCH_AllSALARY_USER,
     CREATE_SALARY_USER,
     FETCH_ExpenseCompany,
+    FETCH_GETALLBOOKBANK_LOG,
 } from '../../../service/graphql/Summary';
 
 import {
@@ -55,6 +56,8 @@ const Compensation: React.FC = () => {
     const [open, setOpen] = useState(false);
     const [form] = Form.useForm();
     const [formshow] = Form.useForm();
+    const sumIncome = Form.useWatch('total_income', form);
+    const sumExpense = Form.useWatch('total_expense', form);
     const navigate = useNavigate();
     const [drawerType, setDrawerType] = useState(1);
     const [selectedRow, setselectedRow] = useState<any>();
@@ -63,21 +66,26 @@ const Compensation: React.FC = () => {
     let propsstate = location.state as any;
     console.log(propsstate);
 
-    // const { data: header } = useQuery(FETCH_GETALLUSER);
     const { data: position_data } = useQuery(FETCH_GETALL_POSITION);
     const { data: TableDataSalary, refetch } = useQuery(FETCH_AllSALARY_USER, {
         variables: { userId: propsstate?.userId },
     });
     const { data: ExpenseComData, refetch: refetch2 } = useQuery(FETCH_ExpenseCompany);
-    console.log("DataT", TableDataSalary)
-    const [creteSalaryUser] = useMutation(CREATE_SALARY_USER);
+    const { data: book_bank_data, refetch: refetch3 } = useQuery(FETCH_GETALLBOOKBANK_LOG, {
+        variables: { userId: propsstate?.userId },
+    });
 
-    // const onFilterData = async (userId: any) => {
-    //     let data = [] as any;
-    //     if (userId == propsstate?.profile.user_Id) { TableDataSalary?.salary?.push(data) }
-    //     console.log("++", data)
-    // }
+    console.log("DataT", TableDataSalary)
+
     const setPer: any = () => {
+        const valueall = form.getFieldsValue();
+        onChangeFormvalue({ base_salary: '' }, valueall);
+        const SS_CAl = () => {
+            let SSCal = (parseFloat(form.getFieldValue('base_salary'))) * (parseFloat(form.getFieldValue('ss_per')) / 100)
+            form.setFieldValue('social_security', (SSCal).toString())
+
+        }
+        SS_CAl();
         form.setFieldsValue({
             vat_per: ExpenseComData?.expense_company?.[0]?.vat_per,
             ss_per: ExpenseComData?.expense_company?.[0]?.ss_per,
@@ -85,15 +93,18 @@ const Compensation: React.FC = () => {
     }
 
     useEffect(() => {
-        refetch2();
-        const salary: any = TableDataSalary
-            ? TableDataSalary?.salary?.bookbank_log?.[0]?.base_salary?.toFixed(2)
+        form.setFieldValue('net', sumIncome - sumExpense)
+    }, [sumIncome, sumExpense])
+
+    useEffect(() => {
+        const salary: any = book_bank_data
+            ? book_bank_data?.bookbank_log_admin?.[0]?.base_salary?.toFixed(2)
             : '0.00';
-        const banknumber: any = TableDataSalary
-            ? TableDataSalary?.salary?.bookbank_log?.[0]?.bank_number
+        const banknumber: any = book_bank_data
+            ? book_bank_data?.bookbank_log_admin?.[0]?.bank_number
             : '0.00';
-        const bankname: any = TableDataSalary
-            ? TableDataSalary?.salary?.bookbank_log?.[0]?.mas_bank?.name
+        const bankname: any = book_bank_data
+            ? book_bank_data?.bookbank_log_admin?.[0]?.mas_bank?.name
             : '';
 
         formshow.setFieldsValue({
@@ -101,7 +112,7 @@ const Compensation: React.FC = () => {
             bank_number: banknumber,
             mas_bankId: bankname,
         });
-    }, [TableDataSalary]);
+    }, [book_bank_data]);
 
     const showDrawer = (type: any) => {
         setOpen(true);
@@ -319,6 +330,65 @@ const Compensation: React.FC = () => {
 
     // }
     // console.log(onChangeCalculate)
+
+    const onChangeFormvalue = (column, all) => {
+        console.log('column,all', column, all)
+        const sum = () => {
+            let sumval = parseFloat(all.base_salary ? all.base_salary : 0)
+                + parseFloat(all.commission ? all.commission : 0)
+                + parseFloat(all.position_income ? all.position_income : 0)
+                + parseFloat(all.special_income ? all.special_income : 0)
+                + parseFloat(all.ot ? all.ot : 0)
+                + parseFloat(all.other_income ? all.other_income : 0)
+                + parseFloat(all.travel_income ? all.travel_income : 0)
+                + parseFloat(all.bursary ? all.bursary : 0)
+                + parseFloat(all.welfare_money ? all.welfare_money : 0)
+                + parseFloat(all.bonus ? all.bonus : 0);
+            console.log(sumval);
+            form.setFieldValue('total_income', (sumval).toString())
+            // finish()
+        }
+        const minus = () => {
+            let SSCal = (parseFloat(all.base_salary)) * (parseFloat(all.ss_per) / 100)
+            form.setFieldValue('social_security', (SSCal).toString())
+            let minusval = parseFloat(all.vat ? all.vat : 0)
+                + parseFloat(all.social_security ? all.social_security : 0)
+                + parseFloat(all.miss ? all.miss : 0)
+                + parseFloat(all.ra ? all.ra : 0)
+                + parseFloat(all.late ? all.late : 0)
+                + parseFloat(all.other ? all.other : 0);
+            console.log(minusval);
+            form.setFieldValue('total_expense', (minusval).toString())
+            // finish()
+        }
+
+        if ((Object.keys(column)[0]) in {
+            base_salary: '',
+            commission: '',
+            position_income: '',
+            special_income: '',
+            ot: '',
+            other_income: '',
+            travel_income: '',
+            bursary: '',
+            welfare_money: '',
+            bonus: '',
+        }) {
+            sum();
+        }
+        if ((Object.keys(column)[0]) in {
+            vat: '',
+            social_security: '',
+            miss: '',
+            ra: '',
+            late: '',
+            other_income: '',
+            other: '',
+        }) {
+            minus();
+        }
+
+    }
     return (
         <>
             <div className="flex text-3xl ml-2 pt-4">
@@ -439,90 +509,11 @@ const Compensation: React.FC = () => {
                         {propsstate?.profile?.lastname_th}
                     </u>
                     <div className="mt-4">
-                        {position_data?.getposition_user?.[
-                            position_data?.getposition_user?.length - 1
-                        ]?.mas_positionlevel3?.name ?? 'no'}
+                        {propsstate?.Position_user?.[0]?.mas_positionlevel3?.name ?? 'ไม่มีตำแหน่งงาน'}
                     </div>
                 </div>
 
-                <Form layout="horizontal" onValuesChange={(column, all) => {
-                    console.log(column, all)
-                    // console.log((Object.keys(column)[0]) in { commission: '', wa: '' })
-                    const finish = () => {
-                        if (all.total_income !== undefined && all.total_expense !== undefined) {
-                            console.log('calculater', all.total_income, all.total_expense)
-                            let netval = parseFloat(all.total_income ? all.total_income : 0)
-                                - parseFloat(all.total_expense ? all.total_expense : 0);
-                            const sumNets = (netval: any) => {
-                                form.setFieldValue('net', (netval).toString())
-                            }
-                            sumNets(netval)
-                        }
-                    }
-                    const sum = () => {
-                        let sumval = parseFloat(all.base_salary ? all.base_salary : 0)
-                            + parseFloat(all.commission ? all.commission : 0)
-                            + parseFloat(all.position_income ? all.position_income : 0)
-                            + parseFloat(all.special_income ? all.special_income : 0)
-                            + parseFloat(all.ot ? all.ot : 0)
-                            + parseFloat(all.other_income ? all.other_income : 0)
-                            + parseFloat(all.travel_income ? all.travel_income : 0)
-                            + parseFloat(all.bursary ? all.bursary : 0)
-                            + parseFloat(all.welfare_money ? all.welfare_money : 0)
-                            + parseFloat(all.bonus ? all.bonus : 0);
-                        console.log(sumval);
-                        form.setFieldValue('total_income', (sumval).toString())
-                        finish()
-                    }
-                    const minus = () => {
-                        let vatCal = (parseFloat(all.base_salary ? all.base_salary : 0)
-                            + parseFloat(all.commission ? all.commission : 0)
-                            + parseFloat(all.position_income ? all.position_income : 0)
-                            + parseFloat(all.special_income ? all.special_income : 0)
-                            + parseFloat(all.ot ? all.ot : 0)
-                            + parseFloat(all.other_income ? all.other_income : 0)
-                            + parseFloat(all.travel_income ? all.travel_income : 0)
-                            + parseFloat(all.bursary ? all.bursary : 0)
-                            + parseFloat(all.welfare_money ? all.welfare_money : 0)
-                            + parseFloat(all.bonus ? all.bonus : 0));
-                        let minusval = parseFloat(all.vat ? all.vat : 0)
-                            + parseFloat(all.social_security ? all.social_security : 0)
-                            + parseFloat(all.miss ? all.miss : 0)
-                            + parseFloat(all.ra ? all.ra : 0)
-                            + parseFloat(all.late ? all.late : 0)
-                            + parseFloat(all.other ? all.other : 0);
-                        console.log(minusval);
-                        form.setFieldValue('total_expense', (minusval).toString())
-                        finish()
-                    }
-                    if ((Object.keys(column)[0]) in {
-                        base_salary: '',
-                        commission: '',
-                        position_income: '',
-                        special_income: '',
-                        ot: '',
-                        other_income: '',
-                        travel_income: '',
-                        bursary: '',
-                        welfare_money: '',
-                        bonus: '',
-                    }) {
-                        sum();
-                    }
-                    if ((Object.keys(column)[0]) in {
-                        vat: '',
-                        social_security: '',
-                        miss: '',
-                        ra: '',
-                        late: '',
-                        other_income: '',
-                        other: '',
-                    }) {
-                        minus();
-                    }
-
-
-                }} form={form} onFinish={onSubmitForm} >
+                <Form layout="horizontal" onValuesChange={onChangeFormvalue} form={form} onFinish={onSubmitForm} >
                     <Row>
                         <Col xs={24} sm={24} md={24} lg={24} xl={24}>
                             <Form.Item name="date" label={'เดือน/ปี'} className='ml-[82px]'>
@@ -667,6 +658,20 @@ const Compensation: React.FC = () => {
                                 </Form.Item>
 
                                 <Form.Item name="social_security" className='ml-[0.5px]'>
+                                    <InputNumber style={{ width: "100%" }} disabled={drawerType === 3 ? true : false} className='w-[222px]' />
+                                </Form.Item>
+                            </Space>
+                        </Col>
+                    </Row>
+
+                    <Row>
+                        <Col xs={24} sm={24} md={24} lg={24} xl={24} className='ml-[53px]'>
+                            <Space>
+                                <Form.Item name="provident_emp" label={'กองทุนสำรองเลี้ยงชีพสะสม (พนักงาน)'}>
+                                    <InputNumber className='w-16' disabled />
+                                </Form.Item>
+
+                                <Form.Item name="pvd_emp" className='ml-[0.5px]'>
                                     <InputNumber style={{ width: "100%" }} disabled={drawerType === 3 ? true : false} className='w-[222px]' />
                                 </Form.Item>
                             </Space>

@@ -436,17 +436,6 @@ const Remuneration: React.FC = () => {
         width={400}
       >
         <Form layout="vertical" form={form} onFinish={onSubmitForm}>
-          <Row>
-            <Col span={24}>
-              <Form.Item name="date" label={'วันที่มีผล'}>
-                <DatePicker
-                  onChange={onChangeDate}
-                  format={'DD/MM/YYYY'}
-                  disabled={drawerType === 3 ? true : false}
-                />
-              </Form.Item>
-            </Col>
-          </Row>
 
           <Row>
             <Col span={24}>
