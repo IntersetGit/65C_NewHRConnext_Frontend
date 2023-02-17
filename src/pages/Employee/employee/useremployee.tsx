@@ -187,7 +187,7 @@ const UserEmployee: React.FC = (props) => {
   };
 
   const onChangeAge: DatePickerProps['onChange'] = (date, dateString) => {
-    const newdate = dayjs().diff(dayjs(dateString), 'year');
+    const newdate = dayjs().diff(date, 'year') ? dayjs().diff(date, 'year') : null;
     form.setFieldValue('age', newdate);
   };
 
