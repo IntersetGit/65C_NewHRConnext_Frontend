@@ -14,6 +14,7 @@ import {
   Drawer,
   Checkbox,
   DatePicker,
+  Tabs,
 } from 'antd';
 import * as dayjs from 'dayjs';
 import { GiReceiveMoney } from 'react-icons/gi';
@@ -63,15 +64,6 @@ const Compensation: React.FC = () => {
     refetch();
     refetch2();
   }, []);
-  // const setDataEC: any = () => {
-  //   form.setFieldsValue({
-  //     cal_date_salary: dayjs.unix(ExpenseComData?.expense_company?.[0]?.cal_date_salary),
-  //     bankId: ExpenseComData?.expense_company?.[0]?.mas_bank?.id,
-  //     vat_per: ExpenseComData?.expense_company?.[0]?.vat_per,
-  //     ss_per: ExpenseComData?.expense_company?.[0]?.ss_per,
-  //     check_vat: ExpenseComData?.expense_company?.[0]?.check_vat,
-  //   })
-  // }
 
   const showDrawer = (type: any) => {
     setOpen(true);
@@ -111,17 +103,6 @@ const Compensation: React.FC = () => {
     ];
   };
 
-  const genarateMenu2 = (record: any) => {
-    return [
-      {
-        key: 'view2',
-        label: 'ดูข้อมูล',
-        icon: <img style={{ width: '17px', height: '17px' }} src={View} />,
-        onClick: (e: any) => onMenuClick(e, record),
-      },
-    ];
-  };
-
   const onMenuClick = (event: any, record: any) => {
     const { key } = event;
     if (key === 'view2') {
@@ -132,23 +113,19 @@ const Compensation: React.FC = () => {
     } else if (key === 'view1') {
       setSelectedRow(record);
       showDrawer(3);
-      // form.setFieldsValue({
-      //   ...record,
-      //   date: record?.date ? dayjs(record.date).format("MM/YYYY") : undefined,
-      // });
-
-      console.log('State', record);
-    } else if (key === 'edit') {
-      setSelectedRow(record);
-      console.log('JJ', record);
-
-      // form.setFieldsValue({
-      //   ...record,
-      //   date: record?.date ? dayjs(record.date).format("MM/YYYY") : undefined,
-      // });
-
       form.setFieldsValue({
         date: dayjs(record?.date),
+        cal_date_salary: dayjs(record?.cal_date_salary),
+        bankId: record?.mas_bank?.name,
+        vat_per: record?.vat_per,
+        ss_per: record?.ss_per,
+        check_vat: record?.check_vat,
+      });
+    } else if (key === 'edit') {
+      setSelectedRow(record);
+      form.setFieldsValue({
+        date: dayjs(record?.date),
+        cal_date_salary: dayjs(record?.cal_date_salary),
         bankId: record?.mas_bank?.name,
         vat_per: record?.vat_per,
         ss_per: record?.ss_per,
@@ -201,63 +178,6 @@ const Compensation: React.FC = () => {
 
     setOpen(false);
   };
-
-  const columns: ColumnsType<any> = [
-    {
-      title: 'รหัสพนักงาน',
-      key: 'profile',
-      dataIndex: 'profile',
-      align: 'center',
-      render: (record) => record.staff_code,
-    },
-    {
-      title: 'ชื่อ-สกุล',
-      key: 'profile',
-      dataIndex: 'profile',
-      align: 'center',
-      render: (txt: any) =>
-        txt.prefix_th + ' ' + txt.firstname_th + ' ' + txt.lastname_th,
-    },
-    {
-      title: 'แผนก',
-      key: 'Position_user',
-      align: 'center',
-      render: (record) => {
-        return record?.Position_user[0]?.mas_positionlevel2?.name;
-      },
-    },
-    {
-      title: 'ตำแหน่ง',
-      key: 'Position_user',
-      align: 'center',
-      render: (record) => {
-        return record?.Position_user[0]?.mas_positionlevel3?.name;
-      },
-    },
-    {
-      title: 'ฐานเงินเดือน',
-      key: 'bookbank_log',
-      align: 'center',
-      render: (record) => {
-        return record?.bookbank_log[0]?.base_salary?.toFixed(2);
-      },
-    },
-    {
-      title: 'Action',
-      key: 'Action',
-      align: 'center',
-      render: (_: any, record: any) => (
-        <Dropdown
-          menu={{
-            items: genarateMenu2(record),
-          }}
-          arrow
-        >
-          <MoreOutlined />
-        </Dropdown>
-      ),
-    },
-  ];
 
   const columnsCom: ColumnsType<any> = [
     {
@@ -323,71 +243,15 @@ const Compensation: React.FC = () => {
 
   return (
     <>
+
       <div className="flex text-3xl ml-2 pt-4">
         <GiReceiveMoney />
         <div className="ml-2 text-xl">
-          ข้อมูลเงินเดือน ( ค่าล่วงเวลา ค่าบริหาร เบี้ยขยัน และ อื่น ๆ )
+          ตั้งค่าคำนวณเงินเดือน ( ตั้งค่าภาษี และค่าประกันสังคม )
         </div>
       </div>
 
       <Divider />
-      <Card className="shadow-xl">
-        <Form size="middle">
-          <Row gutter={16}>
-            <Col xs={24} sm={12} md={12} lg={6} xl={6}>
-              <Form.Item name="search" colon={false} label={'ชื่อ'}>
-                <Input allowClear></Input>
-              </Form.Item>
-            </Col>
-
-            <Col xs={24} sm={12} md={12} lg={6} xl={6}>
-              <Form.Item name="search" colon={false} label={'แผนก'}>
-                <Select allowClear></Select>
-              </Form.Item>
-            </Col>
-
-            <Col xs={24} sm={24} md={24} lg={6} xl={6}>
-              <Form.Item name="search" colon={false} label={'ตำแหน่ง'}>
-                <Select allowClear></Select>
-              </Form.Item>
-            </Col>
-
-            <Col xs={24} sm={24} md={24} lg={6} xl={6}>
-              <Space style={{ float: 'right' }}>
-                <Form.Item>
-                  <Button>Reset</Button>
-                </Form.Item>
-
-                <Form.Item>
-                  <Button
-                    type="primary"
-                    style={{ backgroundColor: token.token.colorPrimary }}
-                    htmlType="submit"
-                  >
-                    Search
-                  </Button>
-                </Form.Item>
-              </Space>
-            </Col>
-          </Row>
-
-          {/* <Row gutter={16}>
-            <Col xs={24} sm={24} md={24} lg={6} xl={6}>
-              <Form.Item name="search" colon={false} label={'สถานะ'}>
-                <Select allowClear></Select>
-              </Form.Item>
-            </Col>
-
-            <Col xs={24} sm={24} md={24} lg={6} xl={6}>
-              <Form.Item name="search" colon={false} label={'เดือน'}>
-                <Select allowClear></Select>
-              </Form.Item>
-            </Col>
-
-          </Row> */}
-        </Form>
-      </Card>
-
       <Card className="shadow-xl mt-4">
         <Col>
           <Row style={{ float: 'right' }}>
@@ -412,29 +276,21 @@ const Compensation: React.FC = () => {
           dataSource={ExpenseComData?.expense_company as any}
         ></Table>
       </Card>
-      <Card className="shadow-md mt-6">
-        <Table
-          rowKey={'id'}
-          columns={columns}
-          dataSource={TableData?.data_salary as any}
-        ></Table>
-      </Card>
-      {/* position_data?.getposition_user as any */}
+
       <Drawer
-        title={`${
-          drawerType === 1
-            ? 'ตั้งค่าการคำนวณเงินเดือน'
-            : drawerType === 2
+        title={`${drawerType === 1
+          ? 'ตั้งค่าการคำนวณเงินเดือน'
+          : drawerType === 2
             ? 'แก้ไขตั้งค่าการคำนวณเงินเดือน'
             : 'ข้อมูลตั้งค่าคำนวณเงินเดือน'
-        }`}
+          }`}
         onClose={onClose}
         width={550}
         open={open}
         size="large"
-        // afterOpenChange={() => {
-        //   setDataEC();
-        // }}
+      // afterOpenChange={() => {
+      //   setDataEC();
+      // }}
       >
         <Form
           layout="horizontal"
@@ -577,4 +433,190 @@ const Compensation: React.FC = () => {
   );
 };
 
-export default Compensation;
+const Compensation2: React.FC = () => {
+  const token = useToken();
+  const [open, setOpen] = useState(false);
+  const [form] = Form.useForm<any>();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { company } = useAuth();
+  console.log('aaa', company);
+  const [drawerType, setDrawerType] = useState(1);
+  let propsstate = location.state as any;
+  const [selectedRow, setSelectedRow] = useState<any>();
+
+  const { data: BookBank } = useQuery(FETCH_SELECT_BOOK_BANK);
+  const { data: TableData, refetch } = useQuery(FETCH_AllSALARY_BASE);
+  const { data: ExpenseComData, refetch: refetch2 } =
+    useQuery(FETCH_ExpenseCompany);
+  const [creteExpenseCom] = useMutation(CREATE_ExpenseCom);
+  console.log('table1', ExpenseComData);
+  console.log('table2', TableData);
+
+  useEffect(() => {
+    refetch();
+    refetch2();
+  }, []);
+
+  const genarateMenu2 = (record: any) => {
+    return [
+      {
+        key: 'view2',
+        label: 'ดูข้อมูล',
+        icon: <img style={{ width: '17px', height: '17px' }} src={View} />,
+        onClick: (e: any) => onMenuClick(e, record),
+      },
+    ];
+  };
+
+  const onMenuClick = (event: any, record: any) => {
+    const { key } = event;
+    if (key === 'view2') {
+      setSelectedRow(record);
+      navigate(`profileCompensation?id=${record.profile.userId}`, {
+        state: { ...record, userId: record?.profile?.userId },
+      });
+    }
+  };
+
+  const columns: ColumnsType<any> = [
+    {
+      title: 'รหัสพนักงาน',
+      key: 'profile',
+      dataIndex: 'profile',
+      align: 'center',
+      render: (record) => record.staff_code,
+    },
+    {
+      title: 'ชื่อ-สกุล',
+      key: 'profile',
+      dataIndex: 'profile',
+      align: 'center',
+      render: (txt: any) =>
+        txt.prefix_th + ' ' + txt.firstname_th + ' ' + txt.lastname_th,
+    },
+    {
+      title: 'แผนก',
+      key: 'Position_user',
+      align: 'center',
+      render: (record) => {
+        return record?.Position_user[0]?.mas_positionlevel2?.name;
+      },
+    },
+    {
+      title: 'ตำแหน่ง',
+      key: 'Position_user',
+      align: 'center',
+      render: (record) => {
+        return record?.Position_user[0]?.mas_positionlevel3?.name;
+      },
+    },
+    {
+      title: 'ฐานเงินเดือน',
+      key: 'bookbank_log',
+      align: 'center',
+      render: (record) => {
+        return record?.bookbank_log[0]?.base_salary?.toFixed(2);
+      },
+    },
+    {
+      title: 'Action',
+      key: 'Action',
+      align: 'center',
+      render: (_: any, record: any) => (
+        <Dropdown
+          menu={{
+            items: genarateMenu2(record),
+          }}
+          arrow
+        >
+          <MoreOutlined />
+        </Dropdown>
+      ),
+    },
+  ];
+
+  return (
+    <>
+
+      <div className="flex text-3xl ml-2 pt-4">
+        <GiReceiveMoney />
+        <div className="ml-2 text-xl">
+          ข้อมูลเงินเดือน ( ค่าล่วงเวลา ค่าบริหาร เบี้ยขยัน และ อื่น ๆ )
+        </div>
+      </div>
+
+      <Divider />
+      <Card className="shadow-xl">
+        <Form size="middle">
+          <Row gutter={16}>
+            <Col xs={24} sm={12} md={12} lg={6} xl={6}>
+              <Form.Item name="search" colon={false} label={'ชื่อ'}>
+                <Input allowClear></Input>
+              </Form.Item>
+            </Col>
+
+            <Col xs={24} sm={12} md={12} lg={6} xl={6}>
+              <Form.Item name="search" colon={false} label={'แผนก'}>
+                <Select allowClear></Select>
+              </Form.Item>
+            </Col>
+
+            <Col xs={24} sm={24} md={24} lg={6} xl={6}>
+              <Form.Item name="search" colon={false} label={'ตำแหน่ง'}>
+                <Select allowClear></Select>
+              </Form.Item>
+            </Col>
+
+            <Col xs={24} sm={24} md={24} lg={6} xl={6}>
+              <Space style={{ float: 'right' }}>
+                <Form.Item>
+                  <Button>Reset</Button>
+                </Form.Item>
+
+                <Form.Item>
+                  <Button
+                    type="primary"
+                    style={{ backgroundColor: token.token.colorPrimary }}
+                    htmlType="submit"
+                  >
+                    Search
+                  </Button>
+                </Form.Item>
+              </Space>
+            </Col>
+          </Row>
+
+        </Form>
+      </Card>
+      <Card className="shadow-md mt-6">
+        <Table
+          rowKey={'id'}
+          columns={columns}
+          dataSource={TableData?.data_salary as any}
+        ></Table>
+      </Card>
+    </>
+  )
+};
+
+const Main = () => {
+  return (
+    <Tabs className="right-tab"
+      defaultActiveKey="1"
+      items={[
+        {
+          label: `ตั้งค่าการคำนวณเงินเดือน`,
+          key: '1',
+          children: <Compensation />
+        },
+        {
+          label: `ข้อมูลเงินเดือน`,
+          key: `2`,
+          children: <Compensation2 />
+
+        },
+      ]}></Tabs>
+  )
+}
+export default Main;
