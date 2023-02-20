@@ -11,6 +11,7 @@ import {
     theme,
     Image,
 } from 'antd';
+import {faker} from '@faker-js/faker'
 
 const { useToken } = theme;
 
@@ -19,7 +20,7 @@ const HomePage: React.FC = () => {
 
     return (
         <>
-            <Card className="shadow-xl">
+            <Card className="shadow-xl hover:shadow-2xl">
                 <div className="text-2xl text-center" style={{ color: token.token.colorPrimary }}>
                     กิจกรรมที่กำลังจะเกิดขึ้น
                 </div>
@@ -29,7 +30,7 @@ const HomePage: React.FC = () => {
                 <Row gutter={16}>
                     <Col xs={24} sm={24} md={24} lg={9} xl={9}>
                         <Card
-                            className="shadow-xl"
+                            className="shadow-xl  hover:shadow-2xl"
                             title="ข้อมูล 001 (Data)"
                             type="inner"
                             style={{ marginTop: 16, height: '100%', borderRadius: '10px' }}
@@ -37,9 +38,7 @@ const HomePage: React.FC = () => {
                         >
                             <Col>
                                 <Form.Item>
-                                    Lorem ipsum, dolor sit amet consectetur adipisicing elit. Dolor delectus ad voluptas totam maiores
-                                    laboriosam ipsa,doloribus officia iste quae ex molestias? Quod architecto eius esse, nisi deserunt
-                                    sint mollitia.
+                                    {faker.lorem.paragraph()}
                                 </Form.Item>
                                 <Form.Item
                                     style={{
@@ -51,7 +50,7 @@ const HomePage: React.FC = () => {
                                     <Image
                                         width={200}
                                         height={200}
-                                        src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+                                        src="https://api.lorem.space/image/movie?w=150&h=220"
                                         preview={false}
                                     />
                                 </Form.Item>
@@ -61,7 +60,7 @@ const HomePage: React.FC = () => {
                     </Col>
                     <Col xs={24} sm={24} md={24} lg={9} xl={9}>
                         <Card
-                            className="shadow-xl"
+                            className="shadow-xl hover:shadow-2xl"
                             title="ข้อมูล 002 (Data)"
                             type="inner"
                             style={{ marginTop: 16, height: '100%', borderRadius: '10px' }}
@@ -69,9 +68,7 @@ const HomePage: React.FC = () => {
                         >
                             <Col>
                                 <Form.Item>
-                                    Lorem ipsum, dolor sit amet consectetur adipisicing elit. Dolor delectus ad voluptas totam maiores
-                                    laboriosam ipsa,doloribus officia iste quae ex molestias? Quod architecto eius esse, nisi deserunt
-                                    sint mollitia.
+                                     {faker.lorem.paragraph()}
                                 </Form.Item>
                                 <Form.Item
                                     style={{
@@ -84,7 +81,7 @@ const HomePage: React.FC = () => {
                                     <Image
                                         width={200}
                                         height={200}
-                                        src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+                                        src="https://api.lorem.space/image/game?w=150&h=220"
                                         preview={false}
                                     />
                                 </Form.Item>
@@ -94,7 +91,7 @@ const HomePage: React.FC = () => {
                     </Col>
                     <Col xs={24} sm={24} md={24} lg={6} xl={6}>
                         <Card
-                            className="shadow-xl"
+                            className="shadow-xl hover:shadow-2xl"
                             title="Manager Director"
                             type="inner"
                             style={{ marginTop: 16, height: '100%', borderRadius: '10px' }}
@@ -130,8 +127,7 @@ const HomePage: React.FC = () => {
                     </Col>
                 </Row>
                 <br />
-                <Divider style={{ backgroundColor: token.token.colorPrimary }} />
-                <Card className="shadow-xl">
+                <Card className="shadow-xl hover:shadow-2xl">
                     <div className="text-2xl text-center" style={{ color: token.token.colorPrimary }}>
                         แคมเปญ จากสถาบันการเงิน
                     </div>
@@ -140,7 +136,7 @@ const HomePage: React.FC = () => {
                 <Row gutter={16}>
                     <Col xs={24} sm={24} md={24} lg={9} xl={9}>
                         <Card
-                            className="shadow-xl"
+                            className="shadow-xl hover:shadow-2xl"
                             title="ข้อมูล 003 (Data)"
                             type="inner"
                             style={{ marginTop: 16, height: '100%', borderRadius: '10px' }}
@@ -148,9 +144,7 @@ const HomePage: React.FC = () => {
                         >
                             <Col>
                                 <Form.Item>
-                                    Lorem ipsum, dolor sit amet consectetur adipisicing elit. Dolor delectus ad voluptas totam maiores
-                                    laboriosam ipsa,doloribus officia iste quae ex molestias? Quod architecto eius esse, nisi deserunt
-                                    sint mollitia.
+                                     {faker.lorem.paragraph()}
                                 </Form.Item>
                                 <Form.Item
                                     style={{
@@ -163,7 +157,7 @@ const HomePage: React.FC = () => {
                                     <Image
                                         width={200}
                                         height={200}
-                                        src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+                                        src="https://api.lorem.space/image/album?w=150&h=220"
                                         preview={false}
                                     />
                                 </Form.Item>
@@ -173,7 +167,7 @@ const HomePage: React.FC = () => {
                     </Col>
                     <Col xs={24} sm={24} md={24} lg={9} xl={9}>
                         <Card
-                            className="shadow-xl"
+                            className="shadow-xl hover:shadow-2xl"
                             title="ข้อมูล 004 (Data)"
                             type="inner"
                             style={{ marginTop: 16, height: '100%', borderRadius: '10px' }}
@@ -181,9 +175,7 @@ const HomePage: React.FC = () => {
                         >
                             <Col>
                                 <Form.Item>
-                                    Lorem ipsum, dolor sit amet consectetur adipisicing elit. Dolor delectus ad voluptas totam maiores
-                                    laboriosam ipsa,doloribus officia iste quae ex molestias? Quod architecto eius esse, nisi deserunt
-                                    sint mollitia.
+                                     {faker.lorem.paragraph()}
                                 </Form.Item>
                                 <Form.Item
                                     style={{
@@ -196,7 +188,7 @@ const HomePage: React.FC = () => {
                                     <Image
                                         width={200}
                                         height={200}
-                                        src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+                                        src="https://api.lorem.space/image/book?w=150&h=220"
                                         preview={false}
                                     />
                                 </Form.Item>
@@ -206,7 +198,7 @@ const HomePage: React.FC = () => {
                     </Col>
                     <Col xs={24} sm={24} md={24} lg={6} xl={6}>
                         <Card
-                            className="shadow-xl text-center"
+                            className="shadow-xl hover:shadow-2xl text-center"
                             title="ร้านค้าแนะนำ"
                             type="inner"
                             style={{ marginTop: 16, height: '100%', borderRadius: '10px', background: '#b5d0f572' }}

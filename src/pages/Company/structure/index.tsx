@@ -11,7 +11,7 @@ import {
     Input,
     Row,
     Select,
-    Space,
+    Tooltip,
     theme,
     Tree,
     TreeDataNode,
@@ -25,8 +25,32 @@ import Swal from 'sweetalert2';
 import { POSITION } from '../../../service/graphql/Position';
 import { useMutation, useQuery } from '@apollo/client';
 import { gql } from '../../../__generated__/gql';
+import { AiOutlineSync } from "react-icons/ai";
 
 const { TreeNode } = Tree;
+
+const ButtonReset = styled('button')`
+    border: 1px solid;
+    position: absolute;
+    right: 20px;
+    top: -10px;
+    background-color: ${props => props.color ? props.color : "green"};
+    border-radius: 5px;
+    padding: 3px;
+    &:hover {
+        svg {
+            animation: rotation 2s infinite linear;
+        }
+    }
+    @keyframes rotation {
+        from {
+          transform: rotate(0deg);
+        }
+        to {
+          transform: rotate(359deg);
+        }
+      }
+`;
 
 const StyledTree = styled(Tree)`
   .ant-tree-list-holder {
@@ -195,7 +219,9 @@ const CompanyStructure: React.FC = () => {
     const [open, setOpen] = useState(false);
     const [open2, setOpen2] = useState(false);
     const [dataStructure, setDataStructure] = useState<any>(undefined);
-    const { data, loading, refetch } = useQuery(POSITION);
+    const { data, loading, refetch } = useQuery(POSITION, {
+        notifyOnNetworkStatusChange: true,
+    });
     const [treestructure, setTreestructure] = useState([
         {
             title: 'เทคโนโลยี',
@@ -249,8 +275,29 @@ const CompanyStructure: React.FC = () => {
           status
         }
       }`);
+    const DELEATEPOSITION1 = gql(`mutation Delete_position1($deletePosition1Id: ID!) {
+        delete_position1(id: $deletePosition1Id) {
+          message
+          status
+        }
+      }`)
+    const DELEATEPOSITION2 = gql(`mutation Delete_position2($deletePosition2Id: ID!) {
+        delete_position2(id: $deletePosition2Id) {
+          message
+          status
+        }
+      }`)
+    const DELEATEPOSITION3 = gql(`mutation Delete_position3($deletePosition3Id: ID!) {
+        delete_position3(id: $deletePosition3Id) {
+          message
+          status
+        }
+      }`)
     const [CreatedPosition] = useMutation(CREATEPOSITION);
     const [EditPosition] = useMutation(EDITPOSITION);
+    const [Deleateposition1] = useMutation(DELEATEPOSITION1);
+    const [Deleateposition2] = useMutation(DELEATEPOSITION2);
+    const [Deleateposition3] = useMutation(DELEATEPOSITION3);
 
     // const [expandedKeys] = useState(['0-0-1']);
 
@@ -258,7 +305,7 @@ const CompanyStructure: React.FC = () => {
         // console.log('getMasPositon', data?.getMasPositon)
         // console.log('convertDataToComponent(getMasPositon) :>> ', convertDataToComponent(data?.getMasPositon));
         setTreestructure(convertDataToComponent(data?.getMasPositon));
-    }, [loading]);
+    }, [loading, data]);
     const onDragEnter: TreeProps['onDragEnter'] = (info) => {
         // console.log("onDrageEnter");
         // expandedKeys
@@ -599,8 +646,33 @@ const CompanyStructure: React.FC = () => {
                     current = current[index]?.children || current[index];
                 }
                 let deleteIndex = kut[kut.length - 1];
-                current.splice(deleteIndex, 1);
-                setTreestructure([...a]);
+                // current.splice(deleteIndex, 1);
+                // setTreestructure([...a]);
+                let level = kut.length;
+                console.log('KeysPosition :>> ', current[deleteIndex], level);
+                if (level == 1) {
+                    Deleateposition1({
+                        variables: {
+                            deletePosition1Id: current[deleteIndex]?.key as any,
+                        },
+                    });
+                } else if (level == 2) {
+                    Deleateposition2({
+                        variables: {
+                            deletePosition2Id: current[deleteIndex]?.key as any,
+                        },
+                    });
+                } else {
+                    Deleateposition3({
+                        variables: {
+                            deletePosition3Id: current[deleteIndex]?.key as any,
+                        },
+                    });
+                }
+                setTimeout(() => {
+                    refetch();
+                }, 2000);
+
                 Swal.fire('ลบข้อมูลสำเร็จ!', '', 'success');
             }
         });
@@ -761,17 +833,23 @@ const CompanyStructure: React.FC = () => {
                         variables: {
                             data: Editdata,
                         },
+                    }).then(() => {
+                        refetch();
                     });
                 }
-                 if (Adddata.length > 0) {
+                if (Adddata.length > 0) {
                     let dataAdd = await CreatedPosition({
                         variables: {
                             data: Adddata,
                         },
+                    }).then(() => {
+                        refetch();
                     });
                 }
+                setTimeout(() => {
+                    refetch();
+                }, 2000);
                 Swal.fire('บันทึกข้อมูลสำเร็จ!', '', 'success');
-                refetch();
             }
         });
     };
@@ -829,7 +907,9 @@ const CompanyStructure: React.FC = () => {
                 </Col>
                 <Col span={16} style={{ padding: '0px 10px' }}>
                     <h3>โครงสร้างองค์กร</h3>
-
+                    <Tooltip title="รีเซ็ต">
+                        <ButtonReset onClick={() => refetch()} color={token.token.colorPrimary} > <AiOutlineSync size={25} color="white" /></ButtonReset>
+                    </Tooltip>
                     <StyledTree
                         className="draggable-tree"
                         // defaultExpandAll

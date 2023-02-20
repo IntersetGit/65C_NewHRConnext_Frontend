@@ -690,93 +690,64 @@ const Newcompany: React.FC<NewcompanyPropsType> = ({ role }) => {
           </div>
 
           <Row gutter={16}>
-            <Col>
+            <Col sm={24} md={8}>
               {/*---------------- Facebook ----------------*/}
-              <div className="relative flex flex-row items-center">
-                <div className="flex flex-row ml-2 tems-center text-4xl">
-                  {/* <FaFacebookSquare /> */}
-                  <img
-                    src={facebook}
-                    alt="Facebook-logo"
-                    style={{ width: '40px' }}
-                  />
-                </div>
-                <div className="flex items-center ml-8 mt-6">
-                  <Col span={24}>
-                    <Form.Item name={'social_facebook'}>
-                      {Editdata?.mode == 'view' ? (
-                        <Input disabled autoComplete="off" />
-                      ) : (
-                        <Input autoComplete="off" />
-                      )}
-                    </Form.Item>
-                  </Col>
-                </div>
-                {/*---------------- in ----------------*/}
-                <div className="flex flex-row items-center ml-6 text-4xl">
-                  {/* <FaLinkedin /> */}
-                  <img
-                    src={initial}
-                    alt="likedin-logo"
-                    style={{ width: '40px' }}
-                  />
-                </div>
-                <div className="flex items-center ml-8 mt-6">
-                  <Col span={24}>
-                    <Form.Item name={'social_likedin'}>
-                      {Editdata?.mode == 'view' ? (
-                        <Input disabled autoComplete="off" />
-                      ) : (
-                        <Input autoComplete="off" />
-                      )}
-                    </Form.Item>
-                  </Col>
-                </div>
-              </div>
+              <Form.Item label={<img
+                src={facebook}
+                alt="Facebook-logo"
+                style={{ width: '40px' }}
+              />} colon={false} name={'social_facebook'}>
+                {Editdata?.mode == 'view' ? (
+                  <Input disabled autoComplete="off" />
+                ) : (
+                  <Input autoComplete="off" />
+                )}
+              </Form.Item>
             </Col>
+            {/*---------------- in ----------------*/}
+
+            <Col sm={24} md={8}>
+              <Form.Item label={<img
+                src={initial}
+                alt="likedin-logo"
+                style={{ width: '40px' }}
+              />} colon={false} name={'social_likedin'}>
+                {Editdata?.mode == 'view' ? (
+                  <Input disabled autoComplete="off" />
+                ) : (
+                  <Input autoComplete="off" />
+                )}
+              </Form.Item>
+            </Col>
+
           </Row>
 
           <Row gutter={16}>
-            <Col>
-              {/*---------------- instagram ----------------*/}
-              <div className="relative flex flex-row items-center">
-                <div className="flex flex-row ml-2 items-center text-4xl">
-                  {/* <FaInstagramSquare /> */}
-                  <img
-                    src={instagram}
-                    alt="instagram-logo"
-                    style={{ width: '40px' }}
-                  />
-                </div>
-                <div className="flex items-center ml-8 mt-6">
-                  <Col span={24}>
-                    <Form.Item name={'social_instragram'}>
-                      {Editdata?.mode == 'view' ? (
-                        <Input disabled autoComplete="off" />
-                      ) : (
-                        <Input autoComplete="off" />
-                      )}
-                    </Form.Item>
-                  </Col>
-                </div>
-                {/*---------------- Line ----------------*/}
-                <div className="flex flex-row items-center ml-6 text-4xl">
-                  {/* <FaLine /> */}
-                  <img src={line} alt="line-logo" style={{ width: '40px' }} />
-                </div>
-                <div className="flex items-center ml-8 mt-6">
-                  <Col span={24}>
-                    <Form.Item name={'social_line'}>
-                      {Editdata?.mode == 'view' ? (
-                        <Input disabled autoComplete="off" />
-                      ) : (
-                        <Input autoComplete="off" />
-                      )}
-                    </Form.Item>
-                  </Col>
-                </div>
-              </div>
+            {/*---------------- instagram ----------------*/}
+            <Col  sm={24} md={8}>
+              <Form.Item label={<img
+                src={instagram}
+                alt="instagram-logo"
+                style={{ width: '40px' }}
+              />} colon={false} name={'social_instragram'}>
+                {Editdata?.mode == 'view' ? (
+                  <Input disabled autoComplete="off" />
+                ) : (
+                  <Input autoComplete="off" />
+                )}
+              </Form.Item>
             </Col>
+
+            <Col  sm={24} md={8}>
+              <Form.Item label={<img src={line} alt="line-logo" style={{ width: '40px' }} />} colon={false} name={'social_line'}>
+                {Editdata?.mode == 'view' ? (
+                  <Input disabled autoComplete="off" />
+                ) : (
+                  <Input autoComplete="off" />
+                )}
+              </Form.Item>
+            </Col>
+
           </Row>
           <Divider style={{ backgroundColor: token.token.colorPrimary }} />
 
