@@ -25,7 +25,12 @@ import edit from '../../assets/Edit.png';
 import Del from '../../assets/DEL.png';
 import View from '../../assets/View.png';
 import { FETCH_ALL_APPROVE } from '../../service/graphql/Approve';
-import { LEAVE_TYPE_DATA, CREATE_LEAVE } from '../../service/graphql/Leave';
+import { POSITION } from '../../service/graphql/Position';
+import {
+  LEAVE_TYPE_DATA,
+  CREATE_LEAVE,
+  DELETE_LEAVE,
+} from '../../service/graphql/Leave';
 import { useMutation, useQuery } from '@apollo/client';
 import Swal from 'sweetalert2';
 import dayjs from 'dayjs';
@@ -37,11 +42,39 @@ const Approveleave: React.FC = () => {
   const token = useToken();
   const [open, setOpen] = useState(false);
   const [form] = Form.useForm();
+  const [formSearch] = Form.useForm();
   const [drawertype, setdrawertype] = useState(1);
   const [selectedrow, setselectedrow] = useState<any>([]);
   const { data: data_approve, refetch } = useQuery(FETCH_ALL_APPROVE);
   const { data: leavetypedata } = useQuery(LEAVE_TYPE_DATA);
   const [createLeaveData] = useMutation(CREATE_LEAVE);
+  const { data: position } = useQuery(POSITION);
+  const [deleteLeave] = useMutation(DELETE_LEAVE);
+  const [maspositionlevel3, setMasPositionlevel3] = useState<
+    { value?: string | null; label?: string | null }[] | undefined
+  >(undefined);
+
+  const onChangePosition = (value) => {
+    formSearch.setFieldValue('mas_positionlevel3', null);
+    const maspositionlevel3 = position?.getMasPositon?.[0]?.mas_positionlevel2
+      ?.find((e) => e?.id === value)
+      ?.mas_positionlevel3?.map((e) => {
+        return {
+          label: e?.name,
+          value: e?.id,
+        };
+      });
+
+    setMasPositionlevel3(maspositionlevel3 ? maspositionlevel3 : []);
+  };
+
+  const mas_positionlevel2 =
+    position?.getMasPositon?.[0]?.mas_positionlevel2?.map((e) => {
+      return {
+        label: e?.name,
+        value: e?.id,
+      };
+    });
 
   const selectleavetype = leavetypedata?.getleavetypedata?.map((e) => {
     return {
@@ -72,18 +105,19 @@ const Approveleave: React.FC = () => {
         key: 'view',
         label: 'ดูข้อมูล',
         icon: <img style={{ width: '17px', height: '17px' }} src={View} />,
+        onClick: (e: any) => onMenuClick(e, record),
       },
       {
         key: 'delete',
         label: 'ลบข้อมูล',
         icon: <img style={{ width: '20px', height: '20px' }} src={Del} />,
+        onClick: (e: any) => onMenuClick(e, record),
       },
     ];
   };
 
   const onMenuClick = (event: any, record: any) => {
     const { key } = event;
-
     if (key === 'edit') {
       console.log(record);
       showDrawer(1);
@@ -94,7 +128,41 @@ const Approveleave: React.FC = () => {
         end_date: record.end_date ? dayjs(record.end_date) : undefined,
       });
     } else if (key === 'view') {
+      showDrawer(2);
+      form.setFieldsValue({
+        ...record,
+        start_date: record.start_date ? dayjs(record.start_date) : undefined,
+        end_date: record.end_date ? dayjs(record.end_date) : undefined,
+      });
     } else if (key === 'delete') {
+      Swal.fire({
+        title: `ยืนยันการลบข้อมูลการลา`,
+        icon: 'warning',
+        showDenyButton: true,
+        showCancelButton: false,
+        confirmButtonColor: token.token.colorPrimary,
+        denyButtonColor: '#ea4e4e',
+        confirmButtonText: 'ตกลง',
+        denyButtonText: `ยกเลิก`,
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          deleteLeave({
+            variables: {
+              deleteLeveId: record?.id,
+            },
+          })
+            .then((val) => {
+              if (val.data?.delete_leve?.status) {
+                Swal.fire(`ลบข้อมูลการลาสำเร็จ!`, '', 'success');
+                refetch();
+              }
+            })
+            .catch((err) => {
+              Swal.fire(`ลบข้อมูลการลาไม่สำเร็จ!`, '', 'error');
+              console.error(err);
+            });
+        }
+      });
     }
   };
 
@@ -184,40 +252,41 @@ const Approveleave: React.FC = () => {
   };
 
   const onFinish = (value) => {
-    Swal.fire({
-      title: `ยืนยันการแก้ไขข้อมูลการลา`,
-      icon: 'warning',
-      showDenyButton: true,
-      showCancelButton: false,
-      confirmButtonColor: token.token.colorPrimary,
-      denyButtonColor: '#ea4e4e',
-      confirmButtonText: 'ตกลง',
-      denyButtonText: `ยกเลิก`,
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        createLeaveData({
-          variables: {
-            data: {
-              ...value,
-              id: selectedrow?.id,
+    drawertype === 1 &&
+      Swal.fire({
+        title: `ยืนยันการแก้ไขข้อมูลการลา`,
+        icon: 'warning',
+        showDenyButton: true,
+        showCancelButton: false,
+        confirmButtonColor: token.token.colorPrimary,
+        denyButtonColor: '#ea4e4e',
+        confirmButtonText: 'ตกลง',
+        denyButtonText: `ยกเลิก`,
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          createLeaveData({
+            variables: {
+              data: {
+                ...value,
+                id: selectedrow?.id,
+              },
             },
-          },
-        })
-          .then((val) => {
-            console.log(val);
-            if (val.data?.createddata_leave?.status) {
-              Swal.fire(`แก้ไขข้อมูลการลาสำเร็จ!`, '', 'success');
-              refetch();
-              form.resetFields();
-              setOpen(false);
-            }
           })
-          .catch((err) => {
-            Swal.fire(`แก้ไขข้อมูลการลาไม่สำเร็จ!`, '', 'error');
-            console.error(err);
-          });
-      }
-    });
+            .then((val) => {
+              console.log(val);
+              if (val.data?.createddata_leave?.status) {
+                Swal.fire(`แก้ไขข้อมูลการลาสำเร็จ!`, '', 'success');
+                refetch();
+                form.resetFields();
+                setOpen(false);
+              }
+            })
+            .catch((err) => {
+              Swal.fire(`แก้ไขข้อมูลการลาไม่สำเร็จ!`, '', 'error');
+              console.error(err);
+            });
+        }
+      });
   };
 
   return (
@@ -229,34 +298,35 @@ const Approveleave: React.FC = () => {
       <Divider style={{ backgroundColor: token.token.colorPrimary }} />
 
       <Card className="shadow-md mb-5">
-        <Form>
+        <Form form={formSearch}>
           <Row gutter={16}>
             <Col xs={24} sm={24} md={12} lg={12} xl={6}>
-              <Form.Item label={<b>ชื่อ</b>}>
+              <Form.Item colon={false} label={<b>ชื่อ</b>}>
                 <Input />
               </Form.Item>
             </Col>
             <Col xs={24} sm={24} md={12} lg={12} xl={6}>
-              <Form.Item label={<b>แผนก</b>}>
+              <Form.Item
+                name={'mas_positionlevel2'}
+                colon={false}
+                label={<b>แผนก</b>}
+              >
                 <Select
-                  options={[
-                    {
-                      value: '1',
-                      label: 'การเงิน',
-                    },
-                  ]}
+                  onChange={onChangePosition}
+                  options={mas_positionlevel2}
+                  allowClear
                 />
               </Form.Item>
             </Col>
             <Col xs={24} sm={24} md={12} lg={12} xl={6}>
-              <Form.Item label={<b>ตำแหน่ง</b>}>
+              <Form.Item
+                name={'mas_positionlevel3'}
+                colon={false}
+                label={<b>ตำแหน่ง</b>}
+              >
                 <Select
-                  options={[
-                    {
-                      value: '1',
-                      label: 'การขาย',
-                    },
-                  ]}
+                  options={maspositionlevel3 ? maspositionlevel3 : []}
+                  allowClear
                 />
               </Form.Item>
             </Col>
@@ -286,8 +356,11 @@ const Approveleave: React.FC = () => {
       </Card>
 
       <Drawer
-        title="รายละเอียดการอนุมัติใบลา"
-        headerStyle={{ textAlign: 'center' }}
+        title={`${
+          drawertype == 1
+            ? 'แก้ไขรายละเอียดการอนุมัติใบลา'
+            : 'ดูรายละเอียดการอนุมัติใบลา'
+        }`}
         onClose={onClose}
         open={open}
         width="40%"
@@ -308,7 +381,11 @@ const Approveleave: React.FC = () => {
           <Row>
             <Col span={12}>
               <Form.Item name={'leavetype_id'} label={'ประเภทการลา'}>
-                <Select options={selectleavetype} allowClear />
+                {drawertype == 2 ? (
+                  <Select options={selectleavetype} allowClear disabled />
+                ) : (
+                  <Select options={selectleavetype} allowClear />
+                )}
               </Form.Item>
             </Col>
           </Row>
@@ -316,13 +393,29 @@ const Approveleave: React.FC = () => {
           <Row gutter={16}>
             <Col span={12}>
               <Form.Item name={'start_date'} label={'จากวันที่'}>
-                <DatePicker style={{ width: '100%' }} format={'DD-MM-YYYY'} />
+                {drawertype == 2 ? (
+                  <DatePicker
+                    style={{ width: '100%' }}
+                    format={'DD-MM-YYYY'}
+                    disabled
+                  />
+                ) : (
+                  <DatePicker style={{ width: '100%' }} format={'DD-MM-YYYY'} />
+                )}
               </Form.Item>
             </Col>
 
             <Col span={12}>
               <Form.Item name={'end_date'} label={'ถึงวันที่'}>
-                <DatePicker style={{ width: '100%' }} format={'DD-MM-YYYY'} />
+                {drawertype == 2 ? (
+                  <DatePicker
+                    style={{ width: '100%' }}
+                    format={'DD-MM-YYYY'}
+                    disabled
+                  />
+                ) : (
+                  <DatePicker style={{ width: '100%' }} format={'DD-MM-YYYY'} />
+                )}
               </Form.Item>
             </Col>
           </Row>
@@ -330,12 +423,12 @@ const Approveleave: React.FC = () => {
           <Row gutter={16}>
             <Col span={12}>
               <Form.Item name={'quantity_day'} label={'จำนวนวัน'}>
-                <Input />
+                {drawertype == 2 ? <Input disabled /> : <Input />}
               </Form.Item>
             </Col>
             <Col span={12}>
               <Form.Item name={'quantity_hours'} label={'จำนวนชั่วโมง'}>
-                <Input />
+                {drawertype == 2 ? <Input disabled /> : <Input />}
               </Form.Item>
             </Col>
           </Row>
@@ -343,7 +436,11 @@ const Approveleave: React.FC = () => {
           <Row>
             <Col span={24}>
               <Form.Item name={'detail_leave'} label={'เหตุผลการลา'}>
-                <TextArea rows={4} />
+                {drawertype == 2 ? (
+                  <TextArea rows={4} disabled />
+                ) : (
+                  <TextArea rows={4} />
+                )}
               </Form.Item>
             </Col>
           </Row>
@@ -351,11 +448,23 @@ const Approveleave: React.FC = () => {
           <Row>
             <Col span={12}>
               <Form.Item label={'ไฟล์เอกสาร'}>
-                <Upload>
-                  <Button style={{ width: '100%' }} icon={<UploadOutlined />}>
-                    ไฟล์เอกสาร PDF
-                  </Button>
-                </Upload>
+                {drawertype == 2 ? (
+                  <Upload disabled>
+                    <Button
+                      style={{ width: '100%' }}
+                      icon={<UploadOutlined />}
+                      disabled
+                    >
+                      ไฟล์เอกสาร PDF
+                    </Button>
+                  </Upload>
+                ) : (
+                  <Upload>
+                    <Button style={{ width: '100%' }} icon={<UploadOutlined />}>
+                      ไฟล์เอกสาร PDF
+                    </Button>
+                  </Upload>
+                )}
               </Form.Item>
             </Col>
           </Row>
@@ -371,10 +480,17 @@ const Approveleave: React.FC = () => {
           >
             <Col>
               <Form.Item name={'Status'}>
-                <Radio.Group onChange={onChange} value={value}>
-                  <Radio value={1}>อนุมัติ</Radio>
-                  <Radio value={2}>ไม่อนุมัติ</Radio>
-                </Radio.Group>
+                {drawertype == 2 ? (
+                  <Radio.Group onChange={onChange} value={value} disabled>
+                    <Radio value={1}>อนุมัติ</Radio>
+                    <Radio value={2}>ไม่อนุมัติ</Radio>
+                  </Radio.Group>
+                ) : (
+                  <Radio.Group onChange={onChange} value={value}>
+                    <Radio value={1}>อนุมัติ</Radio>
+                    <Radio value={2}>ไม่อนุมัติ</Radio>
+                  </Radio.Group>
+                )}
               </Form.Item>
             </Col>
           </Row>
@@ -390,13 +506,15 @@ const Approveleave: React.FC = () => {
           >
             <Form.Item>
               <Space>
-                <Button
-                  htmlType="submit"
-                  type="primary"
-                  style={{ backgroundColor: token.token.colorPrimary }}
-                >
-                  บันทึก
-                </Button>
+                {drawertype !== 2 && (
+                  <Button
+                    htmlType="submit"
+                    type="primary"
+                    style={{ backgroundColor: token.token.colorPrimary }}
+                  >
+                    บันทึก
+                  </Button>
+                )}
                 <Button onClick={onClose}>ยกเลิก</Button>
               </Space>
             </Form.Item>

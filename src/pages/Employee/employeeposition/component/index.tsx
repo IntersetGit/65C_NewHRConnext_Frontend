@@ -297,12 +297,12 @@ const ProfilePosition: React.FC<ProfilePositionPropsType> = ({ role }) => {
         icon: <img style={{ width: '17px', height: '17px' }} src={View} />,
         onClick: (e: any) => onMenuClick(e, record),
       },
-      {
-        key: 'delete',
-        label: 'ลบข้อมูล',
-        icon: <img style={{ width: '20px', height: '20px' }} src={Del} />,
-        onClick: (e: any) => onMenuClick(e, record),
-      },
+      // {
+      //   key: 'delete',
+      //   label: 'ลบข้อมูล',
+      //   icon: <img style={{ width: '20px', height: '20px' }} src={Del} />,
+      //   onClick: (e: any) => onMenuClick(e, record),
+      // },
     ];
   };
 

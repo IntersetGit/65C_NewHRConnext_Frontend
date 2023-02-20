@@ -181,13 +181,17 @@ const UserEmployee: React.FC = (props) => {
   };
 
   const onChange = (key: string) => {
-    navigate(generatePath(key, { companycode }), {
-      state: propsstate,
-    });
+    // console.log('key :>> ', key);
+    companyNavigate(key, { state: propsstate }, `?id=${propsstate?.id}`);
+    // navigate(generatePath(key, { companycode }), {
+    //   state: propsstate,
+    // }); F
   };
 
   const onChangeAge: DatePickerProps['onChange'] = (date, dateString) => {
-    const newdate = dayjs().diff(dayjs(dateString), 'year');
+    const newdate = dayjs().diff(date, 'year')
+      ? dayjs().diff(date, 'year')
+      : null;
     form.setFieldValue('age', newdate);
   };
 
@@ -441,12 +445,13 @@ const UserEmployee: React.FC = (props) => {
               },
               {
                 label: `ตำแหน่งงาน`,
-                key: `/:companycode/employee/positionemployee?id=${propsstate?.id}`,
+                key: `/:companycode/employee/positionemployee`,
               },
             ]}
           />
         </>
       )}
+
       <div className="flex text-3xl ml-2 pt-4">
         <FolderFilled />
         <div className="ml-2 text-lg">ข้อมูลพนักงาน</div>

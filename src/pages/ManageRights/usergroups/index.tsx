@@ -138,6 +138,7 @@ const Manageuser: React.FC = () => {
       form.setFieldsValue(record);
     } else if (key === 'view') {
       showDrawer(3);
+      form.setFieldsValue(record);
     } else if (key === 'delete') {
       Swal.fire({
         title: `ยืนยันการลบข้อมูล Role`,

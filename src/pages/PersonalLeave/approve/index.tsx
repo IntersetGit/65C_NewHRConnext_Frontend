@@ -16,6 +16,7 @@ import {
   Upload,
   Select,
   Space,
+  InputNumber,
 } from 'antd';
 import { RiCalendar2Line, RiBriefcase5Line } from 'react-icons/ri';
 import {
@@ -35,6 +36,7 @@ import {
   FETCH_ALL_LEAVE,
   LEAVE_TYPE_DATA,
   CREATE_LEAVE,
+  DELETE_LEAVE,
 } from '../../../service/graphql/Leave';
 import { getFilePath } from '../../../util';
 import dayjs from 'dayjs';
@@ -57,6 +59,7 @@ const Approve: React.FC = () => {
   } = useQuery(FETCH_ALL_LEAVE, { variables: { userId: propsstate?.id } });
   const { data: leave_type_data } = useQuery(LEAVE_TYPE_DATA);
   const [createLeaveData] = useMutation(CREATE_LEAVE);
+  const [deleteLeave] = useMutation(DELETE_LEAVE);
 
   const showDrawer = (type) => {
     setOpen(true);
@@ -88,12 +91,12 @@ const Approve: React.FC = () => {
         icon: <img style={{ width: '17px', height: '17px' }} src={View} />,
         onClick: (e: any) => onMenuClick(e, record),
       },
-      // {
-      //   key: 'delete',
-      //   label: 'ลบข้อมูล',
-      //   icon: <img style={{ width: '20px', height: '20px' }} src={Del} />,
-      //   onClick: (e: any) => onMenuClick(e, record),
-      // },
+      {
+        key: 'delete',
+        label: 'ลบข้อมูล',
+        icon: <img style={{ width: '20px', height: '20px' }} src={Del} />,
+        onClick: (e: any) => onMenuClick(e, record),
+      },
     ];
   };
 
@@ -115,6 +118,34 @@ const Approve: React.FC = () => {
         end_date: dayjs(record.end_date),
       });
     } else if (key === 'delete') {
+      Swal.fire({
+        title: `ยืนยันการลบข้อมูลการลา`,
+        icon: 'warning',
+        showDenyButton: true,
+        showCancelButton: false,
+        confirmButtonColor: token.token.colorPrimary,
+        denyButtonColor: '#ea4e4e',
+        confirmButtonText: 'ตกลง',
+        denyButtonText: `ยกเลิก`,
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          deleteLeave({
+            variables: {
+              deleteLeveId: record?.id,
+            },
+          })
+            .then((val) => {
+              if (val.data?.delete_leve?.status) {
+                Swal.fire(`ลบข้อมูลการลาสำเร็จ!`, '', 'success');
+                refetch();
+              }
+            })
+            .catch((err) => {
+              Swal.fire(`ลบข้อมูลการลาไม่สำเร็จ!`, '', 'error');
+              console.error(err);
+            });
+        }
+      });
     }
   };
 
@@ -341,12 +372,19 @@ const Approve: React.FC = () => {
       </Card>
 
       <Drawer
-        title="รายละเอียดการลา"
+        title={`${
+          drawertype == 1 ? 'แก้ไขรายละเอียดการลา' : 'ดูรายละเอียดการลา'
+        }`}
         size="large"
         onClose={onClose}
         open={open}
       >
-        <Form form={form} layout="vertical" onFinish={onFinish}>
+        <Form
+          form={form}
+          layout="vertical"
+          onFinish={onFinish}
+          initialValues={{ quantity_day: 0, quantity_hours: 0 }}
+        >
           <Row>
             <Col span={12}>
               <Form.Item name={'leavetype_id'} label={'ประเภทการลา'}>
@@ -392,13 +430,31 @@ const Approve: React.FC = () => {
           <Row gutter={16}>
             <Col span={12}>
               <Form.Item name={'quantity_day'} label={'จำนวนวัน'}>
-                {drawertype == 2 ? <Input disabled /> : <Input />}
+                {drawertype == 2 ? (
+                  <InputNumber
+                    style={{ width: '100%' }}
+                    min={0}
+                    max={31}
+                    disabled
+                  />
+                ) : (
+                  <InputNumber style={{ width: '100%' }} min={0} max={31} />
+                )}
               </Form.Item>
             </Col>
 
             <Col span={12}>
               <Form.Item name={'quantity_hours'} label={'จำนวนชั่วโมง'}>
-                {drawertype == 2 ? <Input disabled /> : <Input />}
+                {drawertype == 2 ? (
+                  <InputNumber
+                    style={{ width: '100%' }}
+                    min={0}
+                    max={31}
+                    disabled
+                  />
+                ) : (
+                  <InputNumber style={{ width: '100%' }} min={0} max={31} />
+                )}
               </Form.Item>
             </Col>
           </Row>
@@ -418,11 +474,23 @@ const Approve: React.FC = () => {
           <Row>
             <Col span={12}>
               <Form.Item label={'ไฟล์เอกสาร'}>
-                <Upload>
-                  <Button style={{ width: '100%' }} icon={<UploadOutlined />}>
-                    เปิดเอกสาร PDF
-                  </Button>
-                </Upload>
+                {drawertype == 2 ? (
+                  <Upload disabled>
+                    <Button
+                      style={{ width: '100%' }}
+                      icon={<UploadOutlined />}
+                      disabled
+                    >
+                      เปิดเอกสาร PDF
+                    </Button>
+                  </Upload>
+                ) : (
+                  <Upload>
+                    <Button style={{ width: '100%' }} icon={<UploadOutlined />}>
+                      เปิดเอกสาร PDF
+                    </Button>
+                  </Upload>
+                )}
               </Form.Item>
             </Col>
           </Row>

@@ -43,7 +43,6 @@ const Compensationbase: React.FC = () => {
 
   const { data: BookBank } = useQuery(FETCH_SELECT_BOOK_BANK);
   const { data: TableData, refetch } = useQuery(FETCH_AllSALARY_BASE);
-  const [creteExpenseCom] = useMutation(CREATE_ExpenseCom);
 
   console.log("table", TableData)
 
@@ -51,15 +50,6 @@ const Compensationbase: React.FC = () => {
     const salary: any = TableData
     refetch(salary)
   }, []);
-
-  const showDrawer = () => {
-    setOpen(true);
-  };
-
-  const onClose = () => {
-    form.resetFields();
-    setOpen(false);
-  };
 
   const onChange = (checkedValues: CheckboxValueType[]) => {
     console.log('checked = ', checkedValues);

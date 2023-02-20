@@ -232,3 +232,12 @@ mutation Createddata_leave($data: leave) {
   }
 }
 `);
+
+export const DELETE_LEAVE = gql(`
+mutation Delete_leve($deleteLeveId: ID!) {
+  delete_leve(id: $deleteLeveId) {
+    message
+    status
+  }
+}
+`);

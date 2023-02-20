@@ -221,11 +221,12 @@ const AuthProvider = ({ children, company: companydata }: Props) => {
   const companyNavigate = (
     path: string,
     opts?: NavigateOptions | undefined,
+    param?: string | '',
   ) => {
     if (!companycode) {
       console.error('Company code not found.');
     }
-    return navigate(generatePath(path, { companycode }), opts);
+    return navigate(generatePath(path, { companycode }) + param, opts);
   };
 
   const value = {

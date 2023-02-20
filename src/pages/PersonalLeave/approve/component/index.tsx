@@ -35,6 +35,7 @@ import {
   FETCH_BYID_LEAVE,
   LEAVE_TYPE_DATA,
   CREATE_LEAVE,
+  DELETE_LEAVE,
 } from '../../../../service/graphql/Leave';
 import { useQuery, useMutation } from '@apollo/client';
 import Swal from 'sweetalert2';
@@ -55,6 +56,7 @@ const ProfileApprove: React.FC<ProfileApprovePropsType> = ({ role }) => {
   const { data: dataleaveme, loading, refetch } = useQuery(FETCH_BYID_LEAVE);
   const { data: leave_type_data } = useQuery(LEAVE_TYPE_DATA);
   const [createLeaveData] = useMutation(CREATE_LEAVE);
+  const [deleteLeave] = useMutation(DELETE_LEAVE);
 
   const selectleavetype = leave_type_data?.getleavetypedata?.map((e) => {
     return {
@@ -109,7 +111,40 @@ const ProfileApprove: React.FC<ProfileApprovePropsType> = ({ role }) => {
       });
     } else if (key === 'view') {
       showDrawer(3);
+      form.setFieldsValue({
+        ...record,
+        start_date: record.start_date ? dayjs(record.start_date) : undefined,
+        end_date: record.end_date ? dayjs(record.end_date) : undefined,
+      });
     } else if (key === 'delete') {
+      Swal.fire({
+        title: `ยืนยันการลบข้อมูลการลา`,
+        icon: 'warning',
+        showDenyButton: true,
+        showCancelButton: false,
+        confirmButtonColor: token.token.colorPrimary,
+        denyButtonColor: '#ea4e4e',
+        confirmButtonText: 'ตกลง',
+        denyButtonText: `ยกเลิก`,
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          deleteLeave({
+            variables: {
+              deleteLeveId: record?.id,
+            },
+          })
+            .then((val) => {
+              if (val.data?.delete_leve?.status) {
+                Swal.fire(`ลบข้อมูลการลาสำเร็จ!`, '', 'success');
+                refetch();
+              }
+            })
+            .catch((err) => {
+              Swal.fire(`ลบข้อมูลการลาไม่สำเร็จ!`, '', 'error');
+              console.error(err);
+            });
+        }
+      });
     }
   };
 
@@ -401,12 +436,32 @@ const ProfileApprove: React.FC<ProfileApprovePropsType> = ({ role }) => {
         ></Table>
       </Card>
 
-      <Drawer title="สร้างใบลา" size="large" onClose={onClose} open={open}>
-        <Form form={form} onFinish={onFinish} layout="vertical">
+      <Drawer
+        title={`${
+          drawertype == 1
+            ? 'สร้างใบลา'
+            : drawertype == 2
+            ? 'แก้ไขใบลา'
+            : 'ดูใบลา'
+        }`}
+        size="large"
+        onClose={onClose}
+        open={open}
+      >
+        <Form
+          form={form}
+          onFinish={onFinish}
+          layout="vertical"
+          initialValues={{ quantity_day: 0, quantity_hours: 0 }}
+        >
           <Row>
             <Col span={12}>
               <Form.Item name={'leavetype_id'} label={'ประเภทการลา'}>
-                <Select options={selectleavetype} allowClear />
+                {drawertype == 3 ? (
+                  <Select options={selectleavetype} allowClear disabled />
+                ) : (
+                  <Select options={selectleavetype} allowClear />
+                )}
               </Form.Item>
             </Col>
           </Row>
@@ -414,13 +469,29 @@ const ProfileApprove: React.FC<ProfileApprovePropsType> = ({ role }) => {
           <Row gutter={16}>
             <Col span={12}>
               <Form.Item name={'start_date'} label={'จากวันที่'}>
-                <DatePicker style={{ width: '100%' }} format={'DD-MM-YYYY'} />
+                {drawertype == 3 ? (
+                  <DatePicker
+                    style={{ width: '100%' }}
+                    format={'DD-MM-YYYY'}
+                    disabled
+                  />
+                ) : (
+                  <DatePicker style={{ width: '100%' }} format={'DD-MM-YYYY'} />
+                )}
               </Form.Item>
             </Col>
 
             <Col span={12}>
               <Form.Item name={'end_date'} label={'ถึงวันที่'}>
-                <DatePicker style={{ width: '100%' }} format={'DD-MM-YYYY'} />
+                {drawertype == 3 ? (
+                  <DatePicker
+                    style={{ width: '100%' }}
+                    format={'DD-MM-YYYY'}
+                    disabled
+                  />
+                ) : (
+                  <DatePicker style={{ width: '100%' }} format={'DD-MM-YYYY'} />
+                )}
               </Form.Item>
             </Col>
           </Row>
@@ -428,23 +499,31 @@ const ProfileApprove: React.FC<ProfileApprovePropsType> = ({ role }) => {
           <Row gutter={16}>
             <Col span={12}>
               <Form.Item name={'quantity_day'} label={'จำนวนวัน'}>
-                <InputNumber
-                  style={{ width: '100%' }}
-                  min={0}
-                  max={31}
-                  defaultValue={0}
-                />
+                {drawertype == 2 ? (
+                  <InputNumber
+                    style={{ width: '100%' }}
+                    min={0}
+                    max={31}
+                    disabled
+                  />
+                ) : (
+                  <InputNumber style={{ width: '100%' }} min={0} max={31} />
+                )}
               </Form.Item>
             </Col>
 
             <Col span={12}>
               <Form.Item name={'quantity_hours'} label={'จำนวนชั่วโมง'}>
-                <InputNumber
-                  style={{ width: '100%' }}
-                  min={0}
-                  max={24}
-                  defaultValue={0}
-                />
+                {drawertype == 2 ? (
+                  <InputNumber
+                    style={{ width: '100%' }}
+                    min={0}
+                    max={31}
+                    disabled
+                  />
+                ) : (
+                  <InputNumber style={{ width: '100%' }} min={0} max={31} />
+                )}
               </Form.Item>
             </Col>
           </Row>
@@ -452,7 +531,11 @@ const ProfileApprove: React.FC<ProfileApprovePropsType> = ({ role }) => {
           <Row>
             <Col span={24}>
               <Form.Item name={'detail_leave'} label={'เหตุผลการลา'}>
-                <TextArea rows={6} />
+                {drawertype == 3 ? (
+                  <TextArea rows={6} disabled />
+                ) : (
+                  <TextArea rows={6} />
+                )}
               </Form.Item>
             </Col>
           </Row>
@@ -460,11 +543,23 @@ const ProfileApprove: React.FC<ProfileApprovePropsType> = ({ role }) => {
           <Row>
             <Col span={12}>
               <Form.Item label={'ไฟล์เอกสาร'}>
-                <Upload>
-                  <Button style={{ width: '100%' }} icon={<UploadOutlined />}>
-                    เปิดเอกสาร PDF
-                  </Button>
-                </Upload>
+                {drawertype == 3 ? (
+                  <Upload disabled>
+                    <Button
+                      style={{ width: '100%' }}
+                      icon={<UploadOutlined />}
+                      disabled
+                    >
+                      เปิดเอกสาร PDF
+                    </Button>
+                  </Upload>
+                ) : (
+                  <Upload>
+                    <Button style={{ width: '100%' }} icon={<UploadOutlined />}>
+                      เปิดเอกสาร PDF
+                    </Button>
+                  </Upload>
+                )}
               </Form.Item>
             </Col>
           </Row>
@@ -486,16 +581,18 @@ const ProfileApprove: React.FC<ProfileApprovePropsType> = ({ role }) => {
           <Row gutter={16} style={{ float: 'right' }}>
             <Form.Item>
               <Space>
-                <Button
-                  htmlType="submit"
-                  type="primary"
-                  style={{
-                    marginBottom: '10px',
-                    backgroundColor: token.token.colorPrimary,
-                  }}
-                >
-                  บันทึก
-                </Button>
+                {drawertype !== 3 && (
+                  <Button
+                    htmlType="submit"
+                    type="primary"
+                    style={{
+                      marginBottom: '10px',
+                      backgroundColor: token.token.colorPrimary,
+                    }}
+                  >
+                    บันทึก
+                  </Button>
+                )}
                 <Button
                   style={{
                     marginBottom: '10px',
