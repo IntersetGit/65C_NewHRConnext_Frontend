@@ -21,6 +21,8 @@ import type { ColumnsType } from 'antd/es/table';
 import { useNavigate } from 'react-router-dom';
 import { FETCH_ALL_LEAVE } from '../../../service/graphql/Leave';
 import { useQuery } from '@apollo/client';
+import { POSITION } from '../../../service/graphql/Position';
+import { useState } from 'react';
 
 const { useToken } = theme;
 
@@ -28,6 +30,34 @@ const Leave: React.FC = () => {
   const token = useToken();
   const navigate = useNavigate();
   const { data: leave_data, refetch } = useQuery(FETCH_ALL_LEAVE);
+  const { data: position } = useQuery(POSITION);
+  const [maspositionlevel3, setMasPositionlevel3] = useState<
+    { value?: string | null; label?: string | null }[] | undefined
+  >(undefined);
+  const [formSearch] = Form.useForm();
+
+  const onChange = (value) => {
+    formSearch.setFieldValue('mas_positionlevel3', null);
+    const maspositionlevel3 = position?.getMasPositon?.[0]?.mas_positionlevel2
+      ?.find((e) => e?.id === value)
+      ?.mas_positionlevel3?.map((e) => {
+        return {
+          label: e?.name,
+          value: e?.id,
+        };
+      });
+
+    setMasPositionlevel3(maspositionlevel3 ? maspositionlevel3 : []);
+    console.log(maspositionlevel3);
+  };
+
+  const mas_positionlevel2 =
+    position?.getMasPositon?.[0]?.mas_positionlevel2?.map((e) => {
+      return {
+        label: e?.name,
+        value: e?.id,
+      };
+    });
 
   const genarateMenu = (record: any) => {
     return [
@@ -83,7 +113,6 @@ const Leave: React.FC = () => {
       title: 'ตำแหน่ง',
       align: 'center',
       render: (record) => {
-        console.log(record);
         return record?.Position_user[0]?.mas_positionlevel3?.name;
       },
     },
@@ -137,23 +166,38 @@ const Leave: React.FC = () => {
       <Divider style={{ backgroundColor: token.token.colorPrimary }} />
 
       <Card className="shadow-xl">
-        <Form size="middle">
+        <Form form={formSearch} size="middle">
           <Row gutter={16}>
             <Col xs={24} sm={12} md={12} lg={6} xl={6}>
-              <Form.Item name="search" colon={false} label={'ชื่อ'}>
+              <Form.Item name={'name'} colon={false} label={'ชื่อ'}>
                 <Input allowClear></Input>
               </Form.Item>
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={6} xl={6}>
-              <Form.Item name="search" colon={false} label={'แผนก'}>
-                <Select allowClear></Select>
+              <Form.Item
+                name={'mas_positionlevel2'}
+                colon={false}
+                label={'แผนก'}
+              >
+                <Select
+                  options={mas_positionlevel2}
+                  onChange={onChange}
+                  allowClear
+                ></Select>
               </Form.Item>
             </Col>
 
             <Col xs={24} sm={24} md={24} lg={6} xl={6}>
-              <Form.Item name="search" colon={false} label={'ตำแหน่ง'}>
-                <Select allowClear></Select>
+              <Form.Item
+                name={'mas_positionlevel3'}
+                colon={false}
+                label={'ตำแหน่ง'}
+              >
+                <Select
+                  options={maspositionlevel3 ? maspositionlevel3 : []}
+                  allowClear
+                ></Select>
               </Form.Item>
             </Col>
 

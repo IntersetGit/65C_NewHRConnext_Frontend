@@ -60,6 +60,10 @@ const Employee: React.FC = () => {
   const [deleteEmployeeAccount] = useMutation(DELETE_EMPLOYEE_ACCOUNT);
   const [isDisplayfield, setDisplayfield] = useState(1);
   const [pagecurrent, setPageCurrent] = useState<number>(2);
+  const [maspositionlevel3, setMasPositionlevel3] = useState<
+    { value?: string | null; label?: string | null }[] | undefined
+  >(undefined);
+  const [formSearch] = Form.useForm();
 
   useEffect(() => {
     refetch();
@@ -207,9 +211,19 @@ const Employee: React.FC = () => {
     },
   ];
 
-  // const onChange = (value) => {
-  //   console.log(value);
-  // };
+  const onChange = (value) => {
+    formSearch.setFieldValue('mas_positionlevel3', null);
+    const maspositionlevel3 = position?.getMasPositon?.[0]?.mas_positionlevel2
+      ?.find((e) => e?.id === value)
+      ?.mas_positionlevel3?.map((e) => {
+        return {
+          label: e?.name,
+          value: e?.id,
+        };
+      });
+
+    setMasPositionlevel3(maspositionlevel3 ? maspositionlevel3 : []);
+  };
 
   const mas_positionlevel2 =
     position?.getMasPositon?.[0]?.mas_positionlevel2?.map((e) => {
@@ -228,7 +242,7 @@ const Employee: React.FC = () => {
 
       <Divider style={{ backgroundColor: token.token.colorPrimary }} />
       <Card className="shadow-xl">
-        <Form size="middle">
+        <Form form={formSearch} size="middle">
           <Row gutter={16}>
             <Col xs={24} sm={12} md={12} lg={6} xl={6}>
               <Form.Item name="search" colon={false} label={'ชื่อพนักงาน'}>
@@ -237,10 +251,10 @@ const Employee: React.FC = () => {
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={6} xl={6}>
-              <Form.Item name="mas_positionleave2" colon={false} label={'แผนก'}>
+              <Form.Item name="mas_positionlevel2" colon={false} label={'แผนก'}>
                 <Select
                   options={mas_positionlevel2}
-                  // onChange={onChange}
+                  onChange={onChange}
                   allowClear
                 ></Select>
               </Form.Item>
@@ -248,11 +262,14 @@ const Employee: React.FC = () => {
 
             <Col xs={24} sm={24} md={24} lg={6} xl={6}>
               <Form.Item
-                name="mas_positionleave3"
+                name="mas_positionlevel3"
                 colon={false}
                 label={'ตำแหน่ง'}
               >
-                <Select allowClear></Select>
+                <Select
+                  options={maspositionlevel3 ? maspositionlevel3 : []}
+                  allowClear
+                ></Select>
               </Form.Item>
             </Col>
 

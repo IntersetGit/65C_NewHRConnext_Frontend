@@ -32,7 +32,11 @@ export type AuthValuesType = {
   user: MeQuery | undefined;
   companycode: string | undefined | null;
   setCompany: (value: CompanyBranchType | undefined) => void;
-  companyNavigate: (path: string, opts?: NavigateOptions | undefined) => void;
+  companyNavigate: (
+    path: string,
+    opts?: NavigateOptions | undefined,
+    param?: string,
+  ) => void;
   company: CompanyBranchType | undefined;
   ability: MongoAbility<AbilityTuple<string, Subject>, MongoQuery<AnyObject>>;
 };

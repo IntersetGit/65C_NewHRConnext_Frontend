@@ -38,18 +38,11 @@ import { FETCH_GETALLUSER } from '../../../service/graphql/Users';
 import { useMutation, useQuery } from '@apollo/client';
 import { Getposition_UserQuery } from '../../../__generated__/graphql';
 import { getFilePath } from '../../../util';
+import { useAuth } from '../../../hooks/useAuth';
 import Swal from 'sweetalert2';
 import dayjs from 'dayjs';
 
 const { useToken } = theme;
-
-// interface DataType {
-//   key: string;
-//   date: Date;
-//   position: string;
-//   role: string;
-//   boss: string;
-// }
 
 const PositionEmployee: React.FC = (props) => {
   const [form] = Form.useForm();
@@ -64,7 +57,6 @@ const PositionEmployee: React.FC = (props) => {
   const { data: position_data, refetch } = useQuery(FETCH_GETALL_POSITION, {
     variables: { getpositionUserId: propsstate?.userId },
   });
-  console.log('position_data', position_data);
   const { data: positionlevel1 } = useQuery(POSITION);
   const { data: header } = useQuery(FETCH_GETALLUSER);
   const [cretePositonUser] = useMutation(CRETE_POSITION_USER);
@@ -74,6 +66,7 @@ const PositionEmployee: React.FC = (props) => {
   const [maspositionlevel2, setMasPostionLevel2] = useState<
     { value?: string | null; label?: string | null }[] | undefined
   >(undefined);
+  const { companyNavigate } = useAuth();
 
   const header_data = header?.users?.map((e) => {
     return {
@@ -128,7 +121,7 @@ const PositionEmployee: React.FC = (props) => {
   };
 
   const onChange = (key: string) => {
-    navigate(generatePath(key, { companycode }), { state: propsstate });
+    companyNavigate(key, { state: propsstate }, `?id=${propsstate?.id}`);
   };
 
   const [open, setOpen] = useState(false);
@@ -230,12 +223,12 @@ const PositionEmployee: React.FC = (props) => {
         icon: <img style={{ width: '17px', height: '17px' }} src={View} />,
         onClick: (e: any) => onMenuClick(e, record),
       },
-      {
-        key: 'delete',
-        label: 'ลบข้อมูล',
-        icon: <img style={{ width: '20px', height: '20px' }} src={Del} />,
-        onClick: (e: any) => onMenuClick(e, record),
-      },
+      // {
+      //   key: 'delete',
+      //   label: 'ลบข้อมูล',
+      //   icon: <img style={{ width: '20px', height: '20px' }} src={Del} />,
+      //   onClick: (e: any) => onMenuClick(e, record),
+      // },
     ];
   };
 
@@ -327,7 +320,7 @@ const PositionEmployee: React.FC = (props) => {
         items={[
           {
             label: `ข้อมูลพนักงาน`,
-            key: `/:companycode/employee/useremployee?id=${propsstate?.id}`,
+            key: `/:companycode/employee/useremployee`,
           },
           {
             label: `ตำแหน่งงาน`,
