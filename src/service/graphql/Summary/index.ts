@@ -195,8 +195,8 @@ query Bookbank_log_admin($userId: String) {
 `)
 
 export const FETCH_ExpenseCompany = gql(`
-query Expense_company {
-  expense_company {
+query Expense_company($date: String) {
+  expense_company(date: $date) {
     id
     vat_per
     ss_per
@@ -205,6 +205,8 @@ query Expense_company {
       id
     }
     check_vat
+    date
+    cal_date_salary
   }
 }
 `)
