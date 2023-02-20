@@ -15,7 +15,7 @@ import {
   Checkbox,
   DatePicker,
 } from 'antd';
-import * as dayjs from 'dayjs'
+import * as dayjs from 'dayjs';
 import { GiReceiveMoney } from 'react-icons/gi';
 import type { ColumnsType } from 'antd/es/table';
 import { MoreOutlined } from '@ant-design/icons';
@@ -30,7 +30,12 @@ import moment from 'moment';
 import { useAuth } from '../../../hooks/useAuth';
 
 import { useQuery, useMutation } from '@apollo/client';
-import { FETCH_SELECT_BOOK_BANK, FETCH_AllSALARY_BASE, CREATE_ExpenseCom, FETCH_ExpenseCompany } from '../../../service/graphql/Summary';
+import {
+  FETCH_SELECT_BOOK_BANK,
+  FETCH_AllSALARY_BASE,
+  CREATE_ExpenseCom,
+  FETCH_ExpenseCompany,
+} from '../../../service/graphql/Summary';
 
 const { useToken } = theme;
 
@@ -41,17 +46,18 @@ const Compensation: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { company } = useAuth();
-  console.log('aaa', company)
+  console.log('aaa', company);
   const [drawerType, setDrawerType] = useState(1);
   let propsstate = location.state as any;
   const [selectedRow, setSelectedRow] = useState<any>();
 
   const { data: BookBank } = useQuery(FETCH_SELECT_BOOK_BANK);
   const { data: TableData, refetch } = useQuery(FETCH_AllSALARY_BASE);
-  const { data: ExpenseComData, refetch: refetch2 } = useQuery(FETCH_ExpenseCompany);
+  const { data: ExpenseComData, refetch: refetch2 } =
+    useQuery(FETCH_ExpenseCompany);
   const [creteExpenseCom] = useMutation(CREATE_ExpenseCom);
-  console.log("table1", ExpenseComData)
-  console.log("table2", TableData)
+  console.log('table1', ExpenseComData);
+  console.log('table2', TableData);
 
   useEffect(() => {
     refetch();
@@ -66,7 +72,6 @@ const Compensation: React.FC = () => {
   //     check_vat: ExpenseComData?.expense_company?.[0]?.check_vat,
   //   })
   // }
-
 
   const showDrawer = (type: any) => {
     setOpen(true);
@@ -122,22 +127,20 @@ const Compensation: React.FC = () => {
     if (key === 'view2') {
       setSelectedRow(record);
       navigate(`profileCompensation?id=${record.profile.userId}`, {
-        state: { ...record, userId: record?.profile?.userId, },
+        state: { ...record, userId: record?.profile?.userId },
       });
     } else if (key === 'view1') {
-      setSelectedRow(record)
+      setSelectedRow(record);
       showDrawer(3);
       // form.setFieldsValue({
       //   ...record,
       //   date: record?.date ? dayjs(record.date).format("MM/YYYY") : undefined,
       // });
 
-
-      console.log("State", record)
-    }
-    else if (key === 'edit') {
-      setSelectedRow(record)
-      console.log("JJ", record)
+      console.log('State', record);
+    } else if (key === 'edit') {
+      setSelectedRow(record);
+      console.log('JJ', record);
 
       // form.setFieldsValue({
       //   ...record,
@@ -145,20 +148,20 @@ const Compensation: React.FC = () => {
       // });
 
       form.setFieldsValue({
-        date: selectedRow?.date,
-        bankId: selectedRow?.mas_bank?.name,
-        vat_per: selectedRow?.vat_per,
-        ss_per: selectedRow?.ss_per,
-        check_vat: selectedRow?.check_vat,
+        date: dayjs(record?.date),
+        bankId: record?.mas_bank?.name,
+        vat_per: record?.vat_per,
+        ss_per: record?.ss_per,
+        check_vat: record?.check_vat,
       });
       showDrawer(2);
 
-      console.log("State", record)
+      console.log('State', record);
     }
   };
 
   const onSubmitForm = (value: any) => {
-    console.log("onSubmit", value)
+    console.log('onSubmit', value);
     Swal.fire({
       title: `ยืนยันการตั้งค่าการคำนวณเงินเดือน`,
       icon: 'warning',
@@ -197,7 +200,7 @@ const Compensation: React.FC = () => {
     });
 
     setOpen(false);
-  }
+  };
 
   const columns: ColumnsType<any> = [
     {
@@ -263,7 +266,7 @@ const Compensation: React.FC = () => {
       dataIndex: 'date',
       align: 'center',
       render: (text, record) => {
-        return dayjs(text).format("MM/YYYY");
+        return dayjs(text).format('MM/YYYY');
       },
     },
     {
@@ -272,7 +275,7 @@ const Compensation: React.FC = () => {
       dataIndex: 'cal_date_salary',
       align: 'center',
       render: (text, record) => {
-        return dayjs(new Date(text)).format("DD/MM");
+        return dayjs(new Date(text)).format('DD/MM');
       },
     },
     {
@@ -289,7 +292,7 @@ const Compensation: React.FC = () => {
       dataIndex: 'vat_per',
       align: 'center',
       render: (text, record) => {
-        return parseFloat(text).toFixed(2)
+        return parseFloat(text).toFixed(2);
       },
     },
     {
@@ -298,7 +301,7 @@ const Compensation: React.FC = () => {
       dataIndex: 'ss_per',
       align: 'center',
       render: (text, record) => {
-        return parseFloat(text).toFixed(2)
+        return parseFloat(text).toFixed(2);
       },
     },
     {
@@ -403,50 +406,76 @@ const Compensation: React.FC = () => {
             </Space>
           </Row>
         </Col>
-        <Table rowKey={'id'} columns={columnsCom} dataSource={ExpenseComData?.expense_company as any} ></Table>
-
+        <Table
+          rowKey={'id'}
+          columns={columnsCom}
+          dataSource={ExpenseComData?.expense_company as any}
+        ></Table>
       </Card>
       <Card className="shadow-md mt-6">
-        <Table rowKey={'id'} columns={columns} dataSource={TableData?.data_salary as any}></Table>
+        <Table
+          rowKey={'id'}
+          columns={columns}
+          dataSource={TableData?.data_salary as any}
+        ></Table>
       </Card>
       {/* position_data?.getposition_user as any */}
       <Drawer
-        title={`${drawerType === 1
-          ? 'ตั้งค่าการคำนวณเงินเดือน'
-          : drawerType === 2
+        title={`${
+          drawerType === 1
+            ? 'ตั้งค่าการคำนวณเงินเดือน'
+            : drawerType === 2
             ? 'แก้ไขตั้งค่าการคำนวณเงินเดือน'
             : 'ข้อมูลตั้งค่าคำนวณเงินเดือน'
-          }`}
+        }`}
         onClose={onClose}
         width={550}
         open={open}
         size="large"
-      // afterOpenChange={() => {
-      //   setDataEC();
-      // }}
+        // afterOpenChange={() => {
+        //   setDataEC();
+        // }}
       >
-        <Form layout="horizontal" form={form} labelCol={{ span: 8 }} onFinish={onSubmitForm}>
+        <Form
+          layout="horizontal"
+          form={form}
+          labelCol={{ span: 8 }}
+          onFinish={onSubmitForm}
+        >
           <Row>
             <Col xs={24} sm={24} md={24} lg={24} xl={24}>
-              <Form.Item name="date" label={'เดือน/ปี'} className='ml-[82px]'>
-                <DatePicker picker="month" format={'MM/YYYY'}
-                  disabled={drawerType === 3 ? true : false} />
+              <Form.Item name="date" label={'เดือน/ปี'} className="ml-[82px]">
+                <DatePicker
+                  picker="month"
+                  format={'MM/YYYY'}
+                  disabled={drawerType === 3 ? true : false}
+                />
               </Form.Item>
             </Col>
           </Row>
           <Row>
             <Col xs={24} sm={24} md={24} lg={24} xl={24}>
-              <Form.Item name="cal_date_salary" label={'วันที่จ่ายเงิน'} className='ml-[82px]'>
-                <DatePicker picker="date" format={'DD/MM'}
-                  disabled={drawerType === 3 ? true : false} />
+              <Form.Item
+                name="cal_date_salary"
+                label={'วันที่จ่ายเงิน'}
+                className="ml-[82px]"
+              >
+                <DatePicker
+                  picker="date"
+                  format={'DD/MM'}
+                  disabled={drawerType === 3 ? true : false}
+                />
               </Form.Item>
             </Col>
           </Row>
           <Row>
             <Col span={24}>
               <Form.Item name="bankId" label={'ธนาคาร (บริษัท)'}>
-                <Select allowClear options={selectBookBank}
-                  disabled={drawerType === 3 ? true : false}></Select>
+                <Select
+                  allowClear
+                  options={selectBookBank}
+                  disabled={drawerType === 3 ? true : false}
+                ></Select>
               </Form.Item>
             </Col>
           </Row>
@@ -470,7 +499,11 @@ const Compensation: React.FC = () => {
           <Row>
             <Col span={24}>
               <Form.Item name="check_vat" label={'หักภาษีจากรายรับประเภท'}>
-                <Checkbox.Group disabled={drawerType === 3 ? true : false} style={{ width: '100%' }} onChange={onChange}>
+                <Checkbox.Group
+                  disabled={drawerType === 3 ? true : false}
+                  style={{ width: '100%' }}
+                  onChange={onChange}
+                >
                   <Row>
                     <Col span={12}>
                       <Checkbox value={'base_salary'}>เงินเดือน</Checkbox>
@@ -507,12 +540,12 @@ const Compensation: React.FC = () => {
               </Form.Item>
               {drawerType === 1 && (
                 <Form.Item>
-                  <Space style={{ display: 'flex', justifyContent: 'center' }} >
+                  <Space style={{ display: 'flex', justifyContent: 'center' }}>
                     <Button
                       type="primary"
                       style={{ backgroundColor: token.token.colorPrimary }}
                       htmlType="submit"
-                      className='mr-8'
+                      className="mr-8"
                     >
                       บันทึก
                     </Button>
@@ -523,12 +556,12 @@ const Compensation: React.FC = () => {
 
               {drawerType === 2 && (
                 <Form.Item>
-                  <Space style={{ display: 'flex', justifyContent: 'center' }} >
+                  <Space style={{ display: 'flex', justifyContent: 'center' }}>
                     <Button
                       type="primary"
                       style={{ backgroundColor: token.token.colorPrimary }}
                       htmlType="submit"
-                      className='mr-8'
+                      className="mr-8"
                     >
                       บันทึก
                     </Button>
