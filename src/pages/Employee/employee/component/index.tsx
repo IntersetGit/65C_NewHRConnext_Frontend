@@ -220,7 +220,9 @@ const ProfileEmployee: React.FC<ProfileEmployeePropsType> = ({ role }) => {
   };
 
   const onChangeAge: DatePickerProps['onChange'] = (date, dateString) => {
-    const newdate = dayjs().diff(dayjs(dateString), 'year');
+    const newdate = dayjs().diff(date, 'year')
+      ? dayjs().diff(date, 'year')
+      : null;
     form.setFieldValue('age', newdate);
   };
 
@@ -436,6 +438,7 @@ const ProfileEmployee: React.FC<ProfileEmployeePropsType> = ({ role }) => {
               id: user?.me?.profile?.userId
                 ? user?.me?.profile?.userId
                 : undefined,
+              age: value.age.toString(),
             },
           },
         })
@@ -518,13 +521,31 @@ const ProfileEmployee: React.FC<ProfileEmployeePropsType> = ({ role }) => {
 
           <Row gutter={16}>
             <Col xs={24} sm={12} md={12} lg={4} xl={4}>
-              <Form.Item name={'staff_code'} label={'รหัสพนักงาน'}>
+              <Form.Item
+                name={'staff_code'}
+                label={'รหัสพนักงาน'}
+                rules={[
+                  {
+                    required: true,
+                    message: 'กรุณากรอกรหัสพนักงาน',
+                  },
+                ]}
+              >
                 <Input />
               </Form.Item>
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={4} xl={4}>
-              <Form.Item name={'staff_status'} label={'Status'}>
+              <Form.Item
+                name={'staff_status'}
+                label={'Status'}
+                rules={[
+                  {
+                    required: true,
+                    message: 'กรุณาเลือก Status',
+                  },
+                ]}
+              >
                 <Select
                   options={[
                     {
@@ -749,16 +770,25 @@ const ProfileEmployee: React.FC<ProfileEmployeePropsType> = ({ role }) => {
             </Col>
 
             <Col xs={24} sm={8} md={12} lg={6} xl={6}>
-              <Form.Item name={'employee_status'} label={'สถานภาพพนักงาน'}>
+              <Form.Item
+                name={'employee_status'}
+                label={'สถานภาพพนักงาน'}
+                rules={[
+                  {
+                    required: true,
+                    message: 'กรุณากรอกสถานภาพพนักงาน',
+                  },
+                ]}
+              >
                 <Select
                   options={[
                     {
-                      value: 'Full Time',
-                      label: 'Full Time',
+                      value: 'พนักงานประจำ',
+                      label: 'พนักงานประจำ',
                     },
                     {
-                      value: 'Full Time',
-                      label: 'Part Time',
+                      value: 'พนักงานชั่วคราว',
+                      label: 'พนักงานชั่วคราว',
                     },
                   ]}
                   allowClear
@@ -805,7 +835,16 @@ const ProfileEmployee: React.FC<ProfileEmployeePropsType> = ({ role }) => {
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={8} xl={8}>
-              <Form.Item name={'role_company'} label={'Role'}>
+              <Form.Item
+                name={'role_company'}
+                label={'Role'}
+                rules={[
+                  {
+                    required: true,
+                    message: 'กรุณากรอก Role',
+                  },
+                ]}
+              >
                 <Select options={selectrole} allowClear />
               </Form.Item>
             </Col>

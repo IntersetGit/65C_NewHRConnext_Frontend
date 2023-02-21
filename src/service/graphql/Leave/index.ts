@@ -1,8 +1,8 @@
 import { gql } from '../../../__generated__';
 
 export const FETCH_ALL_LEAVE = gql(`
-query GetAllleave($userId: ID) {
-  getAllleave(userId: $userId) {
+query GetAllleave($userId: ID, $name: String, $position2Id: ID, $position3Id: ID) {
+  getAllleave(userId: $userId, name: $name, position2Id: $position2Id, position3Id: $position3Id) {
     data_all {
       email
       id

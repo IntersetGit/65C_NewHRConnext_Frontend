@@ -1,8 +1,8 @@
 import { gql } from '../../../__generated__';
 
 export const FETCH_GETALLUSER = gql(`
-query Users {
-    users {
+query Users($name: String, $position2Id: ID, $position3Id: ID) {
+  users(name: $name, position2Id: $position2Id, position3Id: $position3Id) {
       id
       email
       profile {

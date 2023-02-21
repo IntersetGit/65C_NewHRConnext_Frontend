@@ -17,6 +17,7 @@ import { generatePath, useNavigate, useParams } from 'react-router-dom';
 import CompanySelect from './CompantSelect';
 import { AbilityTuple, MongoAbility, MongoQuery, Subject } from '@casl/ability';
 import { AnyObject } from '@casl/ability/dist/types/types';
+import { getFilePath } from '../../util';
 
 const { useToken } = theme;
 
@@ -128,8 +129,11 @@ const RightNavbarContent: React.FC<RightNavContentType> = ({
               >
                 <Avatar
                   size={'large'}
+                  src={getFilePath() + user?.me?.profile?.avatar}
                   style={{
-                    backgroundColor: token.token.colorPrimary,
+                    backgroundColor: !user?.me?.profile?.avatar
+                      ? token.token.colorPrimary
+                      : 'transparent',
                     marginRight: '15px',
                   }}
                   shape="square"
@@ -192,10 +196,14 @@ const RightNavbarContent: React.FC<RightNavContentType> = ({
         trigger={['click']}
       >
         <Avatar
+          src={getFilePath() + user?.me?.profile?.avatar}
           style={{
             cursor: 'pointer',
             marginLeft: 10,
-            backgroundColor: token.token.colorPrimary,
+            backgroundColor: !user?.me?.profile?.avatar
+              ? token.token.colorPrimary
+              : 'transparent',
+            // backgroundColor: token.token.colorPrimary,
           }}
           shape="square"
           icon={<UserOutlined />}

@@ -245,13 +245,13 @@ const Employee: React.FC = () => {
         <Form form={formSearch} size="middle">
           <Row gutter={16}>
             <Col xs={24} sm={12} md={12} lg={6} xl={6}>
-              <Form.Item name="search" colon={false} label={'ชื่อพนักงาน'}>
+              <Form.Item name="name" colon={false} label={'ชื่อพนักงาน'}>
                 <Input allowClear></Input>
               </Form.Item>
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={6} xl={6}>
-              <Form.Item name="mas_positionlevel2" colon={false} label={'แผนก'}>
+              <Form.Item name="position2Id" colon={false} label={'แผนก'}>
                 <Select
                   options={mas_positionlevel2}
                   onChange={onChange}
@@ -261,11 +261,7 @@ const Employee: React.FC = () => {
             </Col>
 
             <Col xs={24} sm={24} md={24} lg={6} xl={6}>
-              <Form.Item
-                name="mas_positionlevel3"
-                colon={false}
-                label={'ตำแหน่ง'}
-              >
+              <Form.Item name="position3Id" colon={false} label={'ตำแหน่ง'}>
                 <Select
                   options={maspositionlevel3 ? maspositionlevel3 : []}
                   allowClear
@@ -277,15 +273,25 @@ const Employee: React.FC = () => {
               <Space style={{ float: 'right' }}>
                 <Form.Item>
                   <Button
-                    type="primary"
-                    style={{ backgroundColor: token.token.colorPrimary }}
+                    onClick={() => {
+                      formSearch.resetFields();
+                      refetch(formSearch.getFieldsValue());
+                    }}
                   >
                     Reset
                   </Button>
                 </Form.Item>
 
                 <Form.Item>
-                  <Button loading={loading} htmlType="submit">
+                  <Button
+                    type="primary"
+                    style={{ backgroundColor: token.token.colorPrimary }}
+                    loading={loading}
+                    htmlType="submit"
+                    onClick={() => {
+                      refetch(formSearch.getFieldsValue());
+                    }}
+                  >
                     Search
                   </Button>
                 </Form.Item>

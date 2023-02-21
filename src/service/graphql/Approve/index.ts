@@ -1,8 +1,8 @@
 import { gql } from '../../../__generated__';
 
 export const FETCH_ALL_APPROVE = gql(`
-query Getleava_alldata {
-    getleava_alldata {
+query Getleava_alldata($name: String, $position2Id: ID, $position3Id: ID) {
+  getleava_alldata(name: $name, position2Id: $position2Id, position3Id: $position3Id) {
       id
       leavetype_id
       mas_leave_type {
