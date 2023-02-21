@@ -407,7 +407,7 @@ const Compensation: React.FC = () => {
                             <Avatar
                                 size={{ xs: 24, sm: 32, md: 40, lg: 64, xl: 80, xxl: 100 }}
                                 icon={<AntDesignOutlined />}
-                                src={getFilePath() + propsstate?.avatar}
+                                src={getFilePath() + propsstate?.profile?.avatar}
                             ></Avatar>
                         </div>
                     </Col>
@@ -425,7 +425,7 @@ const Compensation: React.FC = () => {
                     </Col>
                 </Row>
 
-                <Form form={formshow} size="middle">
+                <Form form={formshow} size="middle" className="py-10">
                     <Row gutter={16}>
                         <Col xs={24} sm={24} md={24} lg={9} xl={6}>
                             <Form.Item name="base_salary" colon={false} label={'ฐานเงินเดือน'}>

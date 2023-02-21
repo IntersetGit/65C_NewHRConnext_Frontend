@@ -195,7 +195,7 @@ const Compensation: React.FC = () => {
       dataIndex: 'cal_date_salary',
       align: 'center',
       render: (text, record) => {
-        return dayjs(new Date(text)).format('DD/MM');
+        return dayjs(new Date(text)).format('DD/MM/YYYY');
       },
     },
     {

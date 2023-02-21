@@ -27,7 +27,7 @@ import Swal from 'sweetalert2';
 import moment from 'moment';
 
 import { useQuery, useMutation, from } from '@apollo/client';
-import { FETCH_SELECT_BOOK_BANK, FETCH_AllSALARY_BASE, CREATE_ExpenseCom } from '../../../service/graphql/Summary';
+import { FETCH_SELECT_BOOK_BANK, FETCH_AllSALARY_BASE } from '../../../service/graphql/Summary';
 
 const { useToken } = theme;
 
@@ -41,26 +41,13 @@ const Compensationbase: React.FC = () => {
   let propsstate = location.state as any;
   const [selectedRow, setSelectedRow] = useState<any>();
 
-  const { data: BookBank } = useQuery(FETCH_SELECT_BOOK_BANK);
   const { data: TableData, refetch } = useQuery(FETCH_AllSALARY_BASE);
 
   console.log("table", TableData)
 
   useEffect(() => {
-    const salary: any = TableData
-    refetch(salary)
+    refetch()
   }, []);
-
-  const onChange = (checkedValues: CheckboxValueType[]) => {
-    console.log('checked = ', checkedValues);
-  };
-
-  const selectBookBank = BookBank?.mas_bank?.map((e: any) => {
-    return {
-      label: e?.name,
-      value: e?.id,
-    };
-  });
 
   const genarateMenu = (record: any) => {
     return [
@@ -80,7 +67,6 @@ const Compensationbase: React.FC = () => {
       navigate(`remuneration?id=${record.profile.userId}`, {
         state: {
           ...record, userId: record?.profile?.userId,
-
         },
       });
 
@@ -222,3 +208,4 @@ const Compensationbase: React.FC = () => {
 };
 
 export default Compensationbase;
+
