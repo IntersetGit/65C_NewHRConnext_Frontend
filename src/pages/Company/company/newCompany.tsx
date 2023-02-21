@@ -12,7 +12,7 @@ import {
   theme,
   Upload,
   Modal,
-  InputNumber
+  InputNumber,
 } from 'antd';
 import { useEffect, useState } from 'react';
 import { RiCloseFill, RiHotelLine } from 'react-icons/ri';
@@ -26,8 +26,8 @@ import { CREATE_COMPANY_ACCOUNT } from '../../../service/graphql/Company';
 import { CreateCompanyBranch } from '../../../__generated__/graphql';
 import { GET_PROVINCE } from '../../../service/graphql/Province';
 import { useAuth } from '../../../hooks/useAuth';
-import Maps from './component/Maps'
-import './index.css'
+import Maps from './component/Maps';
+import './index.css';
 import { PageRoleAndPermissionType } from '../../../context/AuthContext';
 
 const { useToken } = theme;
@@ -45,7 +45,7 @@ const Newcompany: React.FC<NewcompanyPropsType> = ({ role }) => {
   const getLatLng = Form.useWatch('latlng', form);
   const { data: province_data, refetch } = useQuery(GET_PROVINCE);
   const [createCompanyAccount] = useMutation(CREATE_COMPANY_ACCOUNT);
-  const [visible, setVisible] = useState(false)
+  const [visible, setVisible] = useState(false);
   const [district, setDistrict] = useState<
     { value?: string | null; label?: string | null }[] | undefined
   >(undefined);
@@ -127,7 +127,7 @@ const Newcompany: React.FC<NewcompanyPropsType> = ({ role }) => {
       id: Editdata?.id ? Editdata?.id : undefined,
       lat: value?.latlng ? (value?.latlng[0]).toString() : '',
       lng: value?.latlng ? (value?.latlng[1]).toString() : '',
-      registeredamount: (value.registeredamount).toString()
+      registeredamount: value.registeredamount.toString(),
     };
     delete objvalue?.latlng;
     Swal.fire({
@@ -520,7 +520,7 @@ const Newcompany: React.FC<NewcompanyPropsType> = ({ role }) => {
               </Form.Item>
             </Col>
             <Col xs={24} sm={24} md={12} lg={12} xl={6}>
-              <Form.Item name='latlng' label={'พิกัด'}>
+              <Form.Item name="latlng" label={'พิกัด'}>
                 {Editdata?.mode == 'view' ? (
                   <Input disabled autoComplete="off" />
                 ) : (
@@ -530,7 +530,11 @@ const Newcompany: React.FC<NewcompanyPropsType> = ({ role }) => {
             </Col>
 
             <Col xs={24} sm={24} md={12} lg={12} xl={6}>
-              <Form.Item name={'email'} label={'อีเมล์ #1'} rules={[{ type: 'email' }]}>
+              <Form.Item
+                name={'email'}
+                label={'อีเมล์ #1'}
+                rules={[{ type: 'email' }]}
+              >
                 {Editdata?.mode == 'view' ? (
                   <Input disabled autoComplete="off" />
                 ) : (
@@ -539,7 +543,11 @@ const Newcompany: React.FC<NewcompanyPropsType> = ({ role }) => {
               </Form.Item>
             </Col>
             <Col xs={24} sm={24} md={12} lg={12} xl={6}>
-              <Form.Item name={'email_2'} label={'อีเมล์ #2'} rules={[{ type: 'email', message: 'กรุณากรอกอีเมลให้ถูกต้อง' }]}>
+              <Form.Item
+                name={'email_2'}
+                label={'อีเมล์ #2'}
+                rules={[{ type: 'email', message: 'กรุณากรอกอีเมลให้ถูกต้อง' }]}
+              >
                 {Editdata?.mode == 'view' ? (
                   <Input disabled autoComplete="off" />
                 ) : (
@@ -619,10 +627,16 @@ const Newcompany: React.FC<NewcompanyPropsType> = ({ role }) => {
               <Form.Item
                 name={'registeredamount'}
                 label={'ทุนจดทะเบียน ( บาท )'}
-                rules={[{ type: 'number', message: 'กรุณากรอกตัวเลขให้ถูกต้อง' }]}
+                rules={[
+                  { type: 'number', message: 'กรุณากรอกตัวเลขให้ถูกต้อง' },
+                ]}
               >
                 {Editdata?.mode == 'view' ? (
-                  <InputNumber disabled autoComplete="off" placeholder="( บาท )" />
+                  <InputNumber
+                    disabled
+                    autoComplete="off"
+                    placeholder="( บาท )"
+                  />
                 ) : (
                   <InputNumber autoComplete="off" placeholder="( บาท )" />
                 )}
@@ -678,7 +692,6 @@ const Newcompany: React.FC<NewcompanyPropsType> = ({ role }) => {
                 </Upload>
               )}
             </Col>
-
           </Row>
           <Divider style={{ backgroundColor: token.token.colorPrimary }} />
 
@@ -692,11 +705,17 @@ const Newcompany: React.FC<NewcompanyPropsType> = ({ role }) => {
           <Row gutter={16}>
             <Col sm={24} md={8}>
               {/*---------------- Facebook ----------------*/}
-              <Form.Item label={<img
-                src={facebook}
-                alt="Facebook-logo"
-                style={{ width: '40px' }}
-              />} colon={false} name={'social_facebook'}>
+              <Form.Item
+                label={
+                  <img
+                    src={facebook}
+                    alt="Facebook-logo"
+                    style={{ width: '40px' }}
+                  />
+                }
+                colon={false}
+                name={'social_facebook'}
+              >
                 {Editdata?.mode == 'view' ? (
                   <Input disabled autoComplete="off" />
                 ) : (
@@ -707,11 +726,17 @@ const Newcompany: React.FC<NewcompanyPropsType> = ({ role }) => {
             {/*---------------- in ----------------*/}
 
             <Col sm={24} md={8}>
-              <Form.Item label={<img
-                src={initial}
-                alt="likedin-logo"
-                style={{ width: '40px' }}
-              />} colon={false} name={'social_likedin'}>
+              <Form.Item
+                label={
+                  <img
+                    src={initial}
+                    alt="likedin-logo"
+                    style={{ width: '40px' }}
+                  />
+                }
+                colon={false}
+                name={'social_likedin'}
+              >
                 {Editdata?.mode == 'view' ? (
                   <Input disabled autoComplete="off" />
                 ) : (
@@ -719,17 +744,22 @@ const Newcompany: React.FC<NewcompanyPropsType> = ({ role }) => {
                 )}
               </Form.Item>
             </Col>
-
           </Row>
 
           <Row gutter={16}>
             {/*---------------- instagram ----------------*/}
-            <Col  sm={24} md={8}>
-              <Form.Item label={<img
-                src={instagram}
-                alt="instagram-logo"
-                style={{ width: '40px' }}
-              />} colon={false} name={'social_instragram'}>
+            <Col sm={24} md={8}>
+              <Form.Item
+                label={
+                  <img
+                    src={instagram}
+                    alt="instagram-logo"
+                    style={{ width: '40px' }}
+                  />
+                }
+                colon={false}
+                name={'social_instragram'}
+              >
                 {Editdata?.mode == 'view' ? (
                   <Input disabled autoComplete="off" />
                 ) : (
@@ -738,8 +768,14 @@ const Newcompany: React.FC<NewcompanyPropsType> = ({ role }) => {
               </Form.Item>
             </Col>
 
-            <Col  sm={24} md={8}>
-              <Form.Item label={<img src={line} alt="line-logo" style={{ width: '40px' }} />} colon={false} name={'social_line'}>
+            <Col sm={24} md={8}>
+              <Form.Item
+                label={
+                  <img src={line} alt="line-logo" style={{ width: '40px' }} />
+                }
+                colon={false}
+                name={'social_line'}
+              >
                 {Editdata?.mode == 'view' ? (
                   <Input disabled autoComplete="off" />
                 ) : (
@@ -747,7 +783,6 @@ const Newcompany: React.FC<NewcompanyPropsType> = ({ role }) => {
                 )}
               </Form.Item>
             </Col>
-
           </Row>
           <Divider style={{ backgroundColor: token.token.colorPrimary }} />
 
@@ -780,7 +815,6 @@ const Newcompany: React.FC<NewcompanyPropsType> = ({ role }) => {
                       เลือกไฟล์เอกสาร
                     </Button>
                   </Upload>
-
                 ) : (
                   <Upload
                     action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
@@ -803,7 +837,7 @@ const Newcompany: React.FC<NewcompanyPropsType> = ({ role }) => {
               </Form.Item>
             </Col>
 
-            <Col md={12} xl={12} xs={24} >
+            <Col md={12} xl={12} xs={24}>
               <Form.Item label="ก.พ. 20">
                 {Editdata?.mode == 'view' ? (
                   <Upload
@@ -845,13 +879,9 @@ const Newcompany: React.FC<NewcompanyPropsType> = ({ role }) => {
                 )}
               </Form.Item>
             </Col>
-
-
           </Row>
 
           <Row gutter={16}>
-
-
             <Col xs={24} sm={12} md={12} lg={8} xl={12}>
               <Button
                 style={{
@@ -890,12 +920,25 @@ const Newcompany: React.FC<NewcompanyPropsType> = ({ role }) => {
         </Form>
       </Card>
 
-
-
       <br />
       {getLatLng}
-      <Modal title="กรุณาเลือกพื้นที่" onOk={() => setVisible(false)} open={visible} okButtonProps={{ style: { backgroundColor: token.token.colorPrimary } }} onCancel={() => setVisible(false)} >
-        <Maps defaulCenter={getLatLng ? { lat: parseFloat(getLatLng[0]), lng: parseFloat(getLatLng[1]) } : { lat: 13.7740564, lng: 100.7852518 }} onChange={(latlng) => form.setFieldValue('latlng', [latlng.lat, latlng.lng])} />
+      <Modal
+        title="กรุณาเลือกพื้นที่"
+        onOk={() => setVisible(false)}
+        open={visible}
+        okButtonProps={{ style: { backgroundColor: token.token.colorPrimary } }}
+        onCancel={() => setVisible(false)}
+      >
+        <Maps
+          defaulCenter={
+            getLatLng
+              ? { lat: parseFloat(getLatLng[0]), lng: parseFloat(getLatLng[1]) }
+              : { lat: 13.7740564, lng: 100.7852518 }
+          }
+          onChange={(latlng) =>
+            form.setFieldValue('latlng', [latlng.lat, latlng.lng])
+          }
+        />
       </Modal>
     </>
   );

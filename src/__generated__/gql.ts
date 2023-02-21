@@ -19,6 +19,9 @@ const documents = {
     "\n  query Company {\n    company {\n      _count {\n        branch\n      }\n      branch {\n        _count {\n          users\n        }\n        id\n        name\n        address\n        address_2\n        city\n        state\n        zip\n        country\n        tel\n        fax\n        website\n        lat\n        lng\n        email\n        email_2\n        company_type\n        sub_company_type\n        registeredamount\n        social_facebook\n        social_likedin\n        social_instragram\n        social_line\n        createdAt\n        updatedAt\n        regis_vat\n        regiscomnumber\n      }\n      userlimit\n      name\n    }\n  }\n": types.CompanyDocument,
     "\n    mutation CreatedPosition($data: [CreatedAndUpdatePosition!]) {\n        CreatedPosition(data: $data) {\n          message\n          status\n        }\n      }": types.CreatedPositionDocument,
     "\n    mutation EditPosition($data: [CreatedAndUpdatePosition!]) {\n        EditPosition(data: $data) {\n          message\n          status\n        }\n      }": types.EditPositionDocument,
+    "mutation Delete_position1($deletePosition1Id: ID!) {\n        delete_position1(id: $deletePosition1Id) {\n          message\n          status\n        }\n      }": types.Delete_Position1Document,
+    "mutation Delete_position2($deletePosition2Id: ID!) {\n        delete_position2(id: $deletePosition2Id) {\n          message\n          status\n        }\n      }": types.Delete_Position2Document,
+    "mutation Delete_position3($deletePosition3Id: ID!) {\n        delete_position3(id: $deletePosition3Id) {\n          message\n          status\n        }\n      }": types.Delete_Position3Document,
     "\nmutation CreateAccountUser($data: CreateAccountUserInput!) {\n  createAccountUser(data: $data) {\n    message\n    status\n  }\n}": types.CreateAccountUserDocument,
     "\nmutation DeleteAccountUser($deleteAccountUserId: ID!) {\n  deleteAccountUser(id: $deleteAccountUserId) {\n    message\n    status\n  }\n}": types.DeleteAccountUserDocument,
     "\n  mutation Login($data: LoginaInput!) {\n    login(data: $data) {\n      access_token\n      refresh_token\n      status\n    }\n  }\n": types.LoginDocument,
@@ -95,6 +98,18 @@ export function gql(source: "\n    mutation CreatedPosition($data: [CreatedAndUp
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(source: "\n    mutation EditPosition($data: [CreatedAndUpdatePosition!]) {\n        EditPosition(data: $data) {\n          message\n          status\n        }\n      }"): (typeof documents)["\n    mutation EditPosition($data: [CreatedAndUpdatePosition!]) {\n        EditPosition(data: $data) {\n          message\n          status\n        }\n      }"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "mutation Delete_position1($deletePosition1Id: ID!) {\n        delete_position1(id: $deletePosition1Id) {\n          message\n          status\n        }\n      }"): (typeof documents)["mutation Delete_position1($deletePosition1Id: ID!) {\n        delete_position1(id: $deletePosition1Id) {\n          message\n          status\n        }\n      }"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "mutation Delete_position2($deletePosition2Id: ID!) {\n        delete_position2(id: $deletePosition2Id) {\n          message\n          status\n        }\n      }"): (typeof documents)["mutation Delete_position2($deletePosition2Id: ID!) {\n        delete_position2(id: $deletePosition2Id) {\n          message\n          status\n        }\n      }"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "mutation Delete_position3($deletePosition3Id: ID!) {\n        delete_position3(id: $deletePosition3Id) {\n          message\n          status\n        }\n      }"): (typeof documents)["mutation Delete_position3($deletePosition3Id: ID!) {\n        delete_position3(id: $deletePosition3Id) {\n          message\n          status\n        }\n      }"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
