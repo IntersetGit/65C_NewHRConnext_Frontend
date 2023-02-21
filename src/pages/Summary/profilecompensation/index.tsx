@@ -75,6 +75,7 @@ const Compensation: React.FC = () => {
         variables: { userId: propsstate?.userId },
     });
 
+
     console.log("DataT", TableDataSalary)
 
     const setPer: any = () => {
@@ -89,6 +90,7 @@ const Compensation: React.FC = () => {
         form.setFieldsValue({
             vat_per: ExpenseComData?.expense_company?.[0]?.vat_per,
             ss_per: ExpenseComData?.expense_company?.[0]?.ss_per,
+            provident_emp: book_bank_data?.bookbank_log_admin?.[0]?.provident_emp
         })
     }
 
@@ -377,8 +379,6 @@ const Compensation: React.FC = () => {
             sum();
         }
         if ((Object.keys(column)[0]) in {
-            vat: '',
-            social_security: '',
             miss: '',
             ra: '',
             late: '',
@@ -501,7 +501,7 @@ const Compensation: React.FC = () => {
                 onClose={onClose}
                 open={open}
                 afterOpenChange={setPer}
-                width={500}
+                width={700}
             >
                 <div className="text-lg font-bold">
                     <u style={{ color: token.token.colorPrimary }}>

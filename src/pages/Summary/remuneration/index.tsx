@@ -182,6 +182,8 @@ const Remuneration: React.FC = () => {
             variables: {
               data: {
                 ...value,
+                date: new Date(),
+
                 id: selectedRow?.id ? selectedRow?.id : undefined,
                 userId: propsstate?.userId,
                 base_salary: parseFloat(value.base_salary),
@@ -258,7 +260,14 @@ const Remuneration: React.FC = () => {
 
   const columns: ColumnsType<any> = [
     {
-      title: 'วันที่มีผล',
+      title: 'วันที่ Update',
+      key: 'date',
+      dataIndex: 'date',
+      align: 'center',
+      render: (record: any) => dayjs(record).format('DD/MM/YYYY') as any,
+    },
+    {
+      title: 'เดือน/ปี ที่มีผล',
       key: 'date',
       dataIndex: 'date',
       align: 'center',
