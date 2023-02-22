@@ -16,7 +16,7 @@ import {
   DatePicker,
   Tabs,
 } from 'antd';
-import * as dayjs from 'dayjs';
+import dayjs from 'dayjs';
 import { GiReceiveMoney } from 'react-icons/gi';
 import type { ColumnsType } from 'antd/es/table';
 import { MoreOutlined } from '@ant-design/icons';

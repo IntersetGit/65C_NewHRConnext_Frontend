@@ -28,7 +28,7 @@ import Slip from '../../../assets/Slip.png';
 import View from '../../../assets/View.png';
 import Cal1 from '../../../assets/Cal1.png';
 
-import * as dayjs from 'dayjs'
+import dayjs from 'dayjs'
 import th from 'antd/locale/th_TH'
 import { generatePath, useNavigate, useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
@@ -39,6 +39,7 @@ import {
     CREATE_SALARY_USER,
     FETCH_ExpenseCompany,
     FETCH_GETALLBOOKBANK_LOG,
+    FETCH_Filter_BOOKBANK_ADMIN,
 } from '../../../service/graphql/Summary';
 
 import {
@@ -74,9 +75,12 @@ const Compensation: React.FC = () => {
     const { data: book_bank_data, refetch: refetch3 } = useQuery(FETCH_GETALLBOOKBANK_LOG, {
         variables: { userId: propsstate?.userId },
     });
+    const { data: Filter_BookBank, refetch: refetch4 } = useQuery(FETCH_Filter_BOOKBANK_ADMIN, {
+        variables: { userId: propsstate?.userId },
+    });
 
 
-    console.log("DataT", TableDataSalary)
+    console.log("DataT", Filter_BookBank)
 
     const setPer: any = () => {
         const valueall = form.getFieldsValue();
@@ -84,7 +88,8 @@ const Compensation: React.FC = () => {
         const SS_CAl = () => {
             let SSCal = (parseFloat(form.getFieldValue('base_salary'))) * (parseFloat(form.getFieldValue('ss_per')) / 100)
             form.setFieldValue('social_security', (SSCal).toString())
-
+            let provident_EMPCal = (parseFloat(form.getFieldValue('base_salary'))) * (parseFloat(form.getFieldValue('provident_emp')) / 100)
+            form.setFieldValue('pvd_emp', (provident_EMPCal).toString())
         }
         SS_CAl();
         form.setFieldsValue({
@@ -100,13 +105,13 @@ const Compensation: React.FC = () => {
 
     useEffect(() => {
         const salary: any = book_bank_data
-            ? book_bank_data?.bookbank_log_admin?.[0]?.base_salary?.toFixed(2)
+            ? Filter_BookBank?.filter_bookbank_admin?.[0]?.base_salary?.toFixed(2)
             : '0.00';
         const banknumber: any = book_bank_data
-            ? book_bank_data?.bookbank_log_admin?.[0]?.bank_number
-            : '0.00';
+            ? Filter_BookBank?.filter_bookbank_admin?.[0]?.bank_number
+            : '';
         const bankname: any = book_bank_data
-            ? book_bank_data?.bookbank_log_admin?.[0]?.mas_bank?.name
+            ? Filter_BookBank?.filter_bookbank_admin?.[0]?.mas_bank?.name
             : '';
 
         formshow.setFieldsValue({
@@ -114,6 +119,7 @@ const Compensation: React.FC = () => {
             bank_number: banknumber,
             mas_bankId: bankname,
         });
+        refetch3();
     }, [book_bank_data]);
 
     const showDrawer = (type: any) => {
@@ -163,6 +169,9 @@ const Compensation: React.FC = () => {
         const { key } = event;
         if (key === 'edit') {
             showDrawer(2);
+            form.setFieldsValue({
+                base_salary: record?.salary?.bookbank_log?.base_salary,
+            })
         } else if (key === 'view') {
             showDrawer(3);
         } else if (key === 'view_slip') {
@@ -427,32 +436,45 @@ const Compensation: React.FC = () => {
 
                 <Form form={formshow} size="middle" className="py-10">
                     <Row gutter={16}>
-                        <Col xs={24} sm={24} md={24} lg={9} xl={6}>
-                            <Form.Item name="base_salary" colon={false} label={'ฐานเงินเดือน'}>
-                                <Input allowClear
-                                    disabled
-                                    defaultValue={propsstate?.bookbank_log[0]?.base_salary}>
-                                </Input>
+                        <Col xs={24} sm={24} md={24} lg={6} xl={6}>
+                            <Form.Item
+                                name="base_salary"
+                                colon={false}
+                                label={'ฐานเงินเดือน'}
+                            >
+                                <Input disabled allowClear />
                             </Form.Item>
                         </Col>
                     </Row>
 
                     <Row gutter={16}>
-                        <Col xs={24} sm={24} md={24} lg={9} xl={6}>
-                            <Form.Item name="bank_number" colon={false} label={'เลชบัญชี'} style={{ marginLeft: "24px", }}>
-                                <Input allowClear
+                        <Col xs={24} sm={24} md={24} lg={6} xl={6}>
+                            <Form.Item
+                                name="bank_number"
+                                colon={false}
+                                label={'เลชบัญชี'}
+                                style={{ marginLeft: '24px' }}
+                            >
+                                <Input
                                     disabled
-                                    defaultValue={propsstate?.bookbank_log[0]?.bank_number}>
-                                </Input>
+                                    allowClear
+                                    defaultValue={propsstate?.bookbank_log[0]?.bank_number}
+                                ></Input>
                             </Form.Item>
                         </Col>
 
-                        <Col xs={24} sm={24} md={24} lg={9} xl={6}>
-                            <Form.Item name="bank" colon={false} label={'ธนาคาร'} style={{ marginLeft: "32px", }}>
-                                <Input allowClear
+                        <Col xs={24} sm={24} md={24} lg={6} xl={6}>
+                            <Form.Item
+                                name="mas_bankId"
+                                colon={false}
+                                label={'ธนาคาร'}
+                                style={{ marginLeft: '32px' }}
+                            >
+                                <Input
                                     disabled
-                                    defaultValue={propsstate?.bookbank_log[0]?.mas_bank?.name}>
-                                </Input>
+                                    allowClear
+                                    defaultValue={propsstate?.bookbank_log[0]?.mas_bank?.name}
+                                ></Input>
                             </Form.Item>
                         </Col>
                     </Row>
@@ -513,7 +535,9 @@ const Compensation: React.FC = () => {
                     </div>
                 </div>
 
-                <Form layout="horizontal" onValuesChange={onChangeFormvalue} form={form} onFinish={onSubmitForm} >
+                <Form layout="horizontal" onValuesChange={onChangeFormvalue} form={form} onFinish={onSubmitForm}
+                    initialValues={{ base_salary: '0000' }}
+                >
                     <Row>
                         <Col xs={24} sm={24} md={24} lg={24} xl={24}>
                             <Form.Item name="date" label={'เดือน/ปี'} className='ml-[82px]'>

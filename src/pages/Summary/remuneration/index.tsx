@@ -44,7 +44,7 @@ import Del from '../../../assets/DEL.png';
 import View from '../../../assets/View.png';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import * as dayjs from 'dayjs'
+import dayjs from 'dayjs'
 
 const { useToken } = theme;
 
@@ -80,7 +80,7 @@ const Remuneration: React.FC = () => {
       : '0.00';
     const banknumber: any = book_bank_data
       ? Filter_BookBank?.filter_bookbank_admin?.[0]?.bank_number
-      : '0.00';
+      : '';
     const bankname: any = book_bank_data
       ? Filter_BookBank?.filter_bookbank_admin?.[0]?.mas_bank?.name
       : '';
