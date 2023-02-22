@@ -29,7 +29,6 @@ import View from '../../../assets/View.png';
 import Cal1 from '../../../assets/Cal1.png';
 
 import dayjs from 'dayjs'
-import th from 'antd/locale/th_TH'
 import { generatePath, useNavigate, useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { useMutation, useQuery } from '@apollo/client';
@@ -80,24 +79,7 @@ const Compensation: React.FC = () => {
     });
 
 
-    console.log("DataT", Filter_BookBank)
-
-    const setPer: any = () => {
-        const valueall = form.getFieldsValue();
-        onChangeFormvalue({ base_salary: '' }, valueall);
-        const SS_CAl = () => {
-            let SSCal = (parseFloat(form.getFieldValue('base_salary'))) * (parseFloat(form.getFieldValue('ss_per')) / 100)
-            form.setFieldValue('social_security', (SSCal).toString())
-            let provident_EMPCal = (parseFloat(form.getFieldValue('base_salary'))) * (parseFloat(form.getFieldValue('provident_emp')) / 100)
-            form.setFieldValue('pvd_emp', (provident_EMPCal).toString())
-        }
-        SS_CAl();
-        form.setFieldsValue({
-            vat_per: ExpenseComData?.expense_company?.[0]?.vat_per,
-            ss_per: ExpenseComData?.expense_company?.[0]?.ss_per,
-            provident_emp: book_bank_data?.bookbank_log_admin?.[0]?.provident_emp
-        })
-    }
+    console.log("DataT", ExpenseComData)
 
     useEffect(() => {
         form.setFieldValue('net', sumIncome - sumExpense)
@@ -119,8 +101,29 @@ const Compensation: React.FC = () => {
             bank_number: banknumber,
             mas_bankId: bankname,
         });
-        refetch3();
+        refetch4();
     }, [book_bank_data]);
+
+    const setPer: any = () => {
+        const valueall = form.getFieldsValue();
+        onChangeFormvalue({ base_salary: '' }, valueall);
+        const SS_CAl = () => {
+            let SSCal = (parseFloat(form.getFieldValue('base_salary'))) * (parseFloat(form.getFieldValue('ss_per')) / 100)
+            form.setFieldValue('social_security', (SSCal).toFixed(2))
+            let provident_EMPCal = (parseFloat(form.getFieldValue('base_salary'))) * (parseFloat(form.getFieldValue('provident_emp')) / 100)
+            form.setFieldValue('pvd_emp', (provident_EMPCal).toFixed(2))
+            let vatCal = (parseFloat(form.getFieldValue('base_salary'))) * (parseFloat(form.getFieldValue('vat_per')) / 100)
+            form.setFieldValue('vat', (vatCal).toFixed(2))
+            // let = ExpenseComData?.expense_company?.check_vat
+            // ExpenseComData?.expense_company?.check_vat?.
+            // .map(i=>map[i] ? parseFloat(map[i]) : 0).reduce((val, a) => val + a, 0);
+            let summinus1 = vatCal + SSCal + provident_EMPCal;
+            form.setFieldValue('total_expense', (summinus1))
+        }
+        SS_CAl();
+    }
+
+
 
     const showDrawer = (type: any) => {
         setOpen(true);
@@ -170,7 +173,7 @@ const Compensation: React.FC = () => {
         if (key === 'edit') {
             showDrawer(2);
             form.setFieldsValue({
-                base_salary: record?.salary?.bookbank_log?.base_salary,
+                base_salary: record?.salary?.Filter_BookBank?.filter_bookbank_admin?.[0]?.base_salary,
             })
         } else if (key === 'view') {
             showDrawer(3);
@@ -356,12 +359,14 @@ const Compensation: React.FC = () => {
                 + parseFloat(all.welfare_money ? all.welfare_money : 0)
                 + parseFloat(all.bonus ? all.bonus : 0);
             console.log(sumval);
-            form.setFieldValue('total_income', (sumval).toString())
+            form.setFieldValue('total_income', (sumval).toFixed(2))
             // finish()
         }
         const minus = () => {
-            let SSCal = (parseFloat(all.base_salary)) * (parseFloat(all.ss_per) / 100)
-            form.setFieldValue('social_security', (SSCal).toString())
+            // let all_valueVat = 
+            //     all.check_vat?.map(i => all[i] ? parseFloat(map[i]) : 0).reduce((val, a) => val + a, 0);
+            // let SSCal = (parseFloat(all.base_salary)) * (parseFloat(all.ss_per) / 100)
+            // form.setFieldValue('social_security', (SSCal).toFixed(2))
             let minusval = parseFloat(all.vat ? all.vat : 0)
                 + parseFloat(all.social_security ? all.social_security : 0)
                 + parseFloat(all.miss ? all.miss : 0)
@@ -369,7 +374,7 @@ const Compensation: React.FC = () => {
                 + parseFloat(all.late ? all.late : 0)
                 + parseFloat(all.other ? all.other : 0);
             console.log(minusval);
-            form.setFieldValue('total_expense', (minusval).toString())
+            form.setFieldValue('total_expense', (minusval).toFixed(2))
             // finish()
         }
 
@@ -497,7 +502,10 @@ const Compensation: React.FC = () => {
                                         onClick={() => {
                                             showDrawer(1)
                                             form.setFieldsValue({
-                                                base_salary: propsstate?.bookbank_log[0]?.base_salary,
+                                                base_salary: Filter_BookBank?.filter_bookbank_admin?.[0]?.base_salary,
+                                                vat_per: ExpenseComData?.expense_company?.[0]?.vat_per,
+                                                ss_per: ExpenseComData?.expense_company?.[0]?.ss_per,
+                                                provident_emp: Filter_BookBank?.filter_bookbank_admin?.[0]?.provident_emp
                                             })
                                         }}
                                     >

@@ -194,7 +194,7 @@ const Remuneration: React.FC = () => {
             variables: {
               data: {
                 ...value,
-                date: selectedRow.date ? selectedRow?.date : undefined,
+                date: new Date(),
                 id: selectedRow?.id ? selectedRow?.id : undefined,
                 userId: propsstate?.userId,
                 base_salary: parseFloat(value.base_salary),

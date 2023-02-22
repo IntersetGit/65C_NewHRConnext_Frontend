@@ -29,6 +29,8 @@ import moment from 'moment';
 import { useQuery, useMutation, from } from '@apollo/client';
 import { FETCH_SELECT_BOOK_BANK, FETCH_AllSALARY_BASE } from '../../../service/graphql/Summary';
 import { POSITION } from '../../../service/graphql/Position';
+import BaseSalary from '../basesalary';
+import dayjs from 'dayjs';
 
 const { useToken } = theme;
 
@@ -101,6 +103,18 @@ const Compensationbase: React.FC = () => {
     }
   };
 
+  const Filter_baseSalary = () => {
+    let Date_Time: any = [];
+    let Date_New = new Date()
+    let Thismonth = dayjs(Date_New).format("MM")
+    let Thisyear = dayjs(Date_New).format("YYYY")
+
+    // TableData?.data_salary?.bookbank_log?.push(Date_Time)
+    // console.log("Date_F", Date_Time)
+
+  }
+
+
   const columns: ColumnsType<any> = [
     {
       title: 'รหัสพนักงาน',
@@ -140,6 +154,12 @@ const Compensationbase: React.FC = () => {
       align: 'center',
       render: (record) => {
         return record?.[0]?.base_salary?.toFixed(2);
+        // return JSON.stringify(data[0]?.base_salary);
+        // if (parseInt(เดือนปัจจุบัน) < parseInt(เดือนที่มีผลบังคับใช้) && ปีปัจจุบัน === ปีที่มีผลบังคับใช้) { 
+        //   return record?.[0]?.base_salary?.toFixed(2);
+        // }
+        // let data = record?.find((i) => i.accept_month <= dayjs().format('MM'));
+        // return data ? data.base_salary : '-'
       },
     },
     {
@@ -173,13 +193,13 @@ const Compensationbase: React.FC = () => {
         <Form form={formSearch} size="middle">
           <Row gutter={16}>
             <Col xs={24} sm={12} md={12} lg={6} xl={6}>
-              <Form.Item name="name" colon={false} label={'ชื่อพนักงาน'}>
+              <Form.Item name="fristname" colon={false} label={'ชื่อพนักงาน'}>
                 <Input allowClear></Input>
               </Form.Item>
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={6} xl={6}>
-              <Form.Item name="position2Id" colon={false} label={'แผนก'}>
+              <Form.Item name="position2" colon={false} label={'แผนก'}>
                 <Select
                   options={mas_positionlevel2}
                   onChange={onChange}
@@ -189,7 +209,7 @@ const Compensationbase: React.FC = () => {
             </Col>
 
             <Col xs={24} sm={24} md={24} lg={6} xl={6}>
-              <Form.Item name="position3Id" colon={false} label={'ตำแหน่ง'}>
+              <Form.Item name="position3" colon={false} label={'ตำแหน่ง'}>
                 <Select
                   options={maspositionlevel3 ? maspositionlevel3 : []}
                   allowClear
