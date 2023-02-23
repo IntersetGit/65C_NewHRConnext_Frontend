@@ -481,15 +481,32 @@ const UserEmployee: React.FC = (props) => {
           <Row>
             <div className="flex w-screen mt-4 mb-4 justify-center">
               <Form.Item name={'avatar'}>
-                <Upload
-                  maxCount={1}
-                  {...propsupload}
-                  action={getUploadUrl() + 'avatar'}
-                >
-                  <Button loading={uploading} icon={<UploadOutlined />}>
-                    อัพโหลดรูปภาพ
-                  </Button>
-                </Upload>
+                {propsstate?.mode == 'view' ? (
+                  <Upload
+                    maxCount={1}
+                    {...propsupload}
+                    action={getUploadUrl() + 'avatar'}
+                    disabled
+                  >
+                    <Button
+                      loading={uploading}
+                      icon={<UploadOutlined />}
+                      disabled
+                    >
+                      อัพโหลดรูปภาพ
+                    </Button>
+                  </Upload>
+                ) : (
+                  <Upload
+                    maxCount={1}
+                    {...propsupload}
+                    action={getUploadUrl() + 'avatar'}
+                  >
+                    <Button loading={uploading} icon={<UploadOutlined />}>
+                      อัพโหลดรูปภาพ
+                    </Button>
+                  </Upload>
+                )}
               </Form.Item>
             </div>
           </Row>
@@ -526,11 +543,11 @@ const UserEmployee: React.FC = (props) => {
                     disabled
                     options={[
                       {
-                        value: 'ใช้งาน',
+                        value: '1',
                         label: 'ใช้งาน',
                       },
                       {
-                        value: 'ไม่ใช้งาน',
+                        value: '2',
                         label: 'ไม่ใช้งาน',
                       },
                     ]}
@@ -539,11 +556,11 @@ const UserEmployee: React.FC = (props) => {
                   <Select
                     options={[
                       {
-                        value: 'ใช้งาน',
+                        value: '1',
                         label: 'ใช้งาน',
                       },
                       {
-                        value: 'ไม่ใช้งาน',
+                        value: '0',
                         label: 'ไม่ใช้งาน',
                       },
                     ]}
@@ -1080,6 +1097,11 @@ const UserEmployee: React.FC = (props) => {
                     showSearch
                     options={province ? province : []}
                     onChange={onProvinceChangeCitizen}
+                    filterOption={(input, option) =>
+                      (option?.label ?? '')
+                        .toLowerCase()
+                        .includes(input.toLowerCase())
+                    }
                     allowClear
                     disabled
                   />
@@ -1088,6 +1110,11 @@ const UserEmployee: React.FC = (props) => {
                     showSearch
                     options={province ? province : []}
                     onChange={onProvinceChangeCitizen}
+                    filterOption={(input, option) =>
+                      (option?.label ?? '')
+                        .toLowerCase()
+                        .includes(input.toLowerCase())
+                    }
                     allowClear
                   />
                 )}
@@ -1101,6 +1128,11 @@ const UserEmployee: React.FC = (props) => {
                     onChange={onDistrictChangeCitizen}
                     showSearch
                     options={district ? district : []}
+                    filterOption={(input, option) =>
+                      (option?.label ?? '')
+                        .toLowerCase()
+                        .includes(input.toLowerCase())
+                    }
                     allowClear
                     disabled
                   />
@@ -1109,6 +1141,11 @@ const UserEmployee: React.FC = (props) => {
                     onChange={onDistrictChangeCitizen}
                     showSearch
                     options={district ? district : []}
+                    filterOption={(input, option) =>
+                      (option?.label ?? '')
+                        .toLowerCase()
+                        .includes(input.toLowerCase())
+                    }
                     allowClear
                   />
                 )}
@@ -1122,6 +1159,11 @@ const UserEmployee: React.FC = (props) => {
                     showSearch
                     onChange={onAmphoeChangeCitizen}
                     options={amphoe ? amphoe : []}
+                    filterOption={(input, option) =>
+                      (option?.label ?? '')
+                        .toLowerCase()
+                        .includes(input.toLowerCase())
+                    }
                     allowClear
                     disabled
                   />
@@ -1130,6 +1172,11 @@ const UserEmployee: React.FC = (props) => {
                     showSearch
                     onChange={onAmphoeChangeCitizen}
                     options={amphoe ? amphoe : []}
+                    filterOption={(input, option) =>
+                      (option?.label ?? '')
+                        .toLowerCase()
+                        .includes(input.toLowerCase())
+                    }
                     allowClear
                   />
                 )}
@@ -1188,6 +1235,11 @@ const UserEmployee: React.FC = (props) => {
                     showSearch
                     options={province ? province : []}
                     onChange={onProvinceChangeContract}
+                    filterOption={(input, option) =>
+                      (option?.label ?? '')
+                        .toLowerCase()
+                        .includes(input.toLowerCase())
+                    }
                     allowClear
                     disabled
                   />
@@ -1196,6 +1248,11 @@ const UserEmployee: React.FC = (props) => {
                     showSearch
                     options={province ? province : []}
                     onChange={onProvinceChangeContract}
+                    filterOption={(input, option) =>
+                      (option?.label ?? '')
+                        .toLowerCase()
+                        .includes(input.toLowerCase())
+                    }
                     allowClear
                   />
                 )}
@@ -1209,6 +1266,11 @@ const UserEmployee: React.FC = (props) => {
                     onChange={onDistrictChangeContract}
                     showSearch
                     options={districtcontract ? districtcontract : []}
+                    filterOption={(input, option) =>
+                      (option?.label ?? '')
+                        .toLowerCase()
+                        .includes(input.toLowerCase())
+                    }
                     allowClear
                     disabled
                   />
@@ -1217,6 +1279,11 @@ const UserEmployee: React.FC = (props) => {
                     onChange={onDistrictChangeContract}
                     showSearch
                     options={districtcontract ? districtcontract : []}
+                    filterOption={(input, option) =>
+                      (option?.label ?? '')
+                        .toLowerCase()
+                        .includes(input.toLowerCase())
+                    }
                     allowClear
                   />
                 )}
@@ -1230,6 +1297,11 @@ const UserEmployee: React.FC = (props) => {
                     showSearch
                     onChange={onAmphoeChangeContract}
                     options={amphoecontract ? amphoecontract : []}
+                    filterOption={(input, option) =>
+                      (option?.label ?? '')
+                        .toLowerCase()
+                        .includes(input.toLowerCase())
+                    }
                     allowClear
                     disabled
                   />
@@ -1238,6 +1310,11 @@ const UserEmployee: React.FC = (props) => {
                     showSearch
                     onChange={onAmphoeChangeContract}
                     options={amphoecontract ? amphoecontract : []}
+                    filterOption={(input, option) =>
+                      (option?.label ?? '')
+                        .toLowerCase()
+                        .includes(input.toLowerCase())
+                    }
                     allowClear
                   />
                 )}
