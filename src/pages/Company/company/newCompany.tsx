@@ -173,33 +173,33 @@ const Newcompany: React.FC<NewcompanyPropsType> = ({ role }) => {
       confirmButtonText: 'ตกลง',
       denyButtonText: `ยกเลิก`,
     }).then(async (result) => {
-      // if (result.isConfirmed) {
-      //   createCompanyAccount({
-      //     variables: {
-      //       data: objvalue,
-      //     },
-      //   })
-      //     .then((val) => {
-      //       console.log(val);
-      //       if (val?.data?.createAndUpdateComBarance?.status) {
-      //         Swal.fire(
-      //           `${Editdata?.id ? 'แก้ไข' : 'สร้าง'}ข้อมูลบริษัทสำเร็จ!`,
-      //           '',
-      //           'success',
-      //         );
-      //         refetch();
-      //         navigate(-1);
-      //       }
-      //     })
-      //     .catch((err) => {
-      //       Swal.fire(
-      //         `${Editdata?.id ? 'แก้ไข' : 'สร้าง'}ข้อมูลบริษัทไม่สำเร็จ!`,
-      //         '',
-      //         'error',
-      //       );
-      //       console.error(err);
-      //     });
-      //}
+      if (result.isConfirmed) {
+        createCompanyAccount({
+          variables: {
+            data: objvalue,
+          },
+        })
+          .then((val) => {
+            console.log(val);
+            if (val?.data?.createAndUpdateComBarance?.status) {
+              Swal.fire(
+                `${Editdata?.id ? 'แก้ไข' : 'สร้าง'}ข้อมูลบริษัทสำเร็จ!`,
+                '',
+                'success',
+              );
+              refetch();
+              navigate(-1);
+            }
+          })
+          .catch((err) => {
+            Swal.fire(
+              `${Editdata?.id ? 'แก้ไข' : 'สร้าง'}ข้อมูลบริษัทไม่สำเร็จ!`,
+              '',
+              'error',
+            );
+            console.error(err);
+          });
+      }
     });
   };
 
