@@ -196,8 +196,12 @@ const ProfileEmployee: React.FC<ProfileEmployeePropsType> = ({ role }) => {
     );
     await onAmphoeChangeContract(user?.me?.profile?.contract_state as string);
     setImagepath(user?.me?.profile?.avatar);
+    const date = dayjs(user?.me?.profile?.dob);
+    const newdate = dayjs().diff(date, 'year') ? dayjs().diff(date, 'year') : 0;
+    console.log(newdate, date);
     form.setFieldsValue({
       ...user?.me?.profile,
+      age: newdate,
       email: user?.me?.profile?.contract_email,
       dob: user?.me?.profile?.dob ? dayjs(user?.me?.profile?.dob) : undefined,
       start_date_work: user?.me?.profile?.start_date_work
@@ -219,7 +223,7 @@ const ProfileEmployee: React.FC<ProfileEmployeePropsType> = ({ role }) => {
     });
   };
 
-  const onChangeAge: DatePickerProps['onChange'] = (date, dateString) => {
+  const onChangeAge = (date) => {
     const newdate = dayjs().diff(date, 'year')
       ? dayjs().diff(date, 'year')
       : null;
@@ -438,7 +442,7 @@ const ProfileEmployee: React.FC<ProfileEmployeePropsType> = ({ role }) => {
               id: user?.me?.profile?.userId
                 ? user?.me?.profile?.userId
                 : undefined,
-              age: value.age.toString(),
+              age: value.age?.toString(),
             },
           },
         })

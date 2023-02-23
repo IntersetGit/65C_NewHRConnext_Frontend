@@ -32,6 +32,7 @@ const documents = {
     "\nquery Getleava_alldata($name: String, $position2Id: ID, $position3Id: ID) {\n  getleava_alldata(name: $name, position2Id: $position2Id, position3Id: $position3Id) {\n      id\n      leavetype_id\n      mas_leave_type {\n        id\n        name\n        orderby\n      }\n      start_date\n      end_date\n      quantity_day\n      quantity_hours\n      detail_leave\n      Status\n      user_id\n      user {\n        id\n        email\n        profile {\n          id\n          firstname_th\n          lastname_th\n          firstname_en\n          lastname_en\n          avatar\n        }\n      }\n    }\n  }\n": types.Getleava_AlldataDocument,
     "\n  query FetchcompanySelect {\n    company {\n      name\n      branch{\n        _count{\n          users\n        }\n        id\n        name\n        address\n      }\n    }\n  }\n": types.FetchcompanySelectDocument,
     "\nquery GetownCompany {\n  getownCompany {\n    redirect\n    isOwner\n    company {\n      companyCode\n      icon\n      id\n      name\n    }\n    companies {\n      companyCode\n      icon\n      id\n      name\n    }\n  }\n}\n": types.GetownCompanyDocument,
+    "\nquery GetBusinessType {\n  getBusinessType {\n    id\n    name\n    SubBusinessType {\n      id\n      name\n    }\n  }\n}\n": types.GetBusinessTypeDocument,
     "\nmutation CreateAndUpdateComBarance($data: createCompanyBranch!) {\n  createAndUpdateComBarance(data: $data) {\n    message\n    status\n  }\n}\n": types.CreateAndUpdateComBaranceDocument,
     "\nmutation DeleteComBarance($deleteComBaranceId: ID!) {\n  deleteComBarance(id: $deleteComBaranceId) {\n    message\n    status\n  }\n}\n": types.DeleteComBaranceDocument,
     "\nquery GetHoliDayYear {\n    GetHoliDayYear {\n      id\n      day\n      month\n      year\n      holiday_name\n    }\n  }\n": types.GetHoliDayYearDocument,
@@ -151,6 +152,10 @@ export function gql(source: "\n  query FetchcompanySelect {\n    company {\n    
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(source: "\nquery GetownCompany {\n  getownCompany {\n    redirect\n    isOwner\n    company {\n      companyCode\n      icon\n      id\n      name\n    }\n    companies {\n      companyCode\n      icon\n      id\n      name\n    }\n  }\n}\n"): (typeof documents)["\nquery GetownCompany {\n  getownCompany {\n    redirect\n    isOwner\n    company {\n      companyCode\n      icon\n      id\n      name\n    }\n    companies {\n      companyCode\n      icon\n      id\n      name\n    }\n  }\n}\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\nquery GetBusinessType {\n  getBusinessType {\n    id\n    name\n    SubBusinessType {\n      id\n      name\n    }\n  }\n}\n"): (typeof documents)["\nquery GetBusinessType {\n  getBusinessType {\n    id\n    name\n    SubBusinessType {\n      id\n      name\n    }\n  }\n}\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

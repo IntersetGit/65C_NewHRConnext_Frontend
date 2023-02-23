@@ -37,6 +37,19 @@ query GetownCompany {
 }
 `);
 
+export const COMPANY_BUSSINESS_TYPE = gql(`
+query GetBusinessType {
+  getBusinessType {
+    id
+    name
+    SubBusinessType {
+      id
+      name
+    }
+  }
+}
+`);
+
 export const CREATE_COMPANY_ACCOUNT = gql(`
 mutation CreateAndUpdateComBarance($data: createCompanyBranch!) {
   createAndUpdateComBarance(data: $data) {
