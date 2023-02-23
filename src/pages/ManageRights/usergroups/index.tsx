@@ -334,14 +334,14 @@ const Manageuser: React.FC = () => {
                       <Switch
                         className="bg-gray-600"
                         onChange={onChange}
-                        defaultChecked
+                        // defaultChecked
                         disabled
                       />
                     ) : (
                       <Switch
                         className="bg-gray-600"
                         onChange={onChange}
-                        defaultChecked
+                        // defaultChecked
                       />
                     )}
                   </Form.Item>
