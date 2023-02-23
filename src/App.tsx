@@ -175,7 +175,7 @@ function App() {
                 colorPrimary: '#2156f3',
                 colorBgLayout: '#f9fafb',
                 colorText: '#0f172a',
-                borderRadius: 6,
+                borderRadius: 3,
                 colorBgBase: '#fff',
                 fontFamily: `'Roboto','Prompt' ,-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji'`,
               },
