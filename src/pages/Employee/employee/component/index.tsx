@@ -553,11 +553,11 @@ const ProfileEmployee: React.FC<ProfileEmployeePropsType> = ({ role }) => {
                 <Select
                   options={[
                     {
-                      value: 'ใช้งาน',
+                      value: '1',
                       label: 'ใช้งาน',
                     },
                     {
-                      value: 'ไม่ใช้งาน',
+                      value: '0',
                       label: 'ไม่ใช้งาน',
                     },
                   ]}
@@ -803,7 +803,16 @@ const ProfileEmployee: React.FC<ProfileEmployeePropsType> = ({ role }) => {
 
           <Row gutter={16}>
             <Col xs={24} sm={12} md={12} lg={4} xl={4}>
-              <Form.Item name={'start_date_work'} label={'วันที่เริ่มงาน'}>
+              <Form.Item
+                name={'start_date_work'}
+                label={'วันที่เริ่มงาน'}
+                rules={[
+                  {
+                    required: true,
+                    message: 'กรุณากรอกวันที่เริ่มงาน',
+                  },
+                ]}
+              >
                 <DatePicker format={'DD-MM-YYYY'} style={{ width: '100%' }} />
               </Form.Item>
             </Col>
@@ -893,6 +902,11 @@ const ProfileEmployee: React.FC<ProfileEmployeePropsType> = ({ role }) => {
                   showSearch
                   options={province ? province : []}
                   onChange={onProvinceChangeCitizen}
+                  filterOption={(input, option) =>
+                    (option?.label ?? '')
+                      .toLowerCase()
+                      .includes(input.toLowerCase())
+                  }
                   allowClear
                 />
               </Form.Item>
@@ -904,6 +918,11 @@ const ProfileEmployee: React.FC<ProfileEmployeePropsType> = ({ role }) => {
                   onChange={onDistrictChangeCitizen}
                   showSearch
                   options={district ? district : []}
+                  filterOption={(input, option) =>
+                    (option?.label ?? '')
+                      .toLowerCase()
+                      .includes(input.toLowerCase())
+                  }
                   allowClear
                 />
               </Form.Item>
@@ -915,6 +934,11 @@ const ProfileEmployee: React.FC<ProfileEmployeePropsType> = ({ role }) => {
                   showSearch
                   onChange={onAmphoeChangeCitizen}
                   options={amphoe ? amphoe : []}
+                  filterOption={(input, option) =>
+                    (option?.label ?? '')
+                      .toLowerCase()
+                      .includes(input.toLowerCase())
+                  }
                   allowClear
                 />
               </Form.Item>
@@ -971,6 +995,11 @@ const ProfileEmployee: React.FC<ProfileEmployeePropsType> = ({ role }) => {
                   showSearch
                   options={province ? province : []}
                   onChange={onProvinceChangeContract}
+                  filterOption={(input, option) =>
+                    (option?.label ?? '')
+                      .toLowerCase()
+                      .includes(input.toLowerCase())
+                  }
                   allowClear
                 />
               </Form.Item>
@@ -982,6 +1011,11 @@ const ProfileEmployee: React.FC<ProfileEmployeePropsType> = ({ role }) => {
                   onChange={onDistrictChangeContract}
                   showSearch
                   options={districtcontract ? districtcontract : []}
+                  filterOption={(input, option) =>
+                    (option?.label ?? '')
+                      .toLowerCase()
+                      .includes(input.toLowerCase())
+                  }
                   allowClear
                 />
               </Form.Item>
@@ -993,6 +1027,11 @@ const ProfileEmployee: React.FC<ProfileEmployeePropsType> = ({ role }) => {
                   showSearch
                   onChange={onAmphoeChangeContract}
                   options={amphoecontract ? amphoecontract : []}
+                  filterOption={(input, option) =>
+                    (option?.label ?? '')
+                      .toLowerCase()
+                      .includes(input.toLowerCase())
+                  }
                   allowClear
                 />
               </Form.Item>
