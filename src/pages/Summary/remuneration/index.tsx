@@ -44,7 +44,7 @@ import Del from '../../../assets/DEL.png';
 import View from '../../../assets/View.png';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import dayjs from 'dayjs'
+import dayjs from 'dayjs';
 
 const { useToken } = theme;
 
@@ -64,11 +64,14 @@ const Remuneration: React.FC = () => {
   const { data: book_bank_data, refetch } = useQuery(FETCH_GETALLBOOKBANK_LOG, {
     variables: { userId: propsstate?.userId },
   });
-  const { data: Filter_BookBank, refetch: refetch2 } = useQuery(FETCH_Filter_BOOKBANK_ADMIN, {
-    variables: { userId: propsstate?.userId },
-  });
+  const { data: Filter_BookBank, refetch: refetch2 } = useQuery(
+    FETCH_Filter_BOOKBANK_ADMIN,
+    {
+      variables: { userId: propsstate?.userId },
+    },
+  );
 
-  console.log("ssss", book_bank_data)
+  console.log('ssss', book_bank_data);
   const [creteBookBank] = useMutation(CREATE_UPDATE_BOOKBANK);
   const [deleteBookBank] = useMutation(DELETE_BOOKBANK);
 
@@ -91,7 +94,7 @@ const Remuneration: React.FC = () => {
   }, [book_bank_data]);
   useEffect(() => {
     refetch2();
-  })
+  });
 
   const selectBookBank = BookBank?.mas_bank?.map((e: any) => {
     return {
@@ -158,11 +161,16 @@ const Remuneration: React.FC = () => {
                 date: new Date(),
                 userId: propsstate?.userId,
                 base_salary: parseFloat(value.base_salary),
-                provident_emp: parseFloat(value.provident_emp) ? parseFloat(value.provident_emp) : 0,
-                provident_com: parseFloat(value.provident_com) ? parseFloat(value.provident_com) : 0,
+                provident_emp: parseFloat(value.provident_emp)
+                  ? parseFloat(value.provident_emp)
+                  : 0,
+                provident_com: parseFloat(value.provident_com)
+                  ? parseFloat(value.provident_com)
+                  : 0,
               },
-            }
-          })
+            },
+          }
+          )
             .then((val) => {
               console.log(val);
               if (val.data?.Createandupdatebookbank?.status) {
@@ -199,7 +207,7 @@ const Remuneration: React.FC = () => {
                 provident_emp: parseFloat(value.provident_emp),
                 provident_com: parseFloat(value.provident_com),
                 // date: dayjs(value),
-              }
+              },
             },
           })
             .then((val) => {
@@ -214,9 +222,16 @@ const Remuneration: React.FC = () => {
               Swal.fire(`แก้ไขข้อมูลฐานเงินเดือนไม่สำเร็จ!`, '', 'error');
               console.error(err);
               form.resetFields();
+            }
+            )
+            .catch((err) => {
+              Swal.fire(`แก้ไขข้อมูลฐานเงินเดือนไม่สำเร็จ!`, '', 'error');
+              console.error(err);
+              form.resetFields();
             });
         }
-      });
+
+      })
     setOpen(false);
   };
 
@@ -446,7 +461,7 @@ const Remuneration: React.FC = () => {
       </Card>
       <Card className="shadow-xl mt-4">
         <Table
-          key={""}
+          key={''}
           columns={columns}
           dataSource={book_bank_data?.bookbank_log_admin as any}
         />
@@ -466,14 +481,23 @@ const Remuneration: React.FC = () => {
         <Form layout="vertical" form={form} onFinish={onSubmitForm}>
           <Row>
             <Col xs={24} sm={24} md={24} lg={24} xl={24}>
-              <Form.Item name="accept_date" label={'เดือน/ปี ที่มีผล'} className='ml-[0px]'
-                rules={[{
-                  required: true,
-                  message: 'โปรดเลือกเดือน/ปี !',
-                }]}
+              <Form.Item
+                name="accept_date"
+                label={'เดือน/ปี ที่มีผล'}
+                className="ml-[0px]"
+                rules={[
+                  {
+                    required: true,
+                    message: 'โปรดเลือกเดือน/ปี !',
+                  },
+                ]}
               >
-                <DatePicker picker='month' format={'MM/YYYY'}
-                  disabled={drawerType === 3 ? true : drawerType === 2 ? true : false}
+                <DatePicker
+                  picker="month"
+                  format={'MM/YYYY'}
+                  disabled={
+                    drawerType === 3 ? true : drawerType === 2 ? true : false
+                  }
                   disabledDate={disabledDate}
                 />
               </Form.Item>
@@ -481,11 +505,16 @@ const Remuneration: React.FC = () => {
           </Row>
           <Row>
             <Col span={24}>
-              <Form.Item name="base_salary" label={'ฐานเงินเดือน'}
-                rules={[{
-                  required: true,
-                  message: 'โปรดระบุฐานเงินเดือน !',
-                }]}>
+              <Form.Item
+                name="base_salary"
+                label={'ฐานเงินเดือน'}
+                rules={[
+                  {
+                    required: true,
+                    message: 'โปรดระบุฐานเงินเดือน !',
+                  },
+                ]}
+              >
                 <Input disabled={drawerType === 3 ? true : false} />
               </Form.Item>
             </Col>
@@ -493,11 +522,15 @@ const Remuneration: React.FC = () => {
 
           <Row>
             <Col span={24}>
-              <Form.Item name="mas_bankId" label={'ธนาคาร'}
-                rules={[{
-                  required: true,
-                  message: 'โปรดเลือกธนาคาร !',
-                }]}
+              <Form.Item
+                name="mas_bankId"
+                label={'ธนาคาร'}
+                rules={[
+                  {
+                    required: true,
+                    message: 'โปรดเลือกธนาคาร !',
+                  },
+                ]}
               >
                 {/* <Select allowClear disabled={drawerType === 3 ? true : false} ></Select> */}
                 <Select
@@ -511,11 +544,15 @@ const Remuneration: React.FC = () => {
 
           <Row>
             <Col span={24}>
-              <Form.Item name="bank_number" label={'เลขบัญชี'}
-                rules={[{
-                  required: true,
-                  message: 'โปรดระบุเลขบัญชี !',
-                }]}
+              <Form.Item
+                name="bank_number"
+                label={'เลขบัญชี'}
+                rules={[
+                  {
+                    required: true,
+                    message: 'โปรดระบุเลขบัญชี !',
+                  },
+                ]}
               >
                 <Input disabled={drawerType === 3 ? true : false} />
               </Form.Item>
@@ -528,8 +565,7 @@ const Remuneration: React.FC = () => {
                 name="provident_emp"
                 label={'กองทุนสำรองเลี้ยงชีพสะสม ( พนักงาน (%))'}
               >
-                <Input disabled={drawerType === 3 ? true : false}
-                />
+                <Input disabled={drawerType === 3 ? true : false} />
               </Form.Item>
             </Col>
           </Row>
