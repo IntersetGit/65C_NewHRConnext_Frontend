@@ -182,7 +182,7 @@ const Companyniti: React.FC<CompanynitiPropsType> = ({ role }) => {
       render: (_, rec) => {
         return (
           <p>
-            {data?.company?.name} {_}
+             {data?.company?.name} สาขา {_}
           </p>
         );
       },

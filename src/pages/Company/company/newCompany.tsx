@@ -50,6 +50,9 @@ const Newcompany: React.FC<NewcompanyPropsType> = ({ role }) => {
   const { data: bussinesstype } = useQuery(COMPANY_BUSSINESS_TYPE);
   const [createCompanyAccount] = useMutation(CREATE_COMPANY_ACCOUNT);
   const [visible, setVisible] = useState(false);
+  const [uploadlogo, setUploadlogo] = useState([])
+  const [uploadpdf1, setuploadpdf1] = useState([])
+  const [uploadpdf2, setuploadpdf2] = useState([])
   const [district, setDistrict] = useState<
     { value?: string | null; label?: string | null }[] | undefined
   >(undefined);
@@ -73,7 +76,9 @@ const Newcompany: React.FC<NewcompanyPropsType> = ({ role }) => {
     onProvinceChange(Editdata?.country);
     onDistrictChangeCitizen(Editdata?.state);
     onAmphoeChangeCitizen(Editdata?.city);
-    form.setFieldsValue({ ...Editdata, latlng: [Editdata.lat, Editdata.lng] });
+    form.setFieldsValue({
+      ...Editdata, latlng: Editdata?.lat ? ([Editdata.lat, Editdata.lng]).toString() : '',
+    });
   };
 
   const bussiness = bussinesstype?.getBusinessType?.map((e) => {
@@ -149,6 +154,7 @@ const Newcompany: React.FC<NewcompanyPropsType> = ({ role }) => {
   };
 
   const onSubmitForm = (value: any) => {
+    console.log('value', value)
     let objvalue = {
       ...value,
       id: Editdata?.id ? Editdata?.id : undefined,
@@ -167,35 +173,52 @@ const Newcompany: React.FC<NewcompanyPropsType> = ({ role }) => {
       confirmButtonText: 'ตกลง',
       denyButtonText: `ยกเลิก`,
     }).then(async (result) => {
-      if (result.isConfirmed) {
-        createCompanyAccount({
-          variables: {
-            data: objvalue,
-          },
-        })
-          .then((val) => {
-            console.log(val);
-            if (val?.data?.createAndUpdateComBarance?.status) {
-              Swal.fire(
-                `${Editdata?.id ? 'แก้ไข' : 'สร้าง'}ข้อมูลบริษัทสำเร็จ!`,
-                '',
-                'success',
-              );
-              refetch();
-              navigate(-1);
-            }
-          })
-          .catch((err) => {
-            Swal.fire(
-              `${Editdata?.id ? 'แก้ไข' : 'สร้าง'}ข้อมูลบริษัทไม่สำเร็จ!`,
-              '',
-              'error',
-            );
-            console.error(err);
-          });
-      }
+      // if (result.isConfirmed) {
+      //   createCompanyAccount({
+      //     variables: {
+      //       data: objvalue,
+      //     },
+      //   })
+      //     .then((val) => {
+      //       console.log(val);
+      //       if (val?.data?.createAndUpdateComBarance?.status) {
+      //         Swal.fire(
+      //           `${Editdata?.id ? 'แก้ไข' : 'สร้าง'}ข้อมูลบริษัทสำเร็จ!`,
+      //           '',
+      //           'success',
+      //         );
+      //         refetch();
+      //         navigate(-1);
+      //       }
+      //     })
+      //     .catch((err) => {
+      //       Swal.fire(
+      //         `${Editdata?.id ? 'แก้ไข' : 'สร้าง'}ข้อมูลบริษัทไม่สำเร็จ!`,
+      //         '',
+      //         'error',
+      //       );
+      //       console.error(err);
+      //     });
+      //}
     });
   };
+
+
+  const onChangeUploadImageCompany = ({ fileList: newFileList }) => {
+    console.log('newFileList :>> ', newFileList);
+    setUploadlogo(newFileList);
+
+  }
+  const onChangeUploadPdf1Company = ({ fileList: newFileList }) => {
+    console.log('newFileList :>> ', newFileList);
+    setuploadpdf1(newFileList);
+
+  }
+  const onChangeUploadPdf2Company = ({ fileList: newFileList }) => {
+    console.log('newFileList :>> ', newFileList);
+    setuploadpdf2(newFileList);
+
+  }
 
   return (
     <>
@@ -650,44 +673,55 @@ const Newcompany: React.FC<NewcompanyPropsType> = ({ role }) => {
           </div>
           <Row gutter={16} className="px-2">
             <Col span={12} offset={6}>
-              {Editdata?.mode == 'view' ? (
-                <Upload
-                  action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                  maxCount={1}
-                  className={'upload-custom'}
-                  listType="picture"
-                >
-                  <Button
-                    disabled
-                    type="primary"
-                    style={{
-                      width: '100%',
-                      marginBottom: '10px',
-                      backgroundColor: token.token.colorPrimary,
-                    }}
+              <Form.Item
+                name={'uploadimage'}
+                label={''}
+              >
+                {Editdata?.mode == 'view' ? (
+                  <Upload
+                    action={""}
+                    beforeUpload={() => false}
+                    maxCount={1}
+                    className={'upload-custom'}
+                    listType="picture"
+                    onChange={onChangeUploadImageCompany}
                   >
-                    เลือกรูป
-                  </Button>
-                </Upload>
-              ) : (
-                <Upload
-                  action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                  maxCount={1}
-                  className={'upload-custom'}
-                  listType="picture"
-                >
-                  <Button
-                    type="primary"
-                    style={{
-                      width: '100%',
-                      marginBottom: '10px',
-                      backgroundColor: token.token.colorPrimary,
-                    }}
+                    <Button
+                      disabled
+                      type="primary"
+                      style={{
+                        width: '100%',
+                        marginBottom: '10px',
+                        backgroundColor: token.token.colorPrimary,
+                      }}
+                    >
+                      เลือกรูป
+                    </Button>
+                  </Upload>
+                ) : (
+                  <Upload
+                    action={""}
+                    accept=".png,.jpg"
+                    beforeUpload={() => false}
+                    maxCount={1}
+                    className={'upload-custom'}
+                    listType="picture"
+                    onChange={onChangeUploadImageCompany}
+                    fileList={uploadlogo}
                   >
-                    เลือกรูป
-                  </Button>
-                </Upload>
-              )}
+                    <Button
+                      type="primary"
+                      style={{
+                        width: '100%',
+                        marginBottom: '10px',
+                        backgroundColor: token.token.colorPrimary,
+                      }}
+                    >
+                      เลือกรูป
+                    </Button>
+                  </Upload>
+                )}
+              </Form.Item>
             </Col>
           </Row>
           <Divider style={{ backgroundColor: token.token.colorPrimary }} />
@@ -795,10 +829,14 @@ const Newcompany: React.FC<NewcompanyPropsType> = ({ role }) => {
               <Form.Item label="หนังสือรับรอง">
                 {Editdata?.mode == 'view' ? (
                   <Upload
-                    action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                    action={""}
+                    accept=".pdf"
+                    beforeUpload={() => false}
                     maxCount={1}
                     className={'upload-custom'}
-                    listType="picture"
+                    listType="text"
+                    fileList={uploadpdf1}
+                    onChange={onChangeUploadPdf1Company}
                   >
                     <Button
                       disabled
@@ -814,10 +852,14 @@ const Newcompany: React.FC<NewcompanyPropsType> = ({ role }) => {
                   </Upload>
                 ) : (
                   <Upload
-                    action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                    action={""}
+                    accept=".pdf"
+                    beforeUpload={() => false}
                     maxCount={1}
                     className={'upload-custom'}
-                    listType="picture"
+                    listType="text"
+                    fileList={uploadpdf1}
+                    onChange={onChangeUploadPdf1Company}
                   >
                     <Button
                       type="primary"
@@ -838,10 +880,14 @@ const Newcompany: React.FC<NewcompanyPropsType> = ({ role }) => {
               <Form.Item label="ก.พ. 20">
                 {Editdata?.mode == 'view' ? (
                   <Upload
-                    action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                    accept=".pdf"
+                    action={""}
+                    beforeUpload={() => false}
                     maxCount={1}
                     className={'upload-custom'}
-                    listType="picture"
+                    listType="text"
+                    fileList={uploadpdf2}
+                    onChange={onChangeUploadPdf2Company}
                   >
                     <Button
                       disabled
@@ -857,10 +903,14 @@ const Newcompany: React.FC<NewcompanyPropsType> = ({ role }) => {
                   </Upload>
                 ) : (
                   <Upload
-                    action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                    accept=".pdf"
+                    action={""}
+                    beforeUpload={() => false}
                     maxCount={1}
                     className={'upload-custom'}
-                    listType="picture"
+                    listType="text"
+                    fileList={uploadpdf2}
+                    onChange={onChangeUploadPdf2Company}
                   >
                     <Button
                       type="primary"
@@ -918,7 +968,7 @@ const Newcompany: React.FC<NewcompanyPropsType> = ({ role }) => {
       </Card>
 
       <br />
-      {getLatLng}
+      {/* {getLatLng} */}
       <Modal
         title="กรุณาเลือกพื้นที่"
         onOk={() => setVisible(false)}
