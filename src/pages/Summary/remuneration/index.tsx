@@ -161,21 +161,22 @@ const Remuneration: React.FC = () => {
                 provident_emp: parseFloat(value.provident_emp) ? parseFloat(value.provident_emp) : 0,
                 provident_com: parseFloat(value.provident_com) ? parseFloat(value.provident_com) : 0,
               },
+            }
+          })
+            .then((val) => {
+              console.log(val);
+              if (val.data?.Createandupdatebookbank?.status) {
+                Swal.fire(`Update ฐานเงินเดือนสำเร็จ!`, '', 'success');
+                refetch();
+                form.resetFields();
+              }
             })
-              .then((val) => {
-                console.log(val);
-                if (val.data?.Createandupdatebookbank?.status) {
-                  Swal.fire(`Update ฐานเงินเดือนสำเร็จ!`, '', 'success');
-                  refetch();
-                  form.resetFields();
-                }
-              })
-              .catch((err) => {
-                Swal.fire(`Update ฐานเงินเดือนไม่สำเร็จ!`, '', 'error');
-                console.error(err);
-              });
-          }
-        })
+            .catch((err) => {
+              Swal.fire(`Update ฐานเงินเดือนไม่สำเร็จ!`, '', 'error');
+              console.error(err);
+            });
+        }
+      })
       : Swal.fire({
         title: `ยืนยันการแก้ไขฐานเงินเดือน`,
         icon: 'warning',
@@ -198,23 +199,24 @@ const Remuneration: React.FC = () => {
                 provident_emp: parseFloat(value.provident_emp),
                 provident_com: parseFloat(value.provident_com),
                 // date: dayjs(value),
-              },
-            })
-              .then((val) => {
-                console.log(val);
-                if (val.data?.Createandupdatebookbank?.status) {
-                  Swal.fire(`แก้ไขข้อมูลฐานเงินเดือนสำเร็จ!`, '', 'success');
-                  refetch();
-                  form.resetFields();
-                }
-              })
-              .catch((err) => {
-                Swal.fire(`แก้ไขข้อมูลฐานเงินเดือนไม่สำเร็จ!`, '', 'error');
-                console.error(err);
+              }
+            },
+          })
+            .then((val) => {
+              console.log(val);
+              if (val.data?.Createandupdatebookbank?.status) {
+                Swal.fire(`แก้ไขข้อมูลฐานเงินเดือนสำเร็จ!`, '', 'success');
+                refetch();
                 form.resetFields();
-              });
-          }
-        });
+              }
+            })
+            .catch((err) => {
+              Swal.fire(`แก้ไขข้อมูลฐานเงินเดือนไม่สำเร็จ!`, '', 'error');
+              console.error(err);
+              form.resetFields();
+            });
+        }
+      });
     setOpen(false);
   };
 
@@ -451,13 +453,12 @@ const Remuneration: React.FC = () => {
       </Card>
 
       <Drawer
-        title={`${
-          drawerType === 1
-            ? 'Update ข้อมูลฐานเงินเดือน'
-            : drawerType === 2
+        title={`${drawerType === 1
+          ? 'Update ข้อมูลฐานเงินเดือน'
+          : drawerType === 2
             ? 'แก้ไขข้อมูลฐานเงินเดือน'
             : 'ข้อมูลฐานเงินเดือน'
-        }`}
+          }`}
         onClose={onClose}
         open={open}
         width={400}
