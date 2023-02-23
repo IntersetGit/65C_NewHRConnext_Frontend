@@ -24,7 +24,9 @@ const Layouts: React.FC<BaseLayoutProps> = (props) => {
   }, [location.pathname]);
   return (
     <Layout id="components-layout-demo-custom-trigger">
-      {!props.noSidebar && <Siderbar collapsed={collapsed} />}
+      {!props.noSidebar && (
+        <Siderbar setCollapsed={setCollapsed} collapsed={collapsed} />
+      )}
       <Layout className="site-layout">
         <Layout.Header
           className="header header-bg"
@@ -54,17 +56,22 @@ const Layouts: React.FC<BaseLayoutProps> = (props) => {
                   onClick: () => setCollapsed(!collapsed),
                 },
               )}
-            <div style={{ paddingLeft: 10 }}>
+            <div
+              style={{ paddingLeft: 10 }}
+              className=" md:max-w-full max-w-[150px] text-center"
+            >
               {!props.noSidebar ? (
-                <Typography.Text
-                  className="text-md"
+                <p
+                  className="break-all truncate"
                   style={{
+                    margin: 0,
                     userSelect: 'none',
                     fontWeight: 'bold',
+                    fontSize: '1em',
                   }}
                 >
                   {company?.companyName} | {company?.branchName}
-                </Typography.Text>
+                </p>
               ) : (
                 <img src={icon} width={50} />
               )}

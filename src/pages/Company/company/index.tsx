@@ -84,8 +84,8 @@ const Companyniti: React.FC<CompanynitiPropsType> = ({ role }) => {
   const { ability } = useAuth();
 
   useEffect(() => {
-    refetch()
-  }, [])
+    refetch();
+  }, []);
 
   const onMenuClick = (event: any, record: any) => {
     const { key } = event;
@@ -272,23 +272,24 @@ const Companyniti: React.FC<CompanynitiPropsType> = ({ role }) => {
             role?.add?.action as string,
             role?.add?.subject as string,
           ) && (
-              <Button
-                type="primary"
-                style={{
-                  marginBottom: '10px',
-                  backgroundColor: token.token.colorPrimary,
-                }}
-                onClick={() => {
-                  navigate('newCompany');
-                }}
-              >
-                + เพิ่มสาขา
-              </Button>
-            )}
+            <Button
+              type="primary"
+              style={{
+                marginBottom: '10px',
+                backgroundColor: token.token.colorPrimary,
+              }}
+              onClick={() => {
+                navigate('newCompany');
+              }}
+            >
+              + เพิ่มสาขา
+            </Button>
+          )}
         </Col>
         <Table
           rowKey={'id'}
           dataSource={data?.company?.branch as any}
+          scroll={{ x: 1500 }}
           loading={{
             spinning: loading,
             indicator: <Spinner />,

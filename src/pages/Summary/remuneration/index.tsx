@@ -42,7 +42,7 @@ import Del from '../../../assets/DEL.png';
 import View from '../../../assets/View.png';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import * as dayjs from 'dayjs'
+import dayjs from 'dayjs';
 
 const { useToken } = theme;
 
@@ -64,8 +64,6 @@ const Remuneration: React.FC = () => {
   });
   const [creteBookBank] = useMutation(CREATE_UPDATE_BOOKBANK);
   const [deleteBookBank] = useMutation(DELETE_BOOKBANK);
-
-
 
   useEffect(() => {
     const salary: any = book_bank_data
@@ -132,80 +130,80 @@ const Remuneration: React.FC = () => {
     console.log('Update', value);
     drawerType === 1
       ? Swal.fire({
-        title: `ยืนยันการ Update ฐานเงินเดือน`,
-        icon: 'warning',
-        showDenyButton: true,
-        showCancelButton: false,
-        confirmButtonColor: token.token.colorPrimary,
-        denyButtonColor: '#ea4e4e',
-        confirmButtonText: 'ตกลง',
-        denyButtonText: `ยกเลิก`,
-      }).then(async (result) => {
-        if (result.isConfirmed) {
-          creteBookBank({
-            variables: {
-              data: {
-                ...value,
-                userId: propsstate?.userId,
-                base_salary: parseFloat(value.base_salary),
-                provident_emp: parseFloat(value.provident_emp),
-                provident_com: parseFloat(value.provident_com),
+          title: `ยืนยันการ Update ฐานเงินเดือน`,
+          icon: 'warning',
+          showDenyButton: true,
+          showCancelButton: false,
+          confirmButtonColor: token.token.colorPrimary,
+          denyButtonColor: '#ea4e4e',
+          confirmButtonText: 'ตกลง',
+          denyButtonText: `ยกเลิก`,
+        }).then(async (result) => {
+          if (result.isConfirmed) {
+            creteBookBank({
+              variables: {
+                data: {
+                  ...value,
+                  userId: propsstate?.userId,
+                  base_salary: parseFloat(value.base_salary),
+                  provident_emp: parseFloat(value.provident_emp),
+                  provident_com: parseFloat(value.provident_com),
+                },
               },
-            },
-          })
-            .then((val) => {
-              console.log(val);
-              if (val.data?.Createandupdatebookbank?.status) {
-                Swal.fire(`Update ฐานเงินเดือนสำเร็จ!`, '', 'success');
-                refetch();
-                form.resetFields();
-              }
             })
-            .catch((err) => {
-              Swal.fire(`Update ฐานเงินเดือนไม่สำเร็จ!`, '', 'error');
-              console.error(err);
-            });
-        }
-      })
+              .then((val) => {
+                console.log(val);
+                if (val.data?.Createandupdatebookbank?.status) {
+                  Swal.fire(`Update ฐานเงินเดือนสำเร็จ!`, '', 'success');
+                  refetch();
+                  form.resetFields();
+                }
+              })
+              .catch((err) => {
+                Swal.fire(`Update ฐานเงินเดือนไม่สำเร็จ!`, '', 'error');
+                console.error(err);
+              });
+          }
+        })
       : Swal.fire({
-        title: `ยืนยันการแก้ไขฐานเงินเดือน`,
-        icon: 'warning',
-        showDenyButton: true,
-        showCancelButton: false,
-        confirmButtonColor: token.token.colorPrimary,
-        denyButtonColor: '#ea4e4e',
-        confirmButtonText: 'ตกลง',
-        denyButtonText: `ยกเลิก`,
-      }).then(async (result) => {
-        if (result.isConfirmed) {
-          creteBookBank({
-            variables: {
-              data: {
-                ...value,
-                id: selectedRow?.id ? selectedRow?.id : undefined,
-                userId: propsstate?.userId,
-                base_salary: parseFloat(value.base_salary),
-                provident_emp: parseFloat(value.provident_emp),
-                provident_com: parseFloat(value.provident_com),
-                // date: dayjs(value),
+          title: `ยืนยันการแก้ไขฐานเงินเดือน`,
+          icon: 'warning',
+          showDenyButton: true,
+          showCancelButton: false,
+          confirmButtonColor: token.token.colorPrimary,
+          denyButtonColor: '#ea4e4e',
+          confirmButtonText: 'ตกลง',
+          denyButtonText: `ยกเลิก`,
+        }).then(async (result) => {
+          if (result.isConfirmed) {
+            creteBookBank({
+              variables: {
+                data: {
+                  ...value,
+                  id: selectedRow?.id ? selectedRow?.id : undefined,
+                  userId: propsstate?.userId,
+                  base_salary: parseFloat(value.base_salary),
+                  provident_emp: parseFloat(value.provident_emp),
+                  provident_com: parseFloat(value.provident_com),
+                  // date: dayjs(value),
+                },
               },
-            },
-          })
-            .then((val) => {
-              console.log(val);
-              if (val.data?.Createandupdatebookbank?.status) {
-                Swal.fire(`แก้ไขข้อมูลฐานเงินเดือนสำเร็จ!`, '', 'success');
-                refetch();
-                form.resetFields();
-              }
             })
-            .catch((err) => {
-              Swal.fire(`แก้ไขข้อมูลฐานเงินเดือนไม่สำเร็จ!`, '', 'error');
-              console.error(err);
-              form.resetFields();
-            });
-        }
-      });
+              .then((val) => {
+                console.log(val);
+                if (val.data?.Createandupdatebookbank?.status) {
+                  Swal.fire(`แก้ไขข้อมูลฐานเงินเดือนสำเร็จ!`, '', 'success');
+                  refetch();
+                  form.resetFields();
+                }
+              })
+              .catch((err) => {
+                Swal.fire(`แก้ไขข้อมูลฐานเงินเดือนไม่สำเร็จ!`, '', 'error');
+                console.error(err);
+                form.resetFields();
+              });
+          }
+        });
     setOpen(false);
   };
 
@@ -333,7 +331,7 @@ const Remuneration: React.FC = () => {
               <Avatar
                 size={{ xs: 24, sm: 32, md: 40, lg: 64, xl: 80, xxl: 100 }}
                 icon={<AntDesignOutlined />}
-              // src={getFilePath() + propsstate?.avatar}
+                // src={getFilePath() + propsstate?.avatar}
               ></Avatar>
             </div>
           </Col>
@@ -346,7 +344,8 @@ const Remuneration: React.FC = () => {
                 {propsstate?.profile?.lastname_th}
               </u>
               <div className="mt-4">
-                {propsstate?.Position_user?.[0]?.mas_positionlevel3?.name ?? 'ไม่มีตำแหน่งงาน'}
+                {propsstate?.Position_user?.[0]?.mas_positionlevel3?.name ??
+                  'ไม่มีตำแหน่งงาน'}
               </div>
             </div>
           </Col>
@@ -425,12 +424,13 @@ const Remuneration: React.FC = () => {
       </Card>
 
       <Drawer
-        title={`${drawerType === 1
-          ? 'Update ข้อมูลฐานเงินเดือน'
-          : drawerType === 2
+        title={`${
+          drawerType === 1
+            ? 'Update ข้อมูลฐานเงินเดือน'
+            : drawerType === 2
             ? 'แก้ไขข้อมูลฐานเงินเดือน'
             : 'ข้อมูลฐานเงินเดือน'
-          }`}
+        }`}
         onClose={onClose}
         open={open}
         width={400}
@@ -438,8 +438,9 @@ const Remuneration: React.FC = () => {
         <Form layout="vertical" form={form} onFinish={onSubmitForm}>
           <Row>
             <Col xs={24} sm={24} md={24} lg={24} xl={24}>
-              <Form.Item name="date" label={'วันที่มีผล'} className='ml-[0px]'>
-                <DatePicker format={'DD/MM/YYYY'}
+              <Form.Item name="date" label={'วันที่มีผล'} className="ml-[0px]">
+                <DatePicker
+                  format={'DD/MM/YYYY'}
                   disabled={drawerType === 3 ? true : false}
                 />
               </Form.Item>

@@ -16,13 +16,12 @@ import {
   DatePicker,
   Tabs,
 } from 'antd';
-import * as dayjs from 'dayjs';
+import dayjs from 'dayjs';
 import { GiReceiveMoney } from 'react-icons/gi';
 import type { ColumnsType } from 'antd/es/table';
 import { MoreOutlined } from '@ant-design/icons';
 import { useNavigate, useLocation } from 'react-router-dom';
 import edit from '../../../assets/Edit.png';
-import Del from '../../../assets/DEL.png';
 import View from '../../../assets/View.png';
 import type { CheckboxValueType } from 'antd/es/checkbox/Group';
 import { useState, useEffect } from 'react';
@@ -243,7 +242,6 @@ const Compensation: React.FC = () => {
 
   return (
     <>
-
       <div className="flex text-3xl ml-2 pt-4">
         <GiReceiveMoney />
         <div className="ml-2 text-xl">
@@ -273,24 +271,26 @@ const Compensation: React.FC = () => {
         <Table
           rowKey={'id'}
           columns={columnsCom}
+          scroll={{ x: 700 }}
           dataSource={ExpenseComData?.expense_company as any}
         ></Table>
       </Card>
 
       <Drawer
-        title={`${drawerType === 1
-          ? 'ตั้งค่าการคำนวณเงินเดือน'
-          : drawerType === 2
+        title={`${
+          drawerType === 1
+            ? 'ตั้งค่าการคำนวณเงินเดือน'
+            : drawerType === 2
             ? 'แก้ไขตั้งค่าการคำนวณเงินเดือน'
             : 'ข้อมูลตั้งค่าคำนวณเงินเดือน'
-          }`}
+        }`}
         onClose={onClose}
         width={550}
         open={open}
         size="large"
-      // afterOpenChange={() => {
-      //   setDataEC();
-      // }}
+        // afterOpenChange={() => {
+        //   setDataEC();
+        // }}
       >
         <Form
           layout="horizontal"
@@ -538,7 +538,6 @@ const Compensation2: React.FC = () => {
 
   return (
     <>
-
       <div className="flex text-3xl ml-2 pt-4">
         <GiReceiveMoney />
         <div className="ml-2 text-xl">
@@ -586,37 +585,38 @@ const Compensation2: React.FC = () => {
               </Space>
             </Col>
           </Row>
-
         </Form>
       </Card>
       <Card className="shadow-md mt-6">
         <Table
           rowKey={'id'}
+          scroll={{ x: 700 }}
           columns={columns}
           dataSource={TableData?.data_salary as any}
         ></Table>
       </Card>
     </>
-  )
+  );
 };
 
 const Main = () => {
   return (
-    <Tabs className="right-tab"
+    <Tabs
+      className="right-tab"
       defaultActiveKey="1"
       items={[
         {
           label: `ตั้งค่าการคำนวณเงินเดือน`,
           key: '1',
-          children: <Compensation />
+          children: <Compensation />,
         },
         {
           label: `ข้อมูลเงินเดือน`,
           key: `2`,
-          children: <Compensation2 />
-
+          children: <Compensation2 />,
         },
-      ]}></Tabs>
-  )
-}
+      ]}
+    ></Tabs>
+  );
+};
 export default Main;

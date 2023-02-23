@@ -365,6 +365,7 @@ const Approve: React.FC = () => {
         <Table
           columns={columns}
           rowKey={'id'}
+          scroll={{ x: 1500 }}
           dataSource={
             dataleaveme?.getAllleave?.data_all?.[0]?.data_leave as any
           }

@@ -14,6 +14,7 @@ import { useAuth } from '../../hooks/useAuth';
 
 export type SiderbarType = {
   collapsed: boolean;
+  setCollapsed(x: boolean): void;
 };
 
 export type Menurendertype = {
@@ -29,6 +30,7 @@ const Siderbar: React.FC<SiderbarType> = (props) => {
   const location = useLocation();
   const { companycode } = useParams();
   const [activekey, setActivekey] = useState<string>('');
+  const [obp, setObp] = useState<boolean>(false);
   const baseRoute = routing.find(
     (e) => e.path === layoutConfig.dashboardRoute,
   )?.children;
@@ -74,32 +76,39 @@ const Siderbar: React.FC<SiderbarType> = (props) => {
   };
 
   return (
-    <Layout.Sider
-      style={{
-        position: 'fixed',
-        zIndex: 3,
-        userSelect: 'none',
-      }}
-      className="siderbar-custom"
-      width={layoutConfig.siderbarWidth}
-      collapsedWidth={layoutConfig.siderbarCollpasedWidth}
-      theme="light"
-      trigger={null}
-      collapsible
-      collapsed={collapsed}
-    >
-      <img src={collapsed ? icon : logo} className="logo" alt="logo" />
-      <Menu
-        //aria-current="page"
-        style={{ width: '100%', position: 'relative' }}
-        className="menu-custom"
-        mode="inline"
-        onClick={onMenuclick}
-        selectedKeys={[activekey]}
-        // @ts-ignore
-        items={Menurender(baseRoute)}
-      />
-    </Layout.Sider>
+    <>
+      <Layout.Sider
+        breakpoint={'lg'}
+        style={{
+          position: 'fixed',
+          zIndex: 3,
+          userSelect: 'none',
+        }}
+        className="siderbar-custom"
+        width={layoutConfig.siderbarWidth}
+        collapsedWidth={layoutConfig.siderbarCollpasedWidth}
+        theme="light"
+        trigger={null}
+        collapsible
+        collapsed={collapsed}
+        onBreakpoint={(broken) => {
+          props.setCollapsed(broken);
+          setObp(broken);
+        }}
+      >
+        <img src={collapsed ? icon : logo} className="logo" alt="logo" />
+        <Menu
+          //aria-current="page"
+          style={{ width: '100%', position: 'relative' }}
+          className="menu-custom"
+          mode="inline"
+          onClick={onMenuclick}
+          selectedKeys={[activekey]}
+          // @ts-ignore
+          items={Menurender(baseRoute)}
+        />
+      </Layout.Sider>
+    </>
   );
 };
 

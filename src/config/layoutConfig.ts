@@ -1,10 +1,9 @@
-
 const config = {
-    siderbarWidth : 245,
-    siderbarCollpasedWidth : 60,
-    headerHeight : 50,
-    menuitemType : 'divider',
-    dashboardRoute : '/'
-}
+  siderbarWidth: 245,
+  siderbarCollpasedWidth: 50,
+  headerHeight: 50,
+  menuitemType: 'divider',
+  dashboardRoute: '/',
+};
 
-export default config
+export default config;

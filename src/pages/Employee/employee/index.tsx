@@ -364,6 +364,7 @@ const Employee: React.FC = () => {
             columns={columns}
             dataSource={userData?.users as any}
             rowKey={'id'}
+            scroll={{ x: 1500 }}
             pagination={{
               onChange: (page) => {
                 setPageCurrent(page);

@@ -27,7 +27,11 @@ import Swal from 'sweetalert2';
 import moment from 'moment';
 
 import { useQuery, useMutation, from } from '@apollo/client';
-import { FETCH_SELECT_BOOK_BANK, FETCH_AllSALARY_BASE, CREATE_ExpenseCom } from '../../../service/graphql/Summary';
+import {
+  FETCH_SELECT_BOOK_BANK,
+  FETCH_AllSALARY_BASE,
+  CREATE_ExpenseCom,
+} from '../../../service/graphql/Summary';
 
 const { useToken } = theme;
 
@@ -44,11 +48,11 @@ const Compensationbase: React.FC = () => {
   const { data: BookBank } = useQuery(FETCH_SELECT_BOOK_BANK);
   const { data: TableData, refetch } = useQuery(FETCH_AllSALARY_BASE);
 
-  console.log("table", TableData)
+  console.log('table', TableData);
 
   useEffect(() => {
-    const salary: any = TableData
-    refetch(salary)
+    const salary: any = TableData;
+    refetch(salary);
   }, []);
 
   const onChange = (checkedValues: CheckboxValueType[]) => {
@@ -79,12 +83,12 @@ const Compensationbase: React.FC = () => {
       setSelectedRow(record);
       navigate(`remuneration?id=${record.profile.userId}`, {
         state: {
-          ...record, userId: record?.profile?.userId,
-
+          ...record,
+          userId: record?.profile?.userId,
         },
       });
 
-      console.log("State", record)
+      console.log('State', record);
     }
   };
 
@@ -149,9 +153,7 @@ const Compensationbase: React.FC = () => {
     <>
       <div className="flex text-3xl ml-2 pt-4">
         <GiReceiveMoney />
-        <div className="ml-2 text-xl">
-          ข้อมูลฐานเงินเดือน
-        </div>
+        <div className="ml-2 text-xl">ข้อมูลฐานเงินเดือน</div>
       </div>
 
       <Divider />
@@ -213,10 +215,14 @@ const Compensationbase: React.FC = () => {
       </Card>
 
       <Card className="shadow-xl mt-4">
-        <Table rowKey={'id'} columns={columns} dataSource={TableData?.data_salary as any}></Table>
+        <Table
+          scroll={{ x: 1500 }}
+          rowKey={'id'}
+          columns={columns}
+          dataSource={TableData?.data_salary as any}
+        ></Table>
       </Card>
       {/* position_data?.getposition_user as any */}
-
     </>
   );
 };

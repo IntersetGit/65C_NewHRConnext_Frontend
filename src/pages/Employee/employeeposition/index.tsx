@@ -410,6 +410,7 @@ const PositionEmployee: React.FC = (props) => {
         <Table
           className="py-4"
           columns={columns}
+          scroll={{ x: 500 }}
           rowKey={'id'}
           dataSource={position_data?.getposition_user as any}
         ></Table>

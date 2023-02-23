@@ -351,6 +351,7 @@ const Approveleave: React.FC = () => {
         <Table
           columns={columns}
           rowKey={'id'}
+          scroll={{ x: 1500 }}
           dataSource={data_approve?.getleava_alldata as any}
         ></Table>
       </Card>

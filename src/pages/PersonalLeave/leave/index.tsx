@@ -252,6 +252,7 @@ const Leave: React.FC = () => {
 
         <Table
           columns={columns}
+          scroll={{ x: 1500 }}
           rowKey={'id'}
           dataSource={leave_data?.getAllleave?.data_all as any}
         ></Table>
