@@ -22,7 +22,10 @@ import facebook from '../../../assets/Facebook-logo.png';
 import initial from '../../../assets/initials-logo.png';
 import instagram from '../../../assets/Instagram-logo.png';
 import line from '../../../assets/Line-logo.png';
-import { CREATE_COMPANY_ACCOUNT } from '../../../service/graphql/Company';
+import {
+  CREATE_COMPANY_ACCOUNT,
+  COMPANY_BUSSINESS_TYPE,
+} from '../../../service/graphql/Company';
 import { CreateCompanyBranch } from '../../../__generated__/graphql';
 import { GET_PROVINCE } from '../../../service/graphql/Province';
 import { useAuth } from '../../../hooks/useAuth';
@@ -44,12 +47,16 @@ const Newcompany: React.FC<NewcompanyPropsType> = ({ role }) => {
   const [form] = Form.useForm<CreateCompanyBranch>();
   const getLatLng = Form.useWatch('latlng', form);
   const { data: province_data, refetch } = useQuery(GET_PROVINCE);
+  const { data: bussinesstype } = useQuery(COMPANY_BUSSINESS_TYPE);
   const [createCompanyAccount] = useMutation(CREATE_COMPANY_ACCOUNT);
   const [visible, setVisible] = useState(false);
   const [district, setDistrict] = useState<
     { value?: string | null; label?: string | null }[] | undefined
   >(undefined);
   const [amphoe, setAmphoe] = useState<
+    { value?: string | null; label?: string | null }[] | undefined
+  >(undefined);
+  const [bussinesstype2, setBussinessType2] = useState<
     { value?: string | null; label?: string | null }[] | undefined
   >(undefined);
 
@@ -67,6 +74,26 @@ const Newcompany: React.FC<NewcompanyPropsType> = ({ role }) => {
     onDistrictChangeCitizen(Editdata?.state);
     onAmphoeChangeCitizen(Editdata?.city);
     form.setFieldsValue({ ...Editdata, latlng: [Editdata.lat, Editdata.lng] });
+  };
+
+  const bussiness = bussinesstype?.getBusinessType?.map((e) => {
+    return {
+      label: e?.name,
+      value: e?.id,
+    };
+  });
+
+  const onChangeBussinessType = (value) => {
+    form.setFieldValue('sub_company_type', null);
+    const bussinesstype2 = bussinesstype?.getBusinessType
+      ?.find((e) => e?.id === value)
+      ?.SubBusinessType?.map((e) => {
+        return {
+          label: e?.name,
+          value: e?.id,
+        };
+      });
+    setBussinessType2(bussinesstype2 ? bussinesstype2 : []);
   };
 
   const province = province_data?.getProvince?.map((e) => {
@@ -125,9 +152,9 @@ const Newcompany: React.FC<NewcompanyPropsType> = ({ role }) => {
     let objvalue = {
       ...value,
       id: Editdata?.id ? Editdata?.id : undefined,
-      lat: value?.latlng ? (value?.latlng[0]).toString() : '',
-      lng: value?.latlng ? (value?.latlng[1]).toString() : '',
-      registeredamount: value.registeredamount.toString(),
+      lat: value?.latlng ? value?.latlng[0]?.toString() : '',
+      lng: value?.latlng ? value?.latlng[1]?.toString() : '',
+      registeredamount: value?.registeredamount?.toString(),
     };
     delete objvalue?.latlng;
     Swal.fire({
@@ -561,29 +588,15 @@ const Newcompany: React.FC<NewcompanyPropsType> = ({ role }) => {
                 {Editdata?.mode == 'view' ? (
                   <Select
                     disabled
-                    options={[
-                      {
-                        value: '1',
-                        label: 'สำนักงานใหญ่',
-                      },
-                      {
-                        value: '2',
-                        label: 'สาขา',
-                      },
-                    ]}
+                    options={bussiness}
+                    onChange={onChangeBussinessType}
+                    allowClear
                   />
                 ) : (
                   <Select
-                    options={[
-                      {
-                        value: '1',
-                        label: 'สำนักงานใหญ่',
-                      },
-                      {
-                        value: '2',
-                        label: 'สาขา',
-                      },
-                    ]}
+                    options={bussiness}
+                    onChange={onChangeBussinessType}
+                    allowClear
                   />
                 )}
               </Form.Item>
@@ -596,29 +609,13 @@ const Newcompany: React.FC<NewcompanyPropsType> = ({ role }) => {
                 {Editdata?.mode == 'view' ? (
                   <Select
                     disabled
-                    options={[
-                      {
-                        value: '1',
-                        label: 'สำนักงานใหญ่',
-                      },
-                      {
-                        value: '2',
-                        label: 'สาขา',
-                      },
-                    ]}
+                    options={bussinesstype2 ? bussinesstype2 : []}
+                    allowClear
                   />
                 ) : (
                   <Select
-                    options={[
-                      {
-                        value: '1',
-                        label: 'สำนักงานใหญ่',
-                      },
-                      {
-                        value: '2',
-                        label: 'สาขา',
-                      },
-                    ]}
+                    options={bussinesstype2 ? bussinesstype2 : []}
+                    allowClear
                   />
                 )}
               </Form.Item>

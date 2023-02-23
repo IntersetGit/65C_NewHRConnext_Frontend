@@ -53,10 +53,6 @@ mutation DeleteRoleCompany($deleteRoleCompanyId: ID!) {
   }
 }`);
 
-const onChange = (checked: boolean) => {
-  console.log(`switch to ${checked}`);
-};
-
 const Manageuser: React.FC = () => {
   const [open, setOpen] = useState(false);
   const token = useToken();
@@ -74,7 +70,12 @@ const Manageuser: React.FC = () => {
   };
 
   const onClose = () => {
+    form.resetFields();
     setOpen(false);
+  };
+
+  const onChange = (checked: boolean) => {
+    console.log(`Switch to ${checked}`);
   };
 
   const genarateMenu = (record: any) => {
@@ -135,10 +136,16 @@ const Manageuser: React.FC = () => {
     if (key === 'edit') {
       showDrawer(2);
       setselectedrow(record);
-      form.setFieldsValue(record);
+      form.setFieldsValue({
+        ...record,
+        status: record?.status == true ? 1 : 0,
+      });
     } else if (key === 'view') {
       showDrawer(3);
-      form.setFieldsValue(record);
+      form.setFieldsValue({
+        ...record,
+        status: record?.status == true ? 1 : 0,
+      });
     } else if (key === 'delete') {
       Swal.fire({
         title: `ยืนยันการลบข้อมูล Role`,
@@ -187,13 +194,14 @@ const Manageuser: React.FC = () => {
           if (result.isConfirmed) {
             createRole({
               variables: {
-                data: { ...value, status: true ? 1 : 0 },
+                data: { ...value, status: value.status == true ? 1 : 0 },
               },
             })
               .then((val) => {
                 console.log(val);
                 if (val.data?.createRoleCompany?.status) {
                   Swal.fire(`เพิ่มข้อมูล Role สำเร็จ!`, '', 'success');
+                  form.resetFields();
                   setOpen(false);
                   refetch();
                 }
@@ -217,13 +225,18 @@ const Manageuser: React.FC = () => {
           if (result.isConfirmed) {
             createRole({
               variables: {
-                data: { ...value, id: selectedrow?.id, status: true ? 1 : 0 },
+                data: {
+                  ...value,
+                  id: selectedrow?.id,
+                  status: value.status == true ? 1 : 0,
+                },
               },
             })
               .then((val) => {
                 console.log(val);
                 if (val.data?.createRoleCompany?.status) {
                   Swal.fire(`แก้ไขข้อมูล Role สำเร็จ!`, '', 'success');
+                  form.resetFields();
                   setOpen(false);
                   refetch();
                 }
@@ -312,19 +325,23 @@ const Manageuser: React.FC = () => {
                   )}
                 </Col>
                 <Col xl={24} lg={24} md={24} sm={24} xs={24}>
-                  <Form.Item name={'status'} label={'สถานะ'}>
+                  <Form.Item
+                    name={'status'}
+                    label={'สถานะ'}
+                    valuePropName="checked"
+                  >
                     {drawerType == 3 ? (
                       <Switch
                         className="bg-gray-600"
-                        defaultChecked
                         onChange={onChange}
+                        defaultChecked
                         disabled
                       />
                     ) : (
                       <Switch
                         className="bg-gray-600"
-                        defaultChecked
                         onChange={onChange}
+                        defaultChecked
                       />
                     )}
                   </Form.Item>
@@ -352,9 +369,7 @@ const Manageuser: React.FC = () => {
                       style={{
                         marginBottom: '10px',
                       }}
-                      onClick={() => {
-                        setOpen(false);
-                      }}
+                      onClick={onClose}
                     >
                       ยกเลิก
                     </Button>
@@ -364,7 +379,11 @@ const Manageuser: React.FC = () => {
             </Form>
           </Drawer>
         </Col>
-        <Table columns={columns} dataSource={userData?.getcompanyRole as any} />
+        <Table
+          rowKey={'id'}
+          columns={columns}
+          dataSource={userData?.getcompanyRole as any}
+        />
       </Card>
     </>
   );

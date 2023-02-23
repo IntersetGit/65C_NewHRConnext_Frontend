@@ -65,6 +65,10 @@ const ProfileApprove: React.FC<ProfileApprovePropsType> = ({ role }) => {
     };
   });
 
+  const onChangeCountDate = (date, dateString) => {
+    console.log(dateString);
+  };
+
   const showDrawer = (type: any) => {
     setDrawertype(type);
     setOpen(true);
@@ -472,11 +476,18 @@ const ProfileApprove: React.FC<ProfileApprovePropsType> = ({ role }) => {
                 {drawertype == 3 ? (
                   <DatePicker
                     style={{ width: '100%' }}
-                    format={'DD-MM-YYYY'}
+                    showTime={{ format: 'HH:mm' }}
+                    format="DD-MM-YYYY HH:mm"
+                    onChange={onChangeCountDate}
                     disabled
                   />
                 ) : (
-                  <DatePicker style={{ width: '100%' }} format={'DD-MM-YYYY'} />
+                  <DatePicker
+                    style={{ width: '100%' }}
+                    showTime={{ format: 'HH:mm' }}
+                    format="DD-MM-YYYY HH:mm"
+                    onChange={onChangeCountDate}
+                  />
                 )}
               </Form.Item>
             </Col>
@@ -486,11 +497,16 @@ const ProfileApprove: React.FC<ProfileApprovePropsType> = ({ role }) => {
                 {drawertype == 3 ? (
                   <DatePicker
                     style={{ width: '100%' }}
-                    format={'DD-MM-YYYY'}
+                    showTime={{ format: 'HH:mm' }}
+                    format="DD-MM-YYYY HH:mm"
                     disabled
                   />
                 ) : (
-                  <DatePicker style={{ width: '100%' }} format={'DD-MM-YYYY'} />
+                  <DatePicker
+                    style={{ width: '100%' }}
+                    showTime={{ format: 'HH:mm' }}
+                    format="DD-MM-YYYY HH:mm"
+                  />
                 )}
               </Form.Item>
             </Col>

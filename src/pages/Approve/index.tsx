@@ -222,10 +222,27 @@ const Approveleave: React.FC = () => {
       align: 'center',
     },
     {
-      title: 'สถานะการลา',
+      title: 'จำนวนชั่วโมง',
       key: 'quantity_hours',
       dataIndex: 'quantity_hours',
       align: 'center',
+    },
+    {
+      title: 'สถานะการลา',
+      key: 'Status',
+      dataIndex: 'Status',
+      align: 'center',
+      render: (record) => {
+        return (
+          <div>
+            {record === 1
+              ? 'รออนุมัติ'
+              : record === 2
+              ? 'อนุมัติ'
+              : 'ไม่อนุมัติ'}
+          </div>
+        );
+      },
     },
     {
       title: 'Action',
@@ -305,7 +322,7 @@ const Approveleave: React.FC = () => {
                 <Input />
               </Form.Item>
             </Col>
-            <Col xs={24} sm={24} md={12} lg={12} xl={6}>
+            {/* <Col xs={24} sm={24} md={12} lg={12} xl={6}>
               <Form.Item name={'position2Id'} colon={false} label={'แผนก'}>
                 <Select
                   onChange={onChangePosition}
@@ -321,8 +338,8 @@ const Approveleave: React.FC = () => {
                   allowClear
                 />
               </Form.Item>
-            </Col>
-            <Col xs={24} sm={24} md={12} lg={12} xl={6}>
+            </Col> */}
+            <Col xs={24} sm={24} md={12} lg={12} xl={18}>
               <div className="ml-2 items-center flex justify-end">
                 <Space>
                   <Button
