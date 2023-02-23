@@ -76,6 +76,10 @@ const Remuneration: React.FC = () => {
   const [deleteBookBank] = useMutation(DELETE_BOOKBANK);
 
   useEffect(() => {
+    refetch();
+    refetch2();
+  });
+  useEffect(() => {
     const salary: any = book_bank_data
       ? Filter_BookBank?.filter_bookbank_admin?.[0]?.base_salary?.toFixed(2)
       : '0.00';
@@ -92,9 +96,7 @@ const Remuneration: React.FC = () => {
       mas_bankId: bankname,
     });
   }, [book_bank_data]);
-  useEffect(() => {
-    refetch2();
-  });
+
 
   const selectBookBank = BookBank?.mas_bank?.map((e: any) => {
     return {
