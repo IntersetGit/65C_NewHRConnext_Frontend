@@ -208,9 +208,9 @@ const ProfileApprove: React.FC<ProfileApprovePropsType> = ({ role }) => {
         return (
           <div>
             {record.Status === 1
-              ? 'อนุมัติ'
-              : record.Status === 2
               ? 'รออนุมัติ'
+              : record.Status === 2
+              ? 'อนุมัติ'
               : 'ไม่อนุมัติ'}
           </div>
         );

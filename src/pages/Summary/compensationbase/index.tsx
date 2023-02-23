@@ -39,14 +39,16 @@ const Compensationbase: React.FC = () => {
   const token = useToken();
   const [open, setOpen] = useState(false);
   const [form] = Form.useForm<any>();
-  // const [formSearch] = Form.useForm<any>();
+  const [formSearch] = Form.useForm();
   const navigate = useNavigate();
   const location = useLocation();
   let propsstate = location.state as any;
   const [selectedRow, setSelectedRow] = useState<any>();
-
-  const { data: BookBank } = useQuery(FETCH_SELECT_BOOK_BANK);
-  const { data: TableData, refetch } = useQuery(FETCH_AllSALARY_BASE);
+  const { data: TableData, loading, refetch } = useQuery(FETCH_AllSALARY_BASE);
+  const { data: position } = useQuery(POSITION);
+  const [maspositionlevel3, setMasPositionlevel3] = useState<
+    { value?: string | null; label?: string | null }[] | undefined
+  >(undefined);
 
   console.log('table', TableData);
 
@@ -55,16 +57,27 @@ const Compensationbase: React.FC = () => {
     refetch(salary);
   }, []);
 
-  const onChange = (checkedValues: CheckboxValueType[]) => {
-    console.log('checked = ', checkedValues);
+  const onChange = (value) => {
+    formSearch.setFieldValue('mas_positionlevel3', null);
+    const maspositionlevel3 = position?.getMasPositon?.[0]?.mas_positionlevel2
+      ?.find((e) => e?.id === value)
+      ?.mas_positionlevel3?.map((e) => {
+        return {
+          label: e?.name,
+          value: e?.id,
+        };
+      });
+
+    setMasPositionlevel3(maspositionlevel3 ? maspositionlevel3 : []);
   };
 
-  const selectBookBank = BookBank?.mas_bank?.map((e: any) => {
-    return {
-      label: e?.name,
-      value: e?.id,
-    };
-  });
+  const mas_positionlevel2 =
+    position?.getMasPositon?.[0]?.mas_positionlevel2?.map((e) => {
+      return {
+        label: e?.name,
+        value: e?.id,
+      };
+    });
 
   const genarateMenu = (record: any) => {
     return [
@@ -90,6 +103,16 @@ const Compensationbase: React.FC = () => {
 
       console.log('State', record);
     }
+  };
+
+  const Filter_baseSalary = () => {
+    let Date_Time: any = [];
+    let Date_New = new Date();
+    let Thismonth = dayjs(Date_New).format('MM');
+    let Thisyear = dayjs(Date_New).format('YYYY');
+
+    // TableData?.data_salary?.bookbank_log?.push(Date_Time)
+    // console.log("Date_F", Date_Time)
   };
 
   const columns: ColumnsType<any> = [
@@ -127,9 +150,16 @@ const Compensationbase: React.FC = () => {
     {
       title: 'ฐานเงินเดือน',
       key: 'bookbank_log',
+      dataIndex: 'bookbank_log',
       align: 'center',
       render: (record) => {
-        return record?.bookbank_log[0]?.base_salary?.toFixed(2);
+        return record?.[0]?.base_salary?.toFixed(2);
+        // return JSON.stringify(data[0]?.base_salary);
+        // if (parseInt(เดือนปัจจุบัน) < parseInt(เดือนที่มีผลบังคับใช้) && ปีปัจจุบัน === ปีที่มีผลบังคับใช้) {
+        //   return record?.[0]?.base_salary?.toFixed(2);
+        // }
+        // let data = record?.find((i) => i.accept_month <= dayjs().format('MM'));
+        // return data ? data.base_salary : '-'
       },
     },
     {
@@ -158,37 +188,55 @@ const Compensationbase: React.FC = () => {
 
       <Divider />
       <Card className="shadow-xl">
-        <Form size="middle">
+        <Form form={formSearch} size="middle">
           <Row gutter={16}>
             <Col xs={24} sm={12} md={12} lg={6} xl={6}>
-              <Form.Item name="fristname" colon={false} label={'ชื่อ'}>
+              <Form.Item name="fristname" colon={false} label={'ชื่อพนักงาน'}>
                 <Input allowClear></Input>
               </Form.Item>
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={6} xl={6}>
-              <Form.Item name="search" colon={false} label={'แผนก'}>
-                <Select allowClear></Select>
+              <Form.Item name="position2" colon={false} label={'แผนก'}>
+                <Select
+                  options={mas_positionlevel2}
+                  onChange={onChange}
+                  allowClear
+                ></Select>
               </Form.Item>
             </Col>
 
             <Col xs={24} sm={24} md={24} lg={6} xl={6}>
-              <Form.Item name="search" colon={false} label={'ตำแหน่ง'}>
-                <Select allowClear></Select>
+              <Form.Item name="position3" colon={false} label={'ตำแหน่ง'}>
+                <Select
+                  options={maspositionlevel3 ? maspositionlevel3 : []}
+                  allowClear
+                ></Select>
               </Form.Item>
             </Col>
 
             <Col xs={24} sm={24} md={24} lg={6} xl={6}>
               <Space style={{ float: 'right' }}>
                 <Form.Item>
-                  <Button>Reset</Button>
+                  <Button
+                    onClick={() => {
+                      formSearch.resetFields();
+                      refetch(formSearch.getFieldsValue());
+                    }}
+                  >
+                    Reset
+                  </Button>
                 </Form.Item>
 
                 <Form.Item>
                   <Button
                     type="primary"
                     style={{ backgroundColor: token.token.colorPrimary }}
+                    loading={loading}
                     htmlType="submit"
+                    onClick={() => {
+                      refetch(formSearch.getFieldsValue());
+                    }}
                   >
                     Search
                   </Button>
@@ -196,21 +244,6 @@ const Compensationbase: React.FC = () => {
               </Space>
             </Col>
           </Row>
-
-          {/* <Row gutter={16}>
-            <Col xs={24} sm={24} md={24} lg={6} xl={6}>
-              <Form.Item name="search" colon={false} label={'สถานะ'}>
-                <Select allowClear></Select>
-              </Form.Item>
-            </Col>
-
-            <Col xs={24} sm={24} md={24} lg={6} xl={6}>
-              <Form.Item name="search" colon={false} label={'เดือน'}>
-                <Select allowClear></Select>
-              </Form.Item>
-            </Col>
-
-          </Row> */}
         </Form>
       </Card>
 

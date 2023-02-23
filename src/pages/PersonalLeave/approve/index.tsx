@@ -205,9 +205,9 @@ const Approve: React.FC = () => {
         return (
           <div>
             {record === 1
-              ? 'อนุมัติ'
-              : record === 2
               ? 'รออนุมัติ'
+              : record === 2
+              ? 'อนุมัติ'
               : 'ไม่อนุมัติ'}
           </div>
         );
@@ -502,8 +502,8 @@ const Approve: React.FC = () => {
                 {drawertype == 2 ? (
                   <Select
                     options={[
-                      { value: 1, label: 'อนุมัติ' },
-                      { value: 2, label: 'รออนุมัติ' },
+                      { value: 1, label: 'รออนุมัติ' },
+                      { value: 2, label: 'อนุมัติ' },
                       { value: 3, label: 'ไม่อนุมัติ' },
                     ]}
                     disabled
@@ -511,8 +511,8 @@ const Approve: React.FC = () => {
                 ) : (
                   <Select
                     options={[
-                      { value: 1, label: 'อนุมัติ' },
-                      { value: 2, label: 'รออนุมัติ' },
+                      { value: 1, label: 'รออนุมัติ' },
+                      { value: 2, label: 'อนุมัติ' },
                       { value: 3, label: 'ไม่อนุมัติ' },
                     ]}
                   />

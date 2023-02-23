@@ -403,6 +403,7 @@ const UserEmployee: React.FC = (props) => {
             data: {
               ...value,
               id: propsstate?.userId ? propsstate?.userId : undefined,
+              age: value.age.toString(),
             },
           },
         })

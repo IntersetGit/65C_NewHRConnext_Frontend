@@ -23,6 +23,7 @@ query Data_salary($fristname: String, $position2: String, $position3: String) {
       start_date_work
       userId
       employee_status
+      avatar
     }
     bookbank_log {
       base_salary
@@ -38,6 +39,9 @@ query Data_salary($fristname: String, $position2: String, $position3: String) {
       provident_com
       provident_emp
       userId
+      accept_date
+      accept_years
+      accept_month
     }
     Position_user {
       position2_id
@@ -190,6 +194,7 @@ query Bookbank_log_admin($userId: String) {
       name
     }
     userId
+    accept_date
   }
 }
 `)
@@ -210,3 +215,20 @@ query Expense_company($date: String) {
   }
 }
 `)
+
+export const FETCH_Filter_BOOKBANK_ADMIN = gql(`
+query Filter_bookbank_admin($userId: String) {
+  filter_bookbank_admin(userId: $userId) {
+    id
+    bank_number
+    base_salary
+    mas_bank {
+      name
+    }
+    userId
+    provident_com
+    provident_emp
+  }
+}
+`)
+

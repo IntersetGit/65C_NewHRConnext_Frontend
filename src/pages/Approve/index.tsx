@@ -301,16 +301,12 @@ const Approveleave: React.FC = () => {
         <Form form={formSearch}>
           <Row gutter={16}>
             <Col xs={24} sm={24} md={12} lg={12} xl={6}>
-              <Form.Item colon={false} label={<b>ชื่อ</b>}>
+              <Form.Item name={'name'} colon={false} label={'ชื่อ'}>
                 <Input />
               </Form.Item>
             </Col>
             <Col xs={24} sm={24} md={12} lg={12} xl={6}>
-              <Form.Item
-                name={'mas_positionlevel2'}
-                colon={false}
-                label={<b>แผนก</b>}
-              >
+              <Form.Item name={'position2Id'} colon={false} label={'แผนก'}>
                 <Select
                   onChange={onChangePosition}
                   options={mas_positionlevel2}
@@ -319,11 +315,7 @@ const Approveleave: React.FC = () => {
               </Form.Item>
             </Col>
             <Col xs={24} sm={24} md={12} lg={12} xl={6}>
-              <Form.Item
-                name={'mas_positionlevel3'}
-                colon={false}
-                label={<b>ตำแหน่ง</b>}
-              >
+              <Form.Item name={'position3Id'} colon={false} label={'ตำแหน่ง'}>
                 <Select
                   options={maspositionlevel3 ? maspositionlevel3 : []}
                   allowClear
@@ -336,10 +328,20 @@ const Approveleave: React.FC = () => {
                   <Button
                     type="primary"
                     style={{ backgroundColor: token.token.colorPrimary }}
+                    onClick={() => {
+                      refetch(formSearch.getFieldsValue());
+                    }}
                   >
                     Search
                   </Button>
-                  <Button>Reset</Button>
+                  <Button
+                    onClick={() => {
+                      formSearch.resetFields();
+                      refetch(formSearch.getFieldsValue());
+                    }}
+                  >
+                    Reset
+                  </Button>
                 </Space>
               </div>
             </Col>
@@ -483,13 +485,13 @@ const Approveleave: React.FC = () => {
               <Form.Item name={'Status'}>
                 {drawertype == 2 ? (
                   <Radio.Group onChange={onChange} value={value} disabled>
-                    <Radio value={1}>อนุมัติ</Radio>
-                    <Radio value={2}>ไม่อนุมัติ</Radio>
+                    <Radio value={2}>อนุมัติ</Radio>
+                    <Radio value={3}>ไม่อนุมัติ</Radio>
                   </Radio.Group>
                 ) : (
                   <Radio.Group onChange={onChange} value={value}>
-                    <Radio value={1}>อนุมัติ</Radio>
-                    <Radio value={2}>ไม่อนุมัติ</Radio>
+                    <Radio value={2}>อนุมัติ</Radio>
+                    <Radio value={3}>ไม่อนุมัติ</Radio>
                   </Radio.Group>
                 )}
               </Form.Item>
