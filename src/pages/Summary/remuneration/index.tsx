@@ -226,11 +226,7 @@ const Remuneration: React.FC = () => {
               form.resetFields();
             }
             )
-            .catch((err) => {
-              Swal.fire(`แก้ไขข้อมูลฐานเงินเดือนไม่สำเร็จ!`, '', 'error');
-              console.error(err);
-              form.resetFields();
-            });
+
         }
 
       })

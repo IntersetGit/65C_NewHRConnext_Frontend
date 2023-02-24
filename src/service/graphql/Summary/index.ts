@@ -232,3 +232,25 @@ query Filter_bookbank_admin($userId: String) {
 }
 `)
 
+export const FETCH_Show_PervspUser = gql(`
+query Show_pervspUser($userId: String, $date: String) {
+  show_pervspUser(userId: $userId, date: $date) {
+    id
+    email
+    bookbank_log {
+      base_salary
+      bank_number
+      provident_emp
+      provident_com
+    }
+    companyBranch {
+      expense_company {
+        ss_per
+        vat_per
+      }
+      id
+    }
+  }
+}
+`)
+

@@ -125,56 +125,96 @@ const Compensation: React.FC = () => {
       form.setFieldsValue({
         date: dayjs(record?.date),
         cal_date_salary: dayjs(record?.cal_date_salary),
-        bankId: record?.mas_bank?.name,
+        bankId: record?.mas_bank?.id,
         vat_per: record?.vat_per,
         ss_per: record?.ss_per,
         check_vat: record?.check_vat,
       });
       showDrawer(2);
 
-      console.log('State', record);
+      console.log('EDittttt', record);
     }
   };
 
   const onSubmitForm = (value: any) => {
     console.log('onSubmit', value);
-    Swal.fire({
-      title: `ยืนยันการตั้งค่าการคำนวณเงินเดือน`,
-      icon: 'warning',
-      showDenyButton: true,
-      showCancelButton: false,
-      confirmButtonColor: token.token.colorPrimary,
-      denyButtonColor: '#ea4e4e',
-      confirmButtonText: 'ตกลง',
-      denyButtonText: `ยกเลิก`,
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        creteExpenseCom({
-          variables: {
-            data: {
-              ...value,
-              date: value.date,
-              vat_per: parseFloat(value.vat_per),
-              ss_per: parseFloat(value.ss_per),
-              companyBranchId: company?.branchId as any,
+    drawerType === 1
+      ? Swal.fire({
+        title: `ยืนยันการตั้งค่าการคำนวณเงินเดือน`,
+        icon: 'warning',
+        showDenyButton: true,
+        showCancelButton: false,
+        confirmButtonColor: token.token.colorPrimary,
+        denyButtonColor: '#ea4e4e',
+        confirmButtonText: 'ตกลง',
+        denyButtonText: `ยกเลิก`,
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          creteExpenseCom({
+            variables: {
+              data: {
+                ...value,
+                date: value.date,
+                vat_per: parseFloat(value.vat_per),
+                ss_per: parseFloat(value.ss_per),
+                companyBranchId: company?.branchId as any,
+              },
             },
-          },
-        })
-          .then((val) => {
-            console.log(val);
-            if (val.data?.CreateAndUpdateExpenseCom?.status) {
-              Swal.fire(`ตั้งค่าการคำนวณเงินเดือนสำเร็จ!`, '', 'success');
-              refetch2();
-              form.resetFields();
-            }
           })
-          .catch((err) => {
-            Swal.fire(`ตั้งค่าการคำนวณเงินเดือนไม่สำเร็จ!`, '', 'error');
-            console.error(err);
-          });
-      }
-    });
-
+            .then((val) => {
+              console.log(val);
+              if (val.data?.CreateAndUpdateExpenseCom?.status) {
+                Swal.fire(`ตั้งค่าการคำนวณเงินเดือนสำเร็จ!`, '', 'success');
+                refetch();
+                refetch2();
+                form.resetFields();
+              }
+            })
+            .catch((err) => {
+              Swal.fire(`ตั้งค่าการคำนวณเงินเดือนไม่สำเร็จ!`, '', 'error');
+              console.error(err);
+            })
+        }
+      })
+      : Swal.fire({
+        title: `ยืนยันการแก้ไขตั้งค่าการคำนวณเงินเดือน`,
+        icon: 'warning',
+        showDenyButton: true,
+        showCancelButton: false,
+        confirmButtonColor: token.token.colorPrimary,
+        denyButtonColor: '#ea4e4e',
+        confirmButtonText: 'ตกลง',
+        denyButtonText: `ยกเลิก`,
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          creteExpenseCom({
+            variables: {
+              data: {
+                ...value,
+                id: selectedRow?.id,
+                date: value.date,
+                vat_per: parseFloat(value.vat_per),
+                ss_per: parseFloat(value.ss_per),
+                companyBranchId: company?.branchId as any,
+              },
+            },
+          })
+            .then((val) => {
+              console.log(val);
+              if (val.data?.CreateAndUpdateExpenseCom?.status) {
+                Swal.fire(`แก้ไขตั้งค่าการคำนวณเงินเดือนสำเร็จ!`, '', 'success');
+                refetch();
+                refetch2();
+                form.resetFields();
+              }
+            })
+            .catch((err) => {
+              Swal.fire(`แก้ไขตั้งค่าการคำนวณเงินเดือนไม่สำเร็จ!`, '', 'error');
+              console.error(err);
+              form.resetFields();
+            })
+        }
+      })
     setOpen(false);
   };
 
@@ -277,20 +317,19 @@ const Compensation: React.FC = () => {
       </Card>
 
       <Drawer
-        title={`${
-          drawerType === 1
-            ? 'ตั้งค่าการคำนวณเงินเดือน'
-            : drawerType === 2
+        title={`${drawerType === 1
+          ? 'ตั้งค่าการคำนวณเงินเดือน'
+          : drawerType === 2
             ? 'แก้ไขตั้งค่าการคำนวณเงินเดือน'
             : 'ข้อมูลตั้งค่าคำนวณเงินเดือน'
-        }`}
+          }`}
         onClose={onClose}
         width={550}
         open={open}
         size="large"
-        // afterOpenChange={() => {
-        //   setDataEC();
-        // }}
+      // afterOpenChange={() => {
+      //   setDataEC();
+      // }}
       >
         <Form
           layout="horizontal"
@@ -318,7 +357,7 @@ const Compensation: React.FC = () => {
               >
                 <DatePicker
                   picker="date"
-                  format={'DD/MM'}
+                  format={'DD/MM/YYYY'}
                   disabled={drawerType === 3 ? true : false}
                 />
               </Form.Item>

@@ -40,6 +40,7 @@ import {
     FETCH_ExpenseCompany,
     FETCH_GETALLBOOKBANK_LOG,
     FETCH_Filter_BOOKBANK_ADMIN,
+    FETCH_Show_PervspUser,
 } from '../../../service/graphql/Summary';
 
 import {
@@ -84,50 +85,64 @@ const Compensation: React.FC = () => {
             variables: { userId: propsstate?.userId },
         },
     );
+    const { data: Show_PervspUser, refetch: refetch5 } = useQuery(
+        FETCH_Show_PervspUser,
+        {
+            variables: { userId: propsstate?.userId },
+        },
+    );
+    console.log("RRRRRRR", Show_PervspUser)
+
 
     console.log('DataT', TableDataSalary);
+    useEffect(() => {
+        refetch();
+        refetch2();
+        refetch3();
+        refetch4();
+        refetch5();
+    }, [])
     useEffect(() => {
         form.setFieldValue('net', sumIncome - sumExpense)
     }, [sumIncome, sumExpense])
 
-    useEffect(() => {
-        const salary: any = book_bank_data
-            ? Filter_BookBank?.filter_bookbank_admin?.[0]?.base_salary?.toFixed(2)
-            : '0.00';
-        const banknumber: any = book_bank_data
-            ? Filter_BookBank?.filter_bookbank_admin?.[0]?.bank_number
-            : '';
-        const bankname: any = book_bank_data
-            ? Filter_BookBank?.filter_bookbank_admin?.[0]?.mas_bank?.name
-            : '';
+    // useEffect(() => {
+    //     const salary: any = book_bank_data
+    //         ? Filter_BookBank?.filter_bookbank_admin?.[0]?.base_salary?.toFixed(2)
+    //         : '0.00';
+    //     const banknumber: any = book_bank_data
+    //         ? Filter_BookBank?.filter_bookbank_admin?.[0]?.bank_number
+    //         : '';
+    //     const bankname: any = book_bank_data
+    //         ? Filter_BookBank?.filter_bookbank_admin?.[0]?.mas_bank?.name
+    //         : '';
 
-        formshow.setFieldsValue({
-            base_salary: salary,
-            bank_number: banknumber,
-            mas_bankId: bankname,
-        });
-        refetch3();
-        refetch4();
-    }, [book_bank_data]);
+    //     formshow.setFieldsValue({
+    //         base_salary: salary,
+    //         bank_number: banknumber,
+    //         mas_bankId: bankname,
+    //     });
 
-    const setPer: any = () => {
-        const valueall = form.getFieldsValue();
-        onChangeFormvalue({ base_salary: '' }, valueall);
-        const SS_CAl = () => {
-            let SSCal = (parseFloat(form.getFieldValue('base_salary'))) * (parseFloat(form.getFieldValue('ss_per')) / 100)
-            form.setFieldValue('social_security', (SSCal).toFixed(2))
-            let provident_EMPCal = (parseFloat(form.getFieldValue('base_salary'))) * (parseFloat(form.getFieldValue('provident_emp')) / 100)
-            form.setFieldValue('pvd_emp', (provident_EMPCal).toFixed(2))
-            let vatCal = (parseFloat(form.getFieldValue('base_salary'))) * (parseFloat(form.getFieldValue('vat_per')) / 100)
-            form.setFieldValue('vat', (vatCal).toFixed(2))
-            // let = ExpenseComData?.expense_company?.check_vat
-            // ExpenseComData?.expense_company?.check_vat?.
-            // .map(i=>map[i] ? parseFloat(map[i]) : 0).reduce((val, a) => val + a, 0);
-            let summinus1 = vatCal + SSCal + provident_EMPCal;
-            form.setFieldValue('total_expense', (summinus1))
-        }
-        SS_CAl();
-    }
+    // }, [Filter_BookBank]);
+
+    // const setPer: any = () => {
+    //     const valueall = form.getFieldsValue();
+    //     onChangeFormvalue({ base_salary: '' }, valueall);
+    //     const SS_CAl = () => {
+    //         let SSCal = (parseFloat(form.getFieldValue('base_salary'))) * (parseFloat(form.getFieldValue('ss_per')) / 100)
+    //         form.setFieldValue('social_security', (SSCal).toFixed(2))
+    //         let provident_EMPCal = (parseFloat(form.getFieldValue('base_salary'))) * (parseFloat(form.getFieldValue('provident_emp')) / 100)
+    //         form.setFieldValue('pvd_emp', (provident_EMPCal).toFixed(2))
+    //         let vatCal = (parseFloat(form.getFieldValue('base_salary'))) * (parseFloat(form.getFieldValue('vat_per')) / 100)
+    //         form.setFieldValue('vat', (vatCal).toFixed(2))
+    //         // let = ExpenseComData?.expense_company?.check_vat
+    //         // ExpenseComData?.expense_company?.check_vat?.
+    //         // .map(i=>map[i] ? parseFloat(map[i]) : 0).reduce((val, a) => val + a, 0);
+    //         let summinus1 = vatCal + SSCal + provident_EMPCal;
+    //         form.setFieldValue('total_expense', (summinus1))
+    //     }
+    //     SS_CAl();
+    // }
 
     const showDrawer = (type: any) => {
         setOpen(true);
@@ -138,10 +153,6 @@ const Compensation: React.FC = () => {
         form.resetFields();
         setOpen(false);
     };
-
-    // useEffect(() => {
-    //     form.setFieldsValue({ base_salary: propsstate?.bookbank_log[0]?.base_salary })
-    // }, [])
 
     const genarateMenu = (record: any) => {
         return [
@@ -267,6 +278,14 @@ const Compensation: React.FC = () => {
 
     const onChangeDate: DatePickerProps['onChange'] = (date, dateString) => {
         console.log(date, dateString);
+
+        if (propsstate?.userId === propsstate?.userId)
+            form.setFieldsValue({
+                base_salary: Show_PervspUser?.show_pervspUser?.[0]?.bookbank_log?.[0]?.base_salary,
+                vat_per: Show_PervspUser?.show_pervspUser?.[0]?.companyBranch?.[0]?.expense_company?.vat_per,
+                ss_per: Show_PervspUser?.show_pervspUser?.[0]?.companyBranch?.[0]?.expense_company?.ss_per,
+                provident_emp: Show_PervspUser?.show_pervspUser?.[0]?.bookbank_log?.[0]?.provident_emp,
+            });
     };
 
     const columns: ColumnsType<any> = [
@@ -336,12 +355,12 @@ const Compensation: React.FC = () => {
         },
     ];
 
-    const disabledDate: RangePickerProps['disabledDate'] = (current) => {
-        const getmount = TableDataSalary?.salary;
-        // console.log('getmount', getmount)
-        // console.log('current && current ', current)
-        return current && current < dayjs().endOf('day');
-    };
+    // const disabledDate: RangePickerProps['disabledDate'] = (current) => {
+    //     const getmount = TableDataSalary?.salary;
+    //     // console.log('getmount', getmount)
+    //     // console.log('current && current ', current)
+    //     return current && current < dayjs().endOf('day');
+    // };
 
     // const onChangeCalculate: any = salary: any, value: any) => {
     //     const num = value?.base_salary + value?.commission;
@@ -529,12 +548,12 @@ const Compensation: React.FC = () => {
                                         style={{ backgroundColor: token.token.colorPrimary }}
                                         onClick={() => {
                                             showDrawer(1);
-                                            form.setFieldsValue({
-                                                base_salary: propsstate?.bookbank_log[0]?.base_salary,
-                                                vat_per: ExpenseComData?.expense_company?.[0]?.vat_per,
-                                                ss_per: ExpenseComData?.expense_company?.[0]?.ss_per,
-                                                provident_emp: Filter_BookBank?.filter_bookbank_admin?.[0]?.provident_emp,
-                                            });
+                                            // form.setFieldsValue({
+                                            //     base_salary: Show_PervspUser?.[0]?.bookbank_log?.base_salary,
+                                            //     vat_per: Show_PervspUser?.[0]?.companyBranch?.expense_company?.vat_per,
+                                            //     ss_per: Show_PervspUser?.[0]?.companyBranch?.expense_company?.ss_per,
+                                            //     provident_emp: Show_PervspUser?.[0]?.bookbank_log?.provident_emp,
+                                            // });
                                         }}
                                     >
                                         คำนวณเงินเดือน
@@ -562,7 +581,7 @@ const Compensation: React.FC = () => {
                     }`}
                 onClose={onClose}
                 open={open}
-                afterOpenChange={setPer}
+                // afterOpenChange={setPer}
                 width={500}
             >
                 <div className="text-lg font-bold">
@@ -581,16 +600,17 @@ const Compensation: React.FC = () => {
                     onValuesChange={onChangeFormvalue}
                     form={form}
                     onFinish={onSubmitForm}
+
                 >
                     <Row>
                         <Col xs={24} sm={24} md={24} lg={24} xl={24}>
-                            <Form.Item name="date" label={'เดือน/ปี'} className="ml-[82px]">
+                            <Form.Item name="date" label={'เดือน/ปี'} className=" ml-[82px] mt-6">
                                 <DatePicker
                                     onChange={onChangeDate}
                                     picker="month"
                                     format={'MM/YYYY'}
                                     disabled={drawerType === 3 ? true : false}
-                                    disabledDate={disabledDate}
+                                // disabledDate={disabledDate}
                                 />
                             </Form.Item>
                         </Col>
