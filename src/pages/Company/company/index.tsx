@@ -69,6 +69,9 @@ const GET_COMPANY = gql(/* GraphQL */ `
         updatedAt
         regis_vat
         regiscomnumber
+        photo_link
+        vat_link
+        certificate_link
       }
       userlimit
       name
