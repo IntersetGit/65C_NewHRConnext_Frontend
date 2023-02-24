@@ -32,6 +32,7 @@ import { useAuth } from '../../../hooks/useAuth';
 import Maps from './component/Maps';
 import './index.css';
 import { PageRoleAndPermissionType } from '../../../context/AuthContext';
+import axios from 'axios'
 
 const { useToken } = theme;
 
@@ -76,6 +77,24 @@ const Newcompany: React.FC<NewcompanyPropsType> = ({ role }) => {
     onProvinceChange(Editdata?.country);
     onDistrictChangeCitizen(Editdata?.state);
     onAmphoeChangeCitizen(Editdata?.city);
+    Editdata?.photo_link && setUploadlogo([{
+      uid: '-1',
+      name: 'logo',
+      status: 'done',
+      url: `${import.meta.env.VITE_REST_URL_PATH}/${Editdata?.photo_link}`,
+    }] as any)
+    Editdata?.certificate_link && setuploadpdf1([{
+      uid: '-1',
+      name: 'cerfication',
+      status: 'done',
+      url: `${import.meta.env.VITE_REST_URL_PATH}/${Editdata?.certificate_link}`,
+    }] as any)
+    Editdata?.vat_link && setuploadpdf2([{
+      uid: '-1',
+      name: 'vatregistion',
+      status: 'done',
+      url: `${import.meta.env.VITE_REST_URL_PATH}/${Editdata?.vat_link}`,
+    }] as any)
     form.setFieldsValue({
       ...Editdata, latlng: Editdata?.lat ? ([Editdata.lat, Editdata.lng]).toString() : '',
     });
@@ -154,6 +173,7 @@ const Newcompany: React.FC<NewcompanyPropsType> = ({ role }) => {
   };
 
   const onSubmitForm = (value: any) => {
+    // console.log('uploadlogo :>> ', uploadlogo);
     console.log('value', value)
     let objvalue = {
       ...value,
@@ -174,6 +194,13 @@ const Newcompany: React.FC<NewcompanyPropsType> = ({ role }) => {
       denyButtonText: `ยกเลิก`,
     }).then(async (result) => {
       if (result.isConfirmed) {
+        const fileiconcompany = uploadlogo.length > 0 ? await UploadImageCompany(uploadlogo) : undefined;
+        const filecerficate = uploadpdf1.length > 0 ? await UploadPdf1Company(uploadpdf1) : undefined;
+        const filevatregistion = uploadpdf2.length > 0 ? await UploadPdf2Company(uploadpdf2) : undefined;
+        fileiconcompany && (objvalue.photo_link = fileiconcompany.path);
+        filecerficate && (objvalue.certificate_link = filecerficate.path);
+        filevatregistion && (objvalue.vat_link = filevatregistion.path);
+        console.log('objvalue', objvalue)
         createCompanyAccount({
           variables: {
             data: objvalue,
@@ -203,6 +230,66 @@ const Newcompany: React.FC<NewcompanyPropsType> = ({ role }) => {
     });
   };
 
+  const UploadImageCompany = async (image) => {
+    let fileall = new FormData();
+    image?.forEach(img => {
+      fileall?.append('company', img?.originFileObj)
+    });
+    // Object.fromEntries(fileall), {
+
+   return await axios({
+      url: `${import.meta.env.VITE_REST_URL_PATH}/upload/photocompany`,
+      data: fileall,
+      method: 'POST',
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    }).then(({data}) => {
+      return data;
+    }).catch((error) => {
+      console.log('error ', error)
+    });
+  }
+  const UploadPdf1Company = async (image) => {
+    let fileall = new FormData();
+    image?.forEach(img => {
+      fileall?.append('certificate', img?.originFileObj)
+    });
+    // Object.fromEntries(fileall), {
+
+   return await axios({
+      url: `${import.meta.env.VITE_REST_URL_PATH}/upload/pdfcertificate`,
+      data: fileall,
+      method: 'POST',
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    }).then(({data}) => {
+      return data;
+    }).catch((error) => {
+      console.log('error ', error)
+    });
+  }
+  const UploadPdf2Company = async (image) => {
+    let fileall = new FormData();
+    image?.forEach(img => {
+      fileall?.append('vat', img?.originFileObj)
+    });
+    // Object.fromEntries(fileall), {
+
+   return await axios({
+      url: `${import.meta.env.VITE_REST_URL_PATH}/upload/pdfvatregistration`,
+      data: fileall,
+      method: 'POST',
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    }).then(({data}) => {
+      return data;
+    }).catch((error) => {
+      console.log('error ', error)
+    });
+  }
 
   const onChangeUploadImageCompany = ({ fileList: newFileList }) => {
     console.log('newFileList :>> ', newFileList);
@@ -647,9 +734,7 @@ const Newcompany: React.FC<NewcompanyPropsType> = ({ role }) => {
               <Form.Item
                 name={'registeredamount'}
                 label={'ทุนจดทะเบียน ( บาท )'}
-                rules={[
-                  { type: 'number', message: 'กรุณากรอกตัวเลขให้ถูกต้อง' },
-                ]}
+
               >
                 {Editdata?.mode == 'view' ? (
                   <InputNumber
@@ -673,55 +758,52 @@ const Newcompany: React.FC<NewcompanyPropsType> = ({ role }) => {
           </div>
           <Row gutter={16} className="px-2">
             <Col span={12} offset={6}>
-              <Form.Item
-                name={'uploadimage'}
-                label={''}
-              >
-                {Editdata?.mode == 'view' ? (
-                  <Upload
-                    action={""}
-                    beforeUpload={() => false}
-                    maxCount={1}
-                    className={'upload-custom'}
-                    listType="picture"
-                    onChange={onChangeUploadImageCompany}
+
+              {Editdata?.mode == 'view' ? (
+                <Upload
+                  action={""}
+                  beforeUpload={() => false}
+                  maxCount={1}
+                  className={'upload-custom'}
+                  listType="picture"
+                  onChange={onChangeUploadImageCompany}
+                  fileList={uploadlogo}
+                >
+                  <Button
+                    disabled
+                    type="primary"
+                    style={{
+                      width: '100%',
+                      marginBottom: '10px',
+                      backgroundColor: token.token.colorPrimary,
+                    }}
                   >
-                    <Button
-                      disabled
-                      type="primary"
-                      style={{
-                        width: '100%',
-                        marginBottom: '10px',
-                        backgroundColor: token.token.colorPrimary,
-                      }}
-                    >
-                      เลือกรูป
-                    </Button>
-                  </Upload>
-                ) : (
-                  <Upload
-                    action={""}
-                    accept=".png,.jpg"
-                    beforeUpload={() => false}
-                    maxCount={1}
-                    className={'upload-custom'}
-                    listType="picture"
-                    onChange={onChangeUploadImageCompany}
-                    fileList={uploadlogo}
+                    เลือกรูป
+                  </Button>
+                </Upload>
+              ) : (
+                <Upload
+                  action={""}
+                  accept=".png,.jpg"
+                  beforeUpload={() => false}
+                  maxCount={1}
+                  className={'upload-custom'}
+                  listType="picture"
+                  onChange={onChangeUploadImageCompany}
+                  fileList={uploadlogo}
+                >
+                  <Button
+                    type="primary"
+                    style={{
+                      width: '100%',
+                      marginBottom: '10px',
+                      backgroundColor: token.token.colorPrimary,
+                    }}
                   >
-                    <Button
-                      type="primary"
-                      style={{
-                        width: '100%',
-                        marginBottom: '10px',
-                        backgroundColor: token.token.colorPrimary,
-                      }}
-                    >
-                      เลือกรูป
-                    </Button>
-                  </Upload>
-                )}
-              </Form.Item>
+                    เลือกรูป
+                  </Button>
+                </Upload>
+              )}
             </Col>
           </Row>
           <Divider style={{ backgroundColor: token.token.colorPrimary }} />
