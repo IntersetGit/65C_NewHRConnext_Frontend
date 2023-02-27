@@ -205,9 +205,9 @@ const Remuneration: React.FC = () => {
                 date: new Date(),
                 id: selectedRow?.id ? selectedRow?.id : undefined,
                 userId: propsstate?.userId,
-                base_salary: parseFloat(value.base_salary),
-                provident_emp: parseFloat(value.provident_emp),
-                provident_com: parseFloat(value.provident_com),
+                base_salary: parseFloat(value.base_salary) ? parseFloat(value.base_salary) : 0,
+                provident_emp: parseFloat(value.provident_emp) ? parseFloat(value.provident_emp) : 0,
+                provident_com: parseFloat(value.provident_com) ? parseFloat(value.provident_com) : 0,
                 // date: dayjs(value),
               },
             },
@@ -241,6 +241,8 @@ const Remuneration: React.FC = () => {
       form.setFieldsValue({
         ...record,
         accept_date: record.accept_date ? dayjs(record.accept_date) : undefined,
+        provident_emp: record.provident_emp ? record.provident_emp : 0,
+        provident_com: record.provident_com ? record.provident_com : 0,
       });
     } else if (key === 'view') {
       showDrawer(3);
