@@ -496,7 +496,7 @@ const Remuneration: React.FC = () => {
                   disabled={
                     drawerType === 3 ? true : drawerType === 2 ? true : false
                   }
-                  disabledDate={disabledDate}
+
                 />
               </Form.Item>
             </Col>
