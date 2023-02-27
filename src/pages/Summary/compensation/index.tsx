@@ -154,7 +154,7 @@ const Compensation: React.FC = () => {
             variables: {
               data: {
                 ...value,
-                date: value.date,
+                date: dayjs(value.date).format("YYYY-MM"),
                 vat_per: parseFloat(value.vat_per),
                 ss_per: parseFloat(value.ss_per),
                 companyBranchId: company?.branchId as any,

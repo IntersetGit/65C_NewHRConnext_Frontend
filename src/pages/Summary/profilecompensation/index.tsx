@@ -289,7 +289,7 @@ const Compensation: React.FC = () => {
         // const result = dayjs(pickDate).format("YYYY-MM-DD") as any
         // console.log(result);
         // setPickDate(date)
-        refetch5({ userId: propsstate?.userId, date: date.format("YYYY-MM-DD") })
+        refetch5({ userId: propsstate?.userId, date: date })
         console.log("RRRRRRR", Show_PervspUser)
         // if (propsstate?.userId === propsstate?.userId)
     };
