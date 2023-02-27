@@ -339,7 +339,14 @@ const Compensation: React.FC = () => {
         >
           <Row>
             <Col xs={24} sm={24} md={24} lg={24} xl={24}>
-              <Form.Item name="date" label={'เดือน/ปี'} className="ml-[82px]">
+              <Form.Item name="date" label={'เดือน/ปี'} className="ml-[82px]"
+                rules={[
+                  {
+                    required: true,
+                    message: 'โปรดเลือกเดือน/ปี !',
+                  },
+                ]}
+              >
                 <DatePicker
                   picker="month"
                   format={'MM/YYYY'}
@@ -354,6 +361,12 @@ const Compensation: React.FC = () => {
                 name="cal_date_salary"
                 label={'วันที่จ่ายเงิน'}
                 className="ml-[82px]"
+                rules={[
+                  {
+                    required: true,
+                    message: 'โปรดเลือกวันที่จ่ายเงิน !',
+                  },
+                ]}
               >
                 <DatePicker
                   picker="date"
@@ -365,7 +378,14 @@ const Compensation: React.FC = () => {
           </Row>
           <Row>
             <Col span={24}>
-              <Form.Item name="bankId" label={'ธนาคาร (บริษัท)'}>
+              <Form.Item name="bankId" label={'ธนาคาร (บริษัท)'}
+                rules={[
+                  {
+                    required: true,
+                    message: 'โปรดเลือกธนาคาร !',
+                  },
+                ]}
+              >
                 <Select
                   allowClear
                   options={selectBookBank}

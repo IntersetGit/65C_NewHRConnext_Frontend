@@ -62,6 +62,7 @@ const Compensation: React.FC = () => {
     const navigate = useNavigate();
     const [drawerType, setDrawerType] = useState(1);
     const [selectedRow, setselectedRow] = useState<any>();
+    const [pickDate, setPickDate] = useState<any>();
 
     const location = useLocation();
     let propsstate = location.state as any;
@@ -85,13 +86,10 @@ const Compensation: React.FC = () => {
             variables: { userId: propsstate?.userId },
         },
     );
-    const { data: Show_PervspUser, refetch: refetch5 } = useQuery(
-        FETCH_Show_PervspUser,
-        {
-            variables: { userId: propsstate?.userId },
-        },
-    );
-    console.log("RRRRRRR", Show_PervspUser)
+    const { data: Show_PervspUser, refetch: refetch5 } = useQuery(FETCH_Show_PervspUser, {
+        notifyOnNetworkStatusChange: true,
+    });
+
 
 
     console.log('DataT', TableDataSalary);
@@ -100,11 +98,14 @@ const Compensation: React.FC = () => {
         refetch2();
         refetch3();
         refetch4();
-        refetch5();
+        // refetch5();
     }, [])
     useEffect(() => {
         form.setFieldValue('net', sumIncome - sumExpense)
     }, [sumIncome, sumExpense])
+
+
+
 
     // useEffect(() => {
     //     const salary: any = book_bank_data
@@ -139,7 +140,7 @@ const Compensation: React.FC = () => {
     //         // ExpenseComData?.expense_company?.check_vat?.
     //         // .map(i=>map[i] ? parseFloat(map[i]) : 0).reduce((val, a) => val + a, 0);
     //         let summinus1 = vatCal + SSCal + provident_EMPCal;
-    //         form.setFieldValue('total_expense', (summinus1))
+    //         form.setFieldValue('total_expense', (summinus1)) 
     //     }
     //     SS_CAl();
     // }
@@ -275,17 +276,22 @@ const Compensation: React.FC = () => {
         //     });
         // setOpen(false);
     };
-
-    const onChangeDate: DatePickerProps['onChange'] = (date, dateString) => {
-        console.log(date, dateString);
-
-        if (propsstate?.userId === propsstate?.userId)
-            form.setFieldsValue({
-                base_salary: Show_PervspUser?.show_pervspUser?.[0]?.bookbank_log?.[0]?.base_salary,
-                vat_per: Show_PervspUser?.show_pervspUser?.[0]?.companyBranch?.[0]?.expense_company?.vat_per,
-                ss_per: Show_PervspUser?.show_pervspUser?.[0]?.companyBranch?.[0]?.expense_company?.ss_per,
-                provident_emp: Show_PervspUser?.show_pervspUser?.[0]?.bookbank_log?.[0]?.provident_emp,
-            });
+    useEffect(() => {
+        form.setFieldsValue({
+            base_salary: Show_PervspUser?.show_pervspUser?.[0]?.bookbank_log?.[0]?.base_salary,
+            vat_per: Show_PervspUser?.show_pervspUser?.[0]?.companyBranch?.[0]?.expense_company?.vat_per,
+            ss_per: Show_PervspUser?.show_pervspUser?.[0]?.companyBranch?.[0]?.expense_company?.ss_per,
+            provident_emp: Show_PervspUser?.show_pervspUser?.[0]?.bookbank_log?.[0]?.provident_emp,
+        });
+    }, [Show_PervspUser])
+    const onChangeDate = (date) => {
+        // console.log(date.format("YYYY-MM-DD"));
+        // const result = dayjs(pickDate).format("YYYY-MM-DD") as any
+        // console.log(result);
+        // setPickDate(date)
+        refetch5({ userId: propsstate?.userId, date: date.format("YYYY-MM-DD") })
+        console.log("RRRRRRR", Show_PervspUser)
+        // if (propsstate?.userId === propsstate?.userId)
     };
 
     const columns: ColumnsType<any> = [
@@ -370,6 +376,14 @@ const Compensation: React.FC = () => {
 
     const onChangeFormvalue = (column, all) => {
         console.log('column,all', column, all);
+        if (
+            Object.keys(column)[0] in
+            {
+                date: '',
+            }
+        ) {
+            onChangeDate(column.date);
+        }
         const sum = () => {
             let sumval =
                 parseFloat(all.base_salary ? all.base_salary : 0) +
@@ -606,7 +620,7 @@ const Compensation: React.FC = () => {
                         <Col xs={24} sm={24} md={24} lg={24} xl={24}>
                             <Form.Item name="date" label={'เดือน/ปี'} className=" ml-[82px] mt-6">
                                 <DatePicker
-                                    onChange={onChangeDate}
+                                    // onChange={onChangeDate}
                                     picker="month"
                                     format={'MM/YYYY'}
                                     disabled={drawerType === 3 ? true : false}
