@@ -618,7 +618,15 @@ const Compensation: React.FC = () => {
                 >
                     <Row>
                         <Col xs={24} sm={24} md={24} lg={24} xl={24}>
-                            <Form.Item name="date" label={'เดือน/ปี'} className=" ml-[82px] mt-6">
+                            <Form.Item name="date" label={'เดือน/ปี'}
+                                className=" ml-[82px] mt-6"
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: 'โปรดเลือกเดือน/ปี !',
+                                    },
+                                ]}
+                            >
                                 <DatePicker
                                     // onChange={onChangeDate}
                                     picker="month"
