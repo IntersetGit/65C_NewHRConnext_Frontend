@@ -260,7 +260,7 @@ const ProfilePosition: React.FC<ProfilePositionPropsType> = ({ role }) => {
               variables: {
                 data: {
                   ...value,
-                  // user_id: user?.me?.profile?.userId,
+                  user_id: user?.me?.profile?.userId,
                   id: selectedrow?.id,
                 },
               },
@@ -359,8 +359,15 @@ const ProfilePosition: React.FC<ProfilePositionPropsType> = ({ role }) => {
       key: 'header',
       dataIndex: 'header',
       align: 'center',
-      render: (txt: any) => {
-        return txt?.profile?.firstname_th + ' ' + txt?.profile?.lastname_th;
+      render: (record: any) => {
+        return (
+          <div>
+            {record?.profile?.firstname_th
+              ? record?.profile?.firstname_th
+              : null}{' '}
+            {record?.profile?.lastname_th ? record?.profile?.lastname_th : null}
+          </div>
+        );
       },
     },
     {

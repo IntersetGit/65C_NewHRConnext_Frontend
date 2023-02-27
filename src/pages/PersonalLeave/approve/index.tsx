@@ -39,10 +39,12 @@ import {
   DELETE_LEAVE,
 } from '../../../service/graphql/Leave';
 import { getFilePath } from '../../../util';
+import { DateCalculateLeave } from 'aunwalibrary-toolkit';
 import dayjs from 'dayjs';
 import Swal from 'sweetalert2';
 const { useToken } = theme;
 const { TextArea } = Input;
+const { RangePicker } = DatePicker;
 
 const Approve: React.FC = () => {
   const [open, setOpen] = useState(false);
@@ -76,6 +78,20 @@ const Approve: React.FC = () => {
       value: e?.id,
     };
   });
+
+  const onChangeCountDate = (date, dateString) => {
+    if (date?.length >= 2) {
+      const resultdate = DateCalculateLeave(
+        dayjs(date[0]),
+        dayjs(date[1]),
+        '9',
+      );
+      form.setFieldsValue({
+        quantity_day: resultdate?.dayleave,
+        quantity_hours: resultdate?.hoursleave,
+      });
+    }
+  };
 
   const genarateMenu = (record: any) => {
     return [
@@ -248,6 +264,8 @@ const Approve: React.FC = () => {
             data: {
               ...value,
               id: selectedrow?.id,
+              start_date: value?.start_date[0],
+              end_date: value?.start_date[1],
             },
           },
         })
@@ -399,21 +417,43 @@ const Approve: React.FC = () => {
           </Row>
 
           <Row gutter={16}>
-            <Col span={12}>
-              <Form.Item name={'start_date'} label={'จากวันที่'}>
+            <Col span={24}>
+              <Form.Item
+                name={'start_date'}
+                label={'จากวันที่ - ถึงวันที่'}
+                rules={[
+                  {
+                    required: true,
+                    message: 'กรุณากรอกวันที่จะลา',
+                  },
+                ]}
+              >
                 {drawertype == 2 ? (
-                  <DatePicker
-                    style={{ width: '100%' }}
-                    format={'DD-MM-YYYY'}
+                  <RangePicker
+                    style={{
+                      width: '100%',
+                    }}
+                    className="button-range"
+                    showTime={{ format: 'HH:mm' }}
+                    format="DD-MM-YYYY HH:mm"
+                    onChange={onChangeCountDate}
                     disabled
+                    allowClear
                   />
                 ) : (
-                  <DatePicker style={{ width: '100%' }} format={'DD-MM-YYYY'} />
+                  <RangePicker
+                    className="button-range"
+                    style={{ width: '100%' }}
+                    showTime={{ format: 'HH:mm' }}
+                    format="DD-MM-YYYY HH:mm"
+                    onChange={onChangeCountDate}
+                    allowClear
+                  />
                 )}
               </Form.Item>
             </Col>
 
-            <Col span={12}>
+            {/* <Col span={12}>
               <Form.Item name={'end_date'} label={'ถึงวันที่'}>
                 {drawertype == 2 ? (
                   <DatePicker
@@ -425,7 +465,7 @@ const Approve: React.FC = () => {
                   <DatePicker style={{ width: '100%' }} format={'DD-MM-YYYY'} />
                 )}
               </Form.Item>
-            </Col>
+            </Col> */}
           </Row>
 
           <Row gutter={16}>
@@ -439,7 +479,12 @@ const Approve: React.FC = () => {
                     disabled
                   />
                 ) : (
-                  <InputNumber style={{ width: '100%' }} min={0} max={31} />
+                  <InputNumber
+                    style={{ width: '100%' }}
+                    min={0}
+                    max={31}
+                    disabled
+                  />
                 )}
               </Form.Item>
             </Col>
@@ -454,7 +499,12 @@ const Approve: React.FC = () => {
                     disabled
                   />
                 ) : (
-                  <InputNumber style={{ width: '100%' }} min={0} max={31} />
+                  <InputNumber
+                    style={{ width: '100%' }}
+                    min={0}
+                    max={31}
+                    disabled
+                  />
                 )}
               </Form.Item>
             </Col>
@@ -462,7 +512,16 @@ const Approve: React.FC = () => {
 
           <Row>
             <Col span={24}>
-              <Form.Item name={'detail_leave'} label={'เหตุผลการลา'}>
+              <Form.Item
+                name={'detail_leave'}
+                label={'เหตุผลการลา'}
+                rules={[
+                  {
+                    required: true,
+                    message: 'กรุณาใส่เหตุผลการลา',
+                  },
+                ]}
+              >
                 {drawertype == 2 ? (
                   <TextArea rows={6} disabled />
                 ) : (

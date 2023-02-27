@@ -355,16 +355,18 @@ const Manageuser: React.FC = () => {
               >
                 <Form.Item>
                   <Space>
-                    <Button
-                      htmlType="submit"
-                      type="primary"
-                      style={{
-                        marginBottom: '10px',
-                        backgroundColor: token.token.colorPrimary,
-                      }}
-                    >
-                      บันทึก
-                    </Button>
+                    {drawerType !== 3 && (
+                      <Button
+                        htmlType="submit"
+                        type="primary"
+                        style={{
+                          marginBottom: '10px',
+                          backgroundColor: token.token.colorPrimary,
+                        }}
+                      >
+                        บันทึก
+                      </Button>
+                    )}
                     <Button
                       style={{
                         marginBottom: '10px',
