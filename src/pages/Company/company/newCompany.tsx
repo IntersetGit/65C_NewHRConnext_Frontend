@@ -194,10 +194,11 @@ const Newcompany: React.FC<NewcompanyPropsType> = ({ role }) => {
       denyButtonText: `ยกเลิก`,
     }).then(async (result) => {
       if (result.isConfirmed) {
-        const fileiconcompany = uploadlogo.length > 0 ? await UploadImageCompany(uploadlogo) : undefined;
-        const filecerficate = uploadpdf1.length > 0 ? await UploadPdf1Company(uploadpdf1) : undefined;
-        const filevatregistion = uploadpdf2.length > 0 ? await UploadPdf2Company(uploadpdf2) : undefined;
-        fileiconcompany && (objvalue.photo_link = fileiconcompany.path);
+        const fileiconcompany = uploadlogo.length > 0 ? await UploadImageCompany(uploadlogo) : '';
+        const filecerficate = uploadpdf1.length > 0 ? await UploadPdf1Company(uploadpdf1) : '';
+        const filevatregistion = uploadpdf2.length > 0 ? await UploadPdf2Company(uploadpdf2) : '';
+        console.log('fileiconcompany :>> ', fileiconcompany);
+        fileiconcompany == '' || fileiconcompany  && (objvalue.photo_link = fileiconcompany.path);
         filecerficate && (objvalue.certificate_link = filecerficate.path);
         filevatregistion && (objvalue.vat_link = filevatregistion.path);
         console.log('objvalue', objvalue)
@@ -768,6 +769,9 @@ const Newcompany: React.FC<NewcompanyPropsType> = ({ role }) => {
                   listType="picture"
                   onChange={onChangeUploadImageCompany}
                   fileList={uploadlogo}
+                  onRemove={(del)=>{
+                    console.log('del',del)
+                  }}
                 >
                   <Button
                     disabled
@@ -791,6 +795,9 @@ const Newcompany: React.FC<NewcompanyPropsType> = ({ role }) => {
                   listType="picture"
                   onChange={onChangeUploadImageCompany}
                   fileList={uploadlogo}
+                  onRemove={(del)=>{
+                    console.log('del',del)
+                  }}
                 >
                   <Button
                     type="primary"
