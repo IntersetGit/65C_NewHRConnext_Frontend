@@ -161,7 +161,7 @@ const Remuneration: React.FC = () => {
               data: {
                 ...value,
                 date: new Date(),
-                accept_date: dayjs(value.date).format("YYYY-MM"),
+                accept_date: dayjs(value.accept_date).format("YYYY-MM"),
                 userId: propsstate?.userId,
                 base_salary: parseFloat(value.base_salary),
                 provident_emp: parseFloat(value.provident_emp)
