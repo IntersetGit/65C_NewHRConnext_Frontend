@@ -279,10 +279,26 @@ const Compensation: React.FC = () => {
     useEffect(() => {
         form.setFieldsValue({
             base_salary: Show_PervspUser?.show_pervspUser?.[0]?.bookbank_log?.[0]?.base_salary,
-            vat_per: Show_PervspUser?.show_pervspUser?.[0]?.companyBranch?.[0]?.expense_company?.vat_per,
-            ss_per: Show_PervspUser?.show_pervspUser?.[0]?.companyBranch?.[0]?.expense_company?.ss_per,
+            vat_per: Show_PervspUser?.show_pervspUser?.[0]?.companyBranch?.expense_company?.[0]?.vat_per,
+            ss_per: Show_PervspUser?.show_pervspUser?.[0]?.companyBranch?.expense_company?.[0]?.ss_per,
             provident_emp: Show_PervspUser?.show_pervspUser?.[0]?.bookbank_log?.[0]?.provident_emp,
         });
+        const valueall = form.getFieldsValue();
+        onChangeFormvalue({ base_salary: '' }, valueall);
+        const SS_CAl = () => {
+            let SSCal = (parseFloat(form.getFieldValue('base_salary'))) * (parseFloat(form.getFieldValue('ss_per')) / 100)
+            form.setFieldValue('social_security', (SSCal).toFixed(2))
+            let provident_EMPCal = (parseFloat(form.getFieldValue('base_salary'))) * (parseFloat(form.getFieldValue('provident_emp')) / 100)
+            form.setFieldValue('pvd_emp', (provident_EMPCal).toFixed(2))
+            let vatCal = (parseFloat(form.getFieldValue('base_salary'))) * (parseFloat(form.getFieldValue('vat_per')) / 100)
+            form.setFieldValue('vat', (vatCal).toFixed(2))
+            // let = ExpenseComData?.expense_company?.check_vat
+            // ExpenseComData?.expense_company?.check_vat?.
+            // .map(i=>map[i] ? parseFloat(map[i]) : 0).reduce((val, a) => val + a, 0);
+            let summinus1 = vatCal + SSCal + provident_EMPCal;
+            form.setFieldValue('total_expense', (summinus1))
+        }
+        SS_CAl();
     }, [Show_PervspUser])
     const onChangeDate = (date) => {
         // console.log(date.format("YYYY-MM-DD"));
@@ -403,9 +419,10 @@ const Compensation: React.FC = () => {
             // finish()
         };
         const minus = () => {
-
             let SSCal = parseFloat(all.base_salary) * (parseFloat(all.ss_per) / 100);
             form.setFieldValue('social_security', SSCal.toFixed(2));
+            // let Cal_vat = ?.check_vat.map(i=>column[i] ? parseFloat(column[i]) : 0).reduce((val, a) => val + a, 0);
+
             let minusval =
                 parseFloat(all.vat ? all.vat : 0) +
                 parseFloat(all.social_security ? all.social_security : 0) +
