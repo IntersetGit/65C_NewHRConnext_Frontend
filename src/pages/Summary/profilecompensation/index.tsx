@@ -41,6 +41,7 @@ import {
     FETCH_GETALLBOOKBANK_LOG,
     FETCH_Filter_BOOKBANK_ADMIN,
     FETCH_Show_PervspUser,
+    Create_UpdateSalary
 } from '../../../service/graphql/Summary';
 
 import {
@@ -66,7 +67,7 @@ const Compensation: React.FC = () => {
 
     const location = useLocation();
     let propsstate = location.state as any;
-    console.log(propsstate);
+    //console.log(propsstate);
 
     const { data: position_data } = useQuery(FETCH_GETALL_POSITION);
     const { data: TableDataSalary, refetch } = useQuery(FETCH_AllSALARY_USER, {
@@ -89,10 +90,10 @@ const Compensation: React.FC = () => {
     const { data: Show_PervspUser, refetch: refetch5 } = useQuery(FETCH_Show_PervspUser, {
         notifyOnNetworkStatusChange: true,
     });
+    const [create_update_salary] = useMutation(Create_UpdateSalary);
 
 
-
-    console.log('DataT', TableDataSalary);
+    //console.log('DataT', TableDataSalary);
     useEffect(() => {
         refetch();
         refetch2();
@@ -133,7 +134,7 @@ const Compensation: React.FC = () => {
     //         let SSCal = (parseFloat(form.getFieldValue('base_salary'))) * (parseFloat(form.getFieldValue('ss_per')) / 100)
     //         form.setFieldValue('social_security', (SSCal).toFixed(2))
     //         let provident_EMPCal = (parseFloat(form.getFieldValue('base_salary'))) * (parseFloat(form.getFieldValue('provident_emp')) / 100)
-    //         form.setFieldValue('pvd_emp', (provident_EMPCal).toFixed(2))
+    //         form.setFieldValue('provident_employee', (provident_EMPCal).toFixed(2))
     //         let vatCal = (parseFloat(form.getFieldValue('base_salary'))) * (parseFloat(form.getFieldValue('vat_per')) / 100)
     //         form.setFieldValue('vat', (vatCal).toFixed(2))
     //         // let = ExpenseComData?.expense_company?.check_vat
@@ -204,79 +205,94 @@ const Compensation: React.FC = () => {
     // }
 
     const onSubmitForm = (value: any) => {
-        console.log('คำนวณ', value);
-        // drawerType === 1
-        //     ? Swal.fire({
-        //         title: `ยืนยันการคำนวณเงินเดือน`,
-        //         icon: 'warning',
-        //         showDenyButton: true,
-        //         showCancelButton: false,
-        //         confirmButtonColor: token.token.colorPrimary,
-        //         denyButtonColor: '#ea4e4e',
-        //         confirmButtonText: 'ตกลง',
-        //         denyButtonText: `ยกเลิก`,
-        //     }).then(async (result) => {
-        //         if (result.isConfirmed) {
-        //             creteSalaryUser({
-        //                 variables: {
-        //                     data: {
-        //                         ...value,
-        //                         user_id: propsstate?.userId,
-        //                     },
-        //                 },
-        //             })
-        //                 .then((val) => {
-        //                     console.log(val);
-        //                     if (val.data?.Createsalary?.status) {
-        //                         Swal.fire(`คำนวณเงินเดือนสำเร็จ!`, '', 'success');
-        //                         refetch();
-        //                         form.resetFields();
-        //                     }
-        //                 })
-        //                 .catch((err) => {
-        //                     Swal.fire(`คำนวณเงินเดือนไม่สำเร็จ!`, '', 'error');
-        //                     console.error(err);
-        //                 });
-        //         }
-        //     })
-        //     : Swal.fire({
-        //         title: `ยืนยันการแก้ไขคำนวณเงินเดือน`,
-        //         icon: 'warning',
-        //         showDenyButton: true,
-        //         showCancelButton: false,
-        //         confirmButtonColor: token.token.colorPrimary,
-        //         denyButtonColor: '#ea4e4e',
-        //         confirmButtonText: 'ตกลง',
-        //         denyButtonText: `ยกเลิก`,
-        //     }).then(async (result) => {
-        //         if (result.isConfirmed) {
-        //             creteSalaryUser({
-        //                 variables: {
-        //                     data: {
-        //                         ...value,
-        //                         user_id: propsstate?.userId,
-        //                         id: selectedRow?.id,
-        //                     },
-        //                 },
-        //             })
-        //                 .then((val) => {
-        //                     console.log(val);
-        //                     if (val.data?.Createsalary?.status) {
-        //                         Swal.fire(`แก้ไขข้อมูลคำนวณเงินเดือนสำเร็จ!`, '', 'success');
-        //                         refetch();
-        //                         form.resetFields();
-        //                     }
-        //                 })
-        //                 .catch((err) => {
-        //                     Swal.fire(`แก้ไขข้อมูลคำนวณเงินเดือนไม่สำเร็จ!`, '', 'error');
-        //                     console.error(err);
-        //                     form.resetFields();
-        //                 });
-        //         }
-        //     });
-        // setOpen(false);
+        //console.log('คำนวณ', value);
+        drawerType === 1
+            ? Swal.fire({
+                title: `ยืนยันการคำนวณเงินเดือน`,
+                icon: 'warning',
+                showDenyButton: true,
+                showCancelButton: false,
+                confirmButtonColor: token.token.colorPrimary,
+                denyButtonColor: '#ea4e4e',
+                confirmButtonText: 'ตกลง',
+                denyButtonText: `ยกเลิก`,
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    var calsum = 0;
+                    if (value.date !== undefined) {
+                        let cal1 = Show_PervspUser?.show_pervspUser?.[0]?.bookbank_log?.[0]?.base_salary as any
+                        let cal2 = Show_PervspUser?.show_pervspUser?.[0]?.bookbank_log?.[0]?.provident_com as any
+
+                        calsum = cal1 * (cal2 / 100)
+                    }
+                    let sentData = {
+                        ...value,
+                        userId: propsstate?.userId,
+                        provident_company: calsum,
+                    }
+                    delete sentData.base_salary
+                    delete sentData.vat_per
+                    delete sentData.provident_emp
+                    delete sentData.ss_per
+
+                    create_update_salary({
+                        variables: {
+                            data: sentData
+                        },
+                    })
+                        .then((val) => {
+                            console.log(val);
+                            if (val.data?.Createandupdatesalary?.status) {
+                                Swal.fire(`คำนวณเงินเดือนสำเร็จ!`, '', 'success');
+                                refetch();
+                                form.resetFields();
+                            }
+                        })
+                        .catch((err) => {
+                            Swal.fire(`คำนวณเงินเดือนไม่สำเร็จ!`, '', 'error');
+                            console.error(err);
+                        });
+                }
+            })
+            : Swal.fire({
+                title: `ยืนยันการแก้ไขคำนวณเงินเดือน`,
+                icon: 'warning',
+                showDenyButton: true,
+                showCancelButton: false,
+                confirmButtonColor: token.token.colorPrimary,
+                denyButtonColor: '#ea4e4e',
+                confirmButtonText: 'ตกลง',
+                denyButtonText: `ยกเลิก`,
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    create_update_salary({
+                        variables: {
+                            data: {
+                                ...value,
+                                userId: propsstate?.userId,
+                                id: selectedRow?.id,
+                            },
+                        },
+                    })
+                        .then((val) => {
+                            console.log(val);
+                            if (val.data?.Createandupdatesalary?.status) {
+                                Swal.fire(`แก้ไขข้อมูลคำนวณเงินเดือนสำเร็จ!`, '', 'success');
+                                refetch();
+                                form.resetFields();
+                            }
+                        })
+                        .catch((err) => {
+                            Swal.fire(`แก้ไขข้อมูลคำนวณเงินเดือนไม่สำเร็จ!`, '', 'error');
+                            console.error(err);
+                            form.resetFields();
+                        });
+                }
+            });
+        setOpen(false);
     };
     useEffect(() => {
+
         form.setFieldsValue({
             base_salary: Show_PervspUser?.show_pervspUser?.[0]?.bookbank_log?.[0]?.base_salary,
             vat_per: Show_PervspUser?.show_pervspUser?.[0]?.companyBranch?.expense_company?.[0]?.vat_per,
@@ -284,14 +300,30 @@ const Compensation: React.FC = () => {
             provident_emp: Show_PervspUser?.show_pervspUser?.[0]?.bookbank_log?.[0]?.provident_emp,
         });
         const valueall = form.getFieldsValue();
+        //console.log('Show_PervspUser', Show_PervspUser)
+        if (valueall.date !== undefined) {
+
+            let Vat_item = Show_PervspUser?.show_pervspUser ? Show_PervspUser?.show_pervspUser?.[0]?.companyBranch?.expense_company?.[0]?.check_vat : [] as any
+            // let Val_item_cal = Vat_item.map(i => column[''] ? parseFloat(column['']) : 0).reduce((val, a) => val + a, 0)
+            let Val_item_cal = Vat_item.map(i => valueall[i] ? parseFloat(valueall[i]) : 0).reduce((val, a) => val + a, 0);
+            //console.log('Val_item_cal', Val_item_cal)
+
+        }
         onChangeFormvalue({ base_salary: '' }, valueall);
         const SS_CAl = () => {
             let SSCal = (parseFloat(form.getFieldValue('base_salary'))) * (parseFloat(form.getFieldValue('ss_per')) / 100)
-            form.setFieldValue('social_security', (SSCal).toFixed(2))
+            if (SSCal >= 750) {
+                form.setFieldValue('social_security', 750);
+                SSCal = 750;
+            } else {
+                form.setFieldValue('social_security', SSCal);
+            }
+
             let provident_EMPCal = (parseFloat(form.getFieldValue('base_salary'))) * (parseFloat(form.getFieldValue('provident_emp')) / 100)
-            form.setFieldValue('pvd_emp', (provident_EMPCal).toFixed(2))
+            form.setFieldValue('provident_employee', provident_EMPCal);
+
             let vatCal = (parseFloat(form.getFieldValue('base_salary'))) * (parseFloat(form.getFieldValue('vat_per')) / 100)
-            form.setFieldValue('vat', (vatCal).toFixed(2))
+            form.setFieldValue('vat', vatCal ? vatCal : 0)
             // let = ExpenseComData?.expense_company?.check_vat
             // ExpenseComData?.expense_company?.check_vat?.
             // .map(i=>map[i] ? parseFloat(map[i]) : 0).reduce((val, a) => val + a, 0);
@@ -306,7 +338,7 @@ const Compensation: React.FC = () => {
         // console.log(result);
         // setPickDate(date)
         refetch5({ userId: propsstate?.userId, date: date })
-        console.log("RRRRRRR", Show_PervspUser)
+        //console.log("RRRRRRR", Show_PervspUser)
         // if (propsstate?.userId === propsstate?.userId)
     };
 
@@ -328,7 +360,7 @@ const Compensation: React.FC = () => {
             dataIndex: 'total_income',
             align: 'center',
             render: (record) => {
-                return record?.salary?.salary?.total_income ?? '-';
+                return <div>{record.toFixed(2) ?? '-'} </div>;
             },
         },
         {
@@ -337,7 +369,7 @@ const Compensation: React.FC = () => {
             dataIndex: 'total_expense',
             align: 'center',
             render: (record) => {
-                return record?.salary?.salary?.total_expense ?? '-';
+                return <div>{record.toFixed(2) ?? '-'} </div>;
             },
         },
         {
@@ -391,13 +423,25 @@ const Compensation: React.FC = () => {
     // console.log(onChangeCalculate)
 
     const onChangeFormvalue = (column, all) => {
-        console.log('column,all', column, all);
+        //console.log('column,all', column, all);
         if (
             Object.keys(column)[0] in
             {
                 date: '',
             }
         ) {
+            form.setFieldsValue({
+                base_salary: undefined,
+                commission: undefined,
+                position_income: undefined,
+                special_income: undefined,
+                ot: undefined,
+                other_income: undefined,
+                travel_income: undefined,
+                bursary: undefined,
+                welfare_money: undefined,
+                bonus: undefined,
+            })
             onChangeDate(column.date);
         }
         const sum = () => {
@@ -412,28 +456,53 @@ const Compensation: React.FC = () => {
                 parseFloat(all.bursary ? all.bursary : 0) +
                 parseFloat(all.welfare_money ? all.welfare_money : 0) +
                 parseFloat(all.bonus ? all.bonus : 0);
-            console.log(sumval);
-            form.setFieldValue('total_income', sumval.toFixed(2));
-
-            // .map(i=>column[i] ? parseFloat(column[i]) : 0).reduce((val, a) => val + a, 0);
-            // finish()
+            //console.log(sumval);
+            form.setFieldValue('total_income', (sumval));
         };
-        const minus = () => {
-            let SSCal = parseFloat(all.base_salary) * (parseFloat(all.ss_per) / 100);
-            form.setFieldValue('social_security', SSCal.toFixed(2));
-            // let Cal_vat = ?.check_vat.map(i=>column[i] ? parseFloat(column[i]) : 0).reduce((val, a) => val + a, 0);
 
-            let minusval =
-                parseFloat(all.vat ? all.vat : 0) +
-                parseFloat(all.social_security ? all.social_security : 0) +
-                parseFloat(all.provident_emp ? all.provident_emp : 0) +
+
+        const minus = () => {
+            let sumval =
+                parseFloat(all.base_salary ? all.base_salary : 0) +
+                parseFloat(all.commission ? all.commission : 0) +
+                parseFloat(all.position_income ? all.position_income : 0) +
+                parseFloat(all.special_income ? all.special_income : 0) +
+                parseFloat(all.ot ? all.ot : 0) +
+                parseFloat(all.other_income ? all.other_income : 0) +
+                parseFloat(all.travel_income ? all.travel_income : 0) +
+                parseFloat(all.bursary ? all.bursary : 0) +
+                parseFloat(all.welfare_money ? all.welfare_money : 0) +
+                parseFloat(all.bonus ? all.bonus : 0);
+            //console.log(sumval);
+            if (all.date !== undefined) {
+                let Vat_item = Show_PervspUser?.show_pervspUser ? Show_PervspUser?.show_pervspUser?.[0]?.companyBranch?.expense_company?.[0]?.check_vat : [] as any
+                var Val_item_cal = Vat_item.map(i => all[i] ? parseFloat(all[i]) : 0).reduce((val, a) => val + a, 0);
+                //console.log('Val_item_calLLLLLLL', Val_item_cal)
+            }
+            let vatCal = parseFloat(Val_item_cal) * (parseFloat(form.getFieldValue('vat_per')) / 100)
+            form.setFieldValue('vat', vatCal ? vatCal : 0)
+            let SSCal = parseFloat(all.base_salary) * (parseFloat(all.ss_per) / 100);
+            if (SSCal >= 750) {
+                form.setFieldValue('social_security', 750);
+                SSCal = 750;
+            } else {
+                form.setFieldValue('social_security', SSCal);
+            }
+
+            let provident_EMPCal = (parseFloat(form.getFieldValue('base_salary'))) * (parseFloat(form.getFieldValue('provident_emp')) / 100)
+            form.setFieldValue('provident_employee', provident_EMPCal);
+
+
+
+            let minusVal =
                 parseFloat(all.miss ? all.miss : 0) +
                 parseFloat(all.ra ? all.ra : 0) +
                 parseFloat(all.late ? all.late : 0) +
                 parseFloat(all.other ? all.other : 0);
-            console.log(minusval);
-            form.setFieldValue('total_expense', minusval.toFixed(2));
-            // finish()
+
+            let sumExAll = vatCal + provident_EMPCal + SSCal + minusVal
+            //console.log(sumExAll);
+            form.setFieldValue('total_expense', sumExAll);
         };
 
         if (
@@ -456,18 +525,28 @@ const Compensation: React.FC = () => {
         if (
             Object.keys(column)[0] in
             {
-                vat: '',
-                social_security: '',
-                provident_emp: '',
+                // vat: '',
+                // social_security: '',
+                // provident_emp: '',
+                base_salary: '',
+                commission: '',
+                position_income: '',
+                special_income: '',
+                ot: '',
+                other_income: '',
+                travel_income: '',
+                bursary: '',
+                welfare_money: '',
+                bonus: '',
                 miss: '',
                 ra: '',
                 late: '',
-                other_income: '',
                 other: '',
             }
         ) {
             minus();
         }
+
     };
     return (
         <>
@@ -866,7 +945,7 @@ const Compensation: React.FC = () => {
                                     <InputNumber className="w-16" disabled />
                                 </Form.Item>
 
-                                <Form.Item name="pvd_emp" className="ml-[0.5px] w-full">
+                                <Form.Item name="provident_employee" className="ml-[0.5px] w-full">
                                     <InputNumber
                                         disabled={drawerType === 3 ? true : false}
                                         className="w-[222px]"

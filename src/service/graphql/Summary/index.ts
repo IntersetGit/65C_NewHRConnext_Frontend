@@ -255,3 +255,12 @@ query Show_pervspUser($userId: String, $date: String) {
 }
 `)
 
+export const Create_UpdateSalary = gql(`
+mutation Createandupdatesalary($data: salaryInput) {
+  Createandupdatesalary(data: $data) {
+    message
+    status
+  }
+}
+`)
+
