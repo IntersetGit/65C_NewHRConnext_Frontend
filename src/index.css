@@ -20,3 +20,6 @@
   align-items: center;
   justify-items: center;
 }
+.ant-picker-dropdown .ant-picker-ranges .ant-picker-ok .ant-btn.ant-btn-sm {
+  background-color: #1b78e2 !important;
+}

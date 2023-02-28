@@ -289,7 +289,10 @@ const PositionEmployee: React.FC = (props) => {
       render: (record) => {
         return (
           <div>
-            {record?.profile?.firstname_th} {record?.profile?.lastname_th}
+            {record?.profile?.firstname_th
+              ? record?.profile?.firstname_th
+              : null}{' '}
+            {record?.profile?.lastname_th ? record?.profile?.lastname_th : null}
           </div>
         );
       },

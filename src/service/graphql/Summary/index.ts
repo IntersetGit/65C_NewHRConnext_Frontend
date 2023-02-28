@@ -247,6 +247,7 @@ query Show_pervspUser($userId: String, $date: String) {
       expense_company {
         ss_per
         vat_per
+        check_vat
       }
       id
     }

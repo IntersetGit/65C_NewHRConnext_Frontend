@@ -95,7 +95,7 @@ const Remuneration: React.FC = () => {
       bank_number: banknumber,
       mas_bankId: bankname,
     });
-  }, [book_bank_data]);
+  }, [Filter_BookBank]);
 
 
   const selectBookBank = BookBank?.mas_bank?.map((e: any) => {
@@ -161,6 +161,7 @@ const Remuneration: React.FC = () => {
               data: {
                 ...value,
                 date: new Date(),
+                accept_date: dayjs(value.accept_date).format("YYYY-MM"),
                 userId: propsstate?.userId,
                 base_salary: parseFloat(value.base_salary),
                 provident_emp: parseFloat(value.provident_emp)
