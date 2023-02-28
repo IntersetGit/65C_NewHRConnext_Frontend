@@ -95,8 +95,10 @@ const Newcompany: React.FC<NewcompanyPropsType> = ({ role }) => {
       status: 'done',
       url: `${import.meta.env.VITE_REST_URL_PATH}/${Editdata?.vat_link}`,
     }] as any)
+    onChangeBussinessType(Editdata?.main_business_type?.id);
+
     form.setFieldsValue({
-      ...Editdata, latlng: Editdata?.lat ? ([Editdata.lat, Editdata.lng]).toString() : '',
+      ...Editdata, main_business_id: Editdata?.main_business_type?.id, sub_company_typeId: Editdata?.sub_company_type.id, latlng: Editdata?.lat ? ([Editdata.lat, Editdata.lng]).toString() : '',
     });
   };
 
@@ -108,7 +110,7 @@ const Newcompany: React.FC<NewcompanyPropsType> = ({ role }) => {
   });
 
   const onChangeBussinessType = (value) => {
-    form.setFieldValue('sub_company_type', null);
+    form.setFieldValue('sub_company_typeId', null);
     const bussinesstype2 = bussinesstype?.getBusinessType
       ?.find((e) => e?.id === value)
       ?.SubBusinessType?.map((e) => {
