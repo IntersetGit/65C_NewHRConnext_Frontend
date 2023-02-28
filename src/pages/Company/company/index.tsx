@@ -59,7 +59,12 @@ const GET_COMPANY = gql(/* GraphQL */ `
         email
         email_2
         company_type
-        sub_company_type
+        main_business_type {
+          id
+        }
+        sub_company_type {
+          id
+        }
         registeredamount
         social_facebook
         social_likedin

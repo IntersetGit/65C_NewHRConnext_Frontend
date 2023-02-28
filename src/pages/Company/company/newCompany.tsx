@@ -198,9 +198,9 @@ const Newcompany: React.FC<NewcompanyPropsType> = ({ role }) => {
         const filecerficate = uploadpdf1.length > 0 ? await UploadPdf1Company(uploadpdf1) : '';
         const filevatregistion = uploadpdf2.length > 0 ? await UploadPdf2Company(uploadpdf2) : '';
         console.log('fileiconcompany :>> ', fileiconcompany);
-        fileiconcompany == '' || fileiconcompany  && (objvalue.photo_link = fileiconcompany.path);
-        filecerficate && (objvalue.certificate_link = filecerficate.path);
-        filevatregistion && (objvalue.vat_link = filevatregistion.path);
+        fileiconcompany ? (objvalue.photo_link = fileiconcompany.path) : (objvalue.photo_link = '');
+        filecerficate ? (objvalue.certificate_link = filecerficate.path) : (objvalue.certificate_link = '');
+        filevatregistion ? (objvalue.vat_link = filevatregistion.path) : (objvalue.vat_link = '');
         console.log('objvalue', objvalue)
         createCompanyAccount({
           variables: {
@@ -234,62 +234,78 @@ const Newcompany: React.FC<NewcompanyPropsType> = ({ role }) => {
   const UploadImageCompany = async (image) => {
     let fileall = new FormData();
     image?.forEach(img => {
-      fileall?.append('company', img?.originFileObj)
+      if (img.status !== 'done') fileall?.append('company', img?.originFileObj)
     });
     // Object.fromEntries(fileall), {
-
-   return await axios({
-      url: `${import.meta.env.VITE_REST_URL_PATH}/upload/photocompany`,
-      data: fileall,
-      method: 'POST',
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    }).then(({data}) => {
-      return data;
-    }).catch((error) => {
-      console.log('error ', error)
-    });
+    // console.log('Object.fromEntries(fileall) :>> ', Object.keys(Object.fromEntries(fileall)));
+    if (Object.keys(Object.fromEntries(fileall)).length > 0) {
+      return await axios({
+        url: `${import.meta.env.VITE_REST_URL_PATH}/upload/photocompany`,
+        data: fileall,
+        method: 'POST',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      }).then(({ data }) => {
+        return data;
+      }).catch((error) => {
+        console.log('error ', error)
+      });
+    } else if (image.length > 0) {
+      return { ...image[0], path: (image[0].url).replace(`${import.meta.env.VITE_REST_URL_PATH}/`, '') }
+    } else {
+      console.log("noimage");
+    }
   }
   const UploadPdf1Company = async (image) => {
     let fileall = new FormData();
     image?.forEach(img => {
-      fileall?.append('certificate', img?.originFileObj)
+      if (img.status !== 'done') fileall?.append('certificate', img?.originFileObj)
     });
     // Object.fromEntries(fileall), {
-
-   return await axios({
-      url: `${import.meta.env.VITE_REST_URL_PATH}/upload/pdfcertificate`,
-      data: fileall,
-      method: 'POST',
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    }).then(({data}) => {
-      return data;
-    }).catch((error) => {
-      console.log('error ', error)
-    });
+    if (Object.keys(Object.fromEntries(fileall)).length > 0) {
+      return await axios({
+        url: `${import.meta.env.VITE_REST_URL_PATH}/upload/pdfcertificate`,
+        data: fileall,
+        method: 'POST',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      }).then(({ data }) => {
+        return data;
+      }).catch((error) => {
+        console.log('error ', error)
+      });
+    } else if (image.length > 0) {
+      return { ...image[0], path: (image[0].url).replace(`${import.meta.env.VITE_REST_URL_PATH}/`, '') }
+    } else {
+      console.log("noimage");
+    }
   }
   const UploadPdf2Company = async (image) => {
     let fileall = new FormData();
     image?.forEach(img => {
-      fileall?.append('vat', img?.originFileObj)
+      if (img.status !== 'done') fileall?.append('vat', img?.originFileObj)
     });
     // Object.fromEntries(fileall), {
-
-   return await axios({
-      url: `${import.meta.env.VITE_REST_URL_PATH}/upload/pdfvatregistration`,
-      data: fileall,
-      method: 'POST',
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    }).then(({data}) => {
-      return data;
-    }).catch((error) => {
-      console.log('error ', error)
-    });
+    if (Object.keys(Object.fromEntries(fileall)).length > 0) {
+      return await axios({
+        url: `${import.meta.env.VITE_REST_URL_PATH}/upload/pdfvatregistration`,
+        data: fileall,
+        method: 'POST',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      }).then(({ data }) => {
+        return data;
+      }).catch((error) => {
+        console.log('error ', error)
+      });
+    } else if (image.length > 0) {
+      return { ...image[0], path: (image[0].url).replace(`${import.meta.env.VITE_REST_URL_PATH}/`, '') }
+    } else {
+      console.log("noimage");
+    }
   }
 
   const onChangeUploadImageCompany = ({ fileList: newFileList }) => {
@@ -695,7 +711,7 @@ const Newcompany: React.FC<NewcompanyPropsType> = ({ role }) => {
             </Col>
 
             <Col xs={24} sm={24} md={12} lg={12} xl={6}>
-              <Form.Item name={'company_type'} label={'ประเภทของธุรกิจ หลัก'}>
+              <Form.Item name={'main_business_id'} label={'ประเภทของธุรกิจ หลัก'}>
                 {Editdata?.mode == 'view' ? (
                   <Select
                     disabled
@@ -714,7 +730,7 @@ const Newcompany: React.FC<NewcompanyPropsType> = ({ role }) => {
             </Col>
             <Col xs={24} sm={24} md={12} lg={12} xl={6}>
               <Form.Item
-                name={'sub_company_type'}
+                name={'sub_company_typeId'}
                 label={'ประเภทของธุรกิจ ย่อย'}
               >
                 {Editdata?.mode == 'view' ? (
@@ -769,8 +785,8 @@ const Newcompany: React.FC<NewcompanyPropsType> = ({ role }) => {
                   listType="picture"
                   onChange={onChangeUploadImageCompany}
                   fileList={uploadlogo}
-                  onRemove={(del)=>{
-                    console.log('del',del)
+                  onRemove={(del) => {
+                    console.log('del', del)
                   }}
                 >
                   <Button
@@ -795,8 +811,8 @@ const Newcompany: React.FC<NewcompanyPropsType> = ({ role }) => {
                   listType="picture"
                   onChange={onChangeUploadImageCompany}
                   fileList={uploadlogo}
-                  onRemove={(del)=>{
-                    console.log('del',del)
+                  onRemove={(del) => {
+                    console.log('del', del)
                   }}
                 >
                   <Button
