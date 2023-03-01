@@ -17,6 +17,8 @@ import {
   Select,
   Space,
   InputNumber,
+  UploadFile,
+  message,
 } from 'antd';
 import { RiCalendar2Line, RiBriefcase5Line } from 'react-icons/ri';
 import {
@@ -38,10 +40,13 @@ import {
   CREATE_LEAVE,
   DELETE_LEAVE,
 } from '../../../service/graphql/Leave';
-import { getFilePath } from '../../../util';
+import { getFilePath, getUploadUrl } from '../../../util';
 import { DateCalculateLeave } from 'aunwalibrary-toolkit';
+import type { UploadProps } from 'antd';
+import { RcFile } from 'antd/es/upload';
 import dayjs from 'dayjs';
 import Swal from 'sweetalert2';
+import axios from 'axios';
 const { useToken } = theme;
 const { TextArea } = Input;
 const { RangePicker } = DatePicker;
@@ -51,6 +56,9 @@ const Approve: React.FC = () => {
   const [form] = Form.useForm();
   const [drawertype, setdrawertype] = useState(1);
   const [selectedrow, setselectedrow] = useState<any>();
+  const [filepdf, setFilePdf] = useState<UploadFile[]>([]);
+  const [uploading, setUploading] = useState(false);
+  const [imagePath, setImagepath] = useState('');
   const token = useToken();
   const location = useLocation();
   let propsstate = location.state as any;
@@ -71,6 +79,7 @@ const Approve: React.FC = () => {
   };
 
   const onClose = () => {
+    form.resetFields();
     setOpen(false);
   };
 
@@ -93,6 +102,51 @@ const Approve: React.FC = () => {
         quantity_hours: resultdate?.hoursleave,
       });
     }
+  };
+
+  const handleUpload = () => {
+    const formData = new FormData();
+    filepdf.forEach((e) => {
+      formData.append('vat', e as RcFile);
+    });
+    console.log(filepdf);
+    setUploading(true);
+    // You can use any AJAX library you like
+    fetch(getUploadUrl() + 'pdfleave', {
+      method: 'POST',
+      body: formData,
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        console.log(res);
+        // setFilePdf([]);
+        form.setFieldValue('link_pdf', res.destination + '/' + res.filename);
+        setImagepath(res.destination + '/' + res.filename);
+        message.success('upload successfully.');
+      })
+      .catch(() => {
+        message.error('upload failed.');
+      })
+      .finally(() => {
+        setUploading(false);
+      });
+  };
+  ``;
+
+  const propsupload: UploadProps = {
+    fileList: filepdf,
+    onRemove: (file) => {
+      const index = filepdf.indexOf(file);
+      const newFileList = filepdf.slice();
+      newFileList.splice(index, 1);
+      setFilePdf(newFileList);
+    },
+    multiple: false,
+    showUploadList: true,
+    customRequest: handleUpload,
+    beforeUpload(file) {
+      setFilePdf([...filepdf, file]);
+    },
   };
 
   const genarateMenu = (record: any) => {
@@ -123,17 +177,29 @@ const Approve: React.FC = () => {
     if (key === 'edit') {
       showDrawer(1);
       setselectedrow(record);
+      setFilePdf([
+        {
+          url: getFilePath() + record?.link_pdf,
+          name: record?.link_pdf,
+          uid: record?.link_pdf,
+        },
+      ]);
       form.setFieldsValue({
         ...record,
-        start_date: dayjs(record.start_date),
-        end_date: dayjs(record.end_date),
+        start_date: [dayjs(record?.start_date), dayjs(record?.end_date)],
       });
     } else if (key === 'view') {
       showDrawer(2);
+      setFilePdf([
+        {
+          url: getFilePath() + record?.link_pdf,
+          name: record?.link_pdf,
+          uid: record?.link_pdf,
+        },
+      ]);
       form.setFieldsValue({
         ...record,
-        start_date: dayjs(record.start_date),
-        end_date: dayjs(record.end_date),
+        start_date: [dayjs(record?.start_date), dayjs(record?.end_date)],
       });
     } else if (key === 'delete') {
       Swal.fire({
@@ -282,6 +348,7 @@ const Approve: React.FC = () => {
           })
           .catch((err) => {
             Swal.fire(`แก้ไขข้อมูลการลาไม่สำเร็จ!`, '', 'error');
+            form.resetFields();
             console.error(err);
           });
       }
@@ -535,22 +602,41 @@ const Approve: React.FC = () => {
 
           <Row>
             <Col span={12}>
-              <Form.Item label={'ไฟล์เอกสาร'}>
+              <Form.Item name={'link_pdf'} label={'ไฟล์เอกสาร'}>
                 {drawertype == 2 ? (
-                  <Upload disabled>
-                    <Button
-                      style={{ width: '100%' }}
-                      icon={<UploadOutlined />}
-                      disabled
-                    >
-                      เปิดเอกสาร PDF
-                    </Button>
+                  <Upload
+                    {...propsupload}
+                    action={getUploadUrl() + 'link_pdf'}
+                    maxCount={1}
+                    disabled
+                  >
+                    {filepdf.length < 1 && (
+                      <Button
+                        loading={uploading}
+                        style={{ width: '100%' }}
+                        icon={<UploadOutlined />}
+                        disabled
+                      >
+                        เปิดเอกสาร PDF
+                      </Button>
+                    )}
                   </Upload>
                 ) : (
-                  <Upload>
-                    <Button style={{ width: '100%' }} icon={<UploadOutlined />}>
-                      เปิดเอกสาร PDF
-                    </Button>
+                  <Upload
+                    {...propsupload}
+                    action={getUploadUrl() + 'link_pdf'}
+                    accept=".pdf"
+                    maxCount={1}
+                  >
+                    {filepdf.length < 1 && (
+                      <Button
+                        style={{ width: '100%' }}
+                        loading={uploading}
+                        icon={<UploadOutlined />}
+                      >
+                        เปิดเอกสาร PDF
+                      </Button>
+                    )}
                   </Upload>
                 )}
               </Form.Item>

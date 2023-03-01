@@ -117,6 +117,7 @@ query GetAllleave($userId: ID, $name: String, $position2Id: ID, $position3Id: ID
           name
           orderby
         }
+        link_pdf
       }
     }
     data_count {
