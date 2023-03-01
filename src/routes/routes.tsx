@@ -273,7 +273,7 @@ export const routing: RoutingType[] = [
         children: [
           {
             label: 'จัดการข้อมูลเงินเดือน',
-            path: '/:companycode/summary',
+            path: '/:companycode/summary/',
             element: <Compensation />,
           },
           {

@@ -29,7 +29,7 @@ import Del from '../../../assets/DEL.png';
 import View from '../../../assets/View.png';
 import type { ColumnsType } from 'antd/es/table';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useAuth } from '../../../hooks/useAuth';
 import { useMutation, useQuery } from '@apollo/client';
 import {
@@ -58,7 +58,9 @@ const Approve: React.FC = () => {
     data: dataleaveme,
     loading,
     refetch,
-  } = useQuery(FETCH_ALL_LEAVE, { variables: { userId: propsstate?.id } });
+  } = useQuery(FETCH_ALL_LEAVE, {
+    variables: { userId: propsstate?.id },
+  });
   const { data: leave_type_data } = useQuery(LEAVE_TYPE_DATA);
   const [createLeaveData] = useMutation(CREATE_LEAVE);
   const [deleteLeave] = useMutation(DELETE_LEAVE);

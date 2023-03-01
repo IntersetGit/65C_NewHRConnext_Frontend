@@ -666,7 +666,7 @@ const Register: React.FC = () => {
                 style={{ margin: '0 8px' }}
                 onClick={() => prev()}
               >
-                ย่อนกลับ
+                ย้อนกลับ
               </Button>
             )}
           </div>

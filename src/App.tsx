@@ -127,7 +127,7 @@ const authLink = setContext((operation, { headers }) => {
 });
 
 const gqlClient = new ApolloClient({
-  // connectToDevTools: import.meta.env.NODE_ENV === 'development' ? true : false,
+  connectToDevTools: import.meta.env.NODE_ENV === 'development',
   link: ApolloLink.from([errorLink, authLink, httpLink]),
   cache: new InMemoryCache(),
 });
