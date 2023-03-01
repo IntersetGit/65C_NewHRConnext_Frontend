@@ -493,10 +493,18 @@ const ProfilePosition: React.FC<ProfilePositionPropsType> = ({ role }) => {
           <Row>
             <Col span={12}>
               <Form.Item name={'date'} label={'วันที่มีผล'}>
-                <DatePicker
-                  style={{ width: '100%' }}
-                  format={'DD-MM-YYYY'}
-                ></DatePicker>
+                {drawerType === 3 ? (
+                  <DatePicker
+                    style={{ width: '100%' }}
+                    format={'DD-MM-YYYY'}
+                    disabled
+                  ></DatePicker>
+                ) : (
+                  <DatePicker
+                    style={{ width: '100%' }}
+                    format={'DD-MM-YYYY'}
+                  ></DatePicker>
+                )}
               </Form.Item>
             </Col>
           </Row>
@@ -504,11 +512,20 @@ const ProfilePosition: React.FC<ProfilePositionPropsType> = ({ role }) => {
           <Row>
             <Col span={24}>
               <Form.Item name={'position1_id'} label={'ฝ่าย'}>
-                <Select
-                  options={selectposition ? selectposition : []}
-                  onChange={onChangeMasLevel1}
-                  allowClear
-                />
+                {drawerType === 3 ? (
+                  <Select
+                    options={selectposition ? selectposition : []}
+                    onChange={onChangeMasLevel1}
+                    allowClear
+                    disabled
+                  />
+                ) : (
+                  <Select
+                    options={selectposition ? selectposition : []}
+                    onChange={onChangeMasLevel1}
+                    allowClear
+                  />
+                )}
               </Form.Item>
             </Col>
           </Row>
@@ -516,11 +533,20 @@ const ProfilePosition: React.FC<ProfilePositionPropsType> = ({ role }) => {
           <Row>
             <Col span={24}>
               <Form.Item name={'position2_id'} label={'แผนก'}>
-                <Select
-                  options={maspositionlevel1 ? maspositionlevel1 : []}
-                  onChange={onChangeMasLevel2}
-                  allowClear
-                />
+                {drawerType === 3 ? (
+                  <Select
+                    options={maspositionlevel1 ? maspositionlevel1 : []}
+                    onChange={onChangeMasLevel2}
+                    allowClear
+                    disabled
+                  />
+                ) : (
+                  <Select
+                    options={maspositionlevel1 ? maspositionlevel1 : []}
+                    onChange={onChangeMasLevel2}
+                    allowClear
+                  />
+                )}
               </Form.Item>
             </Col>
           </Row>
@@ -528,7 +554,18 @@ const ProfilePosition: React.FC<ProfilePositionPropsType> = ({ role }) => {
           <Row>
             <Col span={24}>
               <Form.Item name={'position3_id'} label={'ตำแหน่ง'}>
-                <Select options={maspositionlevel2 ? maspositionlevel2 : []} />
+                {drawerType === 3 ? (
+                  <Select
+                    options={maspositionlevel2 ? maspositionlevel2 : []}
+                    allowClear
+                    disabled
+                  />
+                ) : (
+                  <Select
+                    options={maspositionlevel2 ? maspositionlevel2 : []}
+                    allowClear
+                  />
+                )}
               </Form.Item>
             </Col>
           </Row>
@@ -536,7 +573,7 @@ const ProfilePosition: React.FC<ProfilePositionPropsType> = ({ role }) => {
           <Row>
             <Col span={24}>
               <Form.Item name={'role'} label={'หน้าที่'}>
-                <Input />
+                {drawerType === 3 ? <Input disabled /> : <Input />}
               </Form.Item>
             </Col>
           </Row>
@@ -544,7 +581,11 @@ const ProfilePosition: React.FC<ProfilePositionPropsType> = ({ role }) => {
           <Row>
             <Col span={24}>
               <Form.Item name={'headderId'} label={'หัวหน้างาน'}>
-                <Select options={header_data} allowClear />
+                {drawerType === 3 ? (
+                  <Select options={header_data} allowClear disabled />
+                ) : (
+                  <Select options={header_data} allowClear />
+                )}
               </Form.Item>
             </Col>
           </Row>
@@ -552,15 +593,17 @@ const ProfilePosition: React.FC<ProfilePositionPropsType> = ({ role }) => {
           <Row style={{ float: 'right', paddingBottom: '20px' }}>
             <Col>
               <Space>
-                <Button
-                  type="primary"
-                  style={{
-                    backgroundColor: token.token.colorPrimary,
-                  }}
-                  htmlType="submit"
-                >
-                  ตกลง
-                </Button>
+                {drawerType !== 3 && (
+                  <Button
+                    htmlType="submit"
+                    type="primary"
+                    style={{
+                      backgroundColor: token.token.colorPrimary,
+                    }}
+                  >
+                    บันทึก
+                  </Button>
+                )}
                 <Button onClick={onClose}>ยกเลิก</Button>
               </Space>
             </Col>
