@@ -202,6 +202,7 @@ query Getleava_datame {
             name
             orderby
           }
+          link_pdf
           start_date
           end_date
           quantity_day

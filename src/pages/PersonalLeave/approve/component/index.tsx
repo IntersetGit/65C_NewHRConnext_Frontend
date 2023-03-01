@@ -698,14 +698,12 @@ const ProfileApprove: React.FC<ProfileApprovePropsType> = ({ role }) => {
                     {...propsupload}
                     action={getUploadUrl() + 'link_pdf'}
                     maxCount={1}
-                    disabled
                   >
                     {filepdf.length < 1 && (
                       <Button
                         loading={uploading}
                         style={{ width: '100%' }}
                         icon={<UploadOutlined />}
-                        disabled
                       >
                         เปิดเอกสาร PDF
                       </Button>
