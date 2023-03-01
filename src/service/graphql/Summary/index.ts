@@ -224,6 +224,7 @@ query Filter_bookbank_admin($userId: String) {
     base_salary
     mas_bank {
       name
+      id
     }
     userId
     provident_com
@@ -263,4 +264,25 @@ mutation Createandupdatesalary($data: salaryInput) {
   }
 }
 `)
+
+export const FETCH_SALARY_SLIP = gql(`
+mutation SalarySlip($userId: String, $date: Date) {
+  SalarySlip(userId: $userId, date: $date) {
+    message
+    path
+    status
+  }
+}
+`)
+
+export const FETCH_SHOW_YEARS = gql(`
+query Show_years($name: String) {
+  show_years(name: $name) {
+    id
+    name
+  }
+}
+`)
+
+
 

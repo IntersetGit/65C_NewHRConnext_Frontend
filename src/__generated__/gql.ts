@@ -58,9 +58,11 @@ const documents = {
     "\nmutation Deletebookbank($deletebookbankId: ID!) {\n  Deletebookbank(id: $deletebookbankId) {\n    message\n    status\n  }\n}\n": types.DeletebookbankDocument,
     "\nquery Bookbank_log_admin($userId: String) {\n  bookbank_log_admin(userId: $userId) {\n    id\n    date\n    mas_bankId\n    bank_number\n    base_salary\n    provident_com\n    provident_emp\n    mas_bank {\n      id\n      name\n    }\n    userId\n    accept_date\n  }\n}\n": types.Bookbank_Log_AdminDocument,
     "\nquery Expense_company($date: String) {\n  expense_company(date: $date) {\n    id\n    vat_per\n    ss_per\n    mas_bank {\n      name\n      id\n    }\n    check_vat\n    date\n    cal_date_salary\n  }\n}\n": types.Expense_CompanyDocument,
-    "\nquery Filter_bookbank_admin($userId: String) {\n  filter_bookbank_admin(userId: $userId) {\n    id\n    bank_number\n    base_salary\n    mas_bank {\n      name\n    }\n    userId\n    provident_com\n    provident_emp\n  }\n}\n": types.Filter_Bookbank_AdminDocument,
+    "\nquery Filter_bookbank_admin($userId: String) {\n  filter_bookbank_admin(userId: $userId) {\n    id\n    bank_number\n    base_salary\n    mas_bank {\n      name\n      id\n    }\n    userId\n    provident_com\n    provident_emp\n  }\n}\n": types.Filter_Bookbank_AdminDocument,
     "\nquery Show_pervspUser($userId: String, $date: String) {\n  show_pervspUser(userId: $userId, date: $date) {\n    id\n    email\n    bookbank_log {\n      base_salary\n      bank_number\n      provident_emp\n      provident_com\n    }\n    companyBranch {\n      expense_company {\n        ss_per\n        vat_per\n        check_vat\n      }\n      id\n    }\n  }\n}\n": types.Show_PervspUserDocument,
     "\nmutation Createandupdatesalary($data: salaryInput) {\n  Createandupdatesalary(data: $data) {\n    message\n    status\n  }\n}\n": types.CreateandupdatesalaryDocument,
+    "\nmutation SalarySlip($userId: String, $date: Date) {\n  SalarySlip(userId: $userId, date: $date) {\n    message\n    path\n    status\n  }\n}\n": types.SalarySlipDocument,
+    "\nquery Show_years($name: String) {\n  show_years(name: $name) {\n    id\n    name\n  }\n}\n": types.Show_YearsDocument,
     "\nquery Users($name: String, $position2Id: ID, $position3Id: ID) {\n  users(name: $name, position2Id: $position2Id, position3Id: $position3Id) {\n      id\n      email\n      profile {\n        address\n        age\n        avatar\n        bio\n        citizen_address\n        citizen_addressnumber\n        citizen_country\n        citizen_district\n        citizen_id\n        citizen_province\n        citizen_state\n        citizen_tel\n        citizen_zipcode\n        contract_address\n        contract_addressnumber\n        contract_companyemail\n        contract_country\n        contract_district\n        id\n        firstname_th\n        lastname_th\n        firstname_en\n        lastname_en\n        dob\n        relationship\n        shirt_size\n        prefix_th\n        prefix_en\n        social_id\n        staff_status\n        tel\n        gender\n        staff_code\n        religion\n        userId\n        contract_sameCitizen\n        contract_province\n        contract_state\n        contract_zipcode\n        contract_email\n        social_facebook\n        social_likedin\n        social_line\n        social_telegram\n        nickname\n        blood_type\n        employee_status\n        start_date_work\n        user {\n          email\n          password\n        }\n      }\n      Role_Company {\n        id\n        name\n\n      }\n      Position_user {\n        date\n        mas_positionlevel1 {\n          id\n          name\n          level\n          code\n          type\n          CompanyId\n        }\n        mas_positionlevel2 {\n          id\n          name\n          level\n          code\n          type\n          positionlevel1_id\n        }\n        mas_positionlevel3 {\n          id\n          name\n          level\n          code\n          type\n          positionlevel2_id\n        }\n      }\n    }\n\n  }\n": types.UsersDocument,
 };
 
@@ -261,7 +263,7 @@ export function gql(source: "\nquery Expense_company($date: String) {\n  expense
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "\nquery Filter_bookbank_admin($userId: String) {\n  filter_bookbank_admin(userId: $userId) {\n    id\n    bank_number\n    base_salary\n    mas_bank {\n      name\n    }\n    userId\n    provident_com\n    provident_emp\n  }\n}\n"): (typeof documents)["\nquery Filter_bookbank_admin($userId: String) {\n  filter_bookbank_admin(userId: $userId) {\n    id\n    bank_number\n    base_salary\n    mas_bank {\n      name\n    }\n    userId\n    provident_com\n    provident_emp\n  }\n}\n"];
+export function gql(source: "\nquery Filter_bookbank_admin($userId: String) {\n  filter_bookbank_admin(userId: $userId) {\n    id\n    bank_number\n    base_salary\n    mas_bank {\n      name\n      id\n    }\n    userId\n    provident_com\n    provident_emp\n  }\n}\n"): (typeof documents)["\nquery Filter_bookbank_admin($userId: String) {\n  filter_bookbank_admin(userId: $userId) {\n    id\n    bank_number\n    base_salary\n    mas_bank {\n      name\n      id\n    }\n    userId\n    provident_com\n    provident_emp\n  }\n}\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -270,6 +272,14 @@ export function gql(source: "\nquery Show_pervspUser($userId: String, $date: Str
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(source: "\nmutation Createandupdatesalary($data: salaryInput) {\n  Createandupdatesalary(data: $data) {\n    message\n    status\n  }\n}\n"): (typeof documents)["\nmutation Createandupdatesalary($data: salaryInput) {\n  Createandupdatesalary(data: $data) {\n    message\n    status\n  }\n}\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\nmutation SalarySlip($userId: String, $date: Date) {\n  SalarySlip(userId: $userId, date: $date) {\n    message\n    path\n    status\n  }\n}\n"): (typeof documents)["\nmutation SalarySlip($userId: String, $date: Date) {\n  SalarySlip(userId: $userId, date: $date) {\n    message\n    path\n    status\n  }\n}\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\nquery Show_years($name: String) {\n  show_years(name: $name) {\n    id\n    name\n  }\n}\n"): (typeof documents)["\nquery Show_years($name: String) {\n  show_years(name: $name) {\n    id\n    name\n  }\n}\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

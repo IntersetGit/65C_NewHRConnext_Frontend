@@ -17,31 +17,29 @@ import {
     DatePicker,
     InputNumber,
 } from 'antd';
-import type { DatePickerProps } from 'antd';
 import { AntDesignOutlined, MoreOutlined } from '@ant-design/icons';
 import Swal from 'sweetalert2';
 import { GiReceiveMoney } from 'react-icons/gi';
 import type { ColumnsType } from 'antd/es/table';
-import type { RangePickerProps } from 'antd/es/date-picker';
 import edit from '../../../assets/Edit.png';
 import Slip from '../../../assets/Slip.png';
 import View from '../../../assets/View.png';
 import Cal1 from '../../../assets/Cal1.png';
 
 import dayjs from 'dayjs';
-import th from 'antd/locale/th_TH';
 import { generatePath, useNavigate, useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { useMutation, useQuery } from '@apollo/client';
 
 import {
     FETCH_AllSALARY_USER,
-    CREATE_SALARY_USER,
     FETCH_ExpenseCompany,
     FETCH_GETALLBOOKBANK_LOG,
     FETCH_Filter_BOOKBANK_ADMIN,
     FETCH_Show_PervspUser,
-    Create_UpdateSalary
+    Create_UpdateSalary,
+    FETCH_SALARY_SLIP,
+    // FETCH_SHOW_YEARS,
 } from '../../../service/graphql/Summary';
 
 import {
@@ -64,6 +62,10 @@ const Compensation: React.FC = () => {
     const [drawerType, setDrawerType] = useState(1);
     const [selectedRow, setselectedRow] = useState<any>();
     const [pickDate, setPickDate] = useState<any>();
+
+    const [Show_Years, setShow_Years] = useState<
+        { value?: string | null; label?: string | null }[] | undefined
+    >(undefined);
 
     const location = useLocation();
     let propsstate = location.state as any;
@@ -91,22 +93,65 @@ const Compensation: React.FC = () => {
         notifyOnNetworkStatusChange: true,
     });
     const [create_update_salary] = useMutation(Create_UpdateSalary);
+    const [createSlip] = useMutation(FETCH_SALARY_SLIP, {
+        notifyOnNetworkStatusChange: true,
+    });
+
+    // const select_ShowYears = () => {
+    //     let arrinfo = [] as any;
+    //     TableDataSalary?.salary?.salary?.forEach((v, k) => {
+    //         let finds = arrinfo?.find((e: any) => e.value == v?.id)
+    //         if (!finds) {
+    //             arrinfo?.push((v: any) => {
+    //                 return {
+    //                     label: v?.years,
+    //                     value: v?.years,
+    //                 }
+    //             })
+    //         }
+    //     })
+    //     setShow_Years(arrinfo);
+
+    // }
+    // const select_ShowYears = TableDataSalary?.salary?.salary?.forEach((v, k) => {
+
+    //     console.log(select_ShowYears)
+    // })
+    // const Filter_ShowYears = TableDataSalary?.salary?.salary
 
 
+    // const { data: ShowYears } = useQuery(FETCH_SHOW_YEARS);
+
+    // const selectYears = TableDataSalary?.salary?.salary?.find((e) => e?.id === value)?.salary?.map((e) => {
+    //     return {
+    //         label: e?.name,
+    //         value: e?.id,
+    //     };
+    // });
+
+    // const onChange = (value) => {
+    //     formshow.setFieldValue('selectYears', null);
+    //     const yearOnChange = TableDataSalary?.salary?.salary?.find((e) => e?.years === value)
+    //     console.log(yearOnChange)
+    // };
+
+
+    // map((e: any) => {
+    //     return {
+    //         label: e.name,
+    //         value: e.name,
+    //     };
+    // });
     //console.log('DataT', TableDataSalary);
     useEffect(() => {
         refetch();
         refetch2();
         refetch3();
         refetch4();
-        // refetch5();
     }, [])
     useEffect(() => {
         form.setFieldValue('net', sumIncome - sumExpense)
     }, [sumIncome, sumExpense])
-
-
-
 
     // useEffect(() => {
     //     const salary: any = book_bank_data
@@ -192,7 +237,11 @@ const Compensation: React.FC = () => {
         } else if (key === 'view') {
             showDrawer(3);
         } else if (key === 'view_slip') {
-            navigate(`payslip`);
+            // navigate(`payslip`);
+            // console.log(record)
+            createSlip({ variables: { date: record.date, userId: record.userId } }).then((rec) => {
+                window.open(rec.data?.SalarySlip?.path as string, '_blank');
+            })
         } else if (key === 'calculate') {
             showDrawer(1);
             setselectedRow(record);
@@ -222,13 +271,18 @@ const Compensation: React.FC = () => {
                     if (value.date !== undefined) {
                         let cal1 = Show_PervspUser?.show_pervspUser?.[0]?.bookbank_log?.[0]?.base_salary as any
                         let cal2 = Show_PervspUser?.show_pervspUser?.[0]?.bookbank_log?.[0]?.provident_com as any
-
                         calsum = cal1 * (cal2 / 100)
+                    }
+                    var sentIdMasBank = "";
+                    if (value.date !== undefined) {
+                        let IDMasBank = Filter_BookBank?.filter_bookbank_admin?.[0]?.mas_bank?.id as any;
+                        sentIdMasBank = IDMasBank;
                     }
                     let sentData = {
                         ...value,
                         userId: propsstate?.userId,
                         provident_company: calsum,
+                        mas_bankId: sentIdMasBank,
                     }
                     delete sentData.base_salary
                     delete sentData.vat_per
@@ -378,7 +432,7 @@ const Compensation: React.FC = () => {
             dataIndex: 'net',
             align: 'center',
             render: (record) => {
-                return <div>{record.toFixed(2)}</div>;
+                return <div>{record.toFixed(2) ?? '-'}</div>;
             },
         },
         {
@@ -641,12 +695,16 @@ const Compensation: React.FC = () => {
                     >
                         <Col xs={24} sm={24} md={24} lg={9} xl={6}>
                             <Form.Item
-                                name="year"
+                                name="selectYears"
                                 colon={false}
                                 label={'ปี'}
                                 style={{ marginLeft: '66px' }}
+
                             >
-                                <Select allowClear></Select>
+                                <Select allowClear
+                                // options={}
+                                // onChange={onChange}
+                                ></Select>
                             </Form.Item>
                         </Col>
 
