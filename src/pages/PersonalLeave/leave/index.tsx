@@ -22,7 +22,7 @@ import { useNavigate } from 'react-router-dom';
 import { FETCH_ALL_LEAVE } from '../../../service/graphql/Leave';
 import { useQuery } from '@apollo/client';
 import { POSITION } from '../../../service/graphql/Position';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const { useToken } = theme;
 
@@ -35,6 +35,10 @@ const Leave: React.FC = () => {
     { value?: string | null; label?: string | null }[] | undefined
   >(undefined);
   const [formSearch] = Form.useForm();
+
+  useEffect(() => {
+    refetch();
+  }, []);
 
   const onChange = (value) => {
     formSearch.setFieldValue('mas_positionlevel3', null);
