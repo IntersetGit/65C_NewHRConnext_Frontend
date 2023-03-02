@@ -195,6 +195,14 @@ query Bookbank_log_admin($userId: String) {
     }
     userId
     accept_date
+    User {
+      companyBranch {
+        expense_company {
+          cal_date_salary
+        }
+      }
+    }
+    unix
   }
 }
 `)
@@ -284,5 +292,12 @@ query Show_years($name: String) {
 }
 `)
 
-
+export const Delete_Expense_Com = gql(`
+mutation DeleteExpensecom($deleteExpensecomId: ID!) {
+  DeleteExpensecom(id: $deleteExpensecomId) {
+    message
+    status
+  }
+}
+`)
 

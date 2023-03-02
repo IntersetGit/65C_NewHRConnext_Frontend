@@ -130,6 +130,8 @@ const Remuneration: React.FC = () => {
       {
         key: 'edit',
         label: 'แก้ไข',
+        // disabled: record.unix <= dayjs(record.cal_date_salary).unix(),
+        disabled: dayjs().unix() >= record.unix,
         icon: <img style={{ width: '17px', height: '17px' }} src={edit} />,
         onClick: (e: any) => onMenuClick(e, record),
       },
