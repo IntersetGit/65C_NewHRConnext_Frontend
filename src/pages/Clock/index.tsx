@@ -1,7 +1,7 @@
 import { generatePath, Outlet, useLocation, useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 
-const Approveroot: React.FC = () => {
+const Clock: React.FC = () => {
   const navigate = useNavigate();
   let { companycode } = useParams();
 
@@ -16,4 +16,4 @@ const Approveroot: React.FC = () => {
   );
 };
 
-export default Approveroot;
+export default Clock;

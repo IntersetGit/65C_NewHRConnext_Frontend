@@ -33,9 +33,14 @@ const ProfileCompany = React.lazy(
 const ProfileApprove = React.lazy(
   () => import('../pages/PersonalLeave/approve/component'),
 );
-const ApproveLeave = React.lazy(() => import('../pages/Approve'));
+const ApproveLeave = React.lazy(() => import('../pages/Approve/approve'));
+const Approveroot = React.lazy(() => import('../pages/Approve'));
 const Employeeroot = React.lazy(() => import('../pages/Employee'));
 const Employee = React.lazy(() => import('../pages/Employee/employee'));
+const Clock = React.lazy(() => import('../pages/Clock'));
+const ClockInClockOut = React.lazy(
+  () => import('../pages/Clock/clockinclockout'),
+);
 const PositionEmployee = React.lazy(
   () => import('../pages/Employee/employeeposition'),
 );
@@ -100,6 +105,7 @@ import {
   RiCalendarCheckLine,
   RiSuitcaseLine,
   RiProfileLine,
+  RiTimeLine,
 } from 'react-icons/ri';
 import { HiOutlineClipboardDocumentCheck } from 'react-icons/hi2';
 import { TbCalendarTime } from 'react-icons/tb';
@@ -266,6 +272,20 @@ export const routing: RoutingType[] = [
         ],
       },
       {
+        path: '/:companycode/clockinclockout',
+        label: 'การลงเวลางาน',
+        icon: <RiTimeLine size={'18'} />,
+        forcerendermenu: true,
+        element: <Clock />,
+        children: [
+          {
+            path: '/:companycode/clockinclockout',
+            element: <ClockInClockOut />,
+            hideInmenu: true,
+          },
+        ],
+      },
+      {
         path: '/:companycode/summary',
         label: 'เงินเดือน',
         icon: <RiMoneyDollarCircleLine size={'18'} />,
@@ -335,8 +355,15 @@ export const routing: RoutingType[] = [
       {
         path: '/:companycode/approveleave',
         label: 'การอนุมัติใบลา',
+        forcerendermenu: true,
         icon: <RiCalendarCheckLine size={'18'} />,
-        element: <ApproveLeave />,
+        element: <Approveroot />,
+        children: [
+          {
+            path: '/:companycode/approveleave',
+            element: <ApproveLeave />,
+          },
+        ],
       },
       {
         path: '/:companycode/training',
