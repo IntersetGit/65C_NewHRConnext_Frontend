@@ -39,7 +39,6 @@ const Siderbar: React.FC<SiderbarType> = (props) => {
     const el = document.getElementById('scrollbar-menu');
     const scrollFunction = () => {
       if (el) {
-        console.log('scroll');
         el.classList.add('on-scrollbar');
       }
     };
