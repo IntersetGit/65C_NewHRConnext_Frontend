@@ -22,12 +22,14 @@ import { RiTimer2Fill } from 'react-icons/ri';
 import edit from '../../../assets/Edit.png';
 import Del from '../../../assets/DEL.png';
 import View from '../../../assets/View.png';
+import { useNavigate } from 'react-router-dom';
 
 const { useToken } = theme;
 
 const ClockInClockOut = () => {
   const token = useToken();
   const [formSearch] = Form.useForm();
+  const navigate = useNavigate();
 
   const genarateMenu = (record: any) => {
     return [
@@ -55,6 +57,9 @@ const ClockInClockOut = () => {
   const onMenuClick = (event: any, record: any) => {
     const { key } = event;
     if (key === 'edit') {
+      navigate(`clocklog`, {
+        state: record,
+      });
     } else if (key === 'view') {
     } else if (key === 'delete') {
     }
@@ -73,30 +78,30 @@ const ClockInClockOut = () => {
       key: 'profile',
       dataIndex: 'profile',
       align: 'center',
-      //   render: (txt) => txt.firstname_th + ' ' + txt.lastname_th,
+      render: (txt) => txt.firstname_th + ' ' + txt.lastname_th,
     },
     {
       title: 'ตำแหน่ง',
       key: 'Positon_user',
       align: 'center',
-      //   render: (record) => {
-      //     return record?.Position_user[0]?.mas_positionlevel3?.name;
-      //   },
+      render: (record) => {
+        return record?.Position_user.mas_positionlevel3;
+      },
     },
     {
       title: 'แผนก',
-      key: 'profile',
+      key: 'Positon_user',
       align: 'center',
-      //   render: (record) => {
-      //     return record?.Position_user[0]?.mas_positionlevel2?.name;
-      //   },
+      render: (record) => {
+        return record?.Position_user?.mas_positionlevel2;
+      },
     },
     {
       title: 'เบอร์โทร',
       key: 'profile',
       dataIndex: 'profile',
       align: 'center',
-      //   render: (record) => record.tel,
+      render: (record) => record.tel,
     },
     {
       title: 'หัวหน้างาน',
@@ -120,6 +125,52 @@ const ClockInClockOut = () => {
       ),
     },
   ];
+
+  const data = [
+    {
+      key: '1',
+      date: '02/2023',
+      profile: {
+        firstname_th: 'นาย สมใจ',
+        lastname_th: 'พิมพ์สวย',
+        tel: '084 222 1477',
+      },
+      Position_user: {
+        mas_positionlevel3: 'โปรแกรมเมอร์',
+        mas_positionlevel2: 'พัฒนาซอฟต์แวร์',
+      },
+      header: 'นาย สมชาย ใจดี',
+    },
+    {
+      key: '2',
+      date: '02/2023',
+      profile: {
+        firstname_th: 'นางสาว สมพร',
+        lastname_th: 'บัวชมพู',
+        tel: '084 222 1456',
+      },
+      Position_user: {
+        mas_positionlevel3: 'เจ้าหน้าที่การเงิน',
+        mas_positionlevel2: 'บัญชี',
+      },
+      header: 'นาย สมชาย ใจดี',
+    },
+    {
+      key: '3',
+      date: '02/2023',
+      profile: {
+        firstname_th: 'นาย สมศักดิ์',
+        lastname_th: 'พิมพ์สวย',
+        tel: '086 555 4444',
+      },
+      Position_user: {
+        mas_positionlevel3: 'นักวิเคราะห์และออกแบบระบบ',
+        mas_positionlevel2: 'พัฒนาซอฟต์แวร์',
+      },
+      header: 'นาย สมชาย ใจดี',
+    },
+  ];
+
   return (
     <>
       <div className="flex text-2xl ml-2 pt-4">
@@ -198,7 +249,11 @@ const ClockInClockOut = () => {
                 justifyContent: 'space-between',
               }}
             >
-              <Table columns={columns} scroll={{ x: 1500 }}></Table>
+              <Table
+                columns={columns}
+                dataSource={data}
+                scroll={{ x: 1500 }}
+              ></Table>
             </div>
           </Col>
         </Row>

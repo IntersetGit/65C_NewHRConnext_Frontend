@@ -33,6 +33,12 @@ const ProfileCompany = React.lazy(
 const ProfileApprove = React.lazy(
   () => import('../pages/PersonalLeave/approve/component'),
 );
+const CompensationProfile = React.lazy(
+  () => import('../pages/Summary/profilecompensation/component'),
+);
+const ProfileRemuneration = React.lazy(
+  () => import('../pages/Summary/remuneration/component'),
+);
 const ApproveLeave = React.lazy(() => import('../pages/Approve/approve'));
 const Approveroot = React.lazy(() => import('../pages/Approve'));
 const Employeeroot = React.lazy(() => import('../pages/Employee'));
@@ -41,6 +47,7 @@ const Clock = React.lazy(() => import('../pages/Clock'));
 const ClockInClockOut = React.lazy(
   () => import('../pages/Clock/clockinclockout'),
 );
+const ClockInClockOutLog = React.lazy(() => import('../pages/Clock/clocklog'));
 const PositionEmployee = React.lazy(
   () => import('../pages/Employee/employeeposition'),
 );
@@ -194,6 +201,16 @@ export const routing: RoutingType[] = [
             ),
             requireRole: { action: 'read', subject: 'manageSelfLeave' },
           },
+          {
+            label: 'เงินเดือน',
+            path: '/:companycode/profile/salary',
+            element: <CompensationProfile />,
+          },
+          {
+            label: 'ข้อมูลฐานเงินเดือน',
+            path: '/:companycode/profile/remuneration',
+            element: <ProfileRemuneration />,
+          },
         ],
       },
       {
@@ -281,6 +298,11 @@ export const routing: RoutingType[] = [
           {
             path: '/:companycode/clockinclockout',
             element: <ClockInClockOut />,
+            hideInmenu: true,
+          },
+          {
+            path: '/:companycode/clockinclockout/clocklog',
+            element: <ClockInClockOutLog />,
             hideInmenu: true,
           },
         ],
