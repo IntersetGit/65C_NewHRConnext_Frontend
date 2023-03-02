@@ -9,7 +9,7 @@ import {
   generatePath,
 } from 'react-router-dom';
 import { routing, RoutingType } from '../../routes/routes';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useAuth } from '../../hooks/useAuth';
 
 export type SiderbarType = {
@@ -34,6 +34,20 @@ const Siderbar: React.FC<SiderbarType> = (props) => {
   const baseRoute = routing.find(
     (e) => e.path === layoutConfig.dashboardRoute,
   )?.children;
+
+  useEffect(() => {
+    const el = document.getElementById('scrollbar-menu');
+    const scrollFunction = () => {
+      if (el) {
+        console.log('scroll');
+        el.classList.add('on-scrollbar');
+      }
+    };
+    el?.addEventListener('scroll', scrollFunction);
+    return () => {
+      el?.removeEventListener('scroll', scrollFunction);
+    };
+  }, []);
 
   const onMenuclick = (e: { key: string }) => {
     setActivekey(e.key);
@@ -83,7 +97,9 @@ const Siderbar: React.FC<SiderbarType> = (props) => {
           position: 'fixed',
           zIndex: 3,
           userSelect: 'none',
+          overflowY: 'scroll',
         }}
+        id="scrollbar-menu"
         className="siderbar-custom"
         width={layoutConfig.siderbarWidth}
         collapsedWidth={layoutConfig.siderbarCollpasedWidth}

@@ -42,6 +42,41 @@
   border-right: 1px solid rgba(0, 0, 0, 0.2);
   padding: 0;
   margin: 0;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE 10+ */
+}
+
+#scrollbar-menu::-webkit-scrollbar-track {
+  -webkit-box-shadow: none !important;
+  background-color: transparent;
+}
+
+#scrollbar-menu::-webkit-scrollbar {
+  width: 3px !important;
+  background-color: transparent;
+}
+
+#scrollbar-menu::-webkit-scrollbar-thumb {
+  background-color: transparent;
+}
+
+.on-scrollbar {
+  scrollbar-width: thin; /* Firefox */
+  -ms-overflow-style: none; /* IE 10+ */
+}
+
+.on-scrollbar::-webkit-scrollbar-track {
+  -webkit-box-shadow: none !important;
+  background-color: transparent !important;
+}
+
+.on-scrollbar::-webkit-scrollbar {
+  width: 6px !important;
+  background-color: transparent;
+}
+
+.on-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #acacac;
 }
 
 .siderbar-custom .menu-custom {
