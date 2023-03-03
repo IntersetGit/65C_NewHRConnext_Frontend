@@ -131,6 +131,7 @@ query Salary($userId: String, $years: String) {
       vatYears
       incomeYears
       mas_bankId
+      base_salary
     }
     bookbank_log {
       mas_bank {
@@ -301,4 +302,15 @@ mutation DeleteExpensecom($deleteExpensecomId: ID!) {
   }
 }
 `)
+
+export const Delete_Salary = gql(`
+mutation DeleteSalary($salaryid: ID!, $userId: String!) {
+  DeleteSalary(salaryid: $salaryid, userId: $userId) {
+    message
+    status
+  }
+}
+`)
+
+
 
