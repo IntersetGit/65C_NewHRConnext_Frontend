@@ -424,7 +424,7 @@ const Remuneration: React.FC = () => {
               <Form.Item
                 name="bank_number"
                 colon={false}
-                label={'เลชบัญชี'}
+                label={'เลขบัญชี'}
                 style={{ marginLeft: '24px' }}
               >
                 <Input

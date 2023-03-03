@@ -140,6 +140,14 @@ query Salary($userId: String, $years: String) {
       bank_number
       base_salary
     }
+    companyBranch {
+      id
+      expense_company {
+        id
+        cal_date_salary
+        unix
+      }
+    }
   }
 }
 `);

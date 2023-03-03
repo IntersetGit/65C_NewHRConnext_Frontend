@@ -17,6 +17,7 @@ import {
   DatePicker,
   InputNumber,
 } from 'antd';
+import type { RangePickerProps } from 'antd/es/date-picker';
 import { AntDesignOutlined, MoreOutlined } from '@ant-design/icons';
 import Swal from 'sweetalert2';
 import { GiReceiveMoney } from 'react-icons/gi';
@@ -87,7 +88,7 @@ const Compensation: React.FC = () => {
       notifyOnNetworkStatusChange: true,
     },
   );
-  console.log('firstfirstfirstfirstfirstfirstfirst', Show_PervspUser)
+  // console.log('firstfirstfirstfirstfirstfirstfirst', Show_PervspUser)
   const [create_update_salary] = useMutation(Create_UpdateSalary);
   const [createSlip] = useMutation(FETCH_SALARY_SLIP, {
     notifyOnNetworkStatusChange: true,
@@ -110,6 +111,7 @@ const Compensation: React.FC = () => {
     refetch3();
     refetch4();
   }, []);
+
   useEffect(() => {
     form.setFieldValue('net', sumIncome - sumExpense);
   }, [sumIncome, sumExpense]);
@@ -129,6 +131,10 @@ const Compensation: React.FC = () => {
   };
 
   const genarateMenu = (record: any) => {
+    let month_s = dayjs(record.date).format('MM')
+    let cal_date_salary_s = dayjs(record.cal_date_salary).format('MM')
+    // console.log('1month_s', month_s)
+    // console.log('2cal_date_salary_s', cal_date_salary_s)
     return [
       {
         key: 'view',
@@ -139,6 +145,7 @@ const Compensation: React.FC = () => {
       {
         key: 'edit',
         label: 'แก้ไข',
+        disabled: dayjs(record.unix).unix() <= record.date && month_s < cal_date_salary_s,
         icon: <img style={{ width: '17px', height: '17px' }} src={edit} />,
         onClick: (e: any) => onMenuClick(e, record),
       },
@@ -240,10 +247,6 @@ const Compensation: React.FC = () => {
     }
 
   };
-
-  // const onSubmitForm = (value: any) => {
-  //     console.log('คำนวณ', value)
-  // }
 
   const onSubmitForm = (value: any) => {
     //console.log('คำนวณ', value);
@@ -433,6 +436,13 @@ const Compensation: React.FC = () => {
     refetch5({ userId: propsstate?.userId, date: date });
     //console.log("RRRRRRR", Show_PervspUser)
     // if (propsstate?.userId === propsstate?.userId)
+  };
+
+  const disabledDate: RangePickerProps['disabledDate'] = (current) => {
+    let size: any = TableDataSalary?.salary?.salary?.length
+    const date: any = TableDataSalary?.salary?.salary?.[size - 1]?.date;
+    // console.log("1234564897984512156", date);
+    return current && current < dayjs(new Date(date)).add(1, 'month');
   };
 
   const columns: ColumnsType<any> = [
@@ -693,7 +703,7 @@ const Compensation: React.FC = () => {
               <Form.Item
                 name="bank_number"
                 colon={false}
-                label={'เลชบัญชี'}
+                label={'เลขบัญชี'}
                 style={{ marginLeft: '24px' }}
               >
                 <Input
@@ -813,13 +823,19 @@ const Compensation: React.FC = () => {
                   },
                 ]}
               >
-                <DatePicker
-                  // onChange={onChangeDate}
-                  picker="month"
-                  format={'MM/YYYY'}
-                  disabled={drawerType === 3 ? true : false}
-                // disabledDate={disabledDate}
-                />
+                {drawerType == 1 ? (
+                  <DatePicker
+                    picker="month"
+                    format={'MM/YYYY'}
+                    disabledDate={disabledDate}
+                  />
+                ) : (
+                  <DatePicker
+                    picker="month"
+                    format={'MM/YYYY'}
+                    disabled={drawerType === 3 ? true : false}
+                  />
+                )}
               </Form.Item>
             </Col>
           </Row>
