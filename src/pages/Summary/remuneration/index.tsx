@@ -414,7 +414,8 @@ const Remuneration: React.FC = () => {
                 colon={false}
                 label={'ฐานเงินเดือน'}
               >
-                <Input disabled allowClear />
+                <Input disabled allowClear
+                />
               </Form.Item>
             </Col>
           </Row>
@@ -426,11 +427,11 @@ const Remuneration: React.FC = () => {
                 colon={false}
                 label={'เลขบัญชี'}
                 style={{ marginLeft: '24px' }}
+                initialValue={propsstate?.bookbank_log[0]?.bank_number}
               >
                 <Input
                   disabled
                   allowClear
-                  defaultValue={propsstate?.bookbank_log[0]?.bank_number}
                 ></Input>
               </Form.Item>
             </Col>
@@ -441,11 +442,11 @@ const Remuneration: React.FC = () => {
                 colon={false}
                 label={'ธนาคาร'}
                 style={{ marginLeft: '32px' }}
+                initialValue={propsstate?.bookbank_log[0]?.mas_bank?.name}
               >
                 <Input
                   disabled
                   allowClear
-                  defaultValue={propsstate?.bookbank_log[0]?.mas_bank?.name}
                 ></Input>
               </Form.Item>
             </Col>

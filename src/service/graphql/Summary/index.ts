@@ -473,3 +473,79 @@ mutation DeleteSalary($salaryid: ID!, $userId: String!) {
   }
 }
 `);
+
+export const FETCH_BOOK_BANK_LOG_USER = gql(`
+query Bookbank_log {
+  bookbank_log {
+    id
+    date
+    accept_date
+    base_salary
+    mas_bankId
+    bank_number
+    provident_com
+    provident_emp
+    accept_month
+    accept_years
+    userId
+    mas_bank {
+      id
+      name
+    }
+    User {
+      id
+      profile {
+        id
+        firstname_th
+        lastname_th
+        mas_positionlevel3 {
+          id
+          name
+        }
+      }
+    }
+    salary {
+      id
+      month
+      years
+      commission
+      position_income
+      ot
+      bonus
+      special_income
+      other_income
+      travel_income
+      bursary
+      welfare_money
+      vatper
+      ss_per
+      vat
+      social_security
+      miss
+      ra
+      late
+      other
+      provident_employee
+      provident_company
+      total_income
+      total_expense
+      net
+      userId
+      bookbank_logId
+      mas_income_typeId
+      date
+      mas_salary_statusId
+      provident_date
+      pro_employee
+      pro_company
+      mas_all_collectId
+      socialYears
+      vatYears
+      incomeYears
+      mas_bankId
+      base_salary
+    }
+  }
+}
+`);
+
