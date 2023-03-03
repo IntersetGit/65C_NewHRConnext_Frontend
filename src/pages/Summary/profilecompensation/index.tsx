@@ -43,9 +43,7 @@ import {
   Delete_Salary,
 } from '../../../service/graphql/Summary';
 
-import {
-  FETCH_GETALL_POSITION,
-} from '../../../service/graphql/Position';
+import { FETCH_GETALL_POSITION } from '../../../service/graphql/Position';
 import { getFilePath } from '../../../util';
 
 const { useToken } = theme;
@@ -67,11 +65,17 @@ const Compensation: React.FC = () => {
   //console.log(propsstate);
 
   const { data: position_data } = useQuery(FETCH_GETALL_POSITION);
-  const { data: TableDataSalary, refetch, called, } = useQuery(FETCH_AllSALARY_USER, {
+  const {
+    data: TableDataSalary,
+    refetch,
+    called,
+  } = useQuery(FETCH_AllSALARY_USER, {
     variables: { userId: propsstate?.userId },
   });
-  const { data: ExpenseComData, refetch: refetch2 } = useQuery(FETCH_ExpenseCompany);
-  const { data: book_bank_data, refetch: refetch3 } = useQuery(FETCH_GETALLBOOKBANK_LOG,
+  const { data: ExpenseComData, refetch: refetch2 } =
+    useQuery(FETCH_ExpenseCompany);
+  const { data: book_bank_data, refetch: refetch3 } = useQuery(
+    FETCH_GETALLBOOKBANK_LOG,
     {
       variables: { userId: propsstate?.userId },
     },
@@ -131,8 +135,8 @@ const Compensation: React.FC = () => {
   };
 
   const genarateMenu = (record: any) => {
-    let month_s = dayjs(record.date).format('MM')
-    let cal_date_salary_s = dayjs(record.cal_date_salary).format('MM')
+    let month_s = dayjs(record.date).format('MM');
+    let cal_date_salary_s = dayjs(record.cal_date_salary).format('MM');
     // console.log('1month_s', month_s)
     // console.log('2cal_date_salary_s', cal_date_salary_s)
     return [
@@ -145,7 +149,9 @@ const Compensation: React.FC = () => {
       {
         key: 'edit',
         label: 'แก้ไข',
-        disabled: dayjs(record.unix).unix() <= record.date && month_s < cal_date_salary_s,
+        disabled:
+          dayjs(record.unix).unix() <= record.date &&
+          month_s < cal_date_salary_s,
         icon: <img style={{ width: '17px', height: '17px' }} src={edit} />,
         onClick: (e: any) => onMenuClick(e, record),
       },
@@ -182,9 +188,13 @@ const Compensation: React.FC = () => {
           Show_PervspUser?.show_pervspUser?.[0]?.companyBranch
             ?.expense_company?.[0]?.ss_per,
         provident_emp:
-          Show_PervspUser?.show_pervspUser?.[0]?.bookbank_log?.[0]?.provident_emp,
-      })
-      refetch5({ userId: propsstate?.userId, date: record.date ? dayjs(record.date) : undefined as any, });
+          Show_PervspUser?.show_pervspUser?.[0]?.bookbank_log?.[0]
+            ?.provident_emp,
+      });
+      refetch5({
+        userId: propsstate?.userId,
+        date: record.date ? dayjs(record.date) : (undefined as any),
+      });
     } else if (key === 'view') {
       showDrawer(3);
       form.setFieldsValue({
@@ -199,9 +209,13 @@ const Compensation: React.FC = () => {
           Show_PervspUser?.show_pervspUser?.[0]?.companyBranch
             ?.expense_company?.[0]?.ss_per,
         provident_emp:
-          Show_PervspUser?.show_pervspUser?.[0]?.bookbank_log?.[0]?.provident_emp,
-      })
-      refetch5({ userId: propsstate?.userId, date: record.date ? dayjs(record.date) : undefined as any, });
+          Show_PervspUser?.show_pervspUser?.[0]?.bookbank_log?.[0]
+            ?.provident_emp,
+      });
+      refetch5({
+        userId: propsstate?.userId,
+        date: record.date ? dayjs(record.date) : (undefined as any),
+      });
       setselectedRow(record);
     } else if (key === 'view_slip') {
       // navigate(`payslip`);
@@ -245,133 +259,133 @@ const Compensation: React.FC = () => {
         }
       });
     }
-
   };
 
   const onSubmitForm = (value: any) => {
     //console.log('คำนวณ', value);
     drawerType === 1
       ? Swal.fire({
-        title: `ยืนยันการคำนวณเงินเดือน`,
-        icon: 'warning',
-        showDenyButton: true,
-        showCancelButton: false,
-        confirmButtonColor: token.token.colorPrimary,
-        denyButtonColor: '#ea4e4e',
-        confirmButtonText: 'ตกลง',
-        denyButtonText: `ยกเลิก`,
-      }).then(async (result) => {
-        if (result.isConfirmed) {
-          var calsum = 0;
-          if (value.date !== undefined) {
-            let cal1 = Show_PervspUser?.show_pervspUser?.[0]
-              ?.bookbank_log?.[0]?.base_salary as any;
-            let cal2 = Show_PervspUser?.show_pervspUser?.[0]
-              ?.bookbank_log?.[0]?.provident_com as any;
-            calsum = cal1 * (cal2 / 100);
-          }
-          var sentIdMasBank = '';
-          if (value.date !== undefined) {
-            let IDMasBank = Filter_BookBank?.filter_bookbank_admin?.[0]
-              ?.mas_bank?.id as any;
-            sentIdMasBank = IDMasBank;
-          }
-          let sentData = {
-            ...value,
-            userId: propsstate?.userId,
-            provident_company: calsum,
-            mas_bankId: sentIdMasBank,
-          };
-          delete sentData.base_salary;
-          delete sentData.vat_per;
-          delete sentData.provident_emp;
-          delete sentData.ss_per;
+          title: `ยืนยันการคำนวณเงินเดือน`,
+          icon: 'warning',
+          showDenyButton: true,
+          showCancelButton: false,
+          confirmButtonColor: token.token.colorPrimary,
+          denyButtonColor: '#ea4e4e',
+          confirmButtonText: 'ตกลง',
+          denyButtonText: `ยกเลิก`,
+        }).then(async (result) => {
+          if (result.isConfirmed) {
+            var calsum = 0;
+            if (value.date !== undefined) {
+              let cal1 = Show_PervspUser?.show_pervspUser?.[0]
+                ?.bookbank_log?.[0]?.base_salary as any;
+              let cal2 = Show_PervspUser?.show_pervspUser?.[0]
+                ?.bookbank_log?.[0]?.provident_com as any;
+              calsum = cal1 * (cal2 / 100);
+            }
+            var sentIdMasBank = '';
+            if (value.date !== undefined) {
+              let IDMasBank = Filter_BookBank?.filter_bookbank_admin?.[0]
+                ?.mas_bank?.id as any;
+              sentIdMasBank = IDMasBank;
+            }
+            let sentData = {
+              ...value,
+              userId: propsstate?.userId,
+              provident_company: calsum,
+              mas_bankId: sentIdMasBank,
+              vat: parseFloat(value.vat),
+            };
+            delete sentData.base_salary;
+            delete sentData.vat_per;
+            delete sentData.provident_emp;
+            delete sentData.ss_per;
 
-          create_update_salary({
-            variables: {
-              data: sentData,
-            },
-          })
-            .then((val) => {
-              console.log(val);
-              if (val.data?.Createandupdatesalary?.status) {
-                Swal.fire(`คำนวณเงินเดือนสำเร็จ!`, '', 'success');
-                refetch();
-                refetch2();
-                refetch3();
-                refetch4();
-                refetch5();
-                form.resetFields();
-              }
+            create_update_salary({
+              variables: {
+                data: sentData,
+              },
             })
-            .catch((err) => {
-              Swal.fire(`คำนวณเงินเดือนไม่สำเร็จ!`, '', 'error');
-              console.error(err);
-            });
-        }
-      })
+              .then((val) => {
+                console.log(val);
+                if (val.data?.Createandupdatesalary?.status) {
+                  Swal.fire(`คำนวณเงินเดือนสำเร็จ!`, '', 'success');
+                  refetch();
+                  refetch2();
+                  refetch3();
+                  refetch4();
+                  refetch5();
+                  form.resetFields();
+                }
+              })
+              .catch((err) => {
+                Swal.fire(`คำนวณเงินเดือนไม่สำเร็จ!`, '', 'error');
+                console.error(err);
+              });
+          }
+        })
       : Swal.fire({
-        title: `ยืนยันการแก้ไขคำนวณเงินเดือน`,
-        icon: 'warning',
-        showDenyButton: true,
-        showCancelButton: false,
-        confirmButtonColor: token.token.colorPrimary,
-        denyButtonColor: '#ea4e4e',
-        confirmButtonText: 'ตกลง',
-        denyButtonText: `ยกเลิก`,
-      }).then(async (result) => {
-        if (result.isConfirmed) {
-          var calsum = 0;
-          if (value.date !== undefined) {
-            let cal1 = Show_PervspUser?.show_pervspUser?.[0]
-              ?.bookbank_log?.[0]?.base_salary as any;
-            let cal2 = Show_PervspUser?.show_pervspUser?.[0]
-              ?.bookbank_log?.[0]?.provident_com as any;
-            calsum = cal1 * (cal2 / 100);
-          }
-          var sentIdMasBank = '';
-          if (value.date !== undefined) {
-            let IDMasBank = Filter_BookBank?.filter_bookbank_admin?.[0]
-              ?.mas_bank?.id as any;
-            sentIdMasBank = IDMasBank;
-          }
-          let sentData = {
-            ...value,
-            userId: propsstate?.userId,
-            provident_company: calsum,
-            mas_bankId: sentIdMasBank,
-            id: selectedRow?.id,
-            vat: parseFloat(value.vat),
-          };
-          delete sentData.base_salary;
-          delete sentData.vat_per;
-          delete sentData.provident_emp;
-          delete sentData.ss_per;
-          create_update_salary({
-            variables: {
-              data: sentData,
-            },
-          })
-            .then((val) => {
-              console.log(val);
-              if (val.data?.Createandupdatesalary?.status) {
-                Swal.fire(`แก้ไขข้อมูลคำนวณเงินเดือนสำเร็จ!`, '', 'success');
-                refetch();
-                refetch2();
-                refetch3();
-                refetch4();
-                refetch5();
-                form.resetFields();
-              }
-              form.resetFields();
+          title: `ยืนยันการแก้ไขคำนวณเงินเดือน`,
+          icon: 'warning',
+          showDenyButton: true,
+          showCancelButton: false,
+          confirmButtonColor: token.token.colorPrimary,
+          denyButtonColor: '#ea4e4e',
+          confirmButtonText: 'ตกลง',
+          denyButtonText: `ยกเลิก`,
+        }).then(async (result) => {
+          if (result.isConfirmed) {
+            var calsum = 0;
+            if (value.date !== undefined) {
+              let cal1 = Show_PervspUser?.show_pervspUser?.[0]
+                ?.bookbank_log?.[0]?.base_salary as any;
+              let cal2 = Show_PervspUser?.show_pervspUser?.[0]
+                ?.bookbank_log?.[0]?.provident_com as any;
+              calsum = cal1 * (cal2 / 100);
+            }
+            var sentIdMasBank = '';
+            if (value.date !== undefined) {
+              let IDMasBank = Filter_BookBank?.filter_bookbank_admin?.[0]
+                ?.mas_bank?.id as any;
+              sentIdMasBank = IDMasBank;
+            }
+            let sentData = {
+              ...value,
+              userId: propsstate?.userId,
+              provident_company: calsum,
+              mas_bankId: sentIdMasBank,
+              id: selectedRow?.id,
+              vat: parseFloat(value.vat),
+            };
+            delete sentData.base_salary;
+            delete sentData.vat_per;
+            delete sentData.provident_emp;
+            delete sentData.ss_per;
+            create_update_salary({
+              variables: {
+                data: sentData,
+              },
             })
-            .catch((err) => {
-              Swal.fire(`แก้ไขข้อมูลคำนวณเงินเดือนไม่สำเร็จ!`, '', 'error');
-              console.error(err);
-              form.resetFields();
-            });
-        }
-      });
+              .then((val) => {
+                console.log(val);
+                if (val.data?.Createandupdatesalary?.status) {
+                  Swal.fire(`แก้ไขข้อมูลคำนวณเงินเดือนสำเร็จ!`, '', 'success');
+                  refetch();
+                  refetch2();
+                  refetch3();
+                  refetch4();
+                  refetch5();
+                  form.resetFields();
+                }
+                form.resetFields();
+              })
+              .catch((err) => {
+                Swal.fire(`แก้ไขข้อมูลคำนวณเงินเดือนไม่สำเร็จ!`, '', 'error');
+                console.error(err);
+                form.resetFields();
+              });
+          }
+        });
     setOpen(false);
   };
   useEffect(() => {
@@ -392,7 +406,7 @@ const Compensation: React.FC = () => {
     if (valueall.date !== undefined) {
       let Vat_item = Show_PervspUser?.show_pervspUser
         ? Show_PervspUser?.show_pervspUser?.[0]?.companyBranch
-          ?.expense_company?.[0]?.check_vat
+            ?.expense_company?.[0]?.check_vat
         : ([] as any);
       // let Val_item_cal = Vat_item.map(i => column[''] ? parseFloat(column['']) : 0).reduce((val, a) => val + a, 0)
       let Val_item_cal = Vat_item.map((i) =>
@@ -440,7 +454,7 @@ const Compensation: React.FC = () => {
   };
 
   const disabledDate: RangePickerProps['disabledDate'] = (current) => {
-    let size: any = TableDataSalary?.salary?.salary?.length
+    let size: any = TableDataSalary?.salary?.salary?.length;
     const date: any = TableDataSalary?.salary?.salary?.[size - 1]?.date;
     // console.log("1234564897984512156", date);
     return current && current < dayjs(new Date(date)).add(1, 'month');
@@ -454,8 +468,8 @@ const Compensation: React.FC = () => {
       render: (text: any, record: any) =>
         text
           ? (dayjs(`${record.month}/${record.years}`, 'MM/YYYY').format(
-            'MMMM' + ' ' + 'YYYY',
-          ) as any)
+              'MMMM' + ' ' + 'YYYY',
+            ) as any)
           : '',
     },
     {
@@ -567,7 +581,7 @@ const Compensation: React.FC = () => {
       if (all.date !== undefined) {
         let Vat_item = Show_PervspUser?.show_pervspUser
           ? Show_PervspUser?.show_pervspUser?.[0]?.companyBranch
-            ?.expense_company?.[0]?.check_vat
+              ?.expense_company?.[0]?.check_vat
           : ([] as any);
         var Val_item_cal = Vat_item.map((i) =>
           all[i] ? parseFloat(all[i]) : 0,
@@ -783,12 +797,13 @@ const Compensation: React.FC = () => {
       </Card>
 
       <Drawer
-        title={`${drawerType === 1
-          ? 'คำนวณเงินเดือน'
-          : drawerType === 2
+        title={`${
+          drawerType === 1
+            ? 'คำนวณเงินเดือน'
+            : drawerType === 2
             ? 'แก้ไขคำนวณเงินเดือน'
             : 'เงินเดือน'
-          }`}
+        }`}
         onClose={onClose}
         open={open}
         // afterOpenChange={setPer}
@@ -1016,10 +1031,7 @@ const Compensation: React.FC = () => {
                 </Form.Item>
 
                 <Form.Item name="vat" className="ml-[1px] w-full">
-                  <InputNumber
-                    disabled
-                    className="w-[222px]"
-                  />
+                  <InputNumber disabled className="w-[222px]" />
                 </Form.Item>
               </Space>
             </Col>
@@ -1033,10 +1045,7 @@ const Compensation: React.FC = () => {
                 </Form.Item>
 
                 <Form.Item name="social_security" className="ml-[0.5px] w-full">
-                  <InputNumber
-                    disabled
-                    className="w-[222px]"
-                  />
+                  <InputNumber disabled className="w-[222px]" />
                 </Form.Item>
               </Space>
             </Col>
@@ -1053,10 +1062,7 @@ const Compensation: React.FC = () => {
                   name="provident_employee"
                   className="ml-[0.5px] w-full"
                 >
-                  <InputNumber
-                    disabled
-                    className="w-[222px]"
-                  />
+                  <InputNumber disabled className="w-[222px]" />
                 </Form.Item>
               </Space>
             </Col>

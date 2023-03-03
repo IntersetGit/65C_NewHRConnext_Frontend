@@ -39,14 +39,10 @@ import {
   FETCH_Show_PervspUser,
   Create_UpdateSalary,
   FETCH_SALARY_SLIP,
-  // FETCH_SHOW_YEARS,
+  FETCH_BOOKBANK_LOG_ME,
+  FETCH_SALARY_ME,
 } from '../../../../service/graphql/Summary';
 
-import {
-  FETCH_GETALL_POSITION,
-  CRETE_POSITION_USER,
-  POSITION,
-} from '../../../../service/graphql/Position';
 import { getFilePath } from '../../../../util';
 
 const { useToken } = theme;
@@ -64,15 +60,13 @@ const ProfileCompensation: React.FC = () => {
   const [pickDate, setPickDate] = useState<any>();
   const [filter, setFilter] = useState<any[]>([]);
 
-  const [Show_Years, setShow_Years] = useState<
-    { value?: string | null; label?: string | null }[] | undefined
-  >(undefined);
-
   const location = useLocation();
   let propsstate = location.state as any;
   //console.log(propsstate);
 
-  const { data: position_data } = useQuery(FETCH_GETALL_POSITION);
+  const { data: bookbank_log_me } = useQuery(FETCH_BOOKBANK_LOG_ME);
+  const { data: salary_me } = useQuery(FETCH_SALARY_ME);
+
   const {
     data: TableDataSalary,
     refetch,
@@ -107,7 +101,7 @@ const ProfileCompensation: React.FC = () => {
 
   useEffect(() => {
     const arr: any[] = [];
-    TableDataSalary?.salary?.salary?.forEach((e) => {
+    salary_me?.mydata_salary?.salary?.forEach((e) => {
       if (arr.find((_e) => _e.value === e?.years)) return;
       arr.push({ label: e?.years, value: e?.years });
     });
@@ -148,21 +142,9 @@ const ProfileCompensation: React.FC = () => {
         onClick: (e: any) => onMenuClick(e, record),
       },
       {
-        key: 'edit',
-        label: 'แก้ไข',
-        icon: <img style={{ width: '17px', height: '17px' }} src={edit} />,
-        onClick: (e: any) => onMenuClick(e, record),
-      },
-      {
         key: 'view_slip',
         label: 'ดูสลิปเงินเดือน',
         icon: <img style={{ width: '18px', height: '18px' }} src={Slip} />,
-        onClick: (e: any) => onMenuClick(e, record),
-      },
-      {
-        key: 'calculate',
-        label: 'คำนวณเงินเดือน',
-        icon: <img style={{ width: '17px', height: '17px' }} src={Cal1} />,
         onClick: (e: any) => onMenuClick(e, record),
       },
     ];
@@ -170,10 +152,27 @@ const ProfileCompensation: React.FC = () => {
 
   const onMenuClick = (event: any, record: any) => {
     const { key } = event;
-    if (key === 'edit') {
-      showDrawer(2);
-    } else if (key === 'view') {
+    if (key === 'view') {
       showDrawer(3);
+      form.setFieldsValue({
+        ...record,
+        date: record.date ? dayjs(record.date) : undefined,
+        base_salary:
+          Show_PervspUser?.show_pervspUser?.[0]?.bookbank_log?.[0]?.base_salary,
+        vat_per:
+          Show_PervspUser?.show_pervspUser?.[0]?.companyBranch
+            ?.expense_company?.[0]?.vat_per,
+        ss_per:
+          Show_PervspUser?.show_pervspUser?.[0]?.companyBranch
+            ?.expense_company?.[0]?.ss_per,
+        provident_emp:
+          Show_PervspUser?.show_pervspUser?.[0]?.bookbank_log?.[0]
+            ?.provident_emp,
+      });
+      refetch5({
+        userId: bookbank_log_me?.filter_bookbank?.[0]?.User?.profile?.userId,
+        date: record.date ? dayjs(record.date) : (undefined as any),
+      });
     } else if (key === 'view_slip') {
       // navigate(`payslip`);
       // console.log(record)
@@ -182,10 +181,6 @@ const ProfileCompensation: React.FC = () => {
       }).then((rec) => {
         window.open(rec.data?.SalarySlip?.path as string, '_blank');
       });
-    } else if (key === 'calculate') {
-      showDrawer(1);
-      setselectedRow(record);
-      form.setFieldsValue({ date: record?.date?.format('MM/YYYY') });
     }
   };
 
@@ -348,11 +343,19 @@ const ProfileCompensation: React.FC = () => {
     // const result = dayjs(pickDate).format("YYYY-MM-DD") as any
     // console.log(result);
     // setPickDate(date)
-    refetch5({ userId: propsstate?.userId, date: date });
+    refetch5({
+      userId: bookbank_log_me?.filter_bookbank?.[0]?.User?.profile?.userId,
+      date: date,
+    });
     //console.log("RRRRRRR", Show_PervspUser)
     // if (propsstate?.userId === propsstate?.userId)
   };
 
+  formshow.setFieldsValue({
+    base_salary: bookbank_log_me?.filter_bookbank?.[0]?.base_salary,
+    bank_number: bookbank_log_me?.filter_bookbank?.[0]?.bank_number,
+    bank: bookbank_log_me?.filter_bookbank?.[0]?.mas_bank?.name,
+  });
   const columns: ColumnsType<any> = [
     {
       title: 'เดือน/ปี',
@@ -564,6 +567,7 @@ const ProfileCompensation: React.FC = () => {
       minus();
     }
   };
+
   return (
     <>
       <div className="flex text-3xl ml-2 pt-4">
@@ -582,7 +586,10 @@ const ProfileCompensation: React.FC = () => {
               <Avatar
                 size={{ xs: 24, sm: 32, md: 40, lg: 64, xl: 80, xxl: 100 }}
                 icon={<AntDesignOutlined />}
-                src={getFilePath() + propsstate?.avatar}
+                src={
+                  getFilePath() +
+                  bookbank_log_me?.filter_bookbank?.[0]?.User?.profile?.avatar
+                }
               ></Avatar>
             </div>
           </Col>
@@ -590,13 +597,22 @@ const ProfileCompensation: React.FC = () => {
           <Col xs={24} sm={24} md={4} lg={4} xl={4}>
             <div className="text-lg font-bold">
               <u className="text-blue-800">
-                {propsstate?.profile?.prefix_th}{' '}
-                {propsstate?.profile?.firstname_th}{' '}
-                {propsstate?.profile?.lastname_th}
+                {
+                  bookbank_log_me?.filter_bookbank?.[0]?.User?.profile
+                    ?.prefix_th
+                }{' '}
+                {
+                  bookbank_log_me?.filter_bookbank?.[0]?.User?.profile
+                    ?.firstname_th
+                }{' '}
+                {
+                  bookbank_log_me?.filter_bookbank?.[0]?.User?.profile
+                    ?.lastname_th
+                }
               </u>
               <div className="mt-4">
-                {propsstate?.Position_user?.[0]?.mas_positionlevel3?.name ??
-                  'ไม่มีตำแหน่งงาน'}
+                {bookbank_log_me?.filter_bookbank?.[0]?.User?.Position_user?.[0]
+                  ?.mas_positionlevel3?.name ?? 'ไม่มีตำแหน่งงาน'}
               </div>
             </div>
           </Col>
@@ -610,11 +626,7 @@ const ProfileCompensation: React.FC = () => {
                 colon={false}
                 label={'ฐานเงินเดือน'}
               >
-                <Input
-                  allowClear
-                  disabled
-                  defaultValue={propsstate?.bookbank_log[0]?.base_salary}
-                ></Input>
+                <Input allowClear disabled></Input>
               </Form.Item>
             </Col>
           </Row>
@@ -627,11 +639,7 @@ const ProfileCompensation: React.FC = () => {
                 label={'เลชบัญชี'}
                 style={{ marginLeft: '24px' }}
               >
-                <Input
-                  allowClear
-                  disabled
-                  defaultValue={propsstate?.bookbank_log[0]?.bank_number}
-                ></Input>
+                <Input allowClear disabled></Input>
               </Form.Item>
             </Col>
 
@@ -642,11 +650,7 @@ const ProfileCompensation: React.FC = () => {
                 label={'ธนาคาร'}
                 style={{ marginLeft: '32px' }}
               >
-                <Input
-                  allowClear
-                  disabled
-                  defaultValue={propsstate?.bookbank_log[0]?.mas_bank?.name}
-                ></Input>
+                <Input allowClear disabled></Input>
               </Form.Item>
             </Col>
           </Row>
@@ -697,8 +701,9 @@ const ProfileCompensation: React.FC = () => {
       <Card className="shadow-xl mt-4">
         <Table
           columns={columns}
+          rowKey={'id'}
           scroll={{ x: 1500 }}
-          dataSource={TableDataSalary?.salary?.salary as any}
+          dataSource={salary_me?.mydata_salary?.salary as any}
         />
       </Card>
 
@@ -717,12 +722,13 @@ const ProfileCompensation: React.FC = () => {
       >
         <div className="text-lg font-bold">
           <u style={{ color: token.token.colorPrimary }}>
-            {propsstate?.profile?.prefix_th} {propsstate?.profile?.firstname_th}{' '}
-            {propsstate?.profile?.lastname_th}
+            {bookbank_log_me?.filter_bookbank?.[0]?.User?.profile?.prefix_th}{' '}
+            {bookbank_log_me?.filter_bookbank?.[0]?.User?.profile?.firstname_th}{' '}
+            {bookbank_log_me?.filter_bookbank?.[0]?.User?.profile?.lastname_th}
           </u>
           <div className="mt-4">
-            {propsstate?.Position_user?.[0]?.mas_positionlevel3?.name ??
-              'ไม่มีตำแหน่งงาน'}
+            {bookbank_log_me?.filter_bookbank?.[0]?.User?.Position_user?.[0]
+              ?.mas_positionlevel3?.name ?? 'ไม่มีตำแหน่งงาน'}
           </div>
         </div>
 

@@ -137,6 +137,7 @@ const ProfileApprove: React.FC<ProfileApprovePropsType> = ({ role }) => {
   const showDrawer = (type: any) => {
     setDrawertype(type);
     setOpen(true);
+    setFilePdf([]);
   };
 
   const onClose = () => {

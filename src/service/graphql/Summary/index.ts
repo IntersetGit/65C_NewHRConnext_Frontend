@@ -82,6 +82,54 @@ query Data_salary($fristname: String, $position2: String, $position3: String) {
 }
 `);
 
+export const FETCH_SALARY_ME = gql(`
+query Mydata_salary {
+  mydata_salary {
+    salary {
+      id
+      month
+      years
+      commission
+      position_income
+      ot
+      bonus
+      special_income
+      other_income
+      travel_income
+      bursary
+      welfare_money
+      vatper
+      ss_per
+      vat
+      social_security
+      miss
+      ra
+      late
+      other
+      provident_employee
+      provident_company
+      total_income
+      total_expense
+      net
+      userId
+      bookbank_logId
+      mas_income_typeId
+      date
+      mas_salary_statusId
+      provident_date
+      pro_employee
+      pro_company
+      mas_all_collectId
+      socialYears
+      vatYears
+      incomeYears
+      mas_bankId
+      base_salary
+    }
+  }
+}
+`);
+
 export const FETCH_AllSALARY_USER = gql(`
 query Salary($userId: String, $years: String) {
   salary(userId: $userId, years: $years) {
@@ -186,7 +234,7 @@ mutation Deletebookbank($deletebookbankId: ID!) {
     status
   }
 }
-`)
+`);
 
 export const FETCH_GETALLBOOKBANK_LOG = gql(`
 query Bookbank_log_admin($userId: String) {
@@ -215,7 +263,113 @@ query Bookbank_log_admin($userId: String) {
     accept_month
   }
 }
-`)
+`);
+
+export const FETCH_BOOKBANK_LOG_ME = gql(`
+query Filter_bookbank {
+  filter_bookbank {
+    id
+    date
+    mas_bankId
+    bank_number
+    base_salary
+    provident_com
+    provident_emp
+    mas_bank {
+      id
+      name
+      bank_code
+    }
+    User {
+      id
+      email
+      profile {
+        id
+        bio
+        firstname_th
+        lastname_th
+        firstname_en
+        lastname_en
+        avatar
+        dob
+        age
+        relationship
+        shirt_size
+        prefix_th
+        prefix_en
+        citizen_id
+        social_id
+        staff_status
+        tel
+        address
+        gender
+        staff_code
+        religion
+        userId
+        citizen_addressnumber
+        citizen_address
+        citizen_country
+        citizen_province
+        citizen_district
+        citizen_state
+        citizen_zipcode
+        citizen_tel
+        contract_sameCitizen
+        contract_addressnumber
+        contract_address
+        contract_country
+        contract_province
+        contract_district
+        contract_state
+        contract_zipcode
+        contract_email
+        contract_companyemail
+        social_facebook
+        social_likedin
+        social_line
+        social_telegram
+        nickname
+        blood_type
+        employee_status
+        start_date_work
+        masposition1_id
+        masposition2_id
+        masposition3_id
+      }
+      Position_user {
+        id
+        user_id
+        position1_id
+        position2_id
+        position3_id
+        mas_positionlevel1 {
+          id
+          name
+          level
+          code
+          type
+        }
+        mas_positionlevel2 {
+          id
+          name
+          level
+          code
+          type
+          positionlevel1_id
+        }
+        mas_positionlevel3 {
+          id
+          name
+          level
+          code
+          type
+          positionlevel2_id
+        }
+      }
+    }
+  }
+}
+`);
 
 export const FETCH_ExpenseCompany = gql(`
 query Expense_company($date: String) {
@@ -232,7 +386,7 @@ query Expense_company($date: String) {
     cal_date_salary
   }
 }
-`)
+`);
 
 export const FETCH_Filter_BOOKBANK_ADMIN = gql(`
 query Filter_bookbank_admin($userId: String) {
@@ -249,7 +403,7 @@ query Filter_bookbank_admin($userId: String) {
     provident_emp
   }
 }
-`)
+`);
 
 export const FETCH_Show_PervspUser = gql(`
 query Show_pervspUser($userId: String, $date: String) {
@@ -272,7 +426,7 @@ query Show_pervspUser($userId: String, $date: String) {
     }
   }
 }
-`)
+`);
 
 export const Create_UpdateSalary = gql(`
 mutation Createandupdatesalary($data: salaryInput) {
@@ -281,7 +435,7 @@ mutation Createandupdatesalary($data: salaryInput) {
     status
   }
 }
-`)
+`);
 
 export const FETCH_SALARY_SLIP = gql(`
 mutation SalarySlip($userId: String, $date: Date) {
@@ -291,7 +445,7 @@ mutation SalarySlip($userId: String, $date: Date) {
     status
   }
 }
-`)
+`);
 
 export const FETCH_SHOW_YEARS = gql(`
 query Show_years($name: String) {
@@ -300,7 +454,7 @@ query Show_years($name: String) {
     name
   }
 }
-`)
+`);
 
 export const Delete_Expense_Com = gql(`
 mutation DeleteExpensecom($deleteExpensecomId: ID!) {
@@ -309,7 +463,7 @@ mutation DeleteExpensecom($deleteExpensecomId: ID!) {
     status
   }
 }
-`)
+`);
 
 export const Delete_Salary = gql(`
 mutation DeleteSalary($salaryid: ID!, $userId: String!) {
@@ -318,7 +472,4 @@ mutation DeleteSalary($salaryid: ID!, $userId: String!) {
     status
   }
 }
-`)
-
-
-
+`);
