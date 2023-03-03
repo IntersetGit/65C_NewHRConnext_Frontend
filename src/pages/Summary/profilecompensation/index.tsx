@@ -341,6 +341,7 @@ const Compensation: React.FC = () => {
             provident_company: calsum,
             mas_bankId: sentIdMasBank,
             id: selectedRow?.id,
+            vat: parseFloat(value.vat),
           };
           delete sentData.base_salary;
           delete sentData.vat_per;
