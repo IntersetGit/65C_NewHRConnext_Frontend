@@ -18,6 +18,7 @@ import {
 } from 'antd';
 import { AntDesignOutlined, MoreOutlined } from '@ant-design/icons';
 import type { DatePickerProps } from 'antd';
+import type { RangePickerProps } from 'antd/es/date-picker';
 import Swal from 'sweetalert2';
 import { getFilePath } from '../../../util';
 
@@ -28,6 +29,7 @@ import {
   CREATE_UPDATE_BOOKBANK,
   DELETE_BOOKBANK,
   FETCH_Filter_BOOKBANK_ADMIN,
+  FETCH_ExpenseCompany,
 } from '../../../service/graphql/Summary';
 
 import {
@@ -71,7 +73,7 @@ const Remuneration: React.FC = () => {
     },
   );
 
-  console.log('ssss', book_bank_data);
+  // console.log('ssss', book_bank_data);
   const [creteBookBank] = useMutation(CREATE_UPDATE_BOOKBANK);
   const [deleteBookBank] = useMutation(DELETE_BOOKBANK);
 
@@ -95,6 +97,7 @@ const Remuneration: React.FC = () => {
       bank_number: banknumber,
       mas_bankId: bankname,
     });
+    refetch2();
   }, [Filter_BookBank]);
 
 
@@ -115,11 +118,13 @@ const Remuneration: React.FC = () => {
     setOpen(false);
   };
 
-  const onChangeDate: DatePickerProps['onChange'] = (date, dateString) => {
-    console.log(date, dateString);
-  };
+  // const onChangeDate: DatePickerProps['onChange'] = (date, dateString) => {
+  // console.log(date, dateString);
+  // };
 
   const genarateMenu = (record: any) => {
+    let month_s = dayjs.unix(record.unix).format('MM')
+    let cal_date_salary_s = dayjs(record.cal_date_salary).format('MM')
     return [
       {
         key: 'view',
@@ -130,8 +135,7 @@ const Remuneration: React.FC = () => {
       {
         key: 'edit',
         label: 'แก้ไข',
-        // disabled: record.unix <= dayjs(record.cal_date_salary).unix(),
-        disabled: dayjs().unix() >= record.unix,
+        disabled: record.unix <= dayjs(record.cal_date_salary).unix() && month_s < cal_date_salary_s,
         icon: <img style={{ width: '17px', height: '17px' }} src={edit} />,
         onClick: (e: any) => onMenuClick(e, record),
       },
@@ -145,7 +149,7 @@ const Remuneration: React.FC = () => {
   };
 
   const onSubmitForm = (value: any) => {
-    console.log('Update', value);
+    // console.log('Update', value);
     drawerType === 1
       ? Swal.fire({
         title: `ยืนยันการ Update ฐานเงินเดือน`,
@@ -177,7 +181,7 @@ const Remuneration: React.FC = () => {
           }
           )
             .then((val) => {
-              console.log(val);
+              // console.log(val);
               if (val.data?.Createandupdatebookbank?.status) {
                 Swal.fire(`Update ฐานเงินเดือนสำเร็จ!`, '', 'success');
                 refetch();
@@ -216,7 +220,7 @@ const Remuneration: React.FC = () => {
             },
           })
             .then((val) => {
-              console.log(val);
+              // console.log(val);
               if (val.data?.Createandupdatebookbank?.status) {
                 Swal.fire(`แก้ไขข้อมูลฐานเงินเดือนสำเร็จ!`, '', 'success');
                 refetch();
@@ -255,7 +259,7 @@ const Remuneration: React.FC = () => {
       });
     } else if (key === 'delete') {
       Swal.fire({
-        title: `ยืนยันการลบข้อมูลพนักงาน`,
+        title: `ยืนยันการลบข้อมูลฐานเงินเดือน`,
         icon: 'warning',
         showDenyButton: true,
         showCancelButton: false,
@@ -272,13 +276,13 @@ const Remuneration: React.FC = () => {
           })
             .then((val) => {
               if (val.data?.Deletebookbank?.status) {
-                Swal.fire(`ลบข้อมูลพนักงานสำเร็จ!`, '', 'success');
+                Swal.fire(`ลบข้อมูลฐานเงินเดือนสำเร็จ!`, '', 'success');
                 refetch();
                 refetch2();
               }
             })
             .catch((err) => {
-              Swal.fire(`ลบข้อมูลพนักงานไม่สำเร็จ!`, '', 'error');
+              Swal.fire(`ลบข้อมูลฐานเงินเดือนไม่สำเร็จ!`, '', 'error');
               console.error(err);
             });
         }
@@ -354,10 +358,11 @@ const Remuneration: React.FC = () => {
     },
   ];
 
-  const disabledDate: any = (current) => {
-    if (drawerType === 1) {
-      return current && current < dayjs().endOf('day');
-    }
+  const disabledDate: RangePickerProps['disabledDate'] = (current) => {
+    let size: any = book_bank_data?.bookbank_log_admin?.length
+    const date: any = book_bank_data?.bookbank_log_admin?.[size - 1]?.accept_date;
+    // console.log("1234564897984512156", date);
+    return current && current < dayjs(new Date(date)).add(1, 'month');
   };
 
   return (
@@ -495,14 +500,19 @@ const Remuneration: React.FC = () => {
                   },
                 ]}
               >
-                <DatePicker
-                  picker="month"
-                  format={'MM/YYYY'}
-                  disabled={
-                    drawerType === 3 ? true : drawerType === 2 ? true : false
-                  }
-
-                />
+                {drawerType == 1 ? (
+                  <DatePicker
+                    picker="month"
+                    format={'MM/YYYY'}
+                    disabledDate={disabledDate}
+                  />
+                ) : (
+                  <DatePicker
+                    picker="month"
+                    format={'MM/YYYY'}
+                    disabled={drawerType === 3 ? true : false}
+                  />
+                )}
               </Form.Item>
             </Col>
           </Row>

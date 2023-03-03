@@ -203,6 +203,7 @@ query Bookbank_log_admin($userId: String) {
       }
     }
     unix
+    accept_month
   }
 }
 `)

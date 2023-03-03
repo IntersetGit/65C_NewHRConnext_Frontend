@@ -37,6 +37,7 @@ import {
   FETCH_AllSALARY_BASE,
   CREATE_ExpenseCom,
   FETCH_ExpenseCompany,
+  Delete_Expense_Com,
 } from '../../../service/graphql/Summary';
 
 const { useToken } = theme;
@@ -48,7 +49,7 @@ const Compensation: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { company } = useAuth();
-  console.log('aaa', company);
+  // console.log('aaa', company);
   const [drawerType, setDrawerType] = useState(1);
   let propsstate = location.state as any;
   const [selectedRow, setSelectedRow] = useState<any>();
@@ -58,8 +59,9 @@ const Compensation: React.FC = () => {
   const { data: ExpenseComData, refetch: refetch2 } =
     useQuery(FETCH_ExpenseCompany);
   const [creteExpenseCom] = useMutation(CREATE_ExpenseCom);
-  console.log('table1', ExpenseComData);
-  console.log('table2', TableData);
+  const [deleteExpense_Com] = useMutation(Delete_Expense_Com);
+  // console.log('table1', ExpenseComData);
+  // console.log('table2', TableData);
 
   useEffect(() => {
     refetch();
@@ -77,7 +79,7 @@ const Compensation: React.FC = () => {
   };
 
   const onChange = (checkedValues: CheckboxValueType[]) => {
-    console.log('checked = ', checkedValues);
+    // console.log('checked = ', checkedValues);
   };
 
   const selectBookBank = BookBank?.mas_bank?.map((e: any) => {
@@ -140,13 +142,42 @@ const Compensation: React.FC = () => {
         check_vat: record?.check_vat,
       });
       showDrawer(2);
-
-      console.log('EDittttt', record);
+      // console.log('EDittttt', record);
+    } else if (key === 'delete') {
+      Swal.fire({
+        title: `ยืนยันการลบข้อมูลตั้งค่าคำนวณเงินเดือน`,
+        icon: 'warning',
+        showDenyButton: true,
+        showCancelButton: false,
+        confirmButtonColor: token.token.colorPrimary,
+        denyButtonColor: '#ea4e4e',
+        confirmButtonText: 'ตกลง',
+        denyButtonText: `ยกเลิก`,
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          deleteExpense_Com({
+            variables: {
+              deleteExpensecomId: record.id,
+            },
+          })
+            .then((val) => {
+              if (val.data?.DeleteExpensecom?.status) {
+                Swal.fire(`ลบข้อมูลตั้งค่าคำนวณเงินเดือนสำเร็จ!`, '', 'success');
+                refetch();
+                refetch2();
+              }
+            })
+            .catch((err) => {
+              Swal.fire(`ลบข้อมูลตั้งค่าคำนวณเงินเดือนไม่สำเร็จ!`, '', 'error');
+              console.error(err);
+            });
+        }
+      });
     }
   };
 
   const onSubmitForm = (value: any) => {
-    console.log('onSubmit', value);
+    // console.log('onSubmit', value);
     drawerType === 1
       ? Swal.fire({
         title: `ยืนยันการตั้งค่าการคำนวณเงินเดือน`,
@@ -171,7 +202,7 @@ const Compensation: React.FC = () => {
             },
           })
             .then((val) => {
-              console.log(val);
+              // console.log(val);
               if (val.data?.CreateAndUpdateExpenseCom?.status) {
                 Swal.fire(`ตั้งค่าการคำนวณเงินเดือนสำเร็จ!`, '', 'success');
                 refetch();
@@ -209,7 +240,7 @@ const Compensation: React.FC = () => {
             },
           })
             .then((val) => {
-              console.log(val);
+              // console.log(val);
               if (val.data?.CreateAndUpdateExpenseCom?.status) {
                 Swal.fire(
                   `แก้ไขตั้งค่าการคำนวณเงินเดือนสำเร็จ!`,
@@ -256,6 +287,7 @@ const Compensation: React.FC = () => {
       render: (text, record) => {
         return dayjs(text).format('MM/YYYY');
       },
+      sorter: (a, b) => a.date - b.date
     },
     {
       title: 'วันที่จ่ายเงิน',
@@ -542,7 +574,7 @@ const Compensation2: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { company } = useAuth();
-  console.log('aaa', company);
+  // console.log('aaa', company);
   const [drawerType, setDrawerType] = useState(1);
   let propsstate = location.state as any;
   const [selectedRow, setSelectedRow] = useState<any>();
@@ -552,8 +584,8 @@ const Compensation2: React.FC = () => {
   const { data: ExpenseComData, refetch: refetch2 } =
     useQuery(FETCH_ExpenseCompany);
   const [creteExpenseCom] = useMutation(CREATE_ExpenseCom);
-  console.log('table1', ExpenseComData);
-  console.log('table2', TableData);
+  // console.log('table1', ExpenseComData);
+  // console.log('table2', TableData);
 
   useEffect(() => {
     refetch();
