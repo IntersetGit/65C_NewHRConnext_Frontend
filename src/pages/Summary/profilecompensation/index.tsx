@@ -136,7 +136,9 @@ const Compensation: React.FC = () => {
 
   const genarateMenu = (record: any) => {
     let month_s = dayjs(record.date).format('MM');
+    let year_s = dayjs(record.date).format('YYYY');
     let cal_date_salary_s = dayjs(record.cal_date_salary).format('MM');
+    let cal_year_s = dayjs(record.cal_date_salary).format('YYYY');
     // console.log('1month_s', month_s)
     // console.log('2cal_date_salary_s', cal_date_salary_s)
     return [
@@ -150,8 +152,7 @@ const Compensation: React.FC = () => {
         key: 'edit',
         label: 'แก้ไข',
         disabled:
-          dayjs(record.unix).unix() <= record.date &&
-          month_s < cal_date_salary_s,
+          dayjs(record.unix).unix() <= record.date && month_s < cal_date_salary_s && year_s <= cal_year_s,
         icon: <img style={{ width: '17px', height: '17px' }} src={edit} />,
         onClick: (e: any) => onMenuClick(e, record),
       },
