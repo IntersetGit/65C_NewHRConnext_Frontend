@@ -98,7 +98,8 @@ const Newcompany: React.FC<NewcompanyPropsType> = ({ role }) => {
     onChangeBussinessType(Editdata?.main_business_type?.id);
 
     form.setFieldsValue({
-      ...Editdata, main_business_id: Editdata?.main_business_type?.id, sub_company_typeId: Editdata?.sub_company_type.id, latlng: Editdata?.lat ? ([Editdata.lat, Editdata.lng]).toString() : '',
+      ...Editdata, main_business_id: Editdata?.main_business_type?.id ? Editdata?.main_business_type?.id : '',
+       sub_company_typeId: Editdata?.sub_company_type?.id ? Editdata?.sub_company_type?.id :'', latlng: Editdata?.lat ? ([Editdata.lat, Editdata.lng]).toString() : '',
     });
   };
 
