@@ -90,6 +90,8 @@ const Compensation: React.FC = () => {
   });
 
   const genarateMenu = (record: any) => {
+    let year_s = dayjs(record.date).format('YYYY');
+    let cal_year_s = dayjs(record.cal_date_salary).format('YYYY');
     return [
       {
         key: 'view1',
@@ -100,7 +102,7 @@ const Compensation: React.FC = () => {
       {
         key: 'edit',
         label: 'แก้ไข',
-        disabled: dayjs().unix() > dayjs(record.cal_date_salary).unix(),
+        disabled: dayjs().unix() > dayjs(record.cal_date_salary).unix() && year_s <= cal_year_s,
         icon: <img style={{ width: '17px', height: '17px' }} src={edit} />,
         onClick: (e: any) => onMenuClick(e, record),
       },
@@ -268,15 +270,17 @@ const Compensation: React.FC = () => {
 
   const disabledDate: RangePickerProps['disabledDate'] = (current) => {
     const date: any = ExpenseComData?.expense_company?.[0]?.date;
-    //console.log(dayjs(date), current);
-    return current && current < dayjs(new Date(date)).add(1, 'month');
+    let getAllMonth: any = ExpenseComData?.expense_company && ExpenseComData?.expense_company.map((item) => dayjs(new Date(item?.date)));
+    var yesday = false;
+    getAllMonth.forEach((day) => current.isSame(day, 'month') && (yesday = true))
+    // console.log(current.format("MM/YYYY"), dayjs(new Date(date)).format("MM/YYYY"), current.isSame(dayjs(new Date(date)), 'month'));
+    return yesday;
   };
-
-  const disabledDate1: RangePickerProps['disabledDate'] = (current) => {
-    let date: any = ExpenseComData?.expense_company?.[0]?.date;
-    //console.log(dayjs(date), current);
-    return current && current < dayjs(new Date(date)).add(1, 'month');
-  };
+  // const disabledDate1: RangePickerProps['disabledDate'] = (current) => {
+  //   let date: any = ExpenseComData?.expense_company?.[0]?.date;
+  //   //console.log(dayjs(date), current);
+  //   return current && current < dayjs(new Date(date)).add(1, 'month');
+  // };
 
   const columnsCom: ColumnsType<any> = [
     {
@@ -421,6 +425,7 @@ const Compensation: React.FC = () => {
                   <DatePicker
                     picker="month"
                     format={'MM/YYYY'}
+                    disabledDate={disabledDate}
                     disabled={drawerType === 3 ? true : false}
                   />
                 )}
@@ -443,7 +448,7 @@ const Compensation: React.FC = () => {
                 <DatePicker
                   picker="date"
                   format={'DD/MM/YYYY'}
-                  disabledDate={disabledDate1}
+                  // disabledDate={disabledDate1}
                   disabled={drawerType === 3 ? true : false}
                 />
               </Form.Item>

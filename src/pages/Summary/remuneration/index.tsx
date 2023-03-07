@@ -360,11 +360,20 @@ const Remuneration: React.FC = () => {
     },
   ];
 
+  // const disabledDate: RangePickerProps['disabledDate'] = (current) => {
+  //   let size: any = book_bank_data?.bookbank_log_admin?.length
+  //   const date: any = book_bank_data?.bookbank_log_admin?.[size - 1]?.accept_date;
+  //   // console.log("1234564897984512156", date);
+  //   return current && current < dayjs(new Date(date)).add(1, 'month');
+  // };
+
   const disabledDate: RangePickerProps['disabledDate'] = (current) => {
-    let size: any = book_bank_data?.bookbank_log_admin?.length
-    const date: any = book_bank_data?.bookbank_log_admin?.[size - 1]?.accept_date;
-    // console.log("1234564897984512156", date);
-    return current && current < dayjs(new Date(date)).add(1, 'month');
+
+    let getAllMonth: any = book_bank_data?.bookbank_log_admin && book_bank_data?.bookbank_log_admin.map((item) => dayjs(new Date(item?.accept_date)));
+    var yesDay = false;
+    getAllMonth.forEach((day) => current.isSame(day, 'month') && (yesDay = true))
+    // console.log(current.format("MM/YYYY"), dayjs(new Date(date)).format("MM/YYYY"), current.isSame(dayjs(new Date(date)), 'month'));
+    return yesDay;
   };
 
   return (
@@ -472,7 +481,7 @@ const Remuneration: React.FC = () => {
       </Card>
       <Card className="shadow-xl mt-4">
         <Table
-          key={''}
+          rowKey={'id'}
           columns={columns}
           dataSource={book_bank_data?.bookbank_log_admin as any}
         />
@@ -513,6 +522,7 @@ const Remuneration: React.FC = () => {
                   <DatePicker
                     picker="month"
                     format={'MM/YYYY'}
+                    disabledDate={disabledDate}
                     disabled={drawerType === 3 ? true : false}
                   />
                 )}

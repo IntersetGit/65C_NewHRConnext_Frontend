@@ -68,7 +68,7 @@ const ProfileRemuneration: React.FC = () => {
   });
   const { data: Filter_BookBank, refetch: refetch2 } = useQuery(FETCH_BOOKBANK_LOG_ME);
 
-  console.log('ssss', book_bank_data);
+  // console.log('ssss', book_bank_data);
   const [creteBookBank] = useMutation(CREATE_UPDATE_BOOKBANK);
 
   useEffect(() => {

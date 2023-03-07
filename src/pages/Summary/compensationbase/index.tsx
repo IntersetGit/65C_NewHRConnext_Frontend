@@ -52,7 +52,7 @@ const Compensationbase: React.FC = () => {
     { value?: string | null; label?: string | null }[] | undefined
   >(undefined);
 
-  console.log('table', TableData);
+  // console.log('table', TableData);
 
   useEffect(() => {
     const salary: any = TableData;
@@ -103,7 +103,7 @@ const Compensationbase: React.FC = () => {
         },
       });
 
-      console.log('State', record);
+      // console.log('State', record);
     }
   };
 
@@ -123,6 +123,7 @@ const Compensationbase: React.FC = () => {
       key: 'profile',
       dataIndex: 'profile',
       align: 'center',
+      width: 130,
       render: (record) => record.staff_code,
     },
     {
@@ -130,6 +131,7 @@ const Compensationbase: React.FC = () => {
       key: 'profile',
       dataIndex: 'profile',
       align: 'center',
+      width: 200,
       render: (txt: any) =>
         txt.prefix_th + ' ' + txt.firstname_th + ' ' + txt.lastname_th,
     },
@@ -137,6 +139,7 @@ const Compensationbase: React.FC = () => {
       title: 'แผนก',
       key: 'Position_user',
       align: 'center',
+      width: 200,
       render: (record) => {
         return record?.Position_user[0]?.mas_positionlevel2?.name;
       },
@@ -145,6 +148,7 @@ const Compensationbase: React.FC = () => {
       title: 'ตำแหน่ง',
       key: 'Position_user',
       align: 'center',
+      width: 150,
       render: (record) => {
         return record?.Position_user[0]?.mas_positionlevel3?.name;
       },
@@ -154,6 +158,7 @@ const Compensationbase: React.FC = () => {
       key: 'bookbank_log',
       dataIndex: 'bookbank_log',
       align: 'center',
+      width: 150,
       render: (record) => {
         return record?.[0]?.base_salary?.toFixed(2);
         // return JSON.stringify(data[0]?.base_salary);
@@ -168,6 +173,7 @@ const Compensationbase: React.FC = () => {
       title: 'Action',
       key: 'Action',
       align: 'center',
+      width: 100,
       render: (_: any, record: any) => (
         <Dropdown
           menu={{

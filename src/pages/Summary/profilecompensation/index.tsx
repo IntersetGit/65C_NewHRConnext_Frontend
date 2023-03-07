@@ -191,6 +191,19 @@ const Compensation: React.FC = () => {
         provident_emp:
           Show_PervspUser?.show_pervspUser?.[0]?.bookbank_log?.[0]
             ?.provident_emp,
+        commission: record.commission ? record.commission : 0,
+        position_income: record.position_income ? record.position_income : 0,
+        special_income: record.special_income ? record.special_income : 0,
+        ot: record.ot ? record.ot : 0,
+        other_income: record.other_income ? record.other_income : 0,
+        travel_income: record.travel_income ? record.travel_income : 0,
+        bursary: record.bursary ? record.bursary : 0,
+        welfare_money: record.welfare_money ? record.welfare_money : 0,
+        bonus: record.bonus ? record.bonus : 0,
+        miss: record.miss ? record.miss : 0,
+        ra: record.ra ? record.ra : 0,
+        late: record.late ? record.late : 0,
+        other: record.other ? record.other : 0,
       });
       refetch5({
         userId: propsstate?.userId,
@@ -212,6 +225,19 @@ const Compensation: React.FC = () => {
         provident_emp:
           Show_PervspUser?.show_pervspUser?.[0]?.bookbank_log?.[0]
             ?.provident_emp,
+        commission: record.commission ? record.commission : 0,
+        position_income: record.position_income ? record.position_income : 0,
+        special_income: record.special_income ? record.special_income : 0,
+        ot: record.ot ? record.ot : 0,
+        other_income: record.other_income ? record.other_income : 0,
+        travel_income: record.travel_income ? record.travel_income : 0,
+        bursary: record.bursary ? record.bursary : 0,
+        welfare_money: record.welfare_money ? record.welfare_money : 0,
+        bonus: record.bonus ? record.bonus : 0,
+        miss: record.miss ? record.miss : 0,
+        ra: record.ra ? record.ra : 0,
+        late: record.late ? record.late : 0,
+        other: record.other ? record.other : 0,
       });
       refetch5({
         userId: propsstate?.userId,
@@ -320,7 +346,11 @@ const Compensation: React.FC = () => {
               }
             })
             .catch((err) => {
-              Swal.fire(`คำนวณเงินเดือนไม่สำเร็จ!`, '', 'error');
+              Swal.fire({
+                title: 'คำนวณเงินเดือนไม่สำเร็จ!',
+                text: `ไม่สามารถคำนวณเงินเดือนได้ กรุณาตั้งค่าการคำนวณเงินเดือน (ตั้งค่าการหักภาษีและประกันสังคม)`,
+                icon: 'error',
+              });
               console.error(err);
             });
         }
@@ -454,12 +484,22 @@ const Compensation: React.FC = () => {
     // if (propsstate?.userId === propsstate?.userId)
   };
 
+  // const disabledDate: RangePickerProps['disabledDate'] = (current) => {
+  //   let size: any = TableDataSalary?.salary?.salary?.length;
+  //   const date: any = TableDataSalary?.salary?.salary?.[size - 1]?.date;
+  //   // console.log("1234564897984512156", date);
+  //   return current && current < dayjs(new Date(date)).add(1, 'month');
+  // };
+
   const disabledDate: RangePickerProps['disabledDate'] = (current) => {
-    let size: any = TableDataSalary?.salary?.salary?.length;
-    const date: any = TableDataSalary?.salary?.salary?.[size - 1]?.date;
-    // console.log("1234564897984512156", date);
-    return current && current < dayjs(new Date(date)).add(1, 'month');
+
+    let getAllMonth: any = TableDataSalary?.salary?.salary && TableDataSalary?.salary?.salary.map((item) => dayjs(new Date(item?.date)));
+    var yesDay = false;
+    getAllMonth.forEach((day) => current.isSame(day, 'month') && (yesDay = true))
+    // console.log(current.format("MM/YYYY"), dayjs(new Date(date)).format("MM/YYYY"), current.isSame(dayjs(new Date(date)), 'month'));
+    return yesDay;
   };
+
 
   const columns: ColumnsType<any> = [
     {
@@ -704,7 +744,7 @@ const Compensation: React.FC = () => {
                 name="base_salary"
                 colon={false}
                 label={'ฐานเงินเดือน'}
-                initialValue={propsstate?.bookbank_log[0]?.base_salary}
+                initialValue={propsstate?.bookbank_log[0]?.base_salary ? propsstate?.bookbank_log[0]?.base_salary : 0.00}
               >
                 <Input
                   allowClear
@@ -721,7 +761,7 @@ const Compensation: React.FC = () => {
                 colon={false}
                 label={'เลขบัญชี'}
                 style={{ marginLeft: '24px' }}
-                initialValue={propsstate?.bookbank_log[0]?.bank_number}
+                initialValue={propsstate?.bookbank_log[0]?.bank_number ? propsstate?.bookbank_log[0]?.bank_number : 'ไม่มีเลขบัญชี'}
               >
                 <Input
                   allowClear
@@ -736,7 +776,7 @@ const Compensation: React.FC = () => {
                 colon={false}
                 label={'ธนาคาร'}
                 style={{ marginLeft: '32px' }}
-                initialValue={propsstate?.bookbank_log[0]?.mas_bank?.name}
+                initialValue={propsstate?.bookbank_log[0]?.mas_bank?.name ? propsstate?.bookbank_log[0]?.mas_bank?.name : 'ไม่มีบัญชีธนาคาร'}
               >
                 <Input
                   allowClear
@@ -850,6 +890,7 @@ const Compensation: React.FC = () => {
                   <DatePicker
                     picker="month"
                     format={'MM/YYYY'}
+                    disabledDate={disabledDate}
                     disabled={drawerType === 3 ? true : false}
                   />
                 )}
@@ -871,8 +912,14 @@ const Compensation: React.FC = () => {
                 name="base_salary"
                 label={'ฐานเงินเดือน'}
                 className="ml-[52px]"
+                initialValue={0.00}
               >
-                <InputNumber disabled style={{ width: '100%' }} />
+                <InputNumber
+                  step="0.01"
+                  disabled style={{ width: '100%' }}
+                  formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                  parser={(value) => value!.replace(/\$\s?|(,*)/g, '')}
+                />
               </Form.Item>
             </Col>
           </Row>
@@ -883,10 +930,17 @@ const Compensation: React.FC = () => {
                 name="commission"
                 label={'ค่าคอมมิชชั่น'}
                 className="ml-[52px]"
+                initialValue={0}
               >
                 <InputNumber
                   style={{ width: '100%' }}
                   disabled={drawerType === 3 ? true : false}
+                  // formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',') + value?.toString().includes(".") ? `.${value?.toString()?.split('.')[1]}` : ''}
+                  formatter={(value) => {
+                    return `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+                  }}
+                  parser={(value) => value!.replace(/\$\s?|(,*)/g, '')}
+
                 />
               </Form.Item>
             </Col>
@@ -898,6 +952,7 @@ const Compensation: React.FC = () => {
                 name="position_income"
                 label={'ค่าตำแหน่ง'}
                 className="ml-[63px]"
+                initialValue={0}
               >
                 <InputNumber
                   style={{ width: '100%' }}
@@ -913,6 +968,7 @@ const Compensation: React.FC = () => {
                 name="special_income"
                 label={'เงินพิเศษ'}
                 className="ml-[72px]"
+                initialValue={0}
               >
                 <InputNumber
                   style={{ width: '100%' }}
@@ -924,7 +980,7 @@ const Compensation: React.FC = () => {
 
           <Row>
             <Col xs={24} sm={24} md={24} lg={24} xl={24}>
-              <Form.Item name="ot" label={'ค่าล่วงเวลา'} className="ml-[59px]">
+              <Form.Item name="ot" label={'ค่าล่วงเวลา'} className="ml-[59px]" initialValue={0.00}>
                 <InputNumber
                   style={{ width: '100%' }}
                   disabled={drawerType === 3 ? true : false}
@@ -939,6 +995,7 @@ const Compensation: React.FC = () => {
                 name="other_income"
                 label={'รายได้อื่น'}
                 className="ml-[72px]"
+                initialValue={0}
               >
                 <InputNumber
                   style={{ width: '100%' }}
@@ -954,6 +1011,7 @@ const Compensation: React.FC = () => {
                 name="travel_income"
                 label={'ค่าเดินทาง'}
                 className="ml-[64px]"
+                initialValue={0}
               >
                 <InputNumber
                   style={{ width: '100%' }}
@@ -969,6 +1027,7 @@ const Compensation: React.FC = () => {
                 name="bursary"
                 label={'เงินอุดหนุน'}
                 className="ml-[60px]"
+                initialValue={0}
               >
                 <InputNumber
                   style={{ width: '100%' }}
@@ -984,6 +1043,7 @@ const Compensation: React.FC = () => {
                 name="welfare_money"
                 label={'เงินสวัสดิการ'}
                 className="ml-[47px]"
+                initialValue={0}
               >
                 <InputNumber
                   style={{ width: '100%' }}
@@ -995,7 +1055,7 @@ const Compensation: React.FC = () => {
 
           <Row>
             <Col xs={24} sm={24} md={24} lg={24} xl={24}>
-              <Form.Item name="bonus" label={'เงินโบนัส'} className="ml-[73px]">
+              <Form.Item name="bonus" label={'เงินโบนัส'} className="ml-[73px]" initialValue={0}>
                 <InputNumber
                   style={{ width: '100%' }}
                   disabled={drawerType === 3 ? true : false}
@@ -1009,7 +1069,8 @@ const Compensation: React.FC = () => {
               <Form.Item
                 name="total_income"
                 label={'รายได้รวม'}
-                className="ml-[73px]"
+                className="ml-[65px]"
+                initialValue={0}
               >
                 <InputNumber style={{ width: '100%' }} disabled />
               </Form.Item>
@@ -1027,8 +1088,10 @@ const Compensation: React.FC = () => {
           <Row>
             <Col xs={24} sm={24} md={24} lg={24} xl={24} className="ml-12">
               <Space>
-                <Form.Item name="vat_per" label={'ภาษี'} className="ml-[54px]">
-                  <InputNumber className="w-16" disabled />
+                <Form.Item name="vat_per" label={'ภาษี'} className="ml-[54px]" initialValue={0}>
+                  <InputNumber className="w-16" disabled
+                    formatter={(value) => `${value}%`}
+                    parser={(value) => value!.replace('%', '')} />
                 </Form.Item>
 
                 <Form.Item name="vat" className="ml-[1px] w-full">
@@ -1041,8 +1104,14 @@ const Compensation: React.FC = () => {
           <Row>
             <Col xs={24} sm={24} md={24} lg={24} xl={24} className="ml-[53px]">
               <Space>
-                <Form.Item name="ss_per" label={'ประกันสังคม'}>
-                  <InputNumber className="w-16" disabled />
+                <Form.Item name="ss_per"
+                  label={'ประกันสังคม'}
+                  initialValue={0}
+                >
+                  <InputNumber className="w-16" disabled
+                    formatter={(value) => `${value}%`}
+                    parser={(value) => value!.replace('%', '')}
+                  />
                 </Form.Item>
 
                 <Form.Item name="social_security" className="ml-[0.5px] w-full">
@@ -1055,8 +1124,11 @@ const Compensation: React.FC = () => {
           <Row>
             <Col xs={24} sm={24} md={24} lg={24} xl={24} className="ml-[53px]">
               <Space>
-                <Form.Item name="provident_emp" label={'กองทุนสะสม'}>
-                  <InputNumber className="w-16" disabled />
+                <Form.Item name="provident_emp" label={'กองทุนสะสม'} initialValue={0}>
+                  <InputNumber className="w-16" disabled
+                    formatter={(value) => `${value}%`}
+                    parser={(value) => value!.replace('%', '')}
+                  />
                 </Form.Item>
 
                 <Form.Item
@@ -1071,7 +1143,7 @@ const Compensation: React.FC = () => {
 
           <Row>
             <Col xs={24} sm={24} md={24} lg={24} xl={24}>
-              <Form.Item name="miss" label={'ขาด'} className="ml-[102px]">
+              <Form.Item name="miss" label={'ขาด'} className="ml-[102px]" initialValue={0}>
                 <InputNumber
                   style={{ width: '100%' }}
                   disabled={drawerType === 3 ? true : false}
@@ -1082,7 +1154,7 @@ const Compensation: React.FC = () => {
 
           <Row>
             <Col xs={24} sm={24} md={24} lg={24} xl={24}>
-              <Form.Item name="ra" label={'ลา'} className="ml-[111px]">
+              <Form.Item name="ra" label={'ลา'} className="ml-[111px]" initialValue={0}>
                 <InputNumber
                   style={{ width: '100%' }}
                   disabled={drawerType === 3 ? true : false}
@@ -1093,7 +1165,7 @@ const Compensation: React.FC = () => {
 
           <Row>
             <Col xs={24} sm={24} md={24} lg={24} xl={24}>
-              <Form.Item name="late" label={'มาสาย'} className="ml-[86px]">
+              <Form.Item name="late" label={'มาสาย'} className="ml-[86px]" initialValue={0}>
                 <InputNumber
                   style={{ width: '100%' }}
                   disabled={drawerType === 3 ? true : false}
@@ -1104,7 +1176,7 @@ const Compensation: React.FC = () => {
 
           <Row>
             <Col xs={24} sm={24} md={24} lg={24} xl={24}>
-              <Form.Item name="other" label={'อื่น ๆ'} className="ml-[95px]">
+              <Form.Item name="other" label={'อื่น ๆ'} className="ml-[95px]" initialValue={0}>
                 <InputNumber
                   style={{ width: '100%' }}
                   disabled={drawerType === 3 ? true : false}
@@ -1118,7 +1190,8 @@ const Compensation: React.FC = () => {
               <Form.Item
                 name="total_expense"
                 label={'รายหักรวม'}
-                className="ml-[73px]"
+                className="ml-[61px]"
+                initialValue={0}
               >
                 <InputNumber style={{ width: '100%' }} disabled />
               </Form.Item>
@@ -1130,7 +1203,8 @@ const Compensation: React.FC = () => {
               <Form.Item
                 name="net"
                 label={'รวมรายรับสุทธิ'}
-                className="font-bold ml-[37px]"
+                className="font-bold ml-[36px]"
+                initialValue={0}
               >
                 <InputNumber
                   disabled
