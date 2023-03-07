@@ -789,7 +789,10 @@ const ProfileCompensation: React.FC = () => {
                 label={'ฐานเงินเดือน'}
                 className="ml-[52px]"
               >
-                <InputNumber disabled style={{ width: '100%' }} />
+                <InputNumber disabled style={{ width: '100%' }}
+                  formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                  parser={(value) => value!.replace(/\$\s?|(,*)/g, '')}
+                />
               </Form.Item>
             </Col>
           </Row>
@@ -804,6 +807,8 @@ const ProfileCompensation: React.FC = () => {
                 <InputNumber
                   style={{ width: '100%' }}
                   disabled={drawerType === 3 ? true : false}
+                  formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                  parser={(value) => value!.replace(/\$\s?|(,*)/g, '')}
                 />
               </Form.Item>
             </Col>
@@ -819,6 +824,8 @@ const ProfileCompensation: React.FC = () => {
                 <InputNumber
                   style={{ width: '100%' }}
                   disabled={drawerType === 3 ? true : false}
+                  formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                  parser={(value) => value!.replace(/\$\s?|(,*)/g, '')}
                 />
               </Form.Item>
             </Col>
@@ -834,6 +841,8 @@ const ProfileCompensation: React.FC = () => {
                 <InputNumber
                   style={{ width: '100%' }}
                   disabled={drawerType === 3 ? true : false}
+                  formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                  parser={(value) => value!.replace(/\$\s?|(,*)/g, '')}
                 />
               </Form.Item>
             </Col>
@@ -845,6 +854,8 @@ const ProfileCompensation: React.FC = () => {
                 <InputNumber
                   style={{ width: '100%' }}
                   disabled={drawerType === 3 ? true : false}
+                  formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                  parser={(value) => value!.replace(/\$\s?|(,*)/g, '')}
                 />
               </Form.Item>
             </Col>
@@ -860,6 +871,8 @@ const ProfileCompensation: React.FC = () => {
                 <InputNumber
                   style={{ width: '100%' }}
                   disabled={drawerType === 3 ? true : false}
+                  formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                  parser={(value) => value!.replace(/\$\s?|(,*)/g, '')}
                 />
               </Form.Item>
             </Col>
@@ -875,6 +888,8 @@ const ProfileCompensation: React.FC = () => {
                 <InputNumber
                   style={{ width: '100%' }}
                   disabled={drawerType === 3 ? true : false}
+                  formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                  parser={(value) => value!.replace(/\$\s?|(,*)/g, '')}
                 />
               </Form.Item>
             </Col>
@@ -890,6 +905,8 @@ const ProfileCompensation: React.FC = () => {
                 <InputNumber
                   style={{ width: '100%' }}
                   disabled={drawerType === 3 ? true : false}
+                  formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                  parser={(value) => value!.replace(/\$\s?|(,*)/g, '')}
                 />
               </Form.Item>
             </Col>
@@ -905,6 +922,8 @@ const ProfileCompensation: React.FC = () => {
                 <InputNumber
                   style={{ width: '100%' }}
                   disabled={drawerType === 3 ? true : false}
+                  formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                  parser={(value) => value!.replace(/\$\s?|(,*)/g, '')}
                 />
               </Form.Item>
             </Col>
@@ -916,6 +935,8 @@ const ProfileCompensation: React.FC = () => {
                 <InputNumber
                   style={{ width: '100%' }}
                   disabled={drawerType === 3 ? true : false}
+                  formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                  parser={(value) => value!.replace(/\$\s?|(,*)/g, '')}
                 />
               </Form.Item>
             </Col>
@@ -928,7 +949,10 @@ const ProfileCompensation: React.FC = () => {
                 label={'รายได้รวม'}
                 className="ml-[73px]"
               >
-                <InputNumber style={{ width: '100%' }} disabled />
+                <InputNumber style={{ width: '100%' }} disabled
+                  formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                  parser={(value) => value!.replace(/\$\s?|(,*)/g, '')}
+                />
               </Form.Item>
             </Col>
           </Row>
@@ -952,6 +976,8 @@ const ProfileCompensation: React.FC = () => {
                   <InputNumber
                     disabled={drawerType === 3 ? true : false}
                     className="w-[222px]"
+                    formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                    parser={(value) => value!.replace(/\$\s?|(,*)/g, '')}
                   />
                 </Form.Item>
               </Space>
@@ -969,6 +995,8 @@ const ProfileCompensation: React.FC = () => {
                   <InputNumber
                     disabled={drawerType === 3 ? true : false}
                     className="w-[222px]"
+                    formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                    parser={(value) => value!.replace(/\$\s?|(,*)/g, '')}
                   />
                 </Form.Item>
               </Space>
@@ -989,6 +1017,8 @@ const ProfileCompensation: React.FC = () => {
                   <InputNumber
                     disabled={drawerType === 3 ? true : false}
                     className="w-[222px]"
+                    formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                    parser={(value) => value!.replace(/\$\s?|(,*)/g, '')}
                   />
                 </Form.Item>
               </Space>
@@ -1001,6 +1031,8 @@ const ProfileCompensation: React.FC = () => {
                 <InputNumber
                   style={{ width: '100%' }}
                   disabled={drawerType === 3 ? true : false}
+                  formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                  parser={(value) => value!.replace(/\$\s?|(,*)/g, '')}
                 />
               </Form.Item>
             </Col>
@@ -1012,6 +1044,8 @@ const ProfileCompensation: React.FC = () => {
                 <InputNumber
                   style={{ width: '100%' }}
                   disabled={drawerType === 3 ? true : false}
+                  formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                  parser={(value) => value!.replace(/\$\s?|(,*)/g, '')}
                 />
               </Form.Item>
             </Col>
@@ -1023,6 +1057,8 @@ const ProfileCompensation: React.FC = () => {
                 <InputNumber
                   style={{ width: '100%' }}
                   disabled={drawerType === 3 ? true : false}
+                  formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                  parser={(value) => value!.replace(/\$\s?|(,*)/g, '')}
                 />
               </Form.Item>
             </Col>
@@ -1034,6 +1070,8 @@ const ProfileCompensation: React.FC = () => {
                 <InputNumber
                   style={{ width: '100%' }}
                   disabled={drawerType === 3 ? true : false}
+                  formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                  parser={(value) => value!.replace(/\$\s?|(,*)/g, '')}
                 />
               </Form.Item>
             </Col>
@@ -1046,7 +1084,10 @@ const ProfileCompensation: React.FC = () => {
                 label={'รายหักรวม'}
                 className="ml-[73px]"
               >
-                <InputNumber style={{ width: '100%' }} disabled />
+                <InputNumber style={{ width: '100%' }} disabled
+                  formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                  parser={(value) => value!.replace(/\$\s?|(,*)/g, '')}
+                />
               </Form.Item>
             </Col>
           </Row>
@@ -1061,6 +1102,8 @@ const ProfileCompensation: React.FC = () => {
                 <InputNumber
                   disabled
                   style={{ background: '#CCFFFF', width: '100%' }}
+                  formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                  parser={(value) => value!.replace(/\$\s?|(,*)/g, '')}
                 />
               </Form.Item>
             </Col>

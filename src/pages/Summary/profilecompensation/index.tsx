@@ -117,6 +117,62 @@ const Compensation: React.FC = () => {
   }, []);
 
   useEffect(() => {
+    form.setFieldsValue({
+      base_salary:
+        Show_PervspUser?.show_pervspUser?.[0]?.bookbank_log?.[0]?.base_salary,
+      vat_per:
+        Show_PervspUser?.show_pervspUser?.[0]?.companyBranch
+          ?.expense_company?.[0]?.vat_per,
+      ss_per:
+        Show_PervspUser?.show_pervspUser?.[0]?.companyBranch
+          ?.expense_company?.[0]?.ss_per,
+      provident_emp:
+        Show_PervspUser?.show_pervspUser?.[0]?.bookbank_log?.[0]?.provident_emp,
+    });
+    const valueall = form.getFieldsValue();
+    //console.log('Show_PervspUser', Show_PervspUser)
+    if (valueall.date !== undefined) {
+      let Vat_item = Show_PervspUser?.show_pervspUser
+        ? Show_PervspUser?.show_pervspUser?.[0]?.companyBranch
+          ?.expense_company?.[0]?.check_vat
+        : ([] as any);
+      // let Val_item_cal = Vat_item.map(i => column[''] ? parseFloat(column['']) : 0).reduce((val, a) => val + a, 0)
+      let Val_item_cal = Vat_item.map((i) =>
+        valueall[i] ? parseFloat(valueall[i]) : 0,
+      ).reduce((val, a) => val + a, 0);
+      //console.log('Val_item_cal', Val_item_cal)
+    }
+    onChangeFormvalue({ base_salary: '' }, valueall);
+    const SS_CAl = () => {
+      let SSCal =
+        parseFloat(form.getFieldValue('base_salary')) *
+        (parseFloat(form.getFieldValue('ss_per')) / 100);
+      if (SSCal >= 750) {
+        form.setFieldValue('social_security', 750);
+        SSCal = 750;
+      } else {
+        form.setFieldValue('social_security', SSCal);
+      }
+
+      let provident_EMPCal =
+        parseFloat(form.getFieldValue('base_salary')) *
+        (parseFloat(form.getFieldValue('provident_emp')) / 100);
+      form.setFieldValue('provident_employee', provident_EMPCal);
+
+      let vatCal =
+        parseFloat(form.getFieldValue('base_salary')) *
+        (parseFloat(form.getFieldValue('vat_per')) / 100);
+      form.setFieldValue('vat', vatCal ? vatCal : 0);
+      // let = ExpenseComData?.expense_company?.check_vat
+      // ExpenseComData?.expense_company?.check_vat?.
+      // .map(i=>map[i] ? parseFloat(map[i]) : 0).reduce((val, a) => val + a, 0);
+      let summinus1 = vatCal + SSCal + provident_EMPCal;
+      form.setFieldValue('total_expense', summinus1);
+    };
+    SS_CAl();
+  }, [Show_PervspUser]);
+
+  useEffect(() => {
     form.setFieldValue('net', sumIncome - sumExpense);
   }, [sumIncome, sumExpense]);
 
@@ -419,61 +475,7 @@ const Compensation: React.FC = () => {
       });
     setOpen(false);
   };
-  useEffect(() => {
-    form.setFieldsValue({
-      base_salary:
-        Show_PervspUser?.show_pervspUser?.[0]?.bookbank_log?.[0]?.base_salary,
-      vat_per:
-        Show_PervspUser?.show_pervspUser?.[0]?.companyBranch
-          ?.expense_company?.[0]?.vat_per,
-      ss_per:
-        Show_PervspUser?.show_pervspUser?.[0]?.companyBranch
-          ?.expense_company?.[0]?.ss_per,
-      provident_emp:
-        Show_PervspUser?.show_pervspUser?.[0]?.bookbank_log?.[0]?.provident_emp,
-    });
-    const valueall = form.getFieldsValue();
-    //console.log('Show_PervspUser', Show_PervspUser)
-    if (valueall.date !== undefined) {
-      let Vat_item = Show_PervspUser?.show_pervspUser
-        ? Show_PervspUser?.show_pervspUser?.[0]?.companyBranch
-          ?.expense_company?.[0]?.check_vat
-        : ([] as any);
-      // let Val_item_cal = Vat_item.map(i => column[''] ? parseFloat(column['']) : 0).reduce((val, a) => val + a, 0)
-      let Val_item_cal = Vat_item.map((i) =>
-        valueall[i] ? parseFloat(valueall[i]) : 0,
-      ).reduce((val, a) => val + a, 0);
-      //console.log('Val_item_cal', Val_item_cal)
-    }
-    onChangeFormvalue({ base_salary: '' }, valueall);
-    const SS_CAl = () => {
-      let SSCal =
-        parseFloat(form.getFieldValue('base_salary')) *
-        (parseFloat(form.getFieldValue('ss_per')) / 100);
-      if (SSCal >= 750) {
-        form.setFieldValue('social_security', 750);
-        SSCal = 750;
-      } else {
-        form.setFieldValue('social_security', SSCal);
-      }
 
-      let provident_EMPCal =
-        parseFloat(form.getFieldValue('base_salary')) *
-        (parseFloat(form.getFieldValue('provident_emp')) / 100);
-      form.setFieldValue('provident_employee', provident_EMPCal);
-
-      let vatCal =
-        parseFloat(form.getFieldValue('base_salary')) *
-        (parseFloat(form.getFieldValue('vat_per')) / 100);
-      form.setFieldValue('vat', vatCal ? vatCal : 0);
-      // let = ExpenseComData?.expense_company?.check_vat
-      // ExpenseComData?.expense_company?.check_vat?.
-      // .map(i=>map[i] ? parseFloat(map[i]) : 0).reduce((val, a) => val + a, 0);
-      let summinus1 = vatCal + SSCal + provident_EMPCal;
-      form.setFieldValue('total_expense', summinus1);
-    };
-    SS_CAl();
-  }, [Show_PervspUser]);
   const onChangeDate = (date) => {
     // console.log(date.format("YYYY-MM-DD"));
     // const result = dayjs(pickDate).format("YYYY-MM-DD") as any
@@ -957,6 +959,8 @@ const Compensation: React.FC = () => {
                 <InputNumber
                   style={{ width: '100%' }}
                   disabled={drawerType === 3 ? true : false}
+                  formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                  parser={(value) => value!.replace(/\$\s?|(,*)/g, '')}
                 />
               </Form.Item>
             </Col>
@@ -973,6 +977,8 @@ const Compensation: React.FC = () => {
                 <InputNumber
                   style={{ width: '100%' }}
                   disabled={drawerType === 3 ? true : false}
+                  formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                  parser={(value) => value!.replace(/\$\s?|(,*)/g, '')}
                 />
               </Form.Item>
             </Col>
@@ -984,6 +990,8 @@ const Compensation: React.FC = () => {
                 <InputNumber
                   style={{ width: '100%' }}
                   disabled={drawerType === 3 ? true : false}
+                  formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                  parser={(value) => value!.replace(/\$\s?|(,*)/g, '')}
                 />
               </Form.Item>
             </Col>
@@ -1000,6 +1008,8 @@ const Compensation: React.FC = () => {
                 <InputNumber
                   style={{ width: '100%' }}
                   disabled={drawerType === 3 ? true : false}
+                  formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                  parser={(value) => value!.replace(/\$\s?|(,*)/g, '')}
                 />
               </Form.Item>
             </Col>
@@ -1016,6 +1026,8 @@ const Compensation: React.FC = () => {
                 <InputNumber
                   style={{ width: '100%' }}
                   disabled={drawerType === 3 ? true : false}
+                  formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                  parser={(value) => value!.replace(/\$\s?|(,*)/g, '')}
                 />
               </Form.Item>
             </Col>
@@ -1032,6 +1044,8 @@ const Compensation: React.FC = () => {
                 <InputNumber
                   style={{ width: '100%' }}
                   disabled={drawerType === 3 ? true : false}
+                  formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                  parser={(value) => value!.replace(/\$\s?|(,*)/g, '')}
                 />
               </Form.Item>
             </Col>
@@ -1048,6 +1062,8 @@ const Compensation: React.FC = () => {
                 <InputNumber
                   style={{ width: '100%' }}
                   disabled={drawerType === 3 ? true : false}
+                  formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                  parser={(value) => value!.replace(/\$\s?|(,*)/g, '')}
                 />
               </Form.Item>
             </Col>
@@ -1059,6 +1075,8 @@ const Compensation: React.FC = () => {
                 <InputNumber
                   style={{ width: '100%' }}
                   disabled={drawerType === 3 ? true : false}
+                  formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                  parser={(value) => value!.replace(/\$\s?|(,*)/g, '')}
                 />
               </Form.Item>
             </Col>
@@ -1072,7 +1090,10 @@ const Compensation: React.FC = () => {
                 className="ml-[65px]"
                 initialValue={0}
               >
-                <InputNumber style={{ width: '100%' }} disabled />
+                <InputNumber style={{ width: '100%' }} disabled
+                  formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                  parser={(value) => value!.replace(/\$\s?|(,*)/g, '')}
+                />
               </Form.Item>
             </Col>
           </Row>
@@ -1095,7 +1116,10 @@ const Compensation: React.FC = () => {
                 </Form.Item>
 
                 <Form.Item name="vat" className="ml-[1px] w-full">
-                  <InputNumber disabled className="w-[222px]" />
+                  <InputNumber disabled className="w-[222px]"
+                    formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                    parser={(value) => value!.replace(/\$\s?|(,*)/g, '')}
+                  />
                 </Form.Item>
               </Space>
             </Col>
@@ -1115,7 +1139,10 @@ const Compensation: React.FC = () => {
                 </Form.Item>
 
                 <Form.Item name="social_security" className="ml-[0.5px] w-full">
-                  <InputNumber disabled className="w-[222px]" />
+                  <InputNumber disabled className="w-[222px]"
+                    formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                    parser={(value) => value!.replace(/\$\s?|(,*)/g, '')}
+                  />
                 </Form.Item>
               </Space>
             </Col>
@@ -1135,7 +1162,10 @@ const Compensation: React.FC = () => {
                   name="provident_employee"
                   className="ml-[0.5px] w-full"
                 >
-                  <InputNumber disabled className="w-[222px]" />
+                  <InputNumber disabled className="w-[222px]"
+                    formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                    parser={(value) => value!.replace(/\$\s?|(,*)/g, '')}
+                  />
                 </Form.Item>
               </Space>
             </Col>
@@ -1147,6 +1177,8 @@ const Compensation: React.FC = () => {
                 <InputNumber
                   style={{ width: '100%' }}
                   disabled={drawerType === 3 ? true : false}
+                  formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                  parser={(value) => value!.replace(/\$\s?|(,*)/g, '')}
                 />
               </Form.Item>
             </Col>
@@ -1158,6 +1190,8 @@ const Compensation: React.FC = () => {
                 <InputNumber
                   style={{ width: '100%' }}
                   disabled={drawerType === 3 ? true : false}
+                  formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                  parser={(value) => value!.replace(/\$\s?|(,*)/g, '')}
                 />
               </Form.Item>
             </Col>
@@ -1169,6 +1203,8 @@ const Compensation: React.FC = () => {
                 <InputNumber
                   style={{ width: '100%' }}
                   disabled={drawerType === 3 ? true : false}
+                  formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                  parser={(value) => value!.replace(/\$\s?|(,*)/g, '')}
                 />
               </Form.Item>
             </Col>
@@ -1180,6 +1216,8 @@ const Compensation: React.FC = () => {
                 <InputNumber
                   style={{ width: '100%' }}
                   disabled={drawerType === 3 ? true : false}
+                  formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                  parser={(value) => value!.replace(/\$\s?|(,*)/g, '')}
                 />
               </Form.Item>
             </Col>
@@ -1193,7 +1231,10 @@ const Compensation: React.FC = () => {
                 className="ml-[61px]"
                 initialValue={0}
               >
-                <InputNumber style={{ width: '100%' }} disabled />
+                <InputNumber style={{ width: '100%' }} disabled
+                  formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                  parser={(value) => value!.replace(/\$\s?|(,*)/g, '')}
+                />
               </Form.Item>
             </Col>
           </Row>
@@ -1209,6 +1250,8 @@ const Compensation: React.FC = () => {
                 <InputNumber
                   disabled
                   style={{ background: '#CCFFFF', width: '100%' }}
+                  formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                  parser={(value) => value!.replace(/\$\s?|(,*)/g, '')}
                 />
               </Form.Item>
             </Col>
