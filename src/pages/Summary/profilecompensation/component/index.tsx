@@ -107,7 +107,7 @@ const ProfileCompensation: React.FC = () => {
     });
     console.log(arr);
     setFilter(arr);
-  }, [called]);
+  }, [salary_me]);
 
   useEffect(() => {
     refetch();
