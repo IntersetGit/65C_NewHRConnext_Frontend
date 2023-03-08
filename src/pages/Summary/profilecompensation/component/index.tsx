@@ -317,7 +317,7 @@ const ProfileCompensation: React.FC = () => {
           ?.expense_company?.[0]?.check_vat
         : ([] as any);
       // let Val_item_cal = Vat_item.map(i => column[''] ? parseFloat(column['']) : 0).reduce((val, a) => val + a, 0)
-      let Val_item_cal = Vat_item.map((i) =>
+      var Val_item_cal = Vat_item.map((i) =>
         valueall[i] ? parseFloat(valueall[i]) : 0,
       ).reduce((val, a) => val + a, 0);
       //console.log('Val_item_cal', Val_item_cal)
@@ -340,13 +340,18 @@ const ProfileCompensation: React.FC = () => {
       form.setFieldValue('provident_employee', provident_EMPCal);
 
       let vatCal =
-        parseFloat(form.getFieldValue('base_salary')) *
+        parseFloat(Val_item_cal) *
         (parseFloat(form.getFieldValue('vat_per')) / 100);
-      form.setFieldValue('vat', vatCal ? vatCal : 0);
+      form.setFieldValue('vat', (vatCal).toFixed(2) ? (vatCal).toFixed(2) : 0);
       // let = ExpenseComData?.expense_company?.check_vat
       // ExpenseComData?.expense_company?.check_vat?.
       // .map(i=>map[i] ? parseFloat(map[i]) : 0).reduce((val, a) => val + a, 0);
-      let summinus1 = vatCal + SSCal + provident_EMPCal;
+
+      let cal_Exp = parseFloat(form.getFieldValue('miss')) +
+        parseFloat(form.getFieldValue('ra')) +
+        parseFloat(form.getFieldValue('late')) +
+        parseFloat(form.getFieldValue('other'))
+      let summinus1 = vatCal + SSCal + provident_EMPCal + cal_Exp;
       form.setFieldValue('total_expense', summinus1);
     };
     SS_CAl();

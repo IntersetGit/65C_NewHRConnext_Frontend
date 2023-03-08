@@ -131,17 +131,19 @@ const Compensation: React.FC = () => {
     });
     const valueall = form.getFieldsValue();
     //console.log('Show_PervspUser', Show_PervspUser)
+
     if (valueall.date !== undefined) {
       let Vat_item = Show_PervspUser?.show_pervspUser
         ? Show_PervspUser?.show_pervspUser?.[0]?.companyBranch
           ?.expense_company?.[0]?.check_vat
         : ([] as any);
       // let Val_item_cal = Vat_item.map(i => column[''] ? parseFloat(column['']) : 0).reduce((val, a) => val + a, 0)
-      let Val_item_cal = Vat_item.map((i) =>
+      var Val_item_cal = Vat_item.map((i) =>
         valueall[i] ? parseFloat(valueall[i]) : 0,
       ).reduce((val, a) => val + a, 0);
       //console.log('Val_item_cal', Val_item_cal)
     }
+
     onChangeFormvalue({ base_salary: '' }, valueall);
     const SS_CAl = () => {
       let SSCal =
@@ -160,16 +162,25 @@ const Compensation: React.FC = () => {
       form.setFieldValue('provident_employee', provident_EMPCal);
 
       let vatCal =
-        parseFloat(form.getFieldValue('base_salary')) *
+        parseFloat(Val_item_cal) *
         (parseFloat(form.getFieldValue('vat_per')) / 100);
-      form.setFieldValue('vat', vatCal ? vatCal : 0);
+      form.setFieldValue('vat', (vatCal).toFixed(2) ? (vatCal).toFixed(2) : 0);
+
+      let cal_Exp = parseFloat(form.getFieldValue('miss')) +
+        parseFloat(form.getFieldValue('ra')) +
+        parseFloat(form.getFieldValue('late')) +
+        parseFloat(form.getFieldValue('other'))
+
+
+
       // let = ExpenseComData?.expense_company?.check_vat
       // ExpenseComData?.expense_company?.check_vat?.
       // .map(i=>map[i] ? parseFloat(map[i]) : 0).reduce((val, a) => val + a, 0);
-      let summinus1 = vatCal + SSCal + provident_EMPCal;
+      let summinus1 = vatCal + SSCal + provident_EMPCal + cal_Exp;
       form.setFieldValue('total_expense', summinus1);
     };
     SS_CAl();
+
   }, [Show_PervspUser]);
 
   useEffect(() => {
@@ -232,7 +243,7 @@ const Compensation: React.FC = () => {
     if (key === 'edit') {
       showDrawer(2);
       setselectedRow(record);
-      // console.log('recordrecordrecordrecordrecord', record)
+      console.log('recordrecordrecordrecordrecord', record)
       form.setFieldsValue({
         ...record,
         date: record.date ? dayjs(record.date) : undefined,
