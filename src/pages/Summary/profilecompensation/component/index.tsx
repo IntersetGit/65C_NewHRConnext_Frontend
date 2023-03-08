@@ -65,7 +65,7 @@ const ProfileCompensation: React.FC = () => {
   //console.log(propsstate);
 
   const { data: bookbank_log_me } = useQuery(FETCH_BOOKBANK_LOG_ME);
-  const { data: salary_me } = useQuery(FETCH_SALARY_ME);
+  const { data: salary_me, refetch: refetch6 } = useQuery(FETCH_SALARY_ME);
 
   const {
     data: TableDataSalary,
@@ -74,14 +74,14 @@ const ProfileCompensation: React.FC = () => {
   } = useQuery(FETCH_AllSALARY_USER, {
     variables: { userId: propsstate?.userId },
   });
-  const { data: ExpenseComData, refetch: refetch2 } =
-    useQuery(FETCH_ExpenseCompany);
-  const { data: book_bank_data, refetch: refetch3 } = useQuery(
-    FETCH_GETALLBOOKBANK_LOG,
-    {
-      variables: { userId: propsstate?.userId },
-    },
-  );
+  // const { data: ExpenseComData, refetch: refetch2 } =
+  //   useQuery(FETCH_ExpenseCompany);
+  // const { data: book_bank_data, refetch: refetch3 } = useQuery(
+  //   FETCH_GETALLBOOKBANK_LOG,
+  //   {
+  //     variables: { userId: propsstate?.userId },
+  //   },
+  // );
   const { data: Filter_BookBank, refetch: refetch4 } = useQuery(
     FETCH_Filter_BOOKBANK_ADMIN,
     {
@@ -111,16 +111,17 @@ const ProfileCompensation: React.FC = () => {
 
   useEffect(() => {
     refetch();
-    refetch2();
-    refetch3();
+    // refetch2();
+    // refetch3();
     refetch4();
+    refetch6();
   }, []);
   useEffect(() => {
     form.setFieldValue('net', sumIncome - sumExpense);
   }, [sumIncome, sumExpense]);
 
   const onchangeselect = () => {
-    refetch({ years: formshow.getFieldValue('years') });
+    refetch6({ years: formshow.getFieldValue('years') });
   };
 
   const showDrawer = (type: any) => {
