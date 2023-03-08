@@ -81,24 +81,29 @@ const Remuneration: React.FC = () => {
     refetch();
     refetch2();
   });
-  useEffect(() => {
-    const salary: any = book_bank_data
-      ? Filter_BookBank?.filter_bookbank_admin?.[0]?.base_salary?.toFixed(2)
-      : '0.00';
-    const banknumber: any = book_bank_data
-      ? Filter_BookBank?.filter_bookbank_admin?.[0]?.bank_number
-      : '';
-    const bankname: any = book_bank_data
-      ? Filter_BookBank?.filter_bookbank_admin?.[0]?.mas_bank?.name
-      : '';
+  // useEffect(() => {
+  //   const salary: any = book_bank_data
+  //     ? Filter_BookBank?.filter_bookbank_admin?.[0]?.base_salary?.toFixed(2)
+  //     : '0.00';
+  //   const banknumber: any = book_bank_data
+  //     ? Filter_BookBank?.filter_bookbank_admin?.[0]?.bank_number
+  //     : '';
+  //   const bankname: any = book_bank_data
+  //     ? Filter_BookBank?.filter_bookbank_admin?.[0]?.mas_bank?.name
+  //     : '';
 
-    formshow.setFieldsValue({
-      base_salary: salary,
-      bank_number: banknumber,
-      mas_bankId: bankname,
-    });
-    refetch2();
-  }, [Filter_BookBank]);
+  //   formshow.setFieldsValue({
+  //     base_salary: salary,
+  //     bank_number: banknumber,
+  //     mas_bankId: bankname,
+  //   });
+  //   refetch2();
+  // }, [Filter_BookBank]);
+  formshow.setFieldsValue({
+    base_salary: Filter_BookBank?.filter_bookbank_admin?.[0]?.base_salary?.toLocaleString(undefined, { minimumFractionDigits: 2 }) ?? '0.00',
+    bank_number: Filter_BookBank?.filter_bookbank_admin?.[0]?.bank_number ?? '',
+    mas_bankId: Filter_BookBank?.filter_bookbank_admin?.[0]?.mas_bank?.name ?? '',
+  });
 
 
   const selectBookBank = BookBank?.mas_bank?.map((e: any) => {

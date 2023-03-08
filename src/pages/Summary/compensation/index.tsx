@@ -655,7 +655,7 @@ const Compensation2: React.FC = () => {
       key: 'bookbank_log',
       align: 'center',
       render: (record) => {
-        return record?.bookbank_log[0]?.base_salary?.toFixed(2);
+        return record?.bookbank_log[0]?.base_salary?.toLocaleString(undefined, { minimumFractionDigits: 2 }) ?? '-';
       },
     },
     {

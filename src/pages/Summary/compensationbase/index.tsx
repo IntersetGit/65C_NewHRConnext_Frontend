@@ -160,7 +160,7 @@ const Compensationbase: React.FC = () => {
       align: 'center',
       width: 150,
       render: (record) => {
-        return record?.[0]?.base_salary?.toFixed(2);
+        return record?.[0]?.base_salary?.toLocaleString(undefined, { minimumFractionDigits: 2 }) ?? '-';
         // return JSON.stringify(data[0]?.base_salary);
         // if (parseInt(เดือนปัจจุบัน) < parseInt(เดือนที่มีผลบังคับใช้) && ปีปัจจุบัน === ปีที่มีผลบังคับใช้) {
         //   return record?.[0]?.base_salary?.toFixed(2);

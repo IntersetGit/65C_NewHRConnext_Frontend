@@ -532,7 +532,7 @@ const Compensation: React.FC = () => {
       dataIndex: 'total_income',
       align: 'center',
       render: (record) => {
-        return <div>{record.toFixed(2) ?? '-'} </div>;
+        return <div>{record.toLocaleString(undefined, { minimumFractionDigits: 2 }) ?? '-'} </div>;
       },
     },
     {
@@ -541,7 +541,7 @@ const Compensation: React.FC = () => {
       dataIndex: 'total_expense',
       align: 'center',
       render: (record) => {
-        return <div>{record.toFixed(2) ?? '-'} </div>;
+        return <div>{record.toLocaleString(undefined, { minimumFractionDigits: 2 }) ?? '-'} </div>;
       },
     },
     {
@@ -550,7 +550,7 @@ const Compensation: React.FC = () => {
       dataIndex: 'net',
       align: 'center',
       render: (record) => {
-        return <div>{record.toFixed(2) ?? '-'}</div>;
+        return <div>{record.toLocaleString(undefined, { minimumFractionDigits: 2 }) ?? '-'}</div>;
       },
     },
     {
@@ -757,7 +757,7 @@ const Compensation: React.FC = () => {
                 name="base_salary"
                 colon={false}
                 label={'ฐานเงินเดือน'}
-                initialValue={propsstate?.bookbank_log[0]?.base_salary ? propsstate?.bookbank_log[0]?.base_salary : 0.00}
+                initialValue={propsstate?.bookbank_log[0]?.base_salary ? propsstate?.bookbank_log[0]?.base_salary?.toLocaleString(undefined, { minimumFractionDigits: 2 }) : 0.00}
               >
                 <Input
                   allowClear

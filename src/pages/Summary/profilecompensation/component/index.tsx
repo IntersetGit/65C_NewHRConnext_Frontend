@@ -370,7 +370,7 @@ const ProfileCompensation: React.FC = () => {
   };
 
   formshow.setFieldsValue({
-    base_salary: bookbank_log_me?.filter_bookbank?.[0]?.base_salary,
+    base_salary: bookbank_log_me?.filter_bookbank?.[0]?.base_salary?.toLocaleString(undefined, { minimumFractionDigits: 2 }) ?? '0.00',
     bank_number: bookbank_log_me?.filter_bookbank?.[0]?.bank_number,
     bank: bookbank_log_me?.filter_bookbank?.[0]?.mas_bank?.name,
   });
@@ -392,7 +392,7 @@ const ProfileCompensation: React.FC = () => {
       dataIndex: 'total_income',
       align: 'center',
       render: (record) => {
-        return <div>{record.toFixed(2) ?? '-'} </div>;
+        return <div>{record.toLocaleString(undefined, { minimumFractionDigits: 2 }) ?? '-'} </div>;
       },
     },
     {
@@ -401,7 +401,7 @@ const ProfileCompensation: React.FC = () => {
       dataIndex: 'total_expense',
       align: 'center',
       render: (record) => {
-        return <div>{record.toFixed(2) ?? '-'} </div>;
+        return <div>{record.toLocaleString(undefined, { minimumFractionDigits: 2 }) ?? '-'} </div>;
       },
     },
     {
@@ -410,7 +410,7 @@ const ProfileCompensation: React.FC = () => {
       dataIndex: 'net',
       align: 'center',
       render: (record) => {
-        return <div>{record.toFixed(2) ?? '-'}</div>;
+        return <div>{record.toLocaleString(undefined, { minimumFractionDigits: 2 }) ?? '-'}</div>;
       },
     },
     {

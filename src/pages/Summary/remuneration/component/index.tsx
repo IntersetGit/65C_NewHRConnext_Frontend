@@ -76,23 +76,13 @@ const ProfileRemuneration: React.FC = () => {
     refetch2();
     refetch3();
   });
-  useEffect(() => {
-    const salary: any = book_bank_data
-      ? Filter_BookBank?.filter_bookbank?.[0]?.base_salary?.toFixed(2)
-      : '0.00';
-    const banknumber: any = book_bank_data
-      ? Filter_BookBank?.filter_bookbank?.[0]?.bank_number
-      : '';
-    const bankname: any = book_bank_data
-      ? Filter_BookBank?.filter_bookbank?.[0]?.mas_bank?.name
-      : '';
 
-    formshow.setFieldsValue({
-      base_salary: salary,
-      bank_number: banknumber,
-      mas_bankId: bankname,
-    });
-  }, [Filter_BookBank]);
+  formshow.setFieldsValue({
+    base_salary: Filter_BookBank?.filter_bookbank?.[0]?.base_salary?.toLocaleString(undefined, { minimumFractionDigits: 2 }) ?? '0.00',
+    bank_number: Filter_BookBank?.filter_bookbank?.[0]?.bank_number ?? '',
+    mas_bankId: Filter_BookBank?.filter_bookbank?.[0]?.mas_bank?.name ?? '',
+  });
+
 
   const selectBookBank = BookBank?.mas_bank?.map((e: any) => {
     return {
@@ -303,7 +293,7 @@ const ProfileRemuneration: React.FC = () => {
       dataIndex: 'base_salary',
       align: 'center',
       render: (record) => {
-        return <div>{record.toFixed(2)}</div>;
+        return <div>{record.toLocaleString(undefined, { minimumFractionDigits: 2 })}</div>;
       },
     },
     {
@@ -404,7 +394,7 @@ const ProfileRemuneration: React.FC = () => {
                 name="base_salary"
                 colon={false}
                 label={'ฐานเงินเดือน'}
-                initialValue={Filter_BookBank?.filter_bookbank?.[0]?.base_salary}
+                initialValue={Filter_BookBank?.filter_bookbank?.[0]?.base_salary?.toLocaleString(undefined, { minimumFractionDigits: 2 }) ?? '0.00'}
               >
                 <Input disabled allowClear />
               </Form.Item>
