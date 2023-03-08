@@ -71,6 +71,7 @@ const Compensation: React.FC = () => {
     called,
   } = useQuery(FETCH_AllSALARY_USER, {
     variables: { userId: propsstate?.userId },
+    notifyOnNetworkStatusChange: true,
   });
   const { data: ExpenseComData, refetch: refetch2 } =
     useQuery(FETCH_ExpenseCompany);
@@ -105,9 +106,9 @@ const Compensation: React.FC = () => {
       if (arr.find((_e) => _e.value === e?.years)) return;
       arr.push({ label: e?.years, value: e?.years });
     });
-    // console.log(arr);
+    console.log("sssssss5555", arr);
     setFilter(arr);
-  }, [called]);
+  }, [TableDataSalary]);
 
   useEffect(() => {
     refetch();
@@ -389,8 +390,8 @@ const Compensation: React.FC = () => {
             provident_company: calsum,
             mas_bankId: sentIdMasBank,
             vat: parseFloat(value.vat),
+            base_salary: parseFloat(value.base_salary),
           };
-          delete sentData.base_salary;
           delete sentData.vat_per;
           delete sentData.provident_emp;
           delete sentData.ss_per;
@@ -454,8 +455,8 @@ const Compensation: React.FC = () => {
             mas_bankId: sentIdMasBank,
             id: selectedRow?.id,
             vat: parseFloat(value.vat),
+            base_salary: parseFloat(value.base_salary),
           };
-          delete sentData.base_salary;
           delete sentData.vat_per;
           delete sentData.provident_emp;
           delete sentData.ss_per;
@@ -532,7 +533,7 @@ const Compensation: React.FC = () => {
       dataIndex: 'total_income',
       align: 'center',
       render: (record) => {
-        return <div>{record.toLocaleString(undefined, { minimumFractionDigits: 2 }) ?? '-'} </div>;
+        return <div>{record?.toLocaleString(undefined, { minimumFractionDigits: 2 }) ?? '-'} </div>;
       },
     },
     {
@@ -541,7 +542,7 @@ const Compensation: React.FC = () => {
       dataIndex: 'total_expense',
       align: 'center',
       render: (record) => {
-        return <div>{record.toLocaleString(undefined, { minimumFractionDigits: 2 }) ?? '-'} </div>;
+        return <div>{record?.toLocaleString(undefined, { minimumFractionDigits: 2 }) ?? '-'} </div>;
       },
     },
     {
@@ -550,7 +551,7 @@ const Compensation: React.FC = () => {
       dataIndex: 'net',
       align: 'center',
       render: (record) => {
-        return <div>{record.toLocaleString(undefined, { minimumFractionDigits: 2 }) ?? '-'}</div>;
+        return <div>{record?.toLocaleString(undefined, { minimumFractionDigits: 2 }) ?? '-'}</div>;
       },
     },
     {
@@ -757,7 +758,7 @@ const Compensation: React.FC = () => {
                 name="base_salary"
                 colon={false}
                 label={'ฐานเงินเดือน'}
-                initialValue={propsstate?.bookbank_log[0]?.base_salary ? propsstate?.bookbank_log[0]?.base_salary?.toLocaleString(undefined, { minimumFractionDigits: 2 }) : 0.00}
+                initialValue={propsstate?.bookbank_log[0]?.base_salary?.toLocaleString(undefined, { minimumFractionDigits: 2 }) ?? '-'}
               >
                 <Input
                   allowClear
