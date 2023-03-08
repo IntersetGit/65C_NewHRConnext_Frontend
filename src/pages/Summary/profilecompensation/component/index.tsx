@@ -99,15 +99,22 @@ const ProfileCompensation: React.FC = () => {
     notifyOnNetworkStatusChange: true,
   });
 
-  useEffect(() => {
-    const arr: any[] = [];
-    salary_me?.mydata_salary?.data_s?.salary?.forEach((e) => {
-      if (arr.find((_e) => _e.value === e?.years)) return;
-      arr.push({ label: e?.years, value: e?.years });
-    });
-    console.log(arr);
-    setFilter(arr);
-  }, [salary_me]);
+  // useEffect(() => {
+  //   const arr: any[] = [];
+  //   salary_me?.mydata_salary?.data_s?.salary?.forEach((e) => {
+  //     if (arr.find((_e) => _e.value === e?.years)) return;
+  //     arr.push({ label: e?.years, value: e?.years });
+  //   });
+  //   console.log(arr);
+  //   setFilter(arr);
+  // }, [salary_me]);
+
+  const selectYear = salary_me?.mydata_salary?.all_years?.map((e) => {
+    return {
+      label: e,
+      value: e,
+    }
+  })
 
   useEffect(() => {
     refetch();
@@ -687,7 +694,7 @@ const ProfileCompensation: React.FC = () => {
               >
                 <Select
                   allowClear
-                  options={filter}
+                  options={selectYear}
                   onChange={onchangeselect}
                 ></Select>
               </Form.Item>

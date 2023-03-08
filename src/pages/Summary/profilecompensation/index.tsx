@@ -93,6 +93,14 @@ const Compensation: React.FC = () => {
       notifyOnNetworkStatusChange: true,
     },
   );
+  const selectYear = TableDataSalary?.salary?.all_years?.map((e) => {
+    return {
+      label: e,
+      value: e,
+    }
+  })
+  // console.log("ddddsss", selectYear)
+
   // console.log('firstfirstfirstfirstfirstfirstfirst', Show_PervspUser)
   const [create_update_salary] = useMutation(Create_UpdateSalary);
   const [createSlip] = useMutation(FETCH_SALARY_SLIP, {
@@ -100,15 +108,15 @@ const Compensation: React.FC = () => {
   });
   const [deleteSalary] = useMutation(Delete_Salary);
 
-  useEffect(() => {
-    const arr: any[] = [];
-    TableDataSalary?.salary?.data_s?.salary?.forEach((e) => {
-      if (arr.find((_e) => _e.value === e?.years)) return;
-      arr.push({ label: e?.years, value: e?.years });
-    });
-    console.log("sssssss5555", arr);
-    setFilter(arr);
-  }, [TableDataSalary]);
+  // useEffect(() => {
+  //   const arr: any[] = [];
+  //   TableDataSalary?.salary?.data_s?.salary?.forEach((e) => {
+  //     if (arr.find((_e) => _e.value === e?.years)) return;
+  //     arr.push({ label: e?.years, value: e?.years });
+  //   });
+  //   console.log("sssssss5555", arr);
+  //   setFilter(arr);
+  // }, [TableDataSalary]);
 
   useEffect(() => {
     refetch();
@@ -813,7 +821,7 @@ const Compensation: React.FC = () => {
               >
                 <Select
                   allowClear
-                  options={filter}
+                  options={selectYear}
                   onChange={onchangeselect}
                 ></Select>
               </Form.Item>
