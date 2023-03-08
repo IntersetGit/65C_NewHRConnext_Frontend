@@ -102,7 +102,7 @@ const Compensation: React.FC = () => {
 
   useEffect(() => {
     const arr: any[] = [];
-    TableDataSalary?.salary?.salary?.forEach((e) => {
+    TableDataSalary?.salary?.data_s?.salary?.forEach((e) => {
       if (arr.find((_e) => _e.value === e?.years)) return;
       arr.push({ label: e?.years, value: e?.years });
     });
@@ -507,7 +507,7 @@ const Compensation: React.FC = () => {
 
   const disabledDate: RangePickerProps['disabledDate'] = (current) => {
 
-    let getAllMonth: any = TableDataSalary?.salary?.salary && TableDataSalary?.salary?.salary.map((item) => dayjs(new Date(item?.date)));
+    let getAllMonth: any = TableDataSalary?.salary?.data_s?.salary && TableDataSalary?.salary?.data_s?.salary.map((item) => dayjs(new Date(item?.date)));
     var yesDay = false;
     getAllMonth.forEach((day) => current.isSame(day, 'month') && (yesDay = true))
     // console.log(current.format("MM/YYYY"), dayjs(new Date(date)).format("MM/YYYY"), current.isSame(dayjs(new Date(date)), 'month'));
@@ -848,7 +848,7 @@ const Compensation: React.FC = () => {
           rowKey={'id'}
           columns={columns}
           scroll={{ x: 1500 }}
-          dataSource={TableDataSalary?.salary?.salary as any}
+          dataSource={TableDataSalary?.salary?.data_s?.salary as any}
         />
       </Card>
 

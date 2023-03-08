@@ -101,7 +101,7 @@ const ProfileCompensation: React.FC = () => {
 
   useEffect(() => {
     const arr: any[] = [];
-    salary_me?.mydata_salary?.salary?.forEach((e) => {
+    salary_me?.mydata_salary?.data_s?.salary?.forEach((e) => {
       if (arr.find((_e) => _e.value === e?.years)) return;
       arr.push({ label: e?.years, value: e?.years });
     });
@@ -722,7 +722,7 @@ const ProfileCompensation: React.FC = () => {
           columns={columns}
           rowKey={'id'}
           scroll={{ x: 1500 }}
-          dataSource={salary_me?.mydata_salary?.salary as any}
+          dataSource={salary_me?.mydata_salary?.data_s?.salary as any}
         />
       </Card>
 
