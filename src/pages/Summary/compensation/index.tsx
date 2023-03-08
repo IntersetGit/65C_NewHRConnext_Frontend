@@ -689,19 +689,19 @@ const Compensation2: React.FC = () => {
         <Form size="middle">
           <Row gutter={16}>
             <Col xs={24} sm={12} md={12} lg={6} xl={6}>
-              <Form.Item name="search" colon={false} label={'ชื่อ'}>
+              <Form.Item name="fristname" colon={false} label={'ชื่อ'}>
                 <Input allowClear></Input>
               </Form.Item>
             </Col>
 
             <Col xs={24} sm={12} md={12} lg={6} xl={6}>
-              <Form.Item name="search" colon={false} label={'แผนก'}>
+              <Form.Item name="position2" colon={false} label={'แผนก'}>
                 <Select allowClear></Select>
               </Form.Item>
             </Col>
 
             <Col xs={24} sm={24} md={24} lg={6} xl={6}>
-              <Form.Item name="search" colon={false} label={'ตำแหน่ง'}>
+              <Form.Item name="position3" colon={false} label={'ตำแหน่ง'}>
                 <Select allowClear></Select>
               </Form.Item>
             </Col>
