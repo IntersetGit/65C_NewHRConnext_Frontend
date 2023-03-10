@@ -17,7 +17,7 @@ import {
   HiOutlineComputerDesktop,
   HiOutlineQuestionMarkCircle,
 } from 'react-icons/hi2';
-import { RiHotelLine } from 'react-icons/ri';
+import { RiHotelLine, RiLockPasswordLine } from 'react-icons/ri';
 
 import { CompanyBranchType } from '../../context/types';
 import { logout } from '../../App';
@@ -71,7 +71,7 @@ const items: MenuProps['items'] = [
   {
     label: 'เปลื่ยนรหัสผ่าน',
     key: '5',
-    icon: <HiOutlineCog6Tooth size={'18'} />,
+    icon: <RiLockPasswordLine size={'18'} />,
   },
   {
     label: 'ตั้งค่าผู้ใช้',
