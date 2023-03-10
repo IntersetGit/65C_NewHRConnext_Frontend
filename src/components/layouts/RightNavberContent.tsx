@@ -1,5 +1,13 @@
 import { UserOutlined } from '@ant-design/icons';
-import { Avatar, Divider, Dropdown, MenuProps, theme, Typography } from 'antd';
+import {
+  Avatar,
+  Divider,
+  Dropdown,
+  MenuProps,
+  Modal,
+  theme,
+  Typography,
+} from 'antd';
 import { MeQuery } from '../../__generated__/graphql';
 import {
   HiOutlineArrowRightOnRectangle,
@@ -18,6 +26,8 @@ import CompanySelect from './CompantSelect';
 import { AbilityTuple, MongoAbility, MongoQuery, Subject } from '@casl/ability';
 import { AnyObject } from '@casl/ability/dist/types/types';
 import { getFilePath } from '../../util';
+import PasswordChanger from '../../pages/PasswordChanger';
+import { useState } from 'react';
 
 const { useToken } = theme;
 
@@ -59,8 +69,13 @@ const items: MenuProps['items'] = [
     icon: <HiOutlineQuestionMarkCircle size={'18'} />,
   },
   {
-    label: 'ตั้งค่าผู้ใช้',
+    label: 'เปลื่ยนรหัสผ่าน',
     key: '5',
+    icon: <HiOutlineCog6Tooth size={'18'} />,
+  },
+  {
+    label: 'ตั้งค่าผู้ใช้',
+    key: '6',
     icon: <HiOutlineCog6Tooth size={'18'} />,
   },
   {
@@ -68,7 +83,7 @@ const items: MenuProps['items'] = [
   },
   {
     label: 'ออกจากระบบ',
-    key: '6',
+    key: '7',
     icon: <HiOutlineArrowRightOnRectangle size={'18'} />,
   },
 ];
@@ -82,10 +97,18 @@ const RightNavbarContent: React.FC<RightNavContentType> = ({
   const token = useToken();
   const navigate = useNavigate();
   let { companycode } = useParams();
+  const [showModal, setShowModal] = useState<boolean>(false);
+
+  const showPassModal = () => {
+    setShowModal(!showModal);
+  };
 
   const onClick: MenuProps['onClick'] = async ({ key }) => {
     if (key === '2') navigate(`/${companycode}/roles`, { replace: true });
-    if (key === '6') await logout();
+    if (key === '5') {
+      showPassModal();
+    }
+    if (key === '7') await logout();
   };
   return (
     <div
@@ -209,6 +232,8 @@ const RightNavbarContent: React.FC<RightNavContentType> = ({
           icon={<UserOutlined />}
         />
       </Dropdown>
+
+      <PasswordChanger visible={showModal} onClose={showPassModal} />
     </div>
   );
 };
