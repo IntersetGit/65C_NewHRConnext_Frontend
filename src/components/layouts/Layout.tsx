@@ -1,9 +1,9 @@
-import { Layout, Typography } from 'antd';
+import { Layout, Typography, Avatar } from 'antd';
 import React, { useEffect } from 'react';
 import { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import Siderbar from './Siderbar';
-import { MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons';
+import { MenuUnfoldOutlined, MenuFoldOutlined, HomeFilled } from '@ant-design/icons';
 import '../../styles/components/layouts.css';
 import nprogress from 'nprogress';
 import { useLocation } from 'react-router-dom';
@@ -11,6 +11,7 @@ import layoutConfig from '../../config/layoutConfig';
 import RightNavbarContent from './RightNavberContent';
 import { useAuth } from '../../hooks/useAuth';
 import { BaseLayoutProps } from '.';
+import { getFilePath } from '../../util';
 
 import icon from '../../assets/HR logo.png';
 
@@ -46,11 +47,10 @@ const Layouts: React.FC<BaseLayoutProps> = (props) => {
                 collapsed ? MenuUnfoldOutlined : MenuFoldOutlined,
                 {
                   style: {
-                    marginLeft: `${
-                      collapsed
-                        ? layoutConfig.siderbarCollpasedWidth
-                        : layoutConfig.siderbarWidth
-                    }px`,
+                    marginLeft: `${collapsed
+                      ? layoutConfig.siderbarCollpasedWidth
+                      : layoutConfig.siderbarWidth
+                      }px`,
                   },
                   className: 'trigger',
                   onClick: () => setCollapsed(!collapsed),
@@ -70,6 +70,16 @@ const Layouts: React.FC<BaseLayoutProps> = (props) => {
                     fontSize: '1em',
                   }}
                 >
+                  <Avatar
+                    size={'default'}
+                    src={getFilePath() + company}
+                    style={{
+                      backgroundColor: 'blue',
+                      marginRight: '10px',
+                    }}
+                    shape="square"
+                    icon={<HomeFilled />}
+                  />
                   {company?.companyName} | {company?.branchName}
                 </p>
               ) : (
@@ -90,16 +100,14 @@ const Layouts: React.FC<BaseLayoutProps> = (props) => {
           style={{
             height: '100vh',
             marginTop: `${layoutConfig.headerHeight}px`,
-            marginLeft: `${
-              !props.noSidebar
-                ? collapsed
-                  ? layoutConfig.siderbarCollpasedWidth
-                  : layoutConfig.siderbarWidth
-                : 0
-            }px`,
-            padding: `${props.py || 10}px ${props.px || 10}px ${
-              props.py || 10
-            }px ${props.px || 10}px`,
+            marginLeft: `${!props.noSidebar
+              ? collapsed
+                ? layoutConfig.siderbarCollpasedWidth
+                : layoutConfig.siderbarWidth
+              : 0
+              }px`,
+            padding: `${props.py || 10}px ${props.px || 10}px ${props.py || 10
+              }px ${props.px || 10}px`,
             minHeight: 280,
           }}
         >

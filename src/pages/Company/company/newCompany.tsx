@@ -99,7 +99,7 @@ const Newcompany: React.FC<NewcompanyPropsType> = ({ role }) => {
 
     form.setFieldsValue({
       ...Editdata, main_business_id: Editdata?.main_business_type?.id ? Editdata?.main_business_type?.id : '',
-       sub_company_typeId: Editdata?.sub_company_type?.id ? Editdata?.sub_company_type?.id :'', latlng: Editdata?.lat ? ([Editdata.lat, Editdata.lng]).toString() : '',
+      sub_company_typeId: Editdata?.sub_company_type?.id ? Editdata?.sub_company_type?.id : '', latlng: Editdata?.lat ? ([Editdata.lat, Editdata.lng]).toString() : '',
     });
   };
 
@@ -714,7 +714,14 @@ const Newcompany: React.FC<NewcompanyPropsType> = ({ role }) => {
             </Col>
 
             <Col xs={24} sm={24} md={12} lg={12} xl={6}>
-              <Form.Item name={'main_business_id'} label={'ประเภทของธุรกิจ หลัก'}>
+              <Form.Item name={'main_business_id'} label={'ประเภทของธุรกิจ หลัก'}
+                rules={[
+                  {
+                    required: true,
+                    message: 'โปรดเลือกประเภทของธุรกิจ หลัก',
+                  },
+                ]}
+              >
                 {Editdata?.mode == 'view' ? (
                   <Select
                     disabled
