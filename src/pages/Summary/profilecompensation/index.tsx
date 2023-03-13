@@ -186,7 +186,7 @@ const Compensation: React.FC = () => {
       // ExpenseComData?.expense_company?.check_vat?.
       // .map(i=>map[i] ? parseFloat(map[i]) : 0).reduce((val, a) => val + a, 0);
       let summinus1 = vatCal + SSCal + provident_EMPCal + cal_Exp;
-      form.setFieldValue('total_expense', summinus1);
+      form.setFieldValue('total_expense', summinus1 ? summinus1 : 0);
     };
     SS_CAl();
 
@@ -676,7 +676,7 @@ const Compensation: React.FC = () => {
 
       let sumExAll = vatCal + provident_EMPCal + SSCal + minusVal;
       //console.log(sumExAll);
-      form.setFieldValue('total_expense', sumExAll);
+      form.setFieldValue('total_expense', sumExAll ? sumExAll : 0);
     };
 
     if (
@@ -1129,7 +1129,7 @@ const Compensation: React.FC = () => {
           <Row>
             <Col xs={24} sm={24} md={24} lg={24} xl={24} className="ml-12">
               <Space>
-                <Form.Item name="vat_per" label={'ภาษี'} className="ml-[54px]" initialValue={0}>
+                <Form.Item name="vat_per" label={'ภาษี'} className="ml-[54px]" >
                   <InputNumber className="w-16" disabled
                     formatter={(value) => `${value}%`}
                     parser={(value) => value!.replace('%', '')} />
@@ -1150,7 +1150,6 @@ const Compensation: React.FC = () => {
               <Space>
                 <Form.Item name="ss_per"
                   label={'ประกันสังคม'}
-                  initialValue={0}
                 >
                   <InputNumber className="w-16" disabled
                     formatter={(value) => `${value}%`}
@@ -1171,7 +1170,7 @@ const Compensation: React.FC = () => {
           <Row>
             <Col xs={24} sm={24} md={24} lg={24} xl={24} className="ml-[53px]">
               <Space>
-                <Form.Item name="provident_emp" label={'กองทุนสะสม'} initialValue={0}>
+                <Form.Item name="provident_emp" label={'กองทุนสะสม'}>
                   <InputNumber className="w-16" disabled
                     formatter={(value) => `${value}%`}
                     parser={(value) => value!.replace('%', '')}
