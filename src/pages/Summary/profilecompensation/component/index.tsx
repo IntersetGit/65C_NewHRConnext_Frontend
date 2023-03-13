@@ -644,7 +644,7 @@ const ProfileCompensation: React.FC = () => {
           </Col>
         </Row>
 
-        <Form form={formshow} size="middle">
+        <Form form={formshow} size="middle" className="pt-4">
           <Row gutter={16}>
             <Col xs={24} sm={24} md={24} lg={9} xl={6}>
               <Form.Item

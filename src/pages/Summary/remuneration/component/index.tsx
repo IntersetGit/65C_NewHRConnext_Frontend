@@ -386,7 +386,7 @@ const ProfileRemuneration: React.FC = () => {
           form={formshow}
           initialValues={{ base_salary: '0000' }}
           size="middle"
-          className="py-10"
+          className="pt-4"
         >
           <Row gutter={16}>
             <Col xs={24} sm={24} md={24} lg={6} xl={6}>
