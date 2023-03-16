@@ -1,5 +1,5 @@
 import { useMutation } from '@apollo/client';
-import { ReactNode, useEffect } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 import {
   useLocation,
   useNavigate,
@@ -40,6 +40,16 @@ const GQL_QUERY = gql(
   `,
 );
 
+function parseJwt(token) {
+  var base64Url = token.split('.')[1];
+  var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+  var jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function (c) {
+    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+  }).join(''));
+
+  return JSON.parse(jsonPayload);
+}
+
 const BaseLayout: React.FC<BaseLayoutProps> = (props) => {
   const { companycode } = useParams();
   const navaigate = useNavigate();
@@ -47,6 +57,9 @@ const BaseLayout: React.FC<BaseLayoutProps> = (props) => {
   let [searchparams, setSearchparam] = useSearchParams();
   const [validateRoute, { loading: validating, error: validaterror, data }] =
     useMutation(GQL_QUERY);
+  const [dataDecode, setDataDecode] = useState(null)
+
+
   useEffect(() => {
     if (companycode) {
       const branch = searchparams.get('branch');
@@ -68,6 +81,8 @@ const BaseLayout: React.FC<BaseLayoutProps> = (props) => {
           }
 
           if (data?.acess && data?.reAccess) {
+            let paramJWT = parseJwt(data?.reAccess)
+            setDataDecode(paramJWT)
             cookie.set('access', data?.reAccess, {
               sameSite: 'lax',
               path: '/',
@@ -92,7 +107,7 @@ const BaseLayout: React.FC<BaseLayoutProps> = (props) => {
   if (validating) return null;
 
   return (
-    <AuthProvider company={data?.validateRoute?.currentBranch}>
+    <AuthProvider company={{ ...data?.validateRoute?.currentBranch, ...dataDecode as any }}>
       <Layouts {...props} />
     </AuthProvider>
   );

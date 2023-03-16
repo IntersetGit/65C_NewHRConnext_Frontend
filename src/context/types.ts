@@ -25,6 +25,15 @@ export type CompanyBranchType = {
   branchName?: string | null | undefined;
   companyId?: string | null | undefined;
   companyName?: string | null | undefined;
+
+  compayId?: string | null | undefined;
+  exp?: string | null | undefined;
+  iat?: string | null | undefined;
+  id?: string | null | undefined;
+  isOwner?: string | null | undefined;
+  photoLink?: string | null | undefined;
+  roleId?: string | null | undefined;
+
 };
 
 export type AuthValuesType = {

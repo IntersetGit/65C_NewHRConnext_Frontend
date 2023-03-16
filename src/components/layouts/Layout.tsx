@@ -72,9 +72,9 @@ const Layouts: React.FC<BaseLayoutProps> = (props) => {
                 >
                   <Avatar
                     size={'default'}
-                    src={getFilePath() + company}
+                    src={getFilePath() + company?.photoLink}
                     style={{
-                      backgroundColor: 'blue',
+
                       marginRight: '10px',
                     }}
                     shape="square"
@@ -85,7 +85,9 @@ const Layouts: React.FC<BaseLayoutProps> = (props) => {
               ) : (
                 <img src={icon} width={50} />
               )}
+
             </div>
+
           </div>
 
           <RightNavbarContent

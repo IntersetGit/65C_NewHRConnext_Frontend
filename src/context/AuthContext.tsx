@@ -213,6 +213,14 @@ const AuthProvider = ({ children, company: companydata }: Props) => {
     branchName: companydata?.branchName,
     companyId: companydata?.companyId,
     companyName: companydata?.companyName,
+
+    compayId: companydata?.compayId,
+    exp: companydata?.exp,
+    iat: companydata?.iat,
+    id: companydata?.id,
+    isOwner: companydata?.isOwner,
+    photoLink: companydata?.photoLink,
+    roleId: companydata?.roleId,
   });
   const navigate = useNavigate();
 
