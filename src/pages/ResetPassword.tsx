@@ -19,15 +19,15 @@ import '../styles/components/login.css';
 import { CHANGE_PW_fORGOT } from '../service/graphql/ForgotPW';
 import { gql } from 'graphql-tag';
 import { useState } from 'react';
-
+import { useSearchParams } from 'react-router-dom';
 const { useToken } = theme;
 const ResetPassword: React.FC = () => {
     const [form] = Form.useForm();
     const token = useToken();
     const [open, setOpen] = useState(false);
-
+    const [searchParams, setSearchParams] = useSearchParams();
     const [CHANGE_PW] = useMutation(CHANGE_PW_fORGOT);
-
+    const acessId = searchParams.get('aceesid');
     const onClose = () => {
         setOpen(false);
         form.resetFields();
@@ -47,7 +47,7 @@ const ResetPassword: React.FC = () => {
             if (result.isConfirmed) {
                 CHANGE_PW({
                     variables: {
-                        data: value,
+                        data: { ...value, id: acessId },
                     },
                 })
                     .then((val) => {
@@ -88,10 +88,10 @@ const ResetPassword: React.FC = () => {
                     <Row className=''>
                         <Col xs={24} sm={24} md={24} lg={24} xl={24}>
                             <Form form={form} size="large" >
-                                <Form.Item name={'password'} label={'รหัสผ่านใหม่'}>
+                                <Form.Item name={'password1'} label={'รหัสผ่านใหม่'}>
                                     <Input />
                                 </Form.Item>
-                                <Form.Item name={'newpassword'} label={'รหัสผ่านใหม่ Confirm'}>
+                                <Form.Item name={'password2'} label={'รหัสผ่านใหม่ (Confirm)'}>
                                     <Input />
                                 </Form.Item>
                                 <Form.Item>
