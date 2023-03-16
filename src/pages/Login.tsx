@@ -1,4 +1,4 @@
-import { Button, Col, Form, Input, Row, Typography, theme } from 'antd';
+import { Button, Col, Form, Input, Row, Typography, theme, Modal } from 'antd';
 import '../styles/components/login.css';
 import { useMutation } from '@apollo/client';
 import lightcartoon from '../assets/auth-v2-forgot-password-illustration-bordered-light.png';
@@ -28,6 +28,22 @@ const Login: React.FC = () => {
   const token = useToken();
   const navigate = useNavigate();
 
+  type type = {
+    visible: boolean;
+    onClose: () => void;
+  };
+  const formItemLayout = {
+    labelCol: {
+      xs: { span: 6 },
+      sm: { span: 6 },
+    },
+    wrapperCol: {
+      xs: { span: 24 },
+      sm: { span: 24 },
+    },
+  };
+
+
   const onFinish = (value: any) => {
     login({ variables: { data: value } })
       .then((v) => {
@@ -45,6 +61,7 @@ const Login: React.FC = () => {
         Swal.fire('เข้าสู่ระบบไม่สำเร็จ', error.message, 'error'),
       );
   };
+
   return (
     <div>
       <Row className="login-container">
@@ -123,6 +140,14 @@ const Login: React.FC = () => {
               <Input.Password />
             </Form.Item>
             <Form.Item>
+              <Link
+                style={{ color: token.token.colorPrimary, display: 'flex', justifyContent: 'right' }}
+                onClick={"#"}
+              >
+                forgot password
+              </Link>
+            </Form.Item>
+            <Form.Item>
               <Button
                 style={{
                   marginRight: '3px',
@@ -145,7 +170,30 @@ const Login: React.FC = () => {
           </Form>
         </Col>
       </Row>
+
+      <Modal
+        title="ลืมรหัสผ่าน"
+        open={visible}
+        onCancel={onClose}
+        width={600}
+        okType="default"
+        centered
+      >
+        <Form {...formItemLayout} size="middle">
+          <Form.Item label={'รหัสผ่านเดิม'}>
+            <Input />
+          </Form.Item>
+          <Form.Item label={'รหัสผ่านใหม่'}>
+            <Input />
+          </Form.Item>
+          <Form.Item label={'ยืนยันรหัสผ่านใหม่'}>
+            <Input />
+          </Form.Item>
+        </Form>
+      </Modal>
     </div>
+
+
   );
 };
 

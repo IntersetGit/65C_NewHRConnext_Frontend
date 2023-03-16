@@ -79,7 +79,7 @@ const ManageCompanyData = React.lazy(
   () => import('../pages/Company/company/newCompany'),
 );
 const Error500 = React.lazy(() => import('../pages/500'));
-
+const ResetPassword = React.lazy(() => import('../pages/ResetPassword'));
 /**
  * ?Profile setting
  */
@@ -483,6 +483,10 @@ export const routing: RoutingType[] = [
   {
     path: '/register',
     element: <Register />,
+  },
+  {
+    path: '/reset-password',
+    element: <ResetPassword />,
   },
   {
     path: '/500',
