@@ -19,7 +19,7 @@ import '../styles/components/login.css';
 import { CHANGE_PW_fORGOT } from '../service/graphql/ForgotPW';
 import { gql } from 'graphql-tag';
 import { useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 const { useToken } = theme;
 const ResetPassword: React.FC = () => {
     const [form] = Form.useForm();
@@ -28,9 +28,9 @@ const ResetPassword: React.FC = () => {
     const [searchParams, setSearchParams] = useSearchParams();
     const [CHANGE_PW] = useMutation(CHANGE_PW_fORGOT);
     const acessId = searchParams.get('aceesid');
+    const navigate = useNavigate()
     const onClose = () => {
         setOpen(false);
-        form.resetFields();
     };
 
     const onFinish = (value) => {
@@ -55,6 +55,8 @@ const ResetPassword: React.FC = () => {
                         if (val.data?.Changesepasswordinforgot?.status) {
                             Swal.fire(`เปลื่ยนรหัสผ่านสำเร็จ!`, '', 'success');
                         }
+                        form.resetFields()
+                        navigate('/auth');
                     })
                     .catch((err) => {
                         Swal.fire(`เปลื่ยนรหัสผ่านไม่สำเร็จ!`, '', 'error');
@@ -62,7 +64,6 @@ const ResetPassword: React.FC = () => {
                     });
             }
             onClose();
-            form.resetFields();
         });
     };
 

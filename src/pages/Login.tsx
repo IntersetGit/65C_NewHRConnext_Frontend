@@ -252,7 +252,7 @@ const Login: React.FC = () => {
           <Form.Item>
             <Row className="flex justify-end">
               <Space>
-                <Button htmlType="submit">ตกลง</Button>
+                <Button htmlType="submit">ส่ง E-mail</Button>
                 <Button onClick={() => onClose()}>ยกเลิก</Button>
               </Space>
             </Row>
