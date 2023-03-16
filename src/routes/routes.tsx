@@ -69,6 +69,7 @@ const LeaveHoliday = React.lazy(() => import('../pages/PersonalLeave/leave'));
 const Approve = React.lazy(() => import('../pages/PersonalLeave/approve'));
 const Login = React.lazy(() => import('../pages/Login'));
 const Register = React.lazy(() => import('../pages/Register'));
+const Comfirm = React.lazy(() => import('../pages/Confirm'));
 const Overview = React.lazy(() => import('../pages/Overview'));
 const MainCompany = React.lazy(() => import('../pages/Company'));
 const ManageRights = React.lazy(() => import('../pages/ManageRights'));
@@ -483,6 +484,10 @@ export const routing: RoutingType[] = [
   {
     path: '/register',
     element: <Register />,
+  },
+  {
+    path: '/confirm',
+    element: <Comfirm />,
   },
   {
     path: '/500',
