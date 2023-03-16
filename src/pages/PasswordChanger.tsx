@@ -79,10 +79,10 @@ const PasswordChanger: React.FC<type> = (props) => {
         centered
       >
         <Form form={form} size="middle" onFinish={onFinish}>
-          <Form.Item name={'password'} label={'รหัสผ่านเดิม'}>
+          <Form.Item name={'password'} label={'รหัสผ่าน'}>
             <Input />
           </Form.Item>
-          <Form.Item name={'newpassword'} label={'รหัสผ่านใหม่'}>
+          <Form.Item name={'newpassword'} label={'รหัสผ่าน Confirm'}>
             <Input />
           </Form.Item>
           <Form.Item>
