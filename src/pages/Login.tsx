@@ -1,4 +1,4 @@
-import { Button, Col, Form, Input, Row, Typography, theme, Modal } from 'antd';
+import { Button, Col, Form, Input, Row, Typography, theme, Modal, Space } from 'antd';
 import '../styles/components/login.css';
 import { useMutation } from '@apollo/client';
 import lightcartoon from '../assets/auth-v2-forgot-password-illustration-bordered-light.png';
@@ -8,6 +8,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Cookies } from 'react-cookie';
 import Swal from 'sweetalert2';
 import { gql } from 'graphql-tag';
+import { useState } from 'react';
 
 const { useToken } = theme;
 const cookie = new Cookies();
@@ -25,13 +26,20 @@ const LOGIN_ACCOUNT = gql/* GraphQL */ `
 const Login: React.FC = () => {
   const [login] = useMutation(LOGIN_ACCOUNT);
   const [form] = Form.useForm();
+  const [formModal] = Form.useForm();
   const token = useToken();
   const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  type type = {
-    visible: boolean;
-    onClose: () => void;
+  const showModal = (type: any) => {
+    setOpen(true);
   };
+  const onClose = () => {
+    setOpen(false);
+    formModal.resetFields();
+  };
+
   const formItemLayout = {
     labelCol: {
       xs: { span: 6 },
@@ -61,6 +69,29 @@ const Login: React.FC = () => {
         Swal.fire('เข้าสู่ระบบไม่สำเร็จ', error.message, 'error'),
       );
   };
+
+  const SentEmail = async (value: any) => {
+    // navigate('/reset-password')
+    // setIsSubmitting(true);
+
+    // try {
+    //   // await Api.post('members/forgetPassword', { email });
+    //   Swal.fire({
+    //     title: 'ส่ง E-mail',
+    //     text: 'ยืนยันการส่ง E-mail สำเร็จ',
+    //     icon: 'success',
+    //   });
+    //   onClose();
+    // } catch (error) {
+    //   Swal.fire({
+    //     title: 'ส่ง E-mail ไม่สำเร็จ',
+    //     text: 'E-mail ผิด หรือ ไม่มี E-mail นี้ในระบบ',
+    //     icon: 'error',
+    //   });
+    // }
+    // setIsSubmitting(false);
+
+  }
 
   return (
     <div>
@@ -140,12 +171,12 @@ const Login: React.FC = () => {
               <Input.Password />
             </Form.Item>
             <Form.Item>
-              <Link
+              <a
                 style={{ color: token.token.colorPrimary, display: 'flex', justifyContent: 'right' }}
-                onClick={"#"}
+                onClick={(e: any) => showModal(e)}
               >
                 forgot password
-              </Link>
+              </a>
             </Form.Item>
             <Form.Item>
               <Button
@@ -172,22 +203,36 @@ const Login: React.FC = () => {
       </Row>
 
       <Modal
-        title="ลืมรหัสผ่าน"
-        open={visible}
+        title="Forgot Password"
+        open={open}
         onCancel={onClose}
         width={600}
         okType="default"
         centered
+        cancelButtonProps={{ style: { display: 'none' } }}
+        okButtonProps={{ style: { display: 'none' } }}
       >
-        <Form {...formItemLayout} size="middle">
-          <Form.Item label={'รหัสผ่านเดิม'}>
-            <Input />
+        <Form {...formItemLayout} form={formModal} size="middle"
+        //   onFinish={SentEmail}
+        >
+          <Form.Item label={'E-mail :'}
+            rules={[
+              {
+                type: 'email',
+                required: true,
+                message: 'โปรดใส่ E-mail',
+              },
+            ]}
+          >
+            <Input type='email' />
           </Form.Item>
-          <Form.Item label={'รหัสผ่านใหม่'}>
-            <Input />
-          </Form.Item>
-          <Form.Item label={'ยืนยันรหัสผ่านใหม่'}>
-            <Input />
+          <Form.Item>
+            <Row className="flex justify-end">
+              <Space>
+                <Button htmlType="submit">ตกลง</Button>
+                <Button onClick={() => onClose()}>ยกเลิก</Button>
+              </Space>
+            </Row>
           </Form.Item>
         </Form>
       </Modal>
