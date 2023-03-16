@@ -74,7 +74,6 @@ const Layouts: React.FC<BaseLayoutProps> = (props) => {
                     size={'default'}
                     src={getFilePath() + company?.photoLink}
                     style={{
-
                       marginRight: '10px',
                     }}
                     shape="square"
