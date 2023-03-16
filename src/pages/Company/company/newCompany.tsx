@@ -32,7 +32,7 @@ import { useAuth } from '../../../hooks/useAuth';
 import Maps from './component/Maps';
 import './index.css';
 import { PageRoleAndPermissionType } from '../../../context/AuthContext';
-import axios from 'axios'
+import axios from 'axios';
 
 const { useToken } = theme;
 
@@ -51,9 +51,9 @@ const Newcompany: React.FC<NewcompanyPropsType> = ({ role }) => {
   const { data: bussinesstype } = useQuery(COMPANY_BUSSINESS_TYPE);
   const [createCompanyAccount] = useMutation(CREATE_COMPANY_ACCOUNT);
   const [visible, setVisible] = useState(false);
-  const [uploadlogo, setUploadlogo] = useState([])
-  const [uploadpdf1, setuploadpdf1] = useState([])
-  const [uploadpdf2, setuploadpdf2] = useState([])
+  const [uploadlogo, setUploadlogo] = useState([]);
+  const [uploadpdf1, setuploadpdf1] = useState([]);
+  const [uploadpdf2, setuploadpdf2] = useState([]);
   const [district, setDistrict] = useState<
     { value?: string | null; label?: string | null }[] | undefined
   >(undefined);
@@ -77,29 +77,46 @@ const Newcompany: React.FC<NewcompanyPropsType> = ({ role }) => {
     onProvinceChange(Editdata?.country);
     onDistrictChangeCitizen(Editdata?.state);
     onAmphoeChangeCitizen(Editdata?.city);
-    Editdata?.photo_link && setUploadlogo([{
-      uid: '-1',
-      name: 'logo',
-      status: 'done',
-      url: `${import.meta.env.VITE_REST_URL_PATH}/${Editdata?.photo_link}`,
-    }] as any)
-    Editdata?.certificate_link && setuploadpdf1([{
-      uid: '-1',
-      name: 'cerfication',
-      status: 'done',
-      url: `${import.meta.env.VITE_REST_URL_PATH}/${Editdata?.certificate_link}`,
-    }] as any)
-    Editdata?.vat_link && setuploadpdf2([{
-      uid: '-1',
-      name: 'vatregistion',
-      status: 'done',
-      url: `${import.meta.env.VITE_REST_URL_PATH}/${Editdata?.vat_link}`,
-    }] as any)
+    Editdata?.photo_link &&
+      setUploadlogo([
+        {
+          uid: '-1',
+          name: 'logo',
+          status: 'done',
+          url: `${import.meta.env.VITE_REST_URL_PATH}/${Editdata?.photo_link}`,
+        },
+      ] as any);
+    Editdata?.certificate_link &&
+      setuploadpdf1([
+        {
+          uid: '-1',
+          name: 'cerfication',
+          status: 'done',
+          url: `${import.meta.env.VITE_REST_URL_PATH}/${
+            Editdata?.certificate_link
+          }`,
+        },
+      ] as any);
+    Editdata?.vat_link &&
+      setuploadpdf2([
+        {
+          uid: '-1',
+          name: 'vatregistion',
+          status: 'done',
+          url: `${import.meta.env.VITE_REST_URL_PATH}/${Editdata?.vat_link}`,
+        },
+      ] as any);
     onChangeBussinessType(Editdata?.main_business_type?.id);
 
     form.setFieldsValue({
-      ...Editdata, main_business_id: Editdata?.main_business_type?.id ? Editdata?.main_business_type?.id : '',
-      sub_company_typeId: Editdata?.sub_company_type?.id ? Editdata?.sub_company_type?.id : '', latlng: Editdata?.lat ? ([Editdata.lat, Editdata.lng]).toString() : '',
+      ...Editdata,
+      main_business_id: Editdata?.main_business_type?.id
+        ? Editdata?.main_business_type?.id
+        : '',
+      sub_company_typeId: Editdata?.sub_company_type?.id
+        ? Editdata?.sub_company_type?.id
+        : '',
+      latlng: Editdata?.lat ? [Editdata.lat, Editdata.lng].toString() : '',
     });
   };
 
@@ -177,7 +194,7 @@ const Newcompany: React.FC<NewcompanyPropsType> = ({ role }) => {
 
   const onSubmitForm = (value: any) => {
     // console.log('uploadlogo :>> ', uploadlogo);
-    console.log('value', value)
+    console.log('value', value);
     let objvalue = {
       ...value,
       id: Editdata?.id ? Editdata?.id : undefined,
@@ -197,14 +214,23 @@ const Newcompany: React.FC<NewcompanyPropsType> = ({ role }) => {
       denyButtonText: `ยกเลิก`,
     }).then(async (result) => {
       if (result.isConfirmed) {
-        const fileiconcompany = uploadlogo.length > 0 ? await UploadImageCompany(uploadlogo) : '';
-        const filecerficate = uploadpdf1.length > 0 ? await UploadPdf1Company(uploadpdf1) : '';
-        const filevatregistion = uploadpdf2.length > 0 ? await UploadPdf2Company(uploadpdf2) : '';
+        const fileiconcompany =
+          uploadlogo.length > 0 ? await UploadImageCompany(uploadlogo) : '';
+        const filecerficate =
+          uploadpdf1.length > 0 ? await UploadPdf1Company(uploadpdf1) : '';
+        const filevatregistion =
+          uploadpdf2.length > 0 ? await UploadPdf2Company(uploadpdf2) : '';
         console.log('fileiconcompany :>> ', fileiconcompany);
-        fileiconcompany ? (objvalue.photo_link = fileiconcompany.path) : (objvalue.photo_link = '');
-        filecerficate ? (objvalue.certificate_link = filecerficate.path) : (objvalue.certificate_link = '');
-        filevatregistion ? (objvalue.vat_link = filevatregistion.path) : (objvalue.vat_link = '');
-        console.log('objvalue', objvalue)
+        fileiconcompany
+          ? (objvalue.photo_link = fileiconcompany.path)
+          : (objvalue.photo_link = '');
+        filecerficate
+          ? (objvalue.certificate_link = filecerficate.path)
+          : (objvalue.certificate_link = '');
+        filevatregistion
+          ? (objvalue.vat_link = filevatregistion.path)
+          : (objvalue.vat_link = '');
+        console.log('objvalue', objvalue);
         createCompanyAccount({
           variables: {
             data: objvalue,
@@ -236,8 +262,8 @@ const Newcompany: React.FC<NewcompanyPropsType> = ({ role }) => {
 
   const UploadImageCompany = async (image) => {
     let fileall = new FormData();
-    image?.forEach(img => {
-      if (img.status !== 'done') fileall?.append('company', img?.originFileObj)
+    image?.forEach((img) => {
+      if (img.status !== 'done') fileall?.append('company', img?.originFileObj);
     });
     // Object.fromEntries(fileall), {
     // console.log('Object.fromEntries(fileall) :>> ', Object.keys(Object.fromEntries(fileall)));
@@ -249,21 +275,30 @@ const Newcompany: React.FC<NewcompanyPropsType> = ({ role }) => {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
-      }).then(({ data }) => {
-        return data;
-      }).catch((error) => {
-        console.log('error ', error)
-      });
+      })
+        .then(({ data }) => {
+          return data;
+        })
+        .catch((error) => {
+          console.log('error ', error);
+        });
     } else if (image.length > 0) {
-      return { ...image[0], path: (image[0].url).replace(`${import.meta.env.VITE_REST_URL_PATH}/`, '') }
+      return {
+        ...image[0],
+        path: image[0].url.replace(
+          `${import.meta.env.VITE_REST_URL_PATH}/`,
+          '',
+        ),
+      };
     } else {
-      console.log("noimage");
+      console.log('noimage');
     }
-  }
+  };
   const UploadPdf1Company = async (image) => {
     let fileall = new FormData();
-    image?.forEach(img => {
-      if (img.status !== 'done') fileall?.append('certificate', img?.originFileObj)
+    image?.forEach((img) => {
+      if (img.status !== 'done')
+        fileall?.append('certificate', img?.originFileObj);
     });
     // Object.fromEntries(fileall), {
     if (Object.keys(Object.fromEntries(fileall)).length > 0) {
@@ -274,21 +309,29 @@ const Newcompany: React.FC<NewcompanyPropsType> = ({ role }) => {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
-      }).then(({ data }) => {
-        return data;
-      }).catch((error) => {
-        console.log('error ', error)
-      });
+      })
+        .then(({ data }) => {
+          return data;
+        })
+        .catch((error) => {
+          console.log('error ', error);
+        });
     } else if (image.length > 0) {
-      return { ...image[0], path: (image[0].url).replace(`${import.meta.env.VITE_REST_URL_PATH}/`, '') }
+      return {
+        ...image[0],
+        path: image[0].url.replace(
+          `${import.meta.env.VITE_REST_URL_PATH}/`,
+          '',
+        ),
+      };
     } else {
-      console.log("noimage");
+      console.log('noimage');
     }
-  }
+  };
   const UploadPdf2Company = async (image) => {
     let fileall = new FormData();
-    image?.forEach(img => {
-      if (img.status !== 'done') fileall?.append('vat', img?.originFileObj)
+    image?.forEach((img) => {
+      if (img.status !== 'done') fileall?.append('vat', img?.originFileObj);
     });
     // Object.fromEntries(fileall), {
     if (Object.keys(Object.fromEntries(fileall)).length > 0) {
@@ -299,33 +342,38 @@ const Newcompany: React.FC<NewcompanyPropsType> = ({ role }) => {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
-      }).then(({ data }) => {
-        return data;
-      }).catch((error) => {
-        console.log('error ', error)
-      });
+      })
+        .then(({ data }) => {
+          return data;
+        })
+        .catch((error) => {
+          console.log('error ', error);
+        });
     } else if (image.length > 0) {
-      return { ...image[0], path: (image[0].url).replace(`${import.meta.env.VITE_REST_URL_PATH}/`, '') }
+      return {
+        ...image[0],
+        path: image[0].url.replace(
+          `${import.meta.env.VITE_REST_URL_PATH}/`,
+          '',
+        ),
+      };
     } else {
-      console.log("noimage");
+      console.log('noimage');
     }
-  }
+  };
 
   const onChangeUploadImageCompany = ({ fileList: newFileList }) => {
     console.log('newFileList :>> ', newFileList);
     setUploadlogo(newFileList);
-
-  }
+  };
   const onChangeUploadPdf1Company = ({ fileList: newFileList }) => {
     console.log('newFileList :>> ', newFileList);
     setuploadpdf1(newFileList);
-
-  }
+  };
   const onChangeUploadPdf2Company = ({ fileList: newFileList }) => {
     console.log('newFileList :>> ', newFileList);
     setuploadpdf2(newFileList);
-
-  }
+  };
 
   return (
     <>
@@ -340,7 +388,9 @@ const Newcompany: React.FC<NewcompanyPropsType> = ({ role }) => {
           <Button
             type="primary"
             onClick={() =>
-              companyNavigate('/:companycode/company/CompanyStructure')
+              companyNavigate('/:companycode/company/CompanyStructure', {
+                state: Editdata,
+              })
             }
             style={{
               marginBottom: '10px',
@@ -714,7 +764,9 @@ const Newcompany: React.FC<NewcompanyPropsType> = ({ role }) => {
             </Col>
 
             <Col xs={24} sm={24} md={12} lg={12} xl={6}>
-              <Form.Item name={'main_business_id'} label={'ประเภทของธุรกิจ หลัก'}
+              <Form.Item
+                name={'main_business_id'}
+                label={'ประเภทของธุรกิจ หลัก'}
                 rules={[
                   {
                     required: true,
@@ -761,7 +813,6 @@ const Newcompany: React.FC<NewcompanyPropsType> = ({ role }) => {
               <Form.Item
                 name={'registeredamount'}
                 label={'ทุนจดทะเบียน ( บาท )'}
-
               >
                 {Editdata?.mode == 'view' ? (
                   <InputNumber
@@ -785,10 +836,9 @@ const Newcompany: React.FC<NewcompanyPropsType> = ({ role }) => {
           </div>
           <Row gutter={16} className="px-2">
             <Col span={12} offset={6}>
-
               {Editdata?.mode == 'view' ? (
                 <Upload
-                  action={""}
+                  action={''}
                   beforeUpload={() => false}
                   maxCount={1}
                   className={'upload-custom'}
@@ -796,7 +846,7 @@ const Newcompany: React.FC<NewcompanyPropsType> = ({ role }) => {
                   onChange={onChangeUploadImageCompany}
                   fileList={uploadlogo}
                   onRemove={(del) => {
-                    console.log('del', del)
+                    console.log('del', del);
                   }}
                 >
                   <Button
@@ -813,7 +863,7 @@ const Newcompany: React.FC<NewcompanyPropsType> = ({ role }) => {
                 </Upload>
               ) : (
                 <Upload
-                  action={""}
+                  action={''}
                   accept=".png,.jpg"
                   beforeUpload={() => false}
                   maxCount={1}
@@ -822,7 +872,7 @@ const Newcompany: React.FC<NewcompanyPropsType> = ({ role }) => {
                   onChange={onChangeUploadImageCompany}
                   fileList={uploadlogo}
                   onRemove={(del) => {
-                    console.log('del', del)
+                    console.log('del', del);
                   }}
                 >
                   <Button
@@ -944,7 +994,7 @@ const Newcompany: React.FC<NewcompanyPropsType> = ({ role }) => {
               <Form.Item label="หนังสือรับรอง">
                 {Editdata?.mode == 'view' ? (
                   <Upload
-                    action={""}
+                    action={''}
                     accept=".pdf"
                     beforeUpload={() => false}
                     maxCount={1}
@@ -967,7 +1017,7 @@ const Newcompany: React.FC<NewcompanyPropsType> = ({ role }) => {
                   </Upload>
                 ) : (
                   <Upload
-                    action={""}
+                    action={''}
                     accept=".pdf"
                     beforeUpload={() => false}
                     maxCount={1}
@@ -996,7 +1046,7 @@ const Newcompany: React.FC<NewcompanyPropsType> = ({ role }) => {
                 {Editdata?.mode == 'view' ? (
                   <Upload
                     accept=".pdf"
-                    action={""}
+                    action={''}
                     beforeUpload={() => false}
                     maxCount={1}
                     className={'upload-custom'}
@@ -1019,7 +1069,7 @@ const Newcompany: React.FC<NewcompanyPropsType> = ({ role }) => {
                 ) : (
                   <Upload
                     accept=".pdf"
-                    action={""}
+                    action={''}
                     beforeUpload={() => false}
                     maxCount={1}
                     className={'upload-custom'}
