@@ -35,6 +35,8 @@ const documents = {
     "\nquery GetBusinessType {\n  getBusinessType {\n    id\n    name\n    SubBusinessType {\n      id\n      name\n    }\n  }\n}\n": types.GetBusinessTypeDocument,
     "\nmutation CreateAndUpdateComBarance($data: createCompanyBranch!) {\n  createAndUpdateComBarance(data: $data) {\n    message\n    status\n  }\n}\n": types.CreateAndUpdateComBaranceDocument,
     "\nmutation DeleteComBarance($deleteComBaranceId: ID!) {\n  deleteComBarance(id: $deleteComBaranceId) {\n    message\n    status\n  }\n}\n": types.DeleteComBaranceDocument,
+    "\nmutation Forgotpassword($data: forgetpasswordInput) {\n    Forgotpassword(data: $data) {\n      message\n      status\n    }\n  }\n": types.ForgotpasswordDocument,
+    "\nmutation Changesepasswordinforgot($data: changepasswordInforgotpasswordinput) {\n    Changesepasswordinforgot(data: $data) {\n      message\n      status\n    }\n  }\n": types.ChangesepasswordinforgotDocument,
     "\nquery GetHolidayDate($year: Int) {\n  GetHolidayDate(year: $year) {\n    data {\n      id\n      holiday_name\n      day\n      month\n      year\n      CompanyId\n      status\n    }\n    year_count {\n      year\n      count\n    }\n  }\n}\n": types.GetHolidayDateDocument,
     "\nquery GetHoliDayYear {\n    GetHoliDayYear {\n      id\n      day\n      month\n      year\n      holiday_name\n    }\n  }\n": types.GetHoliDayYearDocument,
     "\nmutation CreateHolidayYear($data: [CreateHolidayYears!]) {\n  createHolidayYear(data: $data) {\n    message\n    status\n  }\n}\n": types.CreateHolidayYearDocument,
@@ -177,6 +179,14 @@ export function gql(source: "\nmutation CreateAndUpdateComBarance($data: createC
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(source: "\nmutation DeleteComBarance($deleteComBaranceId: ID!) {\n  deleteComBarance(id: $deleteComBaranceId) {\n    message\n    status\n  }\n}\n"): (typeof documents)["\nmutation DeleteComBarance($deleteComBaranceId: ID!) {\n  deleteComBarance(id: $deleteComBaranceId) {\n    message\n    status\n  }\n}\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\nmutation Forgotpassword($data: forgetpasswordInput) {\n    Forgotpassword(data: $data) {\n      message\n      status\n    }\n  }\n"): (typeof documents)["\nmutation Forgotpassword($data: forgetpasswordInput) {\n    Forgotpassword(data: $data) {\n      message\n      status\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\nmutation Changesepasswordinforgot($data: changepasswordInforgotpasswordinput) {\n    Changesepasswordinforgot(data: $data) {\n      message\n      status\n    }\n  }\n"): (typeof documents)["\nmutation Changesepasswordinforgot($data: changepasswordInforgotpasswordinput) {\n    Changesepasswordinforgot(data: $data) {\n      message\n      status\n    }\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

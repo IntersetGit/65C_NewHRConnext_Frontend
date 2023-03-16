@@ -9,6 +9,7 @@ import { Cookies } from 'react-cookie';
 import Swal from 'sweetalert2';
 import { gql } from 'graphql-tag';
 import { useState } from 'react';
+import { FORGOT_PASSWORD } from '../service/graphql/ForgotPW';
 
 const { useToken } = theme;
 const cookie = new Cookies();
@@ -31,6 +32,8 @@ const Login: React.FC = () => {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const [Forgot_passworD] = useMutation(FORGOT_PASSWORD);
 
   const showModal = (type: any) => {
     setOpen(true);
@@ -70,28 +73,47 @@ const Login: React.FC = () => {
       );
   };
 
-  const SentEmail = async (value: any) => {
-    // navigate('/reset-password')
-    // setIsSubmitting(true);
+  const SentEmail = async (value) => {
+    Swal.fire({
+      title: `ยืนยันการส่ง E-mail`,
+      icon: 'warning',
+      showDenyButton: true,
+      showCancelButton: false,
+      confirmButtonColor: token.token.colorPrimary,
+      denyButtonColor: '#ea4e4e',
+      confirmButtonText: 'ตกลง',
+      denyButtonText: `ยกเลิก`,
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        Forgot_passworD({
+          variables: {
+            data: value
+          },
+        })
+          .then((val) => {
+            // console.log(val);
+            if (val.data?.Forgotpassword?.status) {
+              Swal.fire({
+                title: 'ส่ง E-mail',
+                text: 'ยืนยันการส่ง E-mail สำเร็จ',
+                icon: 'success',
+              });
 
-    // try {
-    //   // await Api.post('members/forgetPassword', { email });
-    //   Swal.fire({
-    //     title: 'ส่ง E-mail',
-    //     text: 'ยืนยันการส่ง E-mail สำเร็จ',
-    //     icon: 'success',
-    //   });
-    //   onClose();
-    // } catch (error) {
-    //   Swal.fire({
-    //     title: 'ส่ง E-mail ไม่สำเร็จ',
-    //     text: 'E-mail ผิด หรือ ไม่มี E-mail นี้ในระบบ',
-    //     icon: 'error',
-    //   });
-    // }
-    // setIsSubmitting(false);
+            }
+            onClose();
+            formModal.resetFields();
+          })
+          .catch((err) => {
+            Swal.fire({
+              title: 'ส่ง E-mail ไม่สำเร็จ',
+              text: 'E-mail ผิด หรือ ไม่มี E-mail นี้ในระบบ',
+              icon: 'error',
+            });
+          });
+      }
 
-  }
+    });
+  };
 
   return (
     <div>
@@ -213,16 +235,17 @@ const Login: React.FC = () => {
         okButtonProps={{ style: { display: 'none' } }}
       >
         <Form {...formItemLayout} form={formModal} size="middle"
-        //   onFinish={SentEmail}
+          onFinish={SentEmail}
         >
           <Form.Item label={'E-mail :'}
-            rules={[
-              {
-                type: 'email',
-                required: true,
-                message: 'โปรดใส่ E-mail',
-              },
-            ]}
+            name={'email'}
+          // rules={[
+          //   {
+          //     type: 'email',
+          //     required: true,
+          //     message: 'โปรดใส่ E-mail',
+          //   },
+          // ]}
           >
             <Input type='email' />
           </Form.Item>
