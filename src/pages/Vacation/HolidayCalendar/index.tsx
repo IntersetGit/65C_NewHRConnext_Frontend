@@ -23,89 +23,33 @@ import { TbCalendarTime } from 'react-icons/tb';
 import type { DatePickerProps } from 'antd';
 import { MoreOutlined } from '@ant-design/icons';
 import { ColumnsType } from 'antd/es/table';
-
-const genarateMenu = (record: any) => {
-  return [
-    {
-      key: 'edit',
-      label: 'แก้ไข',
-      icon: <img style={{ width: '17px', height: '17px' }} src={edit} />,
-    },
-    {
-      key: 'view',
-      label: 'ดูข้อมูล',
-      icon: <img style={{ width: '17px', height: '17px' }} src={View} />,
-    },
-    {
-      key: 'delete',
-      label: 'ลบข้อมูล',
-      icon: <img style={{ width: '20px', height: '20px' }} src={Del} />,
-    },
-  ];
-};
-
-const dataSources = [
-  {
-    key: '1',
-    year: '2022',
-    total_holiday: 5,
-  },
-  {
-    key: '2',
-    year: '2023',
-    total_holiday: 10,
-  },
-];
-
-interface DataSourceType {
-  key: string;
-  year: string;
-  total_holiday: number;
-}
-
-const columns: ColumnsType<DataSourceType> = [
-  {
-    title: 'ปี',
-    dataIndex: 'year',
-    key: 'year',
-    align: 'center',
-  },
-  {
-    title: 'จำนวนวันหยุด',
-    dataIndex: 'total_holiday',
-    key: 'total_holiday',
-    align: 'center',
-  },
-  {
-    title: 'Actions',
-    key: 'option',
-    align: 'center',
-    render: (record) => (
-      <Dropdown
-        menu={{
-          items: genarateMenu(record),
-        }}
-        arrow
-      >
-        <MoreOutlined />
-      </Dropdown>
-    ),
-  },
-];
+import {
+  FETCH_ALL_HOLIDAY,
+  HOLIDAY_YEAR,
+  CREATE_HOLIDAY_DATE,
+} from '../../../service/graphql/Holiday';
+import { useMutation, useQuery } from '@apollo/client';
+import Swal from 'sweetalert2';
 
 const { useToken } = theme;
-const onChange: DatePickerProps['onChange'] = (date, dateString) => {
-  console.log(date, dateString);
-};
 
 const Holidaypage: React.FC = () => {
   const token = useToken();
   const [openyear, setOpenyear] = useState(false);
   const [openday, setOpenday] = useState(false);
+  const [selectedRows, setSelectedRows] = useState<any>([]);
+  const [drawerType, setDrawerType] = useState(1);
+  const [selectionType, setSelectionType] = useState<'checkbox' | 'radio'>(
+    'checkbox',
+  );
   const [form] = Form.useForm();
+  const { data: data_all } = useQuery(FETCH_ALL_HOLIDAY);
+  const { data: data_year } = useQuery(HOLIDAY_YEAR);
+  const [createholiday] = useMutation(CREATE_HOLIDAY_DATE);
 
-  const showDraweryear = () => {
+  const showDraweryear = (type: any) => {
     setOpenyear(true);
+    setDrawerType(type);
   };
 
   const onCloseyear = () => {
@@ -119,6 +63,169 @@ const Holidaypage: React.FC = () => {
   const onCloseday = () => {
     setOpenday(false);
   };
+
+  const onChange: DatePickerProps['onChange'] = (date, dateString) => {
+    console.log(date, dateString);
+  };
+
+  const rowSelection = {
+    onChange: (selectedRowKeys, selectedRows) => {
+      setSelectedRows(selectedRows);
+    },
+  };
+
+  const onFinish = (value) => {
+    Swal.fire({
+      title: `ยืนยันการเพิ่มข้อมูลวันหยุด`,
+      icon: 'warning',
+      showDenyButton: true,
+      showCancelButton: false,
+      confirmButtonColor: token.token.colorPrimary,
+      denyButtonColor: '#ea4e4e',
+      confirmButtonText: 'ตกลง',
+      denyButtonText: `ยกเลิก`,
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        createholiday({
+          variables: {
+            data: selectedRows.map((i) => ({
+              day: i.day,
+              month: i.month,
+              year: i.year,
+              holiday_name: i.holiday_name,
+            })),
+          },
+        })
+          .then((val) => {
+            console.log(val);
+            if (val.data?.createAndUpdateHolidayDate?.status) {
+              Swal.fire(`เพิ่มข้อมูลวันหยุดสำเร็จ!`, '', 'success');
+            }
+          })
+          .catch((err) => {
+            Swal.fire(`เพิ่มข้อมูลวันหยุดไม่สำเร็จ!`, '', 'error');
+            console.error(err);
+          });
+      }
+    });
+  };
+
+  const onMenuClick = (event: any, record: any) => {
+    const { key } = event;
+    if (key === 'edit') {
+      showDraweryear(2);
+      setSelectedRows(record);
+    } else if (key === 'view') {
+      showDraweryear(3);
+      setSelectedRows(record);
+    } else if (key === 'delete') {
+    }
+  };
+
+  const genarateMenu = (record: any) => {
+    return [
+      {
+        key: 'edit',
+        label: 'แก้ไข',
+        icon: <img style={{ width: '17px', height: '17px' }} src={edit} />,
+        onClick: (e: any) => onMenuClick(e, record),
+      },
+      {
+        key: 'view',
+        label: 'ดูข้อมูล',
+        icon: <img style={{ width: '17px', height: '17px' }} src={View} />,
+        onClick: (e: any) => onMenuClick(e, record),
+      },
+      {
+        key: 'delete',
+        label: 'ลบข้อมูล',
+        icon: <img style={{ width: '20px', height: '20px' }} src={Del} />,
+        onClick: (e: any) => onMenuClick(e, record),
+      },
+    ];
+  };
+
+  const columns: ColumnsType<any> = [
+    {
+      title: 'ปี',
+      dataIndex: 'year',
+      key: 'year',
+      align: 'center',
+    },
+    {
+      title: 'จำนวนวันหยุด',
+      dataIndex: 'count',
+      key: 'count',
+      align: 'center',
+    },
+    {
+      title: 'Actions',
+      key: 'option',
+      align: 'center',
+      render: (record) => (
+        <Dropdown
+          menu={{
+            items: genarateMenu(record),
+          }}
+          arrow
+        >
+          <MoreOutlined />
+        </Dropdown>
+      ),
+    },
+  ];
+
+  const columnsyear: ColumnsType<any> = [
+    {
+      title: 'วัน',
+      dataIndex: 'day',
+      align: 'center',
+    },
+    {
+      title: 'เดือน',
+      dataIndex: 'month',
+      align: 'center',
+      render: (record) => {
+        return (
+          <div>
+            {record === 1
+              ? 'มกราคม'
+              : record === 2
+              ? 'กุมภาพันธ์'
+              : record === 3
+              ? 'มีนาคม'
+              : record === 4
+              ? 'เมษายน'
+              : record === 5
+              ? 'พฤษภาคม'
+              : record === 6
+              ? 'มิถุนายน'
+              : record === 7
+              ? 'กรกฎาคม'
+              : record === 8
+              ? 'สิงหาคม'
+              : record === 9
+              ? 'กันยายน'
+              : record === 10
+              ? 'ตุลาคม'
+              : record === 11
+              ? 'พฤศจิกายน'
+              : 'ธันวาคม'}
+          </div>
+        );
+      },
+    },
+    {
+      title: 'ปี',
+      dataIndex: 'year',
+      align: 'center',
+    },
+    {
+      title: 'วันหยุด',
+      dataIndex: 'holiday_name',
+      render: (text: string) => <a>{text}</a>,
+    },
+  ];
 
   return (
     <>
@@ -162,7 +269,7 @@ const Holidaypage: React.FC = () => {
                 marginBottom: '10px',
                 backgroundColor: token.token.colorPrimary,
               }}
-              onClick={showDraweryear}
+              onClick={() => showDraweryear(1)}
             >
               + เพิ่มวันหยุดรายปี
             </Button>
@@ -181,7 +288,10 @@ const Holidaypage: React.FC = () => {
             </Button>
           </Col>
         </Row>
-        <Table<DataSourceType> dataSource={dataSources} columns={columns} />
+        <Table
+          dataSource={data_all?.GetHolidayDate?.year_count as any}
+          columns={columns}
+        />
       </Card>
 
       <Drawer
@@ -192,7 +302,7 @@ const Holidaypage: React.FC = () => {
         open={openyear}
         width="40%"
       >
-        <Form>
+        <Form form={form} onFinish={onFinish}>
           <div
             className="flex text-2xl"
             style={{ color: token.token.colorPrimary }}
@@ -221,16 +331,26 @@ const Holidaypage: React.FC = () => {
               />
             </Col>
           </Row>
-          <Row>
+          {/* <Row>
             <Col xs={24} sm={10} md={12} lg={12} xl={5}>
               <Form.Item name={''} label={'จำนวนวันหยุด'}></Form.Item>
             </Col>
             <Col xs={24} sm={14} md={12} lg={12} xl={10}>
               <Input className="mb-5" />
             </Col>
-          </Row>
-          <TableHoliday />
-
+          </Row> */}
+          <Table
+            rowKey={'id'}
+            rowSelection={{
+              type: selectionType,
+              ...rowSelection,
+            }}
+            columns={columnsyear}
+            dataSource={data_year?.GetHoliDayYear as any}
+            // pagination={{ pageSize: 5 }}
+            pagination={false}
+            // scroll={{ x: '45vh', y: '35vh', }}
+          />
           <Row
             gutter={16}
             style={{ position: 'relative', top: '20px', float: 'right' }}
