@@ -88,10 +88,10 @@ const ResetPassword: React.FC = () => {
                     <Row className=''>
                         <Col xs={24} sm={24} md={24} lg={24} xl={24}>
                             <Form form={form} size="large" >
-                                <Form.Item name={'password'} label={'รหัสผ่านเดิม'}>
+                                <Form.Item name={'password'} label={'รหัสผ่านใหม่'}>
                                     <Input />
                                 </Form.Item>
-                                <Form.Item name={'newpassword'} label={'รหัสผ่านใหม่'}>
+                                <Form.Item name={'newpassword'} label={'รหัสผ่านใหม่ Confirm'}>
                                     <Input />
                                 </Form.Item>
                                 <Form.Item>
