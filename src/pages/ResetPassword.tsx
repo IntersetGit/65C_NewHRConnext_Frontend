@@ -92,14 +92,12 @@ const ResetPassword: React.FC = () => {
                                 form.resetFields()
                                 navigate('/auth');
                             }
-
                         })
                         .catch((err) => {
                             Swal.fire(`เปลื่ยนรหัสผ่านไม่สำเร็จ!`, '', 'error');
                             console.error(err);
                         });
                 }
-
             })
             : Swal.fire({
                 title: 'เปลี่ยนรหัสผ่านไม่สำเร็จ',
