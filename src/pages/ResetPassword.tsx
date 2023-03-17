@@ -70,7 +70,7 @@ const ResetPassword: React.FC = () => {
     const onFinish = (value) => {
         password == confirmPassword
             ? Swal.fire({
-                title: `ยืนยันการเปลื่ยนรหัสผ่าน`,
+                title: `ยืนยันการเปลี่ยนรหัสผ่าน`,
                 icon: 'warning',
                 showDenyButton: true,
                 showCancelButton: false,
@@ -88,7 +88,7 @@ const ResetPassword: React.FC = () => {
                         .then((val) => {
                             console.log(val);
                             if (val.data?.Changesepasswordinforgot?.status) {
-                                Swal.fire(`เปลื่ยนรหัสผ่านสำเร็จ!`, '', 'success');
+                                Swal.fire(`เปลี่ยนรหัสผ่านสำเร็จ!`, '', 'success');
                                 form.resetFields()
                                 navigate('/auth');
                             }
