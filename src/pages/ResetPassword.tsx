@@ -18,9 +18,13 @@ import logo from '../assets/HR logo.png';
 import '../styles/components/login.css';
 import { CHANGE_PW_fORGOT } from '../service/graphql/ForgotPW';
 import { gql } from 'graphql-tag';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
+import dayjs from 'dayjs';
 const { useToken } = theme;
+
+
+
 const ResetPassword: React.FC = () => {
     const [form] = Form.useForm();
     const token = useToken();
@@ -28,10 +32,38 @@ const ResetPassword: React.FC = () => {
     const [searchParams, setSearchParams] = useSearchParams();
     const [CHANGE_PW] = useMutation(CHANGE_PW_fORGOT);
     const acessId = searchParams.get('aceesid');
+    const tokenId = searchParams.get('tokenid');
     const navigate = useNavigate()
     const onClose = () => {
         setOpen(false);
     };
+    function parseJwt(token) {
+        var base64Url = token.split('.')[1];
+        var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        var jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function (c) {
+            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        }).join(''));
+
+        return JSON.parse(jsonPayload);
+    }
+
+
+    useEffect(() => {
+        if (token) {
+            let paramJWT = parseJwt(tokenId)
+            let expTime = paramJWT.exp
+            let day = dayjs(new Date()).unix()
+            let sumday = expTime - day
+            console.log('sumday', sumday)
+            if (sumday <= 0) {
+                navigate('500')
+            }
+        } else {
+            navigate('500')
+        }
+    }, []);
+
+
 
     const onFinish = (value) => {
         Swal.fire({
@@ -54,16 +86,17 @@ const ResetPassword: React.FC = () => {
                         console.log(val);
                         if (val.data?.Changesepasswordinforgot?.status) {
                             Swal.fire(`เปลื่ยนรหัสผ่านสำเร็จ!`, '', 'success');
+                            form.resetFields()
+                            navigate('/auth');
                         }
-                        form.resetFields()
-                        navigate('/auth');
+
                     })
                     .catch((err) => {
                         Swal.fire(`เปลื่ยนรหัสผ่านไม่สำเร็จ!`, '', 'error');
                         console.error(err);
                     });
             }
-            onClose();
+
         });
     };
 
@@ -86,14 +119,14 @@ const ResetPassword: React.FC = () => {
                 }}
             >
                 <Card title={'รีเซตรหัสผ่าน'} style={{ width: '40%', minWidth: '300px' }} >
-                    <Row className=''>
+                    <Row>
                         <Col xs={24} sm={24} md={24} lg={24} xl={24}>
-                            <Form form={form} size="large" >
+                            <Form form={form} size="large" onFinish={onFinish}>
                                 <Form.Item name={'password1'} label={'รหัสผ่านใหม่'}>
-                                    <Input />
+                                    <Input.Password />
                                 </Form.Item>
                                 <Form.Item name={'password2'} label={'รหัสผ่านใหม่ (Confirm)'}>
-                                    <Input />
+                                    <Input.Password />
                                 </Form.Item>
                                 <Form.Item>
                                     <Row className="flex justify-end">
