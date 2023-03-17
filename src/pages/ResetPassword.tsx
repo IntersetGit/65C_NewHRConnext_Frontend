@@ -33,6 +33,8 @@ const ResetPassword: React.FC = () => {
     const [CHANGE_PW] = useMutation(CHANGE_PW_fORGOT);
     const acessId = searchParams.get('aceesid');
     const tokenId = searchParams.get('tokenid');
+    const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
     const navigate = useNavigate()
     const onClose = () => {
         setOpen(false);
@@ -66,38 +68,44 @@ const ResetPassword: React.FC = () => {
 
 
     const onFinish = (value) => {
-        Swal.fire({
-            title: `ยืนยันการเปลื่ยนรหัสผ่าน`,
-            icon: 'warning',
-            showDenyButton: true,
-            showCancelButton: false,
-            confirmButtonColor: token.token.colorPrimary,
-            denyButtonColor: '#ea4e4e',
-            confirmButtonText: 'ตกลง',
-            denyButtonText: `ยกเลิก`,
-        }).then(async (result) => {
-            if (result.isConfirmed) {
-                CHANGE_PW({
-                    variables: {
-                        data: { ...value, id: acessId },
-                    },
-                })
-                    .then((val) => {
-                        console.log(val);
-                        if (val.data?.Changesepasswordinforgot?.status) {
-                            Swal.fire(`เปลื่ยนรหัสผ่านสำเร็จ!`, '', 'success');
-                            form.resetFields()
-                            navigate('/auth');
-                        }
-
+        password == confirmPassword
+            ? Swal.fire({
+                title: `ยืนยันการเปลื่ยนรหัสผ่าน`,
+                icon: 'warning',
+                showDenyButton: true,
+                showCancelButton: false,
+                confirmButtonColor: token.token.colorPrimary,
+                denyButtonColor: '#ea4e4e',
+                confirmButtonText: 'ตกลง',
+                denyButtonText: `ยกเลิก`,
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    CHANGE_PW({
+                        variables: {
+                            data: { ...value, id: acessId },
+                        },
                     })
-                    .catch((err) => {
-                        Swal.fire(`เปลื่ยนรหัสผ่านไม่สำเร็จ!`, '', 'error');
-                        console.error(err);
-                    });
-            }
+                        .then((val) => {
+                            console.log(val);
+                            if (val.data?.Changesepasswordinforgot?.status) {
+                                Swal.fire(`เปลื่ยนรหัสผ่านสำเร็จ!`, '', 'success');
+                                form.resetFields()
+                                navigate('/auth');
+                            }
 
-        });
+                        })
+                        .catch((err) => {
+                            Swal.fire(`เปลื่ยนรหัสผ่านไม่สำเร็จ!`, '', 'error');
+                            console.error(err);
+                        });
+                }
+
+            })
+            : Swal.fire({
+                title: 'เปลี่ยนรหัสผ่านไม่สำเร็จ',
+                text: 'Password ไม่ตรงกัน',
+                icon: 'error',
+            })
     };
 
     return (
@@ -122,11 +130,35 @@ const ResetPassword: React.FC = () => {
                     <Row>
                         <Col xs={24} sm={24} md={24} lg={24} xl={24}>
                             <Form form={form} size="large" onFinish={onFinish}>
-                                <Form.Item name={'password1'} label={'รหัสผ่านใหม่'}>
-                                    <Input.Password />
+                                <Form.Item name={'password1'} label={'รหัสผ่านใหม่'}
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: "โปรดกรอกรหัสผ่านใหม่",
+
+                                        },
+                                    ]}
+                                >
+                                    <Input.Password
+                                        value={password}
+                                        onChange={e => setPassword(e.target.value)}
+                                        placeholder="New Password"
+                                    />
                                 </Form.Item>
-                                <Form.Item name={'password2'} label={'รหัสผ่านใหม่ (Confirm)'}>
-                                    <Input.Password />
+                                <Form.Item name={'password2'} label={'รหัสผ่านใหม่ (Confirm)'}
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: "โปรดกรอกรหัสผ่าน (Confirm) ใหม่",
+
+                                        },
+                                    ]}
+                                >
+                                    <Input.Password
+                                        value={confirmPassword}
+                                        onChange={e => setConfirmPassword(e.target.value)}
+                                        placeholder="Confirm Password"
+                                    />
                                 </Form.Item>
                                 <Form.Item>
                                     <Row className="flex justify-end">
