@@ -58,10 +58,10 @@ const ResetPassword: React.FC = () => {
             let sumday = expTime - day
             console.log('sumday', sumday)
             if (sumday <= 0) {
+                Swal.fire(`E-mail นี้หมดเวลาแล้ว!`, '', 'error');
                 navigate('500')
+
             }
-        } else {
-            navigate('500')
         }
     }, []);
 
