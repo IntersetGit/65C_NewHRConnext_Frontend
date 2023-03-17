@@ -383,8 +383,7 @@ export type GetCompanyAccessType = {
 
 export type GetHolidayDateResponseType = {
   __typename?: 'GetHolidayDateResponseType';
-  data?: Maybe<Array<Maybe<Holiday_Date>>>;
-  year_count?: Maybe<Array<Maybe<YearCountType>>>;
+  data?: Maybe<Array<Maybe<YearCountType>>>;
 };
 
 export type GetOwncompanytype = {
@@ -508,6 +507,7 @@ export type Mutation = {
   delete_position1?: Maybe<DeletepositionResponseType>;
   delete_position2?: Maybe<DeletepositionResponseType>;
   delete_position3?: Maybe<DeletepositionResponseType>;
+  editActive?: Maybe<DeleteAccountUserResponseType>;
   editstatusleave?: Maybe<CreateleaveResponseType>;
   login?: Maybe<LoginResponse>;
   refreshToken?: Maybe<RefreshtokenResponseType>;
@@ -690,6 +690,11 @@ export type MutationDelete_Position2Args = {
 
 export type MutationDelete_Position3Args = {
   id: Scalars['ID'];
+};
+
+
+export type MutationEditActiveArgs = {
+  id?: InputMaybe<Scalars['ID']>;
 };
 
 
@@ -1135,6 +1140,7 @@ export type ValidateRoute = {
 
 export type YearCountType = {
   __typename?: 'YearCountType';
+  child?: Maybe<Array<Maybe<Holiday_Date>>>;
   count?: Maybe<Scalars['Int']>;
   year?: Maybe<Scalars['Int']>;
 };
@@ -1936,6 +1942,13 @@ export type DeleteComBaranceMutationVariables = Exact<{
 
 export type DeleteComBaranceMutation = { __typename?: 'Mutation', deleteComBarance?: { __typename?: 'DeleteComapnyBranchResponseType', message?: string | null, status?: boolean | null } | null };
 
+export type EditActiveMutationVariables = Exact<{
+  editActiveId?: InputMaybe<Scalars['ID']>;
+}>;
+
+
+export type EditActiveMutation = { __typename?: 'Mutation', editActive?: { __typename?: 'DeleteAccountUserResponseType', message?: string | null, status?: boolean | null } | null };
+
 export type ForgotpasswordMutationVariables = Exact<{
   data?: InputMaybe<ForgetpasswordInput>;
 }>;
@@ -1955,7 +1968,7 @@ export type GetHolidayDateQueryVariables = Exact<{
 }>;
 
 
-export type GetHolidayDateQuery = { __typename?: 'Query', GetHolidayDate?: { __typename?: 'GetHolidayDateResponseType', data?: Array<{ __typename?: 'holiday_date', id?: string | null, holiday_name?: string | null, day?: number | null, month?: number | null, year?: number | null, CompanyId?: string | null, status?: number | null } | null> | null, year_count?: Array<{ __typename?: 'YearCountType', year?: number | null, count?: number | null } | null> | null } | null };
+export type GetHolidayDateQuery = { __typename?: 'Query', GetHolidayDate?: { __typename?: 'GetHolidayDateResponseType', data?: Array<{ __typename?: 'YearCountType', year?: number | null, count?: number | null, child?: Array<{ __typename?: 'holiday_date', id?: string | null, holiday_name?: string | null, day?: number | null, month?: number | null, year?: number | null, CompanyId?: string | null, status?: number | null } | null> | null } | null> | null } | null };
 
 export type GetHoliDayYearQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -2221,9 +2234,10 @@ export const GetownCompanyDocument = {"kind":"Document","definitions":[{"kind":"
 export const GetBusinessTypeDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetBusinessType"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getBusinessType"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"SubBusinessType"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]}}]} as unknown as DocumentNode<GetBusinessTypeQuery, GetBusinessTypeQueryVariables>;
 export const CreateAndUpdateComBaranceDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateAndUpdateComBarance"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"data"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"createCompanyBranch"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createAndUpdateComBarance"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"data"},"value":{"kind":"Variable","name":{"kind":"Name","value":"data"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"message"}},{"kind":"Field","name":{"kind":"Name","value":"status"}}]}}]}}]} as unknown as DocumentNode<CreateAndUpdateComBaranceMutation, CreateAndUpdateComBaranceMutationVariables>;
 export const DeleteComBaranceDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"DeleteComBarance"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"deleteComBaranceId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"deleteComBarance"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"deleteComBaranceId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"message"}},{"kind":"Field","name":{"kind":"Name","value":"status"}}]}}]}}]} as unknown as DocumentNode<DeleteComBaranceMutation, DeleteComBaranceMutationVariables>;
+export const EditActiveDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"EditActive"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"editActiveId"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"editActive"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"editActiveId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"message"}},{"kind":"Field","name":{"kind":"Name","value":"status"}}]}}]}}]} as unknown as DocumentNode<EditActiveMutation, EditActiveMutationVariables>;
 export const ForgotpasswordDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"Forgotpassword"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"data"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"forgetpasswordInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"Forgotpassword"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"data"},"value":{"kind":"Variable","name":{"kind":"Name","value":"data"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"message"}},{"kind":"Field","name":{"kind":"Name","value":"status"}}]}}]}}]} as unknown as DocumentNode<ForgotpasswordMutation, ForgotpasswordMutationVariables>;
 export const ChangesepasswordinforgotDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"Changesepasswordinforgot"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"data"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"changepasswordInforgotpasswordinput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"Changesepasswordinforgot"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"data"},"value":{"kind":"Variable","name":{"kind":"Name","value":"data"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"message"}},{"kind":"Field","name":{"kind":"Name","value":"status"}}]}}]}}]} as unknown as DocumentNode<ChangesepasswordinforgotMutation, ChangesepasswordinforgotMutationVariables>;
-export const GetHolidayDateDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetHolidayDate"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"year"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"GetHolidayDate"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"year"},"value":{"kind":"Variable","name":{"kind":"Name","value":"year"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"data"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"holiday_name"}},{"kind":"Field","name":{"kind":"Name","value":"day"}},{"kind":"Field","name":{"kind":"Name","value":"month"}},{"kind":"Field","name":{"kind":"Name","value":"year"}},{"kind":"Field","name":{"kind":"Name","value":"CompanyId"}},{"kind":"Field","name":{"kind":"Name","value":"status"}}]}},{"kind":"Field","name":{"kind":"Name","value":"year_count"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"year"}},{"kind":"Field","name":{"kind":"Name","value":"count"}}]}}]}}]}}]} as unknown as DocumentNode<GetHolidayDateQuery, GetHolidayDateQueryVariables>;
+export const GetHolidayDateDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetHolidayDate"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"year"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"GetHolidayDate"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"year"},"value":{"kind":"Variable","name":{"kind":"Name","value":"year"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"data"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"year"}},{"kind":"Field","name":{"kind":"Name","value":"count"}},{"kind":"Field","name":{"kind":"Name","value":"child"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"holiday_name"}},{"kind":"Field","name":{"kind":"Name","value":"day"}},{"kind":"Field","name":{"kind":"Name","value":"month"}},{"kind":"Field","name":{"kind":"Name","value":"year"}},{"kind":"Field","name":{"kind":"Name","value":"CompanyId"}},{"kind":"Field","name":{"kind":"Name","value":"status"}}]}}]}}]}}]}}]} as unknown as DocumentNode<GetHolidayDateQuery, GetHolidayDateQueryVariables>;
 export const GetHoliDayYearDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetHoliDayYear"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"GetHoliDayYear"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"day"}},{"kind":"Field","name":{"kind":"Name","value":"month"}},{"kind":"Field","name":{"kind":"Name","value":"year"}},{"kind":"Field","name":{"kind":"Name","value":"holiday_name"}}]}}]}}]} as unknown as DocumentNode<GetHoliDayYearQuery, GetHoliDayYearQueryVariables>;
 export const CreateHolidayYearDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateHolidayYear"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"data"}},"type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CreateHolidayYears"}}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createHolidayYear"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"data"},"value":{"kind":"Variable","name":{"kind":"Name","value":"data"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"message"}},{"kind":"Field","name":{"kind":"Name","value":"status"}}]}}]}}]} as unknown as DocumentNode<CreateHolidayYearMutation, CreateHolidayYearMutationVariables>;
 export const CreateAndUpdateHolidayDateDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateAndUpdateHolidayDate"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"data"}},"type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CreateHolidayDate"}}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createAndUpdateHolidayDate"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"data"},"value":{"kind":"Variable","name":{"kind":"Name","value":"data"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"message"}},{"kind":"Field","name":{"kind":"Name","value":"status"}}]}}]}}]} as unknown as DocumentNode<CreateAndUpdateHolidayDateMutation, CreateAndUpdateHolidayDateMutationVariables>;

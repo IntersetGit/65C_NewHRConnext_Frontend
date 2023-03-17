@@ -11,17 +11,64 @@ import {
   Steps,
   theme,
 } from 'antd';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import marklight from '../assets/auth-v2-login-mask-light.png';
 import Swal from 'sweetalert2';
 import human from '../assets/500.png';
 import logo from '../assets/HR logo.png';
+import { useMutation } from '@apollo/client';
+import { CONFIRM_EMAIL } from '../service/graphql/Confirm';
+import { MdOutlineMarkEmailRead } from 'react-icons/md';
 
 const { useToken } = theme;
 
 const Confirm: React.FC = () => {
   const navigate = useNavigate();
   const token = useToken();
+  const [confirm] = useMutation(CONFIRM_EMAIL);
+  const [searchParam, setSearchParam] = useSearchParams();
+  const aceesid = searchParam.get('aceesid');
+
+  const onFinish = () => {
+    Swal.fire({
+      title: 'ยืนยันอีเมลในการสมัครข้อมูลบริษัท',
+      // text: 'ยืนยันการลบรูป',
+      icon: 'warning',
+      showDenyButton: true,
+      showCancelButton: false,
+      confirmButtonColor: token.token.colorPrimary,
+      denyButtonColor: '#efefef',
+      confirmButtonText: 'ตกลง',
+      denyButtonText: `ยกเลิก`,
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        confirm({
+          variables: {
+            editActiveId: aceesid,
+          },
+        })
+          .then((val) => {
+            console.log(val);
+            if (val.data?.editActive?.status) {
+              Swal.fire(
+                `ยืนยันอีเมลในการสมัครข้อมูลบริษัทสำเร็จ!`,
+                '',
+                'success',
+              );
+            }
+            navigate('/auth');
+          })
+          .catch((err) => {
+            Swal.fire(
+              `ยืนยันอีเมลในการสมัครข้อมูลบริษัทไม่สำเร็จ!`,
+              '',
+              'error',
+            );
+            console.error(err);
+          });
+      }
+    });
+  };
   return (
     <div
       style={{
@@ -51,14 +98,30 @@ const Confirm: React.FC = () => {
             borderWidth: '0.5px',
           }}
         >
-          <div className="flex justify-center font-bold text-base">
-            ยืนยันอีเมลในการสมัครข้อมูลบริษัท
-          </div>
+          <Row className="flex justify-center font-bold text-base">
+            <div>ยืนยันอีเมลในการสมัครข้อมูลบริษัท</div>
+          </Row>
+
+          <Row className="flex justify-center font-bold text-base">
+            <MdOutlineMarkEmailRead size={100} />
+          </Row>
 
           <Row className="flex justify-center mt-4">
             <Space>
-              <Button>ตกลง</Button>
-              <Button>ยกเลิก</Button>
+              <Button
+                onClick={() => {
+                  onFinish();
+                }}
+              >
+                ตกลง
+              </Button>
+              <Button
+                onClick={() => {
+                  navigate('/auth');
+                }}
+              >
+                ยกเลิก
+              </Button>
             </Space>
           </Row>
         </Card>

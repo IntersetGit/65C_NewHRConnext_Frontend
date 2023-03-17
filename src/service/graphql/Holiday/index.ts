@@ -4,17 +4,17 @@ export const FETCH_ALL_HOLIDAY = gql(`
 query GetHolidayDate($year: Int) {
   GetHolidayDate(year: $year) {
     data {
-      id
-      holiday_name
-      day
-      month
-      year
-      CompanyId
-      status
-    }
-    year_count {
       year
       count
+      child {
+        id
+        holiday_name
+        day
+        month
+        year
+        CompanyId
+        status
+      }
     }
   }
 }

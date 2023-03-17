@@ -43,7 +43,7 @@ const Holidaypage: React.FC = () => {
     'checkbox',
   );
   const [form] = Form.useForm();
-  const { data: data_all } = useQuery(FETCH_ALL_HOLIDAY);
+  const { data: data_all, refetch } = useQuery(FETCH_ALL_HOLIDAY);
   const { data: data_year } = useQuery(HOLIDAY_YEAR);
   const [createholiday] = useMutation(CREATE_HOLIDAY_DATE);
 
@@ -70,11 +70,15 @@ const Holidaypage: React.FC = () => {
 
   const rowSelection = {
     onChange: (selectedRowKeys, selectedRows) => {
-      setSelectedRows(selectedRows);
+      setSelectedRows(selectedRowKeys);
     },
   };
 
   const onFinish = (value) => {
+    let rows = selectedRows.map((root) => {
+      return data_year?.GetHoliDayYear?.find((e) => e?.id === root);
+    });
+
     Swal.fire({
       title: `ยืนยันการเพิ่มข้อมูลวันหยุด`,
       icon: 'warning',
@@ -88,7 +92,7 @@ const Holidaypage: React.FC = () => {
       if (result.isConfirmed) {
         createholiday({
           variables: {
-            data: selectedRows.map((i) => ({
+            data: rows.map((i) => ({
               day: i.day,
               month: i.month,
               year: i.year,
@@ -107,14 +111,24 @@ const Holidaypage: React.FC = () => {
             console.error(err);
           });
       }
+      refetch();
     });
   };
 
-  const onMenuClick = (event: any, record: any) => {
+  const onMenuClick = async (event: any, record: any) => {
     const { key } = event;
     if (key === 'edit') {
+      let mapper = record.child.map((root) => {
+        return data_year?.GetHoliDayYear?.find(
+          (e) =>
+            e?.day === root.day &&
+            e?.year === root.year &&
+            e?.month === root.month,
+        )?.id;
+      });
+      setSelectedRows(mapper);
       showDraweryear(2);
-      setSelectedRows(record);
+      console.log(record);
     } else if (key === 'view') {
       showDraweryear(3);
       setSelectedRows(record);
@@ -223,7 +237,7 @@ const Holidaypage: React.FC = () => {
     {
       title: 'วันหยุด',
       dataIndex: 'holiday_name',
-      render: (text: string) => <a>{text}</a>,
+      render: (text: any) => <a>{text}</a>,
     },
   ];
 
@@ -289,7 +303,8 @@ const Holidaypage: React.FC = () => {
           </Col>
         </Row>
         <Table
-          dataSource={data_all?.GetHolidayDate?.year_count as any}
+          rowKey={'id'}
+          dataSource={data_all?.GetHolidayDate?.data as any}
           columns={columns}
         />
       </Card>
@@ -343,6 +358,7 @@ const Holidaypage: React.FC = () => {
             rowKey={'id'}
             rowSelection={{
               type: selectionType,
+              selectedRowKeys: selectedRows,
               ...rowSelection,
             }}
             columns={columnsyear}
@@ -351,6 +367,7 @@ const Holidaypage: React.FC = () => {
             pagination={false}
             // scroll={{ x: '45vh', y: '35vh', }}
           />
+
           <Row
             gutter={16}
             style={{ position: 'relative', top: '20px', float: 'right' }}
