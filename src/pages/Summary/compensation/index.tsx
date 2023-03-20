@@ -101,8 +101,13 @@ const Compensation: React.FC = () => {
       key: 'profile',
       dataIndex: 'profile',
       align: 'center',
-      render: (txt: any) =>
-        txt.prefix_th + ' ' + txt.firstname_th + ' ' + txt.lastname_th,
+      render: (txt: any) => {
+        return (
+          <div>
+            {txt?.prefix_th} {txt?.firstname_th} {txt?.lastname_th}
+          </div>
+        );
+      },
     },
     {
       title: 'แผนก',
@@ -125,7 +130,11 @@ const Compensation: React.FC = () => {
       key: 'bookbank_log',
       align: 'center',
       render: (record) => {
-        return record?.bookbank_log[0]?.base_salary?.toLocaleString(undefined, { minimumFractionDigits: 2 }) ?? '-';
+        return (
+          record?.bookbank_log[0]?.base_salary?.toLocaleString(undefined, {
+            minimumFractionDigits: 2,
+          }) ?? '-'
+        );
       },
     },
     {

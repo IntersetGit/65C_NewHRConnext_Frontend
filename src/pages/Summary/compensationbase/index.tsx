@@ -124,7 +124,7 @@ const Compensationbase: React.FC = () => {
       dataIndex: 'profile',
       align: 'center',
       width: 130,
-      render: (record) => record.staff_code,
+      render: (record) => record?.staff_code,
     },
     {
       title: 'ชื่อ-สกุล',
@@ -132,8 +132,13 @@ const Compensationbase: React.FC = () => {
       dataIndex: 'profile',
       align: 'center',
       width: 200,
-      render: (txt: any) =>
-        txt.prefix_th + ' ' + txt.firstname_th + ' ' + txt.lastname_th,
+      render: (txt: any) => {
+        return (
+          <div>
+            {txt?.prefix_th} {txt?.firstname_th} {txt?.lastname_th}
+          </div>
+        );
+      },
     },
     {
       title: 'แผนก',
@@ -160,7 +165,11 @@ const Compensationbase: React.FC = () => {
       align: 'center',
       width: 150,
       render: (record) => {
-        return record?.[0]?.base_salary?.toLocaleString(undefined, { minimumFractionDigits: 2 }) ?? '-';
+        return (
+          record?.[0]?.base_salary?.toLocaleString(undefined, {
+            minimumFractionDigits: 2,
+          }) ?? '-'
+        );
         // return JSON.stringify(data[0]?.base_salary);
         // if (parseInt(เดือนปัจจุบัน) < parseInt(เดือนที่มีผลบังคับใช้) && ปีปัจจุบัน === ปีที่มีผลบังคับใช้) {
         //   return record?.[0]?.base_salary?.toFixed(2);
