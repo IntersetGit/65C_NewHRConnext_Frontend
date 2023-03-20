@@ -54,17 +54,31 @@ const PasswordChanger: React.FC<type> = (props) => {
           .then((val) => {
             console.log(val);
             if (val.data?.Changeselfpassword?.status) {
-              Swal.fire(`เปลื่ยนรหัสผ่านสำเร็จ!`, '', 'success');
+              Swal.fire(
+                val?.data?.Changeselfpassword?.message as any,
+                '',
+                'success',
+              );
             }
           })
           .catch((err) => {
-            Swal.fire(`เปลื่ยนรหัสผ่านไม่สำเร็จ!`, '', 'error');
-            console.error(err);
+            Swal.fire(err?.graphQLErrors?.[0]?.message, '', 'error');
           });
       }
       props.onClose();
       form.resetFields();
     });
+  };
+
+  const formItemLayout = {
+    labelCol: {
+      xs: { span: 5 },
+      sm: { span: 5 },
+    },
+    wrapperCol: {
+      xs: { span: 24 },
+      sm: { span: 24 },
+    },
   };
 
   return (
@@ -78,11 +92,14 @@ const PasswordChanger: React.FC<type> = (props) => {
         okButtonProps={{ style: { display: 'none' } }}
         centered
       >
-        <Form form={form} size="middle" onFinish={onFinish}>
+        <Form {...formItemLayout} form={form} size="middle" onFinish={onFinish}>
           <Form.Item name={'password'} label={'รหัสผ่านเดิม'}>
             <Input />
           </Form.Item>
-          <Form.Item name={'newpassword'} label={'รหัสผ่านใหม่'}>
+          <Form.Item name={'newpassword1'} label={'รหัสผ่านใหม่'}>
+            <Input />
+          </Form.Item>
+          <Form.Item name={'newpassword2'} label={'ยืนยันรหัสผ่านใหม่'}>
             <Input />
           </Form.Item>
           <Form.Item>
