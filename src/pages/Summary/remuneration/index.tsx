@@ -263,6 +263,9 @@ const Remuneration: React.FC = () => {
       form.setFieldsValue({
         ...record,
         accept_date: record.accept_date ? dayjs(record.accept_date) : undefined,
+        base_salary: record.base_salary ? (record.base_salary)?.toLocaleString(undefined, { minimumFractionDigits: 2 }) : undefined,
+        provident_emp: record.provident_emp ? (record.provident_emp)?.toFixed(2) : 0,
+        provident_com: record.provident_com ? (record.provident_com)?.toFixed(2) : 0,
       });
     } else if (key === 'delete') {
       Swal.fire({
@@ -318,7 +321,7 @@ const Remuneration: React.FC = () => {
       dataIndex: 'base_salary',
       align: 'center',
       render: (record) => {
-        return <div>{record.toFixed(2)}</div>;
+        return <div>{record?.toLocaleString(undefined, { minimumFractionDigits: 2 }) ?? '-'}</div>;
       },
     },
     {
@@ -341,12 +344,18 @@ const Remuneration: React.FC = () => {
       key: 'provident_emp',
       dataIndex: 'provident_emp',
       align: 'center',
+      render: (record) => {
+        return record?.toFixed(2);
+      },
     },
     {
       title: 'กองทุนสำรองสะสม (บริษัท (%))',
       key: 'provident_com',
       dataIndex: 'provident_com',
       align: 'center',
+      render: (record) => {
+        return record?.toFixed(2);
+      },
     },
     {
       title: 'Action',
@@ -582,6 +591,10 @@ const Remuneration: React.FC = () => {
                   {
                     required: true,
                     message: 'โปรดระบุเลขบัญชี !',
+                  },
+                  {
+                    message: 'โปรดกรอกเลขบัญชีให้ถูกต้อง (ตัวอย่าง : 0123456789) !',
+                    len: 10,
                   },
                 ]}
               >

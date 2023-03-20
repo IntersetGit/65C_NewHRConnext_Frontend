@@ -314,6 +314,10 @@ const Compensation: React.FC = () => {
         ra: record.ra ? record.ra : 0,
         late: record.late ? record.late : 0,
         other: record.other ? record.other : 0,
+        // accept_date: record.accept_date ? dayjs(record.accept_date) : undefined,
+        // base_salary: record.base_salary ? (record.base_salary)?.toLocaleString(undefined, { minimumFractionDigits: 2 }) : undefined,
+        // provident_emp: record.provident_emp ? (record.provident_emp)?.toFixed(2) : 0,
+        // provident_com: record.provident_com ? (record.provident_com)?.toFixed(2) : 0,
       });
       refetch5({
         userId: propsstate?.userId,
@@ -497,13 +501,7 @@ const Compensation: React.FC = () => {
   };
 
   const onChangeDate = (date) => {
-    // console.log(date.format("YYYY-MM-DD"));
-    // const result = dayjs(pickDate).format("YYYY-MM-DD") as any
-    // console.log(result);
-    // setPickDate(date)
     refetch5({ userId: propsstate?.userId, date: date });
-    //console.log("RRRRRRR", Show_PervspUser)
-    // if (propsstate?.userId === propsstate?.userId)
   };
 
   // const disabledDate: RangePickerProps['disabledDate'] = (current) => {

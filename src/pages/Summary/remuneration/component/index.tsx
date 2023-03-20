@@ -229,6 +229,9 @@ const ProfileRemuneration: React.FC = () => {
       form.setFieldsValue({
         ...record,
         accept_date: record.accept_date ? dayjs(record.accept_date) : undefined,
+        base_salary: record.base_salary ? (record.base_salary)?.toLocaleString(undefined, { minimumFractionDigits: 2 }) : undefined,
+        provident_emp: record.provident_emp ? (record.provident_emp)?.toFixed(2) : 0,
+        provident_com: record.provident_com ? (record.provident_com)?.toFixed(2) : 0,
       });
       // } else if (key === 'edit') {
       //   showDrawer(2);
@@ -540,6 +543,7 @@ const ProfileRemuneration: React.FC = () => {
                   {
                     required: true,
                     message: 'โปรดระบุเลขบัญชี !',
+                    len: 10,
                   },
                 ]}
               >

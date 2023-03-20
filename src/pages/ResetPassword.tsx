@@ -64,9 +64,6 @@ const ResetPassword: React.FC = () => {
             }
         }
     }, []);
-
-
-
     const onFinish = (value) => {
         password == confirmPassword
             ? Swal.fire({
@@ -124,7 +121,7 @@ const ResetPassword: React.FC = () => {
                     objectFit: 'cover',
                 }}
             >
-                <Card title={'รีเซตรหัสผ่าน'} style={{ width: '40%', minWidth: '300px' }} >
+                <Card title={'ตั้งค่ารหัสผ่านใหม่'} style={{ width: '40%', minWidth: '300px' }} >
                     <Row>
                         <Col xs={24} sm={24} md={24} lg={24} xl={24}>
                             <Form form={form} size="large" onFinish={onFinish}>

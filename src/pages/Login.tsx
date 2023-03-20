@@ -54,7 +54,6 @@ const Login: React.FC = () => {
     },
   };
 
-
   const onFinish = (value: any) => {
     login({ variables: { data: value } })
       .then((v) => {
@@ -239,13 +238,13 @@ const Login: React.FC = () => {
         >
           <Form.Item label={'E-mail :'}
             name={'email'}
-          // rules={[
-          //   {
-          //     type: 'email',
-          //     required: true,
-          //     message: 'โปรดใส่ E-mail',
-          //   },
-          // ]}
+            rules={[
+              {
+                type: 'email',
+                required: true,
+                message: 'กรุณากอรก E-mail ให้ถูกต้อง',
+              },
+            ]}
           >
             <Input type='email' />
           </Form.Item>

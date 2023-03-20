@@ -53,6 +53,7 @@ const PositionEmployee = React.lazy(
 );
 const Summaryroot = React.lazy(() => import('../pages/Summary'));
 const Compensation = React.lazy(() => import('../pages/Summary/compensation'));
+const SettingSummary = React.lazy(() => import('../pages/Summary/settingsummary'));
 const ProfileCompensation = React.lazy(
   () => import('../pages/Summary/profilecompensation'),
 );
@@ -315,12 +316,12 @@ export const routing: RoutingType[] = [
         element: <Summaryroot />,
         children: [
           {
-            label: 'จัดการข้อมูลเงินเดือน',
-            path: '/:companycode/summary/',
-            element: <Compensation />,
+            label: 'ตั้งค่าการคำนวณเงินเดือน',
+            path: '/:companycode/summary/settingsummary',
+            element: <SettingSummary />,
           },
           {
-            path: '/:companycode/summary/profileCompensation',
+            path: '/:companycode/summary/compensation/profileCompensation',
             element: <ProfileCompensation />,
             hideInmenu: true,
           },
@@ -328,6 +329,11 @@ export const routing: RoutingType[] = [
             label: 'จัดการข้อมูลฐานเงินเดือน',
             path: '/:companycode/summary/compensationbase',
             element: <Compensationbase />,
+          },
+          {
+            label: 'จัดการข้อมูลเงินเดือน',
+            path: '/:companycode/summary/compensation',
+            element: <Compensation />,
           },
           {
             path: '/:companycode/summary/compensationbase/remuneration',
