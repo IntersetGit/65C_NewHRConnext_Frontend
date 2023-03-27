@@ -12,8 +12,8 @@ query GetHolidayDate($year: Int) {
         day
         month
         year
-        CompanyId
         status
+        holiday_yearId
       }
     }
   }
@@ -21,8 +21,8 @@ query GetHolidayDate($year: Int) {
 `);
 
 export const HOLIDAY_YEAR = gql(`
-query GetHoliDayYear {
-    GetHoliDayYear {
+query GetHoliDayYear($year: Int) {
+  GetHoliDayYear(year: $year) {
       id
       day
       month

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Button,
   Card,
@@ -30,6 +30,7 @@ import {
 } from '../../../service/graphql/Holiday';
 import { useMutation, useQuery } from '@apollo/client';
 import Swal from 'sweetalert2';
+import dayjs from 'dayjs';
 
 const { useToken } = theme;
 
@@ -42,9 +43,13 @@ const Holidaypage: React.FC = () => {
   const [selectionType, setSelectionType] = useState<'checkbox' | 'radio'>(
     'checkbox',
   );
+  const [dataselect, setDataselect] = useState([]);
+
   const [form] = Form.useForm();
+  const [formday] = Form.useForm();
+  const [formSearch] = Form.useForm();
   const { data: data_all, refetch } = useQuery(FETCH_ALL_HOLIDAY);
-  const { data: data_year } = useQuery(HOLIDAY_YEAR);
+  const { data: data_year, refetch: refetchyear } = useQuery(HOLIDAY_YEAR);
   const [createholiday] = useMutation(CREATE_HOLIDAY_DATE);
 
   const showDraweryear = (type: any) => {
@@ -64,21 +69,127 @@ const Holidaypage: React.FC = () => {
     setOpenday(false);
   };
 
-  const onChange: DatePickerProps['onChange'] = (date, dateString) => {
+  const onChangeTable: DatePickerProps['onChange'] = (date, dateString) => {
+    let dateTable: any = parseInt(dateString);
+    refetch({ year: dateTable });
     console.log(date, dateString);
+  };
+
+  const onChange: DatePickerProps['onChange'] = (date, dateString) => {
+    let dates: any = parseInt(dateString);
+    refetchyear({ year: dates });
+    console.log(date, dateString);
+  };
+
+  const onChangeDay: DatePickerProps['onChange'] = (date, dateString) => {
+    console.log(date);
+    const newdate = dayjs().diff(date, 'day');
+    console.log(newdate);
   };
 
   const rowSelection = {
     onChange: (selectedRowKeys, selectedRows) => {
       setSelectedRows(selectedRowKeys);
+      console.log(selectedRows);
     },
+    getCheckboxProps: (record: any) => ({
+      disabled: drawerType === 3,
+    }),
+    hideSelectAll: true,
   };
 
   const onFinish = (value) => {
-    let rows = selectedRows.map((root) => {
-      return data_year?.GetHoliDayYear?.find((e) => e?.id === root);
+    let rows = data_year?.GetHoliDayYear?.map((root) => {
+      const filter = selectedRows.find((e) => e === root?.id);
+      const filteredData: any = dataselect.find(
+        (e: any) => (e.holiday_yearId as string) === root?.id,
+      );
+      let status = 0;
+      // console.log(filter, root, filteredData);
+      if (filter) status = 1;
+      return {
+        ...root,
+        id: filteredData?.id as string,
+        status: status,
+        holiday_yearId: root?.id,
+        __typename: undefined,
+      };
     });
+    console.log(rows);
+    console.log(dataselect);
+    drawerType === 1
+      ? Swal.fire({
+          title: `ยืนยันการเพิ่มข้อมูลวันหยุด`,
+          icon: 'warning',
+          showDenyButton: true,
+          showCancelButton: false,
+          confirmButtonColor: token.token.colorPrimary,
+          denyButtonColor: '#ea4e4e',
+          confirmButtonText: 'ตกลง',
+          denyButtonText: `ยกเลิก`,
+        }).then(async (result) => {
+          if (result.isConfirmed) {
+            createholiday({
+              variables: {
+                data: rows?.map((i) => ({
+                  day: i.day,
+                  month: i.month,
+                  year: i.year,
+                  holiday_name: i.holiday_name,
+                  status: i.status,
+                  holiday_yearId: i.holiday_yearId,
+                })),
+              },
+            })
+              .then((val) => {
+                console.log(val);
+                if (val.data?.createAndUpdateHolidayDate?.status) {
+                  Swal.fire(`เพิ่มข้อมูลวันหยุดสำเร็จ!`, '', 'success');
+                  refetch();
+                }
+              })
+              .catch((err) => {
+                Swal.fire(`เพิ่มข้อมูลวันหยุดไม่สำเร็จ!`, '', 'error');
+                console.error(err);
+              });
+          }
+        })
+      : Swal.fire({
+          title: `ยืนยันการแก้ไขข้อมูลวันหยุด`,
+          icon: 'warning',
+          showDenyButton: true,
+          showCancelButton: false,
+          confirmButtonColor: token.token.colorPrimary,
+          denyButtonColor: '#ea4e4e',
+          confirmButtonText: 'ตกลง',
+          denyButtonText: `ยกเลิก`,
+        }).then(async (result) => {
+          if (result.isConfirmed) {
+            createholiday({
+              variables: {
+                data: rows,
+              },
+            })
+              .then((val) => {
+                console.log(val);
+                if (val.data?.createAndUpdateHolidayDate?.status) {
+                  Swal.fire(`แก้ไขข้อมูลวันหยุดสำเร็จ!`, '', 'success');
+                  refetch();
+                }
+              })
+              .catch((err) => {
+                Swal.fire(`แก้ไขข้อมูลวันหยุดไม่สำเร็จ!`, '', 'error');
+                console.error(err);
+              });
+          }
+        });
+  };
 
+  const onFinishDay = (value) => {
+    let day = value.date.date();
+    let month = value.date.month() + 1;
+    let year = value.date.year();
+    let holiday_name = value.holiday_name;
     Swal.fire({
       title: `ยืนยันการเพิ่มข้อมูลวันหยุด`,
       icon: 'warning',
@@ -92,18 +203,20 @@ const Holidaypage: React.FC = () => {
       if (result.isConfirmed) {
         createholiday({
           variables: {
-            data: rows.map((i) => ({
-              day: i.day,
-              month: i.month,
-              year: i.year,
-              holiday_name: i.holiday_name,
-            })),
+            data: {
+              day: day,
+              month: month,
+              year: year,
+              holiday_name: holiday_name,
+              status: 1,
+            },
           },
         })
           .then((val) => {
             console.log(val);
             if (val.data?.createAndUpdateHolidayDate?.status) {
               Swal.fire(`เพิ่มข้อมูลวันหยุดสำเร็จ!`, '', 'success');
+              refetch();
             }
           })
           .catch((err) => {
@@ -111,27 +224,46 @@ const Holidaypage: React.FC = () => {
             console.error(err);
           });
       }
-      refetch();
     });
   };
 
   const onMenuClick = async (event: any, record: any) => {
     const { key } = event;
+    console.log(key);
     if (key === 'edit') {
       let mapper = record.child.map((root) => {
-        return data_year?.GetHoliDayYear?.find(
-          (e) =>
-            e?.day === root.day &&
-            e?.year === root.year &&
-            e?.month === root.month,
-        )?.id;
+        if (root.status === 1) {
+          return root.holiday_yearId;
+        } else {
+          return root;
+        }
       });
+      let cuttype = record?.child.map((v) => {
+        return {
+          id: v.id,
+          holiday_name: v.holiday_name,
+          day: v.day,
+          month: v.month,
+          year: v.year,
+          status: v.status,
+          holiday_yearId: v.holiday_yearId,
+        };
+      });
+      onChange('' as any, record.year);
+      setDataselect(cuttype);
       setSelectedRows(mapper);
       showDraweryear(2);
-      console.log(record);
     } else if (key === 'view') {
+      let mapper = record.child.map((root) => {
+        if (root.status === 1) {
+          return root.holiday_yearId;
+        } else {
+          return root;
+        }
+      });
+      onChange('' as any, record.year);
+      setSelectedRows(mapper);
       showDraweryear(3);
-      setSelectedRows(record);
     } else if (key === 'delete') {
     }
   };
@@ -250,27 +382,32 @@ const Holidaypage: React.FC = () => {
       <Divider style={{ backgroundColor: token.token.colorPrimary }} />
 
       <Card className="shadow-md mb-3">
-        <Row gutter={5}>
-          <Col xs={24} sm={24} md={16} lg={16} xl={8}>
-            <Form.Item label={<b> เลือกปี </b>}>
-              <DatePicker
-                style={{ width: '100%' }}
-                onChange={onChange}
-                picker="year"
-              />
-            </Form.Item>
-          </Col>
-          <Col xs={24} sm={24} md={8} lg={8} xl={16}>
-            <div className="flex items-center justify-end justify-items-center">
-              <Button
-                type="primary"
-                style={{ backgroundColor: token.token.colorPrimary }}
-              >
-                Search
-              </Button>
-            </div>
-          </Col>
-        </Row>
+        <Form form={formSearch}>
+          <Row gutter={5}>
+            <Col xs={24} sm={24} md={16} lg={16} xl={8}>
+              <Form.Item name={'year'} label={<b> เลือกปี </b>}>
+                <DatePicker
+                  style={{ width: '100%' }}
+                  onChange={onChangeTable}
+                  picker="year"
+                />
+              </Form.Item>
+            </Col>
+            <Col xs={24} sm={24} md={8} lg={8} xl={16}>
+              {/* <div className="flex items-center justify-end justify-items-center">
+                <Button
+                  type="primary"
+                  style={{ backgroundColor: token.token.colorPrimary }}
+                  onClick={() => {
+                    refetch({ year: formSearch.getFieldsValue() });
+                  }}
+                >
+                  Search
+                </Button>
+              </div> */}
+            </Col>
+          </Row>
+        </Form>
       </Card>
 
       <Card className="shadow-md mb-3">
@@ -283,7 +420,11 @@ const Holidaypage: React.FC = () => {
                 marginBottom: '10px',
                 backgroundColor: token.token.colorPrimary,
               }}
-              onClick={() => showDraweryear(1)}
+              onClick={() => {
+                showDraweryear(1);
+                setSelectedRows('');
+                onChange('' as any, '');
+              }}
             >
               + เพิ่มวันหยุดรายปี
             </Button>
@@ -310,7 +451,13 @@ const Holidaypage: React.FC = () => {
       </Card>
 
       <Drawer
-        title="เพิ่มวันหยุดรายปี"
+        title={`${
+          drawerType == 1
+            ? 'เพิ่มวันหยุดรายปี'
+            : drawerType == 2
+            ? 'แก้ไขวันหยุดรายปี'
+            : 'ดูวันหยุดรายปี'
+        }`}
         headerStyle={{ textAlign: 'center' }}
         placement="right"
         onClose={onCloseyear}
@@ -334,26 +481,17 @@ const Holidaypage: React.FC = () => {
           <Divider style={{ backgroundColor: token.token.colorPrimary }} />
 
           <Row>
-            <Col xs={24} sm={6} md={12} lg={12} xl={5}>
-              <Form.Item name={''} label={'เลือกปี'}></Form.Item>
-            </Col>
-            <Col xs={24} sm={18} md={12} lg={12} xl={10}>
-              <DatePicker
-                className="mb-5"
-                style={{ width: '100%' }}
-                onChange={onChange}
-                picker="year"
-              />
+            <Col xs={24} sm={12} md={12} lg={12} xl={12}>
+              <Form.Item name={'year'} label={'เลือกปี'}>
+                <DatePicker
+                  style={{ width: '100%' }}
+                  onChange={onChange}
+                  picker="year"
+                />
+              </Form.Item>
             </Col>
           </Row>
-          {/* <Row>
-            <Col xs={24} sm={10} md={12} lg={12} xl={5}>
-              <Form.Item name={''} label={'จำนวนวันหยุด'}></Form.Item>
-            </Col>
-            <Col xs={24} sm={14} md={12} lg={12} xl={10}>
-              <Input className="mb-5" />
-            </Col>
-          </Row> */}
+
           <Table
             rowKey={'id'}
             rowSelection={{
@@ -363,8 +501,8 @@ const Holidaypage: React.FC = () => {
             }}
             columns={columnsyear}
             dataSource={data_year?.GetHoliDayYear as any}
-            // pagination={{ pageSize: 5 }}
-            pagination={false}
+            pagination={drawerType == 3 ? false : { pageSize: 10 }}
+            // pagination={false}
             // scroll={{ x: '45vh', y: '35vh', }}
           />
 
@@ -374,16 +512,18 @@ const Holidaypage: React.FC = () => {
           >
             <Form.Item>
               <Space>
-                <Button
-                  htmlType="submit"
-                  type="primary"
-                  style={{
-                    marginBottom: '10px',
-                    backgroundColor: token.token.colorPrimary,
-                  }}
-                >
-                  บันทึก
-                </Button>
+                {drawerType !== 3 && (
+                  <Button
+                    htmlType="submit"
+                    type="primary"
+                    style={{
+                      marginBottom: '10px',
+                      backgroundColor: token.token.colorPrimary,
+                    }}
+                  >
+                    บันทึก
+                  </Button>
+                )}
                 <Button
                   style={{
                     marginBottom: '10px',
@@ -401,14 +541,14 @@ const Holidaypage: React.FC = () => {
       </Drawer>
 
       <Drawer
-        title="เพิ่มวันหยุดรายวัน"
+        title={`เพิ่มวันหยุดรายวัน`}
         headerStyle={{ textAlign: 'center' }}
         placement="right"
         onClose={onCloseday}
         open={openday}
         width="40%"
       >
-        <Form>
+        <Form form={formday} onFinish={onFinishDay}>
           <div
             className="flex text-2xl"
             style={{ color: token.token.colorPrimary }}
@@ -424,62 +564,21 @@ const Holidaypage: React.FC = () => {
           </div>
           <Divider style={{ backgroundColor: token.token.colorPrimary }} />
           <Row>
-            <Col xs={24} sm={16} md={12} lg={12} xl={8}>
-              <Form.Item name={''} label={'เลือก วัน/เดือน/ปี'}></Form.Item>
-            </Col>
-            <Col xs={24} sm={18} md={12} lg={12} xl={10}>
-              <DatePicker
-                className="mb-5"
-                style={{ width: '100%' }}
-                onChange={onChange}
-              />
+            <Col xs={24} sm={24} md={24} lg={24} xl={24}>
+              <Form.Item name={'date'} label={'เลือก วัน/เดือน/ปี'}>
+                <DatePicker
+                  className="mb-5"
+                  style={{ width: '100%' }}
+                  onChange={onChangeDay}
+                />
+              </Form.Item>
             </Col>
           </Row>
           <Row>
-            <Col xs={24} sm={8} md={12} lg={12} xl={8}>
-              <Form.Item name={''} label={'ชื่อวันหยุด'}></Form.Item>
-            </Col>
-            <Col xs={24} sm={24} md={12} lg={12} xl={10}>
-              <Select
-                showSearch
-                style={{ width: '100%' }}
-                placeholder="กรุณาเลือกวันที่จะหยุด"
-                optionFilterProp="children"
-                filterOption={(input, option) =>
-                  (option?.label ?? '').includes(input)
-                }
-                filterSort={(optionA, optionB) =>
-                  (optionA?.label ?? '')
-                    .toLowerCase()
-                    .localeCompare((optionB?.label ?? '').toLowerCase())
-                }
-                options={[
-                  {
-                    value: '1',
-                    label: 'วันจักรี',
-                  },
-                  {
-                    value: '2',
-                    label: 'วันสงกรานต์',
-                  },
-                  {
-                    value: '3',
-                    label: 'วันแรงงานแห่งชาติ',
-                  },
-                  {
-                    value: '4',
-                    label: 'วันฉัตรมงคล',
-                  },
-                  {
-                    value: '5',
-                    label: 'วันวิสาขบูชา',
-                  },
-                  {
-                    value: '6',
-                    label: 'วันอาสาฬหบูชา',
-                  },
-                ]}
-              />
+            <Col xs={24} sm={24} md={24} lg={24} xl={24}>
+              <Form.Item name={'holiday_name'} label={'ชื่อวันหยุด'}>
+                <Input />
+              </Form.Item>
             </Col>
           </Row>
 
@@ -495,22 +594,25 @@ const Holidaypage: React.FC = () => {
           >
             <Form.Item>
               <Space>
-                <Button
-                  htmlType="submit"
-                  type="primary"
-                  style={{
-                    marginBottom: '10px',
-                    backgroundColor: token.token.colorPrimary,
-                  }}
-                >
-                  บันทึก
-                </Button>
+                {drawerType !== 3 && (
+                  <Button
+                    htmlType="submit"
+                    type="primary"
+                    style={{
+                      marginBottom: '10px',
+                      backgroundColor: token.token.colorPrimary,
+                    }}
+                  >
+                    บันทึก
+                  </Button>
+                )}
                 <Button
                   style={{
                     marginBottom: '10px',
                   }}
                   onClick={() => {
                     setOpenday(false);
+                    formday.resetFields();
                   }}
                 >
                   ยกเลิก

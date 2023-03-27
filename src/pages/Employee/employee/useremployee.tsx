@@ -192,6 +192,7 @@ const UserEmployee: React.FC = (props) => {
     const newdate = dayjs().diff(date, 'year')
       ? dayjs().diff(date, 'year')
       : null;
+    console.log(newdate);
     form.setFieldValue('age', newdate);
   };
 
@@ -404,6 +405,7 @@ const UserEmployee: React.FC = (props) => {
               ...value,
               id: propsstate?.userId ? propsstate?.userId : undefined,
               age: value.age?.toString(),
+              citizen_country: 'ประเทศไทย',
             },
           },
         })
@@ -1080,7 +1082,7 @@ const UserEmployee: React.FC = (props) => {
           </Row>
 
           <Row gutter={16}>
-            <Col xs={24} sm={12} md={12} lg={6} xl={6}>
+            {/* <Col xs={24} sm={12} md={12} lg={6} xl={6}>
               <Form.Item name={'citizen_country'} label={'ประเทศ'}>
                 {propsstate?.mode == 'view' ? (
                   <Select options={country} showSearch allowClear disabled />
@@ -1088,9 +1090,9 @@ const UserEmployee: React.FC = (props) => {
                   <Select options={country} showSearch allowClear />
                 )}
               </Form.Item>
-            </Col>
+            </Col> */}
 
-            <Col xs={24} sm={12} md={12} lg={6} xl={6}>
+            <Col xs={24} sm={12} md={12} lg={8} xl={8}>
               <Form.Item name={'citizen_province'} label={'จังหวัด'}>
                 {propsstate?.mode == 'view' ? (
                   <Select
@@ -1121,7 +1123,7 @@ const UserEmployee: React.FC = (props) => {
               </Form.Item>
             </Col>
 
-            <Col xs={24} sm={12} md={12} lg={6} xl={6}>
+            <Col xs={24} sm={12} md={12} lg={8} xl={8}>
               <Form.Item name={'citizen_district'} label={'เขต/อำเภอ'}>
                 {propsstate?.mode == 'view' ? (
                   <Select
@@ -1152,7 +1154,7 @@ const UserEmployee: React.FC = (props) => {
               </Form.Item>
             </Col>
 
-            <Col xs={24} sm={12} md={12} lg={6} xl={6}>
+            <Col xs={24} sm={12} md={12} lg={8} xl={8}>
               <Form.Item name={'citizen_state'} label={'แขวง/ตำบล'}>
                 {propsstate?.mode == 'view' ? (
                   <Select
